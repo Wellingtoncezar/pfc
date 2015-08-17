@@ -1,0 +1,7 @@
+#
+#@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+#
+RewriteEngine On
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?cod=$1

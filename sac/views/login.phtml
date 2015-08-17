@@ -1,0 +1,91 @@
+<body class="back_login">
+
+    <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <div id="wrap" >
+
+    	<section class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="container_login">
+    		<div class="box_login">
+    			<header>
+    				<img src="<?=URL?>img/logo/logo.png">
+    			</header>
+        		<form class="form-horizontal" id="form_login" action="<?=URL?>login/logar">
+		      		<label>
+		      			<img src="<?=URL?>img/imagens/perfil.png">
+		      			<input type="text" class="form-control" id="login" name="login" placeholder="login">
+		      		</label>
+		      		<label>
+		      			<img src="<?=URL?>img/imagens/cadeado.png">
+		      			<input type="password" class="form-control" id="senha" name="senha" placeholder="Senha">
+		      		</label>
+		      		<!--capcha - para 5 ou mais tentativas de login incorreta-->
+		      		<label class="captcha">
+		      			<div class="img">
+		      				<img src="<?=URL?>login/captcha" style="width: 96%;">
+		      			</div>
+		      			<input type="text" class="form-control" id="captcha" name="captcha" placeholder="Insira o código">
+		      		</label>
+		      		<div class="resposta" style="display:none">
+		      			<p>Senha incorreta</p>
+		      		</div>
+		      		<button type="submit" class="btn btn_login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Entrar</button>
+				</form>
+				<a href="" class="recupera">Recuperar senha</a>
+    		</div>
+
+    	</section>
+	</div><!--wrap-->
+	
+
+	<script type="text/javascript">
+	$(function(){
+		$.post('<?=URL?>login/verificaNTentativaLogin',{},function(data){
+			if(data == true)
+				$('label.captcha').show();
+		});
+
+		$('#form_login').submit(function(){
+			$('input',this).css('box-shadow','none');
+			$.ajax({
+	           	type: 'POST',
+	           	url: '<?=URL?>login/logar',
+	           	dataType: 'json',
+	           	data: $('#form_login').serialize(),
+	           	success: function (data) {
+	           		console.log(data);
+	               if (data != true)
+	               {
+	                   	if(data.captcha == true)
+	                   	{
+	                   		$.post('<?=URL?>login/captcha',{},function(data){
+	                   			if(data != false)
+	                   			{
+	                   				$('label.captcha .img img').attr('src','<?=URL?>login/captcha');
+	                   				$('label.captcha').show();
+	                   			}
+	                   		});
+	                   	}
+	                   	$('[name='+data.campo+']').css('box-shadow','0 0 6px 1px red');
+	                   	$('.resposta').html(data.error).show();
+	                   	setTimeout(function() {
+	                   		$('.resposta').html('').fadeOut();
+	                   	}, 3000);
+	               }else
+	               {
+	                   location.href="<?=URL?>";
+	               }
+	           	},
+	           	error: function(xhr, textStatus, errorThrown) {
+				    console.log('ajax loading error...'+xhr+' - '+textStatus+' - '+ errorThrown);
+				    console.log(xhr);
+				    
+				    return false;
+				}
+	       	});
+			return false;
+		});
+	});
+	</script>
+</body>
+</html>

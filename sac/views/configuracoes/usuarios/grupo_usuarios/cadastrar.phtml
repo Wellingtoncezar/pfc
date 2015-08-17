@@ -1,0 +1,293 @@
+<?php 
+$template = new template();
+?>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <?=$template->page_header('Adicionar novo grupo de usuários');?>
+    <?php
+    $btnVoltar = $template->btnVoltar(URL.'configuracoes/usuarios/grupo_usuarios/');
+    echo $template->actions_buttons($btnVoltar);
+    ?>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left list_grupo_usuario" >
+        <form action="<?=URL?>configuracoes/usuarios/grupo_usuarios/inserir" id="form_grupo_usuario" method="POST">
+            <div class="form-group has-feedback">
+                <label class="control-label" for="nome">Nome do grupo</label>
+                <input type="text" class="form-control" id="nome" placeholder="Nome do grupo" name="nome" >
+            </div>
+
+            <button class="btn btn-defult checkAll">Selecionar todos</button><button class="btn btn-defult uncheckAll">Remover seleção</button>
+            <div class="tree" style="padding-top: 14px;padding-right: 14px;">
+            <?php
+            if($modulos != false):
+            ?>
+                <ul>
+                <?php
+                foreach ($modulos as $keyMod => $mod):
+                ?>
+                    <li><!--modulo-->
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <input type="checkbox" name="status" id="<?=$keyMod?>" mod-pai="0" tipo="modulo" campo="status_modulo" url="<?=$mod['url']?>">
+                                </span>
+                                <input type="text" class="form-control" placeholder="<?=$mod['url']?>" value="<?=$mod['nome']?>" tipo="modulo" id="<?=$keyMod?>" campo="nome_modulo" disabled>
+                            </div>
+                        </div>
+                        <?php
+                        if(!empty($mod['paginas'])):
+                        ?>
+                        <ul>
+                            <?php
+                            foreach ($mod['paginas'] as $keyModPag => $modPag):
+                                
+                            ?>
+                            <li>
+                                <div class="form-group has-feedback">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="status" id="<?=$keyModPag?>" tipo="pagina" campo="status_pagina" url="<?=$modPag['url']?>">
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="<?=$modPag['url']?>" value="<?=$modPag['nome']?>" tipo="pagina" id="<?=$keyModPag?>" campo="nome_pagina" disabled>
+                                    </div>
+                                </div>
+                                <?php
+                                if(!empty($modPag['acoes'])):
+                                ?>
+                                <ul>
+                                    <?php
+                                    foreach ($modPag['acoes'] as $keyModPagAct => $modPagAct):
+                                    ?>
+                                    <li>
+                                        <div class="form-group has-feedback">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="checkbox" name="status" id="<?=$keyModPagAct?>" tipo="acao" campo="status_action" url="<?=$modPagAct['url']?>">
+                                                </span>
+                                                <input type="text" class="form-control" placeholder="<?=$modPagAct['url']?>" value="<?=$modPagAct['nome']?>" tipo="acao" id="<?=$keyModPagAct?>" campo="nome_action" disabled>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </ul>
+                                <?php
+                                endif;
+                                ?>
+
+
+
+                            </li>
+                            <?php
+                            endforeach;
+                            ?>
+                        </ul>
+                        <?php
+                        endif;
+                        ?>
+
+
+
+
+
+                        <?php
+                        if(!empty($mod['submodulos'])):
+                            
+                        ?>
+                        <ul>
+                            <?php
+                            foreach ($mod['submodulos'] as $keyModSubmod => $modSubmod):
+                                
+                                
+                            ?>
+                            <li>
+                                <div class="form-group">
+                                    <div class="input-group has-feedback">
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="status" id="<?=$keyModSubmod?>" tipo="submodulo" campo="status_modulo" url="<?=$modSubmod['url']?>">
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="<?=$modSubmod['url']?>" value="<?=$modSubmod['nome']?>" tipo="submodulo" id="<?=$keyModSubmod?>" campo="nome_modulo" disabled>
+                                    </div>
+                                </div>
+                                <?php
+                                if(!empty($modSubmod['paginas'])):
+                                ?>
+                                <ul>
+                                    <?php
+                                    foreach ($modSubmod['paginas'] as $keyModSubmodPag => $modSubmodPag):
+                                    ?>
+                                    <li>
+                                        <div class="form-group has-feedback">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="checkbox" name="status" id="<?=$keyModSubmodPag?>" tipo="pagina" campo="status_pagina" url="<?=$modSubmodPag['url']?>">
+                                                </span>
+                                                <input type="text" class="form-control" placeholder="<?=$modSubmodPag['url']?>" value="<?=$modSubmodPag['nome']?>" tipo="pagina" id="<?=$keyModSubmodPag?>" campo="nome_pagina" disabled>
+                                            </div>
+                                        </div>
+
+                                        <?php
+                                        if(!empty($modSubmodPag['acoes'])):
+                                        ?>
+                                        <ul>
+                                            <?php
+                                            foreach ($modSubmodPag['acoes'] as $keyModSubmodPagAct => $modSubmodPagAct):
+                                            ?>
+                                            <li>
+                                                <div class="form-group has-feedback">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <input type="checkbox" name="status" id="<?=$keyModSubmodPagAct?>" tipo="acao" campo="status_action" url="<?=$modSubmodPagAct['url']?>">
+                                                        </span>
+                                                        <input type="text" class="form-control" placeholder="<?=$modSubmodPagAct['url']?>" value="<?=$modSubmodPagAct['nome']?>" tipo="acao" id="<?=$keyModSubmodPagAct?>" campo="nome_action" disabled> 
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <?php
+                                            endforeach;
+                                            ?>
+                                        </ul>
+                                        <?php
+                                        endif;
+                                        ?>
+
+
+                                    </li>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </ul>
+                                <?php
+                                endif;
+                                ?>
+                            </li>
+                            <?php
+                            endforeach;
+                            ?>
+                        </ul>
+                        <?php
+                        endif;
+                        ?>
+                    </li>
+                <?php
+                endforeach;
+                ?>
+
+                </ul>
+            <?php
+            endif;
+            ?>
+            </div>
+            <input type="submit" name="btn_salvar" value="Salvar" class="btn btn-default text-right" style="float:right"/>
+        </form>
+    </div>
+</div>
+<style>
+.popover-content {
+  padding: 0px 0px;
+}
+</style>
+<script type="text/javascript" src="<?=URL?>js/jquery-tree/js/jquery.tree.js"></script>
+<link rel="stylesheet" type="text/css" href="<?=URL?>js/jquery-tree/css/jquery.tree.css"/>
+<script>
+$(function() {   
+
+
+    $('input[name=btn_salvar]').click(function(e) { 
+
+        var modulos = Object();
+
+        //pegando os modulos
+        $('.tree>ul>li').each(function(){
+            if($('input[type=checkbox]:checked',this).is(':checked'))
+            {
+                
+
+
+
+                var auxMod = Object();
+                var auxPag = Object();
+                //pegando os submodulos
+                $('>ul>li',this).each(function(){
+                    if($('input[type=checkbox]:checked',this).is(':checked') && $('input[type=checkbox]:checked',this).attr('tipo') == 'submodulo')
+                    {
+                        var aux2 = Object();
+                        //pegando as paginas
+                        $('>ul>li',this).each(function(){
+                            if($('input[type=checkbox]:checked',this).is(':checked'))
+                            {
+                                var aux3 = Object();
+                                //pegando as actions
+                                $('>ul>li',this).each(function(){
+                                    if($('input[type=checkbox]:checked',this).is(':checked')){
+                                        aux3[$('input[type=checkbox]:checked',this).attr('url')] = ''
+                                    }
+                                });
+                                aux2[$('input[type=checkbox]:checked',this).attr('url')] = aux3;
+                            }
+                        });
+                        auxMod[$('input[type=checkbox]:checked',this).attr('url')] = aux2;
+                    }else
+                    {
+                        var auxAction = Object();
+                        //pegando as actions
+                        $('>ul>li',this).each(function(){
+                            if($('input[type=checkbox]:checked',this).is(':checked')){
+                                auxAction[$('input[type=checkbox]:checked',this).attr('url')] = ''
+                            }
+                        });
+                        auxPag[$('input[type=checkbox]:checked',this).attr('url')] = auxAction
+                    }
+                });
+
+                modulos[$('input[type=checkbox]:checked',this).attr('url')] = {
+                                                                                'submodulos' : auxMod,
+                                                                                'paginas' : auxPag
+                                                                                };
+            }
+        });
+
+        //console.log(modulos);
+
+        
+
+        modulos = JSON.stringify(modulos);
+
+        var sendInfo = {
+            'permissoes' : modulos,
+            'nome' : $('input[name=nome]').val()
+        }
+        
+        $('#form_grupo_usuario').submitForm({
+            'sendInfo': sendInfo,
+            'resetform' : false,
+            'redirect' : '<?=URL?>configuracoes/usuarios/grupo_usuarios' 
+        });
+
+        //return false;
+    });
+
+
+
+
+
+    $('.tree').tree({
+        collapseUiIcon: 'ui-icon-plus',
+        expandUiIcon: 'ui-icon-minus',
+        leafUiIcon: 'ui-icon-bullet'
+    });
+
+    $('.checkAll').click(function(){
+        $('.tree').tree('checkAll');
+        return false;
+    });
+
+    $('.uncheckAll').click(function(){
+        $('.tree').tree('uncheckAll');
+        return false;
+    });
+
+$('.ui-icon-minus').trigger('click')
+ 
+
+});
+</script>

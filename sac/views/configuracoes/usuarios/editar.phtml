@@ -1,0 +1,44 @@
+<?php 
+$Letra_A = '';$Letra_B = '';$Letra_C = '';$Letra_D = '';$Letra_E = '';$Letra_F = '';$Letra_G = '';
+$Letra_H = '';$Letra_I = '';$Letra_J = '';$Letra_K = '';$Letra_L = '';$Letra_M = '';$Letra_N = '';
+$Letra_O = '';$Letra_P = '';$Letra_Q = '';$Letra_R = '';$Letra_S = '';$Letra_T = '';$Letra_U = '';
+$Letra_V = '';$Letra_W = '';$Letra_X = '';$Letra_Y = '';$Letra_Z = '';
+$template = new template();
+?>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <?=$template->page_header('Editar tipo de membro: <small>'.$nome_tipo_membro.'</small>');?>
+    <?php
+    $btnVoltar = $template->btnVoltar(URL.'configuracoes/tabelas/tipo_membro/');
+    echo $template->actions_buttons($btnVoltar);
+    ?>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">
+        <form action="<?=URL?>configuracoes/tabelas/tipo_membro/atualizar" id="form_tipo_membro" method="POST">
+            <div class="form-group">
+                <label for="estadocivil">Nome do estado civil</label>
+                <input type="text" class="form-control" id="estadocivil" placeholder="Nome do estado civil" name="nome" value="<?=$nome_tipo_membro?>">
+            </div>
+
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="status" <?=$status_tipo_membro?>> Publicar?
+                </label>
+            </div>
+
+            <input type="hidden" class="form-control" id="id" name="id" value="<?=$id_tipo_membro?>">
+            <button type="submit" class="btn btn-default" name="btn_salvar">Salvar</button>
+        </form>
+    </div>
+</div>
+<style>
+.popover-content {
+  padding: 0px 0px;
+}
+</style>
+<script>
+$(function() {    
+    $('#form_tipo_membro').submitForm({
+    	'reload' : true
+    });
+});
+</script>

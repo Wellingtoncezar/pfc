@@ -1,0 +1,112 @@
+<?php 
+$template = new template();
+
+?>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <?=$template->page_header('Adicionar tipo de ofício da igreja');?>
+    <?php
+    $btnVoltar = $template->btnVoltar(URL.'configuracoes/tabelas/tipo_oficio_igreja/');
+    echo $template->actions_buttons($btnVoltar);
+    ?>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">
+        <div class="panel generalErrors panel-danger" style="text-align:left; display:none;  background-color: #f2dede;">
+            <h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4>
+            <div class="alert alert-danger" role="alert">
+            </div>
+        </div>
+
+        <form action="<?=URL?>configuracoes/tabelas/tipo_oficio_igreja/inserir" id="form_tipo_oficio_igreja" method="POST">
+
+
+            <div class="form-group has-feedback">
+                <label for="tipoOficioIgreja">Nome do tipo de ofício da igreja</label>
+                <input type="text" class="form-control" id="tipoOficioIgreja" placeholder="Nome do tipo de oficio da igreja" name="nome">
+            </div>
+
+
+            <div id="defaultCampos">
+                <div class="radio statusOficio" id="defaultStatus" style="margin-bottom:5px;display:none">
+                    <span class="input-group-addon">
+                        <a href="javascript:void(0)" class="delStatusOficio" style="  float: right;  margin-bottom: 7px;"><img src="<?=URL?>img/close.png"></a>
+                        <input type="text" name="statusOficio" placeholder="Status do ofício" class="form-control" />
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group group_status">
+                <a href="javascript:void(0)" class="addStatusOficio addCel"><img src="<?=URL?>img/imagens/_more.png" style="width: 26px;"> Adicionar status do ofício</a>
+            </div>
+
+
+
+
+            <div class="form-group has-feedback">
+                <div class="input-group">
+                    <span class="input-group-addon"><input type="checkbox" name="status" ></span>
+                    <input type="text" class="form-control" value="Publicar ?" readonly="readonly">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-default" name="btn_salvar">Salvar</button>
+        </form>
+    </div>
+</div>
+<style>
+.popover-content {
+  padding: 0px 0px;
+}
+</style>
+<script>
+$(function() {    
+   /*
+    $('#form_tipo_oficio_igreja').submitForm({
+    	'reload' : true
+    });
+*/
+    $('#form_tipo_oficio_igreja').submit(function(){
+        var statusOficio = Object();
+        var iStatus = 0;
+        $('.group_status .statusOficio').each(function(){
+            var aux = Object();
+            var status = $('input[name=statusOficio]',this).val();
+            aux['statusOficio'] = status;
+            statusOficio[iStatus] = aux;
+            iStatus++;
+        });
+
+
+        if(iStatus > 0)
+        {
+            var parameters = Object();
+            parameters['statusOficio'] = statusOficio;
+
+            $('#form_tipo_oficio_igreja').uploadForm({
+                'parameters': parameters,
+                'reload' : true
+            });
+        }else
+        {   
+            $('.generalErrors .alert').html('');
+            $('.generalErrors .alert').append('<p>Informe o nome e adicione ao menos um status para o ofício</p>');
+            $('.generalErrors').show()
+        }
+
+        return false;
+    });
+
+
+
+
+
+
+    $('.addStatusOficio').on('click',function(){
+        var error = 0;
+        var campTel = $('#defaultCampos #defaultStatus').clone().removeAttr('id').removeAttr('style');
+        campTel.find('input').val('');
+        $(this).before(campTel);
+    });
+    
+    $(document).on('click','.delStatusOficio',function(){
+        $(this).parent().parent().remove();
+    });
+});
+</script>

@@ -1,0 +1,100 @@
+<?php
+$template = new template();
+?>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <?=$template->page_header('Tabela de tipos de membros');?>
+    <?php
+        //page-header
+        $btnAdiconar = $template->btnAdicionarRegistro(URL.'configuracoes/tabelas/tipo_membro/cadastrar');
+        echo $template->actions_buttons($btnAdiconar);
+    ?>
+    <div class="middle-content">
+        <?php
+        $thead = '  <tr>
+                        <th>Nome</th>
+                        <th width="100">Status (Ativo/Inativo)</th>
+                        <th width="180">Ações</th>
+                    </tr>';
+        $tfoot = '  <tr>
+                        <th>Nome</th>
+                        <th>Status (Ativo/Inativo)</th>
+                        <th>Ações</th>
+                    </tr>';	 
+        if($tipoMembros != false):
+            $tbody = '';
+            foreach ($tipoMembros as $tipoMembro):
+            	$status = ($tipoMembro['status_tipo_membro'] == 'Ativo') ? true : false;
+
+                $tbody .='  <tr id="'.$tipoMembro['id_tipo_membro'].'">
+                                <td>'.$tipoMembro['nome_tipo_membro'].'</td>
+                                <td>
+                                    '.$template->checkboxStatus($tipoMembro['id_tipo_membro'],'status',$status).'
+                                </td>
+                                <td>
+                                    '.$template->btnEditarRegistro(URL.'configuracoes/tabelas/tipo_membro/editar/'.$tipoMembro['id_tipo_membro']).
+                                    $template->btnExcluirRegistro('javascript:void(0)',$tipoMembro['id_tipo_membro']).
+                                '</td>
+                            </tr>';
+            endforeach;
+            echo $template->tabela($thead, $tfoot, $tbody);
+        else:
+            echo '<h2>Não há registros cadastrados</h2>';
+        endif;
+        ?>
+    </div>
+
+</div>
+<script>
+$(document).ready(function() {
+    var table = $('.dataTable').DataTable({
+    	order: []
+    });
+    table.$('.btn_excluir').on('click',function(){
+        var id = $(this).attr('id');
+        var status = 'Excluído';
+
+        $("#dialogResult").html('Deseja mesmo excluir?');
+		$("#dialogResult").dialog({
+			autoOpen: true,
+			buttons: [
+				{
+					text: "Ok",
+					click: function() {
+						$( this ).dialog( "close" );
+
+				    	$.post(url+'configuracoes/tabelas/tipo_membro/excluir',{id:id,status:status},function(data){
+							if(data == true)
+								$('tr#'+id).hide();
+						});
+					}
+				},
+				{
+					text: "Cancelar",
+					click: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			]
+		});
+
+
+
+		
+        
+    });
+
+    table.$('input[name=status]').on('change',function(){
+    	var id = $(this).attr('id')
+    	var status = 'Inativo';
+		if($(this).is(':checked'))
+			status = 'Ativo';
+
+		$.post(url+'configuracoes/tabelas/tipo_membro/atualizarStatus',{id:id,status:status},function(data){
+
+		})
+
+    });
+
+
+});
+</script>

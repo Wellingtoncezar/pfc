@@ -1,0 +1,119 @@
+<?php
+/**
+*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+*/
+$template = new template();
+?>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="rol_membros">
+    <?=$template->page_header('Escola Bíblica Dominical <small>Editar Superintendente: '.$superintendente['nome_membro'].' '.$superintendente['sobrenome_membro'] .'</small>');?>
+    <?php
+        //page-header
+        $btnVoltar = $template->btnVoltar(URL.'ebd/superintendentes/');
+        echo $template->actions_buttons($btnVoltar);
+    ?>
+
+    <div class="panel generalErrors panel-danger" style="text-align:left; display:none;  background-color: #f2dede;">
+        <h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4>
+        <div class="alert alert-danger" role="alert">
+
+        </div>
+    </div>
+
+    <form id="form_cadastro_superintendente" action="<?=URL?>ebd/superintendentes/atualizar" method="POST">
+    <!--DADOS FAMILIARES-->
+    <div >
+        <header class="box_header">
+            <h2>Edição do superintendente <strong><?=$superintendente['nome_membro'].' '.$superintendente['sobrenome_membro']?></strong></h2>
+        </header>
+
+        <div class="content">
+            <div class="form-group input-group">
+                <span class="input-group-addon">Membro</span>
+                <select name="membro" id="membro" class="form-control">
+                    <option selected="selected" disabled="disabled" value="">Membro:</option>
+                    <?php if($membros != false):?>
+                    <?php foreach ($membros as $membro):?>
+                    <?php $fotoM = ($membro['foto_membro'] != '') ? URL.'uploads/membros/p/'.$membro['foto_membro'] : URL.'img/imagens/perfil-icone.png'?>
+                    <?php $sel = ($superintendente['id_membro'] == $membro['id_membro']) ? 'selected="selected"' :''?>
+                    <option value="<?=$membro['id_membro']?>" data-class="avatar" data-style="background-image: url('<?=$fotoM?>');  background-size: 100%;  width: 22px;  height: 22px;" <?=$sel?> ><?=$membro['nome_membro']?></option>
+                    <?php endforeach;?>
+                    <?php endif;?>
+                </select>
+            </div>
+            <div class="form-group input-group">
+                <?php
+                $dataFormat = new dataFormat();
+                $dataInicio = $dataFormat->formatar($superintendente['data_inicio_superintendente_ebd'],'data');
+                $dataFim = $dataFormat->formatar($superintendente['data_fim_superintendente_ebd'],'data');
+                ?>
+                <span class="input-group-addon" id="basic-addon1" placeholder="Data Início">Data inicio</span>
+                <input type="text" class="form-control" placeholder="Data Início" name="data_inicio" value="<?=$dataInicio?>">
+            </div>
+
+            <div class="form-group input-group">
+                <span class="input-group-addon" id="basic-addon1" placeholder="Data Início">Data fim</span>
+                <input type="text" class="form-control" placeholder="Data Fim" name="data_fim" value="<?=$dataFim?>">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <input type="hidden" name="id_superintendente" value="<?=$superintendente['id_superintendente_ebd']?>">
+            <button type="submit" class="btn btn-success btn_salvar pull-right"><span class="glyphicon glyphicon-ok"></span> Atualizar</button>
+        </div>
+    </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="<?=URL?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?=URL?>js/jquery.maskedinput.min.js"></script>
+
+
+
+<script type="text/javascript">
+    $(function(){
+        //mascaras de campos
+        $('input[name=data_inicio]').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('input[name=data_fim]').datepicker({ dateFormat: 'dd/mm/yy' });
+
+
+        
+        $('#form_cadastro_superintendente').submit(function(){
+
+            $('#form_cadastro_superintendente').uploadForm({
+                reload:true
+            });
+            return false;
+        });
+
+        /************************************/
+        //campos select
+        $.widget( "custom.iconselectmenu", $.ui.selectmenu, {
+          _renderItem: function( ul, item ) {
+            var li = $( "<li>", { text: item.label } );
+     
+            if ( item.disabled ) {
+              li.addClass( "ui-state-disabled" );
+            }
+     
+            $( "<span>", {
+              style: item.element.attr( "data-style" ),
+              "class": "ui-icon " + item.element.attr( "data-class" )
+            })
+              .appendTo( li );
+            return li.appendTo( ul );
+          }
+        });
+
+        $( "#membro" )
+        .iconselectmenu()
+        .iconselectmenu( "menuWidget")
+        .addClass( "ui-menu-icons avatar" );
+
+             /************************************/
+
+        
+    });
+</script>
+

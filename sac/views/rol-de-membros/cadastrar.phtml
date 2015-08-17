@@ -1,0 +1,705 @@
+<?php
+/**
+*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+*/
+$template = new template();
+?>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="rol_membros">
+    <?=$template->page_header('Cadastrar - Rol de Membros');?>
+    <?php
+        //page-header
+        $btnAdiconar = $template->btnVoltar(URL.'rol-de-membros/home/');
+        echo $template->actions_buttons($btnAdiconar);
+    ?>
+
+    <div class="panel generalErrors panel-danger" style="text-align:left; display:none;  background-color: #f2dede;">
+        <h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4>
+        <div class="alert alert-danger" role="alert">
+
+        </div>
+    </div>
+
+    <form id="form_cadastro_membro" action="<?=URL?>rol-de-membros/home/inserir" method="POST">
+    <!--DADOS PESSOAIS-->
+    <div class="box_bembros" id="dados_pessoais">
+        <header class="box_header">
+            <h2>Dados Pessoais</h2>
+        </header>
+
+
+        <div class="content">
+
+            <div class="foto">
+                <label class="col-xs-12 col-md-12" for="foto">
+                    <div class="thumbnail img-preview preview-lg">
+                        <img src="<?=URL?>img/imagens/rol-de-membros-icone.png" id="img_previous">
+                    </div>
+                    <input type="file" name="foto" id="foto"  />
+                </label>
+            </div>
+            
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="sexo" id="sexo" value="M" >
+                        Masculino
+                    </label>
+                    <label>
+                        <input type="radio" name="sexo" id="sexo" value="F" >
+                        Feminino
+                    </label>
+                </div>
+            <!--<div class="group_input">-->
+                <div class="form-group has-feedback">
+                    <input type="text" name="nome" placeholder="Nome" class="form-control"  />
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="text" name="sobrenome" placeholder="Sobrenome" class="form-control" />
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="text" name="data_nascimento" placeholder="Data de nascimento" class="form-control" />
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="text" name="filiacao" placeholder="Filiação" class="form-control" />
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="text" name="naturalidade" placeholder="Naturalidade" class="form-control" />
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="text" name="nacionalidade" placeholder="Nacionalidade" class="form-control" />
+                </div>
+
+                <div class="row has-feedback">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                RG
+                            </span>
+                            <input type="text" class="form-control" name="rg" placeholder="RG" class="form-control">
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-6 -->
+
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                CPF
+                            </span>
+                            <input type="text" class="form-control" name="cpf" placeholder="CPF" class="form-control">
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-6 -->
+                </div><!-- /.row -->
+            <!--</div>-->
+        </div>
+    </div>
+    <!--/DADOS PESSOAIS-->
+
+
+
+    <!--DADOS FAMILIARES-->
+    <div class="box_bembros" id="dados_familiares">
+        <header class="box_header">
+            <h2>Dados Familiares</h2>
+        </header>
+
+        <div class="content">
+            <!--<div class="group_input">-->
+                <div class="form-group">
+                    <select name="estado_civil" class="form-control" >
+                        <option disabled="disabled" value="">Estado Civil</option>
+                    <?php
+                    if($estadocivil != false):
+                        foreach ($estadocivil as $estCiv):
+                    ?>
+                        <option value="<?=$estCiv['id_estado_civil']?>"><?=$estCiv['nome_estado_civil']?></option>
+                    <?php
+                        endforeach;
+                    endif;
+                    ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" name="nome_conjuge" placeholder="Nome do Cônjuge" class="form-control" />
+                    ou
+                    <select name="id_conjuge" id="id_conjuge" class="form-control">
+                        <option selected="selected" disabled="disabled" value="">Conjuge:</option>
+                        <?php if($membros != false):?>
+                        <?php foreach ($membros as $membro):?>
+                        <?php $fotoM = ($membro['foto_membro'] != '') ? URL.'uploads/membros/p/'.$membro['foto_membro'] : URL.'img/imagens/perfil-icone.png'?>
+                        <option value="<?=$membro['id_membro']?>" data-class="avatar" data-style="background-image: url('<?=$fotoM?>');  background-size: 100%;  width: 22px;  height: 22px;"><?=$membro['nome_membro']?></option>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" name="data_casamento" placeholder="Data de casamento" class="form-control" />
+                </div>
+                
+                
+                <div class="form-group">
+                    <select name="pai" id="pai" class="form-control">
+                        <option selected="selected" disabled="disabled" value="">Filho(a) de (Pai):</option>
+                        <?php if($membros != false):?>
+                        <?php foreach ($membros as $membro):?>
+                        <?php if($membro['sexo_membro'] == 'M'):?>
+                        <?php $fotoM = ($membro['foto_membro'] != '') ? URL.'uploads/membros/p/'.$membro['foto_membro'] : URL.'img/imagens/perfil-icone.png'?>
+                        <option value="<?=$membro['id_membro']?>" data-class="avatar" data-style="background-image: url('<?=$fotoM?>');  background-size: 100%;  width: 22px;  height: 22px;"><?=$membro['nome_membro']?></option>
+                        <?php endif;?>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <select name="mae" id="mae" class="form-control">
+                        <option selected="selected" disabled="disabled" value="">Filho(a) de (Mãe):</option>
+                        <?php if($membros != false):?>
+                        <?php foreach ($membros as $membro):?>
+                        <?php if($membro['sexo_membro'] == 'F'):?>
+                        <?php $fotoM = ($membro['foto_membro'] != '') ? URL.'uploads/membros/p/'.$membro['foto_membro'] : URL.'img/imagens/perfil-icone.png'?>
+                        <option value="<?=$membro['id_membro']?>" data-class="avatar" data-style="background-image: url(<?=$fotoM?>);  background-size: 100%;  width: 22px;  height: 22px;"><?=$membro['nome_membro']?></option>
+                        <?php endif;?>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
+                </div>
+            <!--</div>-->
+        </div>
+    </div>
+    <!--/DADOS FAMILIARES-->
+
+
+    <!--DADOS DE CONTATO-->
+    <div class="box_bembros" id="dados_contato">
+        <header class="box_header">
+            <h2>Dados de Contato</h2>
+        </header>
+
+        <div class="content">
+            <!--<div class="group_input">-->
+            <div class="form-group">
+                <input type="text" name="cep" placeholder="CEP" class="form-control" id="cep"/>
+            </div>
+            <div class="form-group">
+                <input type="text" name="rua" placeholder="Rua" class="form-control" id="rua"/>
+            </div>
+            <div class="form-group">
+                <input type="text" name="numero" placeholder="Número" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="text" name="complemento" placeholder="Complemento" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="text" name="bairro" placeholder="Bairro" class="form-control" id="bairro"/>
+            </div>
+            <div class="form-group">
+                <input type="text" name="cidade" placeholder="Cidade" class="form-control" id="cidade"/>
+            </div>
+
+            <div class="form-group">
+                <select name="estado" class="form-control" id="uf">
+                    <option selected="selected" selected="selected" >Estado</option>
+                     <option value="AC">AC - Acre</option>
+                     <option value="AL">AL - Alagoas</option>
+                     <option value="AP">AP - Amapá</option>
+                     <option value="AM">AM - Amazonas</option>
+                     <option value="BA">BA - Bahia</option>
+                     <option value="CE">CE - Ceará</option>
+                     <option value="DF">DF - Distrito Federal</option>
+                     <option value="GO">GO - Goiás</option>
+                     <option value="ES">ES - Espírito Santo</option>
+                     <option value="MA">MA - Maranhão</option>
+                     <option value="MT">MT - Mato Grosso</option>
+                     <option value="MS">MS - Mato Grosso do Sul</option>
+                     <option value="MG">MG - Minas Gerais</option>
+                     <option value="PA">PA - Pará</option>
+                     <option value="PB">PB - Paraiba</option>
+                     <option value="PR">PR - Paraná</option>
+                     <option value="PE">PE - Pernambuco</option>
+                     <option value="PI">PI - Piauí­</option>
+                     <option value="RJ">RJ - Rio de Janeiro</option>
+                     <option value="RN">RN - Rio Grande do Norte</option>
+                     <option value="RS">RS - Rio Grande do Sul</option>
+                     <option value="RO">RO - Rondônia</option>
+                     <option value="RR">RR - Roraima</option>
+                     <option value="SP">SP - São Paulo</option>
+                     <option value="SC">SC - Santa Catarina</option>
+                     <option value="SE">SE - Sergipe</option>
+                     <option value="TO">TO - Tocantins</option>
+                </select>
+            </div>
+
+            <div id="defaultCampos">
+                <div class="radio telefones" id="defaultTel" style="margin-bottom:5px;display:none">
+                    <span class="input-group-addon">
+                        <a href="javascript:void(0)" class="delCel"><img src="<?=URL?>img/close.png"></a>
+                        <select name="categoria" class="form-control">
+                            <option value="telefone" selected="selected">Telefone</option>
+                            <option value="celular">Celular</option>
+                        </select>
+
+                        <input type="text" name="telefone" placeholder="Telefone" class="form-control" />
+                        <input type="text" name="operadora" placeholder="Operadora" class="form-control" />
+                        <select name="tipo_telefone" class="form-control">
+                            <option value="" selected="selected" disabled="disabled">Selecione um tipo</option>
+                        <?php
+                        if($tipoTelefone != false):
+                        foreach ($tipoTelefone as $tipoTel):
+                        ?>
+                            <option value="<?=$tipoTel['id_tipo_telefone']?>"><?=$tipoTel['nome_tipo_telefone']?></option>
+                        <?php
+                        endforeach;
+                        endif;
+                        ?>
+                        </select>
+                    </span>
+                </div>
+
+                <div class="radio emails" id="defaultEmail" style="margin-bottom:5px;display:none">
+                    <span class="input-group-addon">
+                        <a href="javascript:void(0)" class="delCel"><img src="<?=URL?>img/close.png"></a>
+                        
+
+                        <select name="tipo_email" class="form-control">
+                            <option value="">Tipo</option>
+                            <?php
+                            if($tipoEmail != false):
+                            foreach ($tipoEmail as $tipoMail):
+                            ?>
+                                <option value="<?=$tipoMail['id_tipo_email']?>"><?=$tipoMail['nome_tipo_email']?></option>
+                            <?php
+                            endforeach;
+                            endif;
+                            ?>
+                        </select>
+                        <input type="text" name="email" placeholder="E-mail" class="form-control" />
+                    </span>
+                </div>
+
+                <div class="radio redesociais" id="defaultSocial" style="margin-bottom:5px;display:none">
+                    <span class="input-group-addon">
+                        <a href="javascript:void(0)" class="delCel"><img src="<?=URL?>img/close.png"></a>
+                        <select name="redesocial" class="form-control">
+                            <option value="Facebook">Facebook</option>
+                            <option value="Twitter">Twitter</option>
+                            <option value="Tumblr">Tumblr</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Pinterest">Pinterest</option>
+                            <option value="Foursquare">Foursquare</option>
+                            <option value="Google+">Google+</option>
+                            <option value="YouTube">YouTube</option>
+                        </select>
+                        <input type="text" name="linkredesocial" placeholder="Link da Rede social" class="form-control" />
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="form-group group_tel">
+                <a href="javascript:void(0)" class="addTel addCel"><img src="<?=URL?>img/imagens/_more.png">Adicionar o telefone</a>
+            </div>
+           
+            <div class="form-group group_email">
+                <a href="javascript:void(0)" class="addEmail addCel"><img src="<?=URL?>img/imagens/_more.png"> Adicionar E-mail</a>
+            </div>
+
+            <div class="form-group group_social">
+                <a href="javascript:void(0)" class="addSocial addCel"><img src="<?=URL?>img/imagens/_more.png"> Adicionar redes sociais</a>
+            </div>
+
+            <!--</div>-->
+        </div>
+    </div>
+    <!--/DADOS DE CONTATO-->
+
+
+    <div class="box_bembros">
+        <header class="box_header">
+            <h2>Vida Profissional</h2>
+        </header>
+
+        <div class="content">
+
+            <div class="form-group">
+                <input type="text" name="profissao" placeholder="Profissão" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="text" name="aptidoesArtisticas" placeholder="Aptidões artísticas" class="form-control" />
+            </div>
+            
+            <div class="radio">
+                <label>Exerce docência?</label>
+                <label><input type="radio" name="docencia" value="Sim"/>Sim</label>
+                <label><input type="radio" name="docencia" value="Não" checked="checked" />Não</label>
+            </div>
+
+            <div class="form-group">
+                <textarea name="outras_informacoes" class="form-control" style="height:150px" placeholder="Outras informações relevantes"></textarea>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="box_bembros">
+        <header class="box_header">
+            <h2>Dados Eclesiásticos</h2>
+        </header>
+
+        <div class="content">
+            
+                <!--<div class="group_input">-->
+                    <div class="form-group">
+                        <select class="form-control" name="igreja">
+                            <option value="" selected="selected" disabled>Igreja</option>
+                        <?php
+                        if($igreja != false):
+                        foreach ($igreja as $igr):
+                        ?>
+                            <option value="<?=$igr['id_igreja']?>"><?=$igr['nome_igreja']?></option>
+                        <?php
+                        endforeach;
+                        endif;
+                        ?>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" name="numero_rol" placeholder="Número ROL" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" name="data_recebimento" placeholder="Data de recebento como membro" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" name="data_batismo" placeholder="Data do batismo" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" name="data_profissao_fe" placeholder="Data da Profissão de Fé" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" name="celebrante" placeholder="Celebrante do Batismo" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" name="local_batismo" placeholder="Local do Batismo" class="form-control" />
+                    </div>
+
+
+                    <div class="form-group">
+                        <select class="form-control" name="tipo_recebimento">
+                            <option value="" selected="selected" disabled>Tipo recebimento</option>
+                        <?php
+                        if($tipoRecebimento != false):
+                        foreach ($tipoRecebimento as $recebimento):
+                        ?>
+                            <option value="<?=$recebimento['id_tipo_recebimento']?>"><?=$recebimento['letra_tipo_recebimento']?> <?=$recebimento['nome_tipo_recebimento']?></option>
+                        <?php
+                        endforeach;
+                        endif;
+                        ?>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <select class="form-control" name="tipo_membro">
+                            <option value="" selected="selected" disabled>Tipo de membro</option>
+                            <?php
+                            if($tipoMembro != false):
+                            foreach ($tipoMembro as $tipoMem):
+                            ?>
+                                <option value="<?=$tipoMem['id_tipo_membro']?>"><?=$tipoMem['nome_tipo_membro']?></option>
+                            <?php
+                            endforeach;
+                            endif;
+                            ?>
+                        </select>
+                    </div>
+                <!--</div>-->
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="box_bembros">
+        <header class="box_header">
+            <h2>Vida Eclesiásticas</h2>
+        </header>
+
+        <div class="content">
+            
+                <!--<div class="group_input">-->
+                    <div class="form-group">
+                        <div class="radio">
+                            <label>Oficial da Igreja? </label>
+                            <label><input type="radio" name="oficial_igreja" placeholder="Sim" value="Sim" />Sim</label>
+                            <label><input type="radio" name="oficial_igreja" placeholder="Não" value="Não" />Não</label>
+                        </div>
+                        <select class="form-control" name="tipoOficioIgreja">
+                            <option value="" selected="selected" disabled>Ofício</option>
+                            <?php
+                            if($tipoOficioIgreja != false):
+                            foreach ($tipoOficioIgreja as $tipoOficio):
+                            ?>
+                            <option value="<?=$tipoOficio['id_tipo_oficio_igreja']?>"><?=$tipoOficio['nome_tipo_oficio_igreja']?></option>
+                            <?php
+                            endforeach;
+                            endif;
+                            ?>
+                        </select>
+
+                        <select class="form-control" name="statusTipoOficioIgreja">
+                            <option value="" selected="selected" disabled>Status</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="radio">
+                            <label>Dizimista</label>
+                            <label><input type="radio" name="dizimista" placeholder="Sim" value="Sim" />Sim</label>
+                            <label><input type="radio" name="dizimista" placeholder="Não" value="Não" checked="checked" />Não</label>
+                        </div>
+                        <input type="text" name="num_dizimista" class="form-control" style="display:none" placeholder="Nº Dizimista">
+                    </div>
+
+                    
+                <!--</div>-->
+        </div>
+    </div>
+<?php
+/*
+    */?>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-success btn_atualizar"><span class="glyphicon glyphicon-ok"></span> Cadastrar</button>
+        </div>
+    </div>
+    </form>
+</div>
+
+<link href="<?=URL?>js/croper/cropper.min.css" rel="stylesheet">
+<link href="<?=URL?>js/croper/main.css" rel="stylesheet">
+<script src="<?=URL?>js/croper/cropper.min.js"></script>
+
+<script type="text/javascript" src="<?=URL?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?=URL?>js/jquery.maskedinput.min.js"></script>
+
+
+
+<script type="text/javascript">
+    $(function(){
+        //mascaras de campos
+        $('input[name=data_nascimento]').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('input[name=data_casamento]').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('input[name=data_recebimento]').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('input[name=data_batismo]').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('input[name=data_profissao_fe]').datepicker({ dateFormat: 'dd/mm/yy' });
+
+
+        $('input[name=cep]').wvmask('cep')
+        $('input[name=numero]').wvmask('numero')
+        $('input[name=cpf]').mask('999.999.999-99');
+        $('input[name=rg]').mask('99.999.999-9');
+        $('#form_cadastro_membro').validaCep();
+
+        //mascara para telefones de 8 e 9 dígitos
+        var maskBehavior = function (val) {
+            return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+        },
+        options = {onKeyPress: function(val, e, field, options) {
+            field.mask(maskBehavior.apply({}, arguments), options);
+            }
+        };
+        $('input[name=telefone]').mask(maskBehavior, options);
+
+        /************************************/
+        //submissao do formulario e crop da imagem
+        $('#form_cadastro_membro').uploadImage({
+            'width' : '150',
+            'height' : '150'
+        });
+
+        $('#form_cadastro_membro').submit(function(){
+            var telefones = Object();
+            //telefones
+            var iTel = 0;
+            $('.group_tel .telefones').each(function(){
+                var aux = Object();
+                var categoria = $('select[name=categoria] option:selected',this).val();
+                var telefone = $('input[name=telefone]',this).val();
+                var operadora = $('input[name=operadora]',this).val();
+                var tipo_telefone = $('select[name=tipo_telefone] option:selected',this).val();
+
+                aux['categoria'] = categoria;
+                aux['telefone'] = telefone;
+                aux['operadora'] = operadora;
+                aux['tipo_telefone'] = tipo_telefone;
+
+                telefones[iTel] = aux;
+                iTel++;
+            });
+
+            //email
+            var emails = Object();
+            var iEmail = 0;
+            $('.group_email .emails').each(function(){
+                var aux = Object();
+                var tipo_email = $('select[name=tipo_email] option:selected',this).val();
+                var email = $('input[name=email]',this).val();
+                aux['tipo_email'] = tipo_email;
+                aux['email'] = email;
+                emails[iEmail] = aux;
+                iEmail++;
+            });
+
+            //email
+            var redes = Object();
+            var iRedes = 0;
+            $('.group_social .redesociais').each(function(){
+                var aux = Object();
+                var redesocial = $('select[name=redesocial] option:selected',this).val();
+                var linkredesocial = $('input[name=linkredesocial]',this).val();
+                aux['redesocial'] = redesocial;
+                aux['linkredesocial'] = linkredesocial;
+                redes[iRedes] = aux;
+                iRedes++;
+            });
+
+            console.log(redes);
+
+            var parameters = Object();
+            parameters['telefones'] = telefones;
+            parameters['emails'] = emails;
+            parameters['redes'] = redes;
+
+            $('#form_cadastro_membro').uploadForm({
+                'parameters': parameters
+
+            });
+            return false;
+        });
+
+        /************************************/
+
+        //campos select
+        $.widget( "custom.iconselectmenu", $.ui.selectmenu, {
+          _renderItem: function( ul, item ) {
+            var li = $( "<li>", { text: item.label } );
+     
+            if ( item.disabled ) {
+              li.addClass( "ui-state-disabled" );
+            }
+     
+            $( "<span>", {
+              style: item.element.attr( "data-style" ),
+              "class": "ui-icon " + item.element.attr( "data-class" )
+            })
+              .appendTo( li );
+            return li.appendTo( ul );
+          }
+        });
+
+        $( "#pai" )
+        .iconselectmenu()
+        .iconselectmenu( "menuWidget")
+        .addClass( "ui-menu-icons avatar" );
+
+        $( "#mae" )
+        .iconselectmenu()
+        .iconselectmenu( "menuWidget")
+        .addClass( "ui-menu-icons avatar" );
+
+        $( "#id_conjuge" )
+        .iconselectmenu()
+        .iconselectmenu( "menuWidget")
+        .addClass( "ui-menu-icons avatar" );
+
+        /************************************/
+
+        //telefone
+        $('.addTel').on('click',function(){
+            var error = 0;
+            var campTel = $('#defaultCampos #defaultTel').clone().removeAttr('id').removeAttr('style');
+            campTel.find('input').val('');
+            $(this).before(campTel);
+            $('input[name=telefone]').mask(maskBehavior, options);
+        });
+        
+        $(document).on('click','.delCel',function(){
+            $(this).parent().parent().remove();
+        });
+
+        /************************************/
+
+        //email
+        $('.addEmail').on('click',function(){
+            var error = 0;
+            var campTel = $('#defaultCampos #defaultEmail').clone().removeAttr('id').removeAttr('style');
+            campTel.find('input').val('');
+            $(this).before(campTel);
+        });
+        
+        $(document).on('click','.delEmail',function(){
+            $(this).parent().parent().remove();
+        });
+
+        //email
+        $('.addSocial').on('click',function(){
+            var error = 0;
+            var campTel = $('#defaultCampos #defaultSocial').clone().removeAttr('id').removeAttr('style');
+            campTel.find('input').val('');
+            $(this).before(campTel);
+        });
+        
+        $(document).on('click','.delSocial',function(){
+            $(this).parent().parent().remove();
+        });
+
+
+        $('input[name=dizimista]').change(function() {
+            if($(this).val() == 'Sim')
+                $('input[name=num_dizimista]').show();
+            else
+                $('input[name=num_dizimista]').hide();
+            
+            
+
+        });
+
+        $('select[name=tipoOficioIgreja]').change(function(event) {
+            $.post('<?=URL?>rol-de-membros/home/listarTipoOficio', {'id' : $(this).val()}, function(data){
+                $('select[name=statusTipoOficioIgreja]').html(data);
+                //onsole.log(data)
+            })
+
+            
+        });
+    });
+</script>
+
+<style type="text/css">
+.ui-button{
+display: none;
+}
+.ui-datepicker{
+z-index: 2!important;
+}
+</style>

@@ -1,0 +1,132 @@
+<?php
+/**
+*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+*/
+$template = new template();
+?>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="rol_membros">
+    <?=$template->page_header('Escola Bíblica Dominical <small>professores da classe <strong>'.$classe['nome_classe_ebd'].'</strong></small>');?>
+    <?php
+        //page-header
+        $btnVoltar = $template->btnVoltar(URL.'ebd/classes');
+        $btnAdiconar = $template->btnAdicionarRegistro(URL.'ebd/classes/professores/cadastrar/'.$classe['id_classe_ebd'],'<span class="glyphicon glyphicon-user"></span> Adicionar professor');
+        echo $template->actions_buttons($btnVoltar.$btnAdiconar);
+    ?>
+
+
+    <div class="middle-content">
+        <header class="box_header">
+            <h2>Classe: <strong><?=$classe['nome_classe_ebd']?></strong></h2>
+        </header>
+        <?php
+        $thead = '  <tr>   
+                        <th width="120">Foto</th>
+                        <th width="160">Nome</th>
+                        <th width="100">Classe</th>
+                        <th width="100">Status (Ativo/Inativo)</th>
+                        <th width="100">Ações</th>
+                    </tr>';
+        $tfoot = '  <tr>
+                        <th>Foto</th>
+                        <th>Nome</th>
+                        <th width="100">Classe</th>
+                        <th>Status (Ativo/Inativo)</th>
+                        <th>Ações</th>
+                    </tr>';  
+        if($professores != false):
+            $tbody = '';
+            foreach ($professores as $professor):
+                $status = ($professor['status_professor'] == 'Ativo') ? true : false;
+                $foto = ($professor['foto_professor'] != '') ? URL.'uploads/membros/p/'.$professor['foto_professor'] : URL.'img/imagens/perfil-icone.png';
+                $tbody .='  <tr id="'.$professor['id_professor'].'">
+                                <td><img src="'.$foto.'" style="width: 60px;"></td>
+                                <td>'.$professor['nome_professor'].' '.$professor['sobrenome_professor'].'</td>
+                                
+                                <td width="100">'.$professor['nome_classe_ebd'].'</td>
+                                <td>
+                                    '.$template->checkboxStatus($professor['id_professor'],'status',$status).'
+                                </td>
+                                <td>'
+                                    .$template->btnVisualizarRegistro(URL.'ebd/classes/professores/visualizar/'.$professor['id_professor']).
+                                    $template->btnExcluirRegistro('javascript:void(0)',$professor['id_professor']).
+                                '</td>
+                            </tr>';
+            endforeach;
+            echo $template->tabela($thead, $tfoot, $tbody);
+        else:
+            echo '<h2>Não há registros cadastrados</h2>';
+        endif;
+        ?>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    var table = $('.dataTable').DataTable({
+        order: [1,'asc']
+    });
+    table.$('.btn_excluir').on('click',function(){
+        var id = $(this).attr('id');
+        var status = 'Excluído';
+
+        $("#dialogResult").html('Deseja mesmo excluir?');
+        $("#dialogResult").dialog({
+            autoOpen: true,
+            buttons: [
+                {
+                    text: "Ok",
+                    click: function() {
+                        $( this ).dialog( "close" );
+
+                        $.post(url+'ebd/classes/professores/excluir',{id:id,status:status},function(data){
+                            if(data == true){
+                                $('tr#'+id).hide();
+
+                                $("#dialogResult").html('Registro enviado para a lixeira');
+                                $("#dialogResult").dialog({
+                                    autoOpen: true,
+                                    buttons: [
+                                        {
+                                            text: "Ok",
+                                            click: function() {
+                                                $( this ).dialog( "close" );
+                                            }
+                                        }
+                                    ]
+                                });
+
+
+                            }
+                        });
+                    }
+                },
+                {
+                    text: "Cancelar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            ]
+        });
+
+
+
+        
+        
+    });
+
+    table.$('input[name=status]').on('change',function(){
+        var id = $(this).attr('id')
+        var status = 'Inativo';
+        if($(this).is(':checked'))
+            status = 'Ativo';
+
+        $.post(url+'ebd/classes/professores/atualizarStatus',{id:id,status:status},function(data){
+            
+        });
+
+    });
+
+
+});
+</script>

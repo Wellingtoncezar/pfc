@@ -1,0 +1,361 @@
+<?php 
+$template = new template();
+?>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <?=$template->page_header('Editar grupo de usuários');?>
+    <?php
+    $btnVoltar = $template->btnVoltar(URL.'configuracoes/usuarios/grupo_usuarios/');
+    echo $template->actions_buttons($btnVoltar);
+    $permissao = json_decode($grupoUsuario['permissao'],true);
+    ?>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left list_grupo_usuario" >
+        <form action="<?=URL?>configuracoes/usuarios/grupo_usuarios/atualizar" id="form_grupo_usuario" method="POST">
+            <div class="form-group has-feedback">
+                <label class="control-label" for="nome">Nome do grupo</label>
+                <input type="text" class="form-control" id="nome" placeholder="Nome do grupo" name="nome" value="<?=$grupoUsuario['nome_permissao']?>">
+            </div>
+
+            <button class="btn btn-defult checkAll">Selecionar todos</button><button class="btn btn-defult uncheckAll">Remover seleção</button>
+            <div class="tree" style="padding-top: 14px;padding-right: 14px;">
+            <?php
+            if($modulos != false):
+            ?>
+                <ul>
+                <?php
+                foreach ($modulos as $keyMod => $mod):
+                    $selMod = '';
+                    if(array_key_exists($mod['url'],$permissao))
+                        $selMod = 'checked';
+
+                ?>
+                    <li><!--modulo-->
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <input type="checkbox" name="status" id="<?=$keyMod?>" mod-pai="0" tipo="modulo" campo="status_modulo" <?=$selMod?> url="<?=$mod['url']?>">
+                                </span>
+                                <input type="text" class="form-control" placeholder="<?=$mod['url']?>" value="<?=$mod['nome']?>" tipo="modulo" id="<?=$keyMod?>" campo="nome_modulo" disabled>
+                            </div>
+                        </div>
+                        <!--PAGINAS-->
+                        <?php
+                        if(!empty($mod['paginas'])):
+                        ?>
+                        <ul>
+                            <?php
+                            foreach ($mod['paginas'] as $keyModPag => $modPag):
+                                $selModPag = '';
+                                if(array_key_exists($mod['url'],$permissao))
+                                {
+                                    if(array_key_exists($modPag['url'],$permissao[$mod['url']]['paginas']))
+                                    {
+                                        $selModPag = 'checked';
+                                    }
+                                }
+                            ?>
+                            <li>
+                                <div class="form-group has-feedback">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="status" id="<?=$keyModPag?>" tipo="pagina" campo="status_pagina" <?=$selModPag?> url="<?=$modPag['url']?>">
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="<?=$modPag['url']?>" value="<?=$modPag['nome']?>" tipo="pagina" id="<?=$keyModPag?>" campo="nome_pagina" disabled>
+                                    </div>
+                                </div>
+                                <?php
+                                if(!empty($modPag['acoes'])):
+                                ?>
+                                <ul>
+                                    <?php
+                                    foreach ($modPag['acoes'] as $keyModPagAct => $modPagAct):
+                                        $selModPagAct = '';
+                                        if(array_key_exists($mod['url'],$permissao))
+                                        {
+                                            if(array_key_exists($modPag['url'],$permissao[$mod['url']]['paginas']))
+                                            {
+                                                if(array_key_exists($modPagAct['url'],$permissao[$mod['url']]['paginas'][$modPag['url']]))
+                                                {
+                                                    $selModPagAct = 'checked';
+                                                }
+                                            }
+                                        }
+
+                                    ?>
+                                    <li>
+                                        <div class="form-group has-feedback">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="checkbox" name="status" id="<?=$keyModPagAct?>" tipo="acao" campo="status_action" url="<?=$modPagAct['url']?>" <?=$selModPagAct?>>
+                                                </span>
+                                                <input type="text" class="form-control" placeholder="<?=$modPagAct['url']?>" value="<?=$modPagAct['nome']?>" tipo="acao" id="<?=$keyModPagAct?>" campo="nome_action" disabled>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </ul>
+                                <?php
+                                endif;
+                                ?>
+
+
+
+                            </li>
+                            <?php
+                            endforeach;
+                            ?>
+                        </ul>
+                        <?php
+                        endif;
+                        ?>
+
+
+
+
+                        <!--SUBMODULOS-->
+
+                        <?php
+                        if(!empty($mod['submodulos'])):
+                            
+                        ?>
+                        <ul>
+                            <?php
+                            foreach ($mod['submodulos'] as $keyModSubmod => $modSubmod):
+                                $selModSubmod = '';
+                                if(array_key_exists($mod['url'],$permissao))
+                                {
+                                    if(array_key_exists($modSubmod['url'], $permissao[$mod['url']]['submodulos']))
+                                    {
+                                        $selModSubmod = 'checked';
+                                    }
+                                }
+                                
+                            ?>
+                            <li>
+                                <div class="form-group">
+                                    <div class="input-group has-feedback">
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="status" id="<?=$keyModSubmod?>" tipo="submodulo" campo="status_modulo" <?=$selModSubmod?> url="<?=$modSubmod['url']?>">
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="<?=$modSubmod['url']?>" value="<?=$modSubmod['nome']?>" tipo="submodulo" id="<?=$keyModSubmod?>" campo="nome_modulo" disabled>
+                                    </div>
+                                </div>
+                                <?php
+                                if(!empty($modSubmod['paginas'])):
+                                ?>
+                                <ul>
+                                    <?php
+                                    foreach ($modSubmod['paginas'] as $keyModSubmodPag => $modSubmodPag):
+                                        $selModSubmodPag = '';
+                                        if(array_key_exists($mod['url'],$permissao))
+                                        {
+                                            if(array_key_exists($modSubmod['url'],$permissao[$mod['url']]['submodulos']))
+                                            {
+                                                if(array_key_exists($modSubmodPag['url'],$permissao[$mod['url']]['submodulos'][$modSubmod['url']]))
+                                                {
+                                                    $selModSubmodPag = 'checked';
+                                                }
+                                            }
+                                        }
+                                    ?>
+                                    <li>
+                                        <div class="form-group has-feedback">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="checkbox" name="status" id="<?=$keyModSubmodPag?>" tipo="pagina" campo="status_pagina" <?=$selModSubmodPag?> url="<?=$modSubmodPag['url']?>">
+                                                </span>
+                                                <input type="text" class="form-control" placeholder="<?=$modSubmodPag['url']?>" value="<?=$modSubmodPag['nome']?>" tipo="pagina" id="<?=$keyModSubmodPag?>" campo="nome_pagina" disabled>
+                                            </div>
+                                        </div>
+
+                                        <?php
+                                        if(!empty($modSubmodPag['acoes'])):
+                                        ?>
+                                        <ul>
+                                            <?php
+                                            foreach ($modSubmodPag['acoes'] as $keyModSubmodPagAct => $modSubmodPagAct):
+                                                $selModSubmodPagAct = '';
+                                                //print_r($permissao[ $mod['url'] ] ['submodulos'] [ $modSubmod['url'] ] [ $modSubmodPag['url'] ]);
+                                                if(array_key_exists($mod['url'],$permissao))
+                                                {
+                                                    if(array_key_exists($modSubmod['url'],$permissao[$mod['url']]['submodulos']))
+                                                    {
+                                                        if(array_key_exists($modSubmodPag['url'],$permissao[$mod['url']]['submodulos'][$modSubmod['url']]))
+                                                        {
+                                                            if(array_key_exists($modSubmodPagAct['url'],$permissao[$mod['url']]['submodulos'][$modSubmod['url']][$modSubmodPag['url']]))
+                                                            {
+                                                                $selModSubmodPagAct = 'checked';
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                            ?>
+                                            <li>
+                                                <div class="form-group has-feedback">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <input type="checkbox" name="status" id="<?=$keyModSubmodPagAct?>" tipo="acao" campo="status_action" <?=$selModSubmodPagAct?> url="<?=$modSubmodPagAct['url']?>">
+                                                        </span>
+                                                        <input type="text" class="form-control" placeholder="<?=$modSubmodPagAct['url']?>" value="<?=$modSubmodPagAct['nome']?>" tipo="acao" id="<?=$keyModSubmodPagAct?>" campo="nome_action" disabled> 
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <?php
+                                            endforeach;
+                                            ?>
+                                        </ul>
+                                        <?php
+                                        endif;
+                                        ?>
+
+
+                                    </li>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </ul>
+                                <?php
+                                endif;
+                                ?>
+                            </li>
+                            <?php
+                            endforeach;
+                            ?>
+                        </ul>
+                        <?php
+                        endif;
+                        ?>
+                    </li>
+                <?php
+                endforeach;
+                ?>
+
+                </ul>
+            <?php
+            endif;
+            ?>
+            </div>
+            <input type="hidden" name="id_grupo" value="<?=$grupoUsuario['id_grupo_permissao']?>">
+            <input type="submit" name="btn_salvar" value="Salvar" class="btn btn-default text-right" style="float:right"/>
+        </form>
+    </div>
+</div>
+<style>
+.popover-content {
+  padding: 0px 0px;
+}
+</style>
+<script type="text/javascript" src="<?=URL?>js/jquery-tree/js/jquery.tree.js"></script>
+<link rel="stylesheet" type="text/css" href="<?=URL?>js/jquery-tree/css/jquery.tree.css"/>
+<script>
+$(function() {   
+
+
+    $('input[name=btn_salvar]').click(function(e) { 
+
+        var modulos = Object();
+
+        //pegando os modulos
+        $('.tree>ul>li').each(function(){
+            if($('input[type=checkbox]:checked',this).is(':checked'))
+            {
+                
+
+
+
+                var auxMod = Object();
+                var auxPag = Object();
+                //pegando os submodulos
+                $('>ul>li',this).each(function(){
+                    if($('input[type=checkbox]:checked',this).is(':checked') && $('input[type=checkbox]:checked',this).attr('tipo') == 'submodulo')
+                    {
+                        var aux2 = Object();
+                        //pegando as paginas
+                        $('>ul>li',this).each(function(){
+                            if($('input[type=checkbox]:checked',this).is(':checked'))
+                            {
+                                var aux3 = Object();
+                                //pegando as actions
+                                $('>ul>li',this).each(function(){
+                                    if($('input[type=checkbox]:checked',this).is(':checked')){
+                                        aux3[$('input[type=checkbox]:checked',this).attr('url')] = ''
+                                    }
+                                });
+                                aux2[$('input[type=checkbox]:checked',this).attr('url')] = aux3;
+                            }
+                        });
+                        auxMod[$('input[type=checkbox]:checked',this).attr('url')] = aux2;
+                    }else
+                    {
+                        var auxAction = Object();
+                        //pegando as actions
+                        $('>ul>li',this).each(function(){
+                            if($('input[type=checkbox]:checked',this).is(':checked')){
+                                auxAction[$('input[type=checkbox]:checked',this).attr('url')] = ''
+                            }
+                        });
+                        auxPag[$('input[type=checkbox]:checked',this).attr('url')] = auxAction
+                    }
+                });
+
+                modulos[$('input[type=checkbox]:checked',this).attr('url')] = {
+                                                                                'submodulos' : auxMod,
+                                                                                'paginas' : auxPag
+                                                                                };
+            }
+        });
+
+        //console.log(modulos);
+
+        modulos = JSON.stringify(modulos);
+        /*
+        $.post("<?=URL?>configuracoes/usuarios/grupo_usuarios/inserir",{
+                'nome' : $('input[name=nome]').val(),
+                'permissoes' : modulos
+        },
+        function(data){
+            console.log(data)
+        });*/
+
+        var sendInfo = {
+            'permissoes' : modulos,
+            'nome' : $('input[name=nome]').val(),
+            'id' : $('input[name=id_grupo]').val()
+        }
+        
+        $('#form_grupo_usuario').submitForm({
+            'sendInfo': sendInfo,
+            'reload' : true
+            //'redirect' : '<?=URL?>configuracoes/usuarios/grupo_usuarios' 
+        });
+        //$('#form_grupo_usuario').submit();
+        
+        //return false;
+    });
+
+
+
+
+
+    $('.tree').tree({
+        collapseUiIcon: 'ui-icon-plus',
+        expandUiIcon: 'ui-icon-minus',
+        leafUiIcon: 'ui-icon-bullet'
+    });
+
+    $('.checkAll').click(function(){
+        $('.tree').tree('checkAll');
+        return false;
+    });
+
+    $('.uncheckAll').click(function(){
+        $('.tree').tree('uncheckAll');
+        return false;
+    });
+
+ 
+
+});
+</script>

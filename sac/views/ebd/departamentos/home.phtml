@@ -1,0 +1,123 @@
+<?php
+/**
+*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+*/
+$template = new template();
+?>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    
+    <?=$template->page_header('Escola Bíblica Dominical <small>Departamentos da EBD</small>');?>
+    <?php
+        //page-header
+        $btnAdiconar = $template->btnAdicionarRegistro(URL.'ebd/departamentos/cadastrar','<span class="glyphicon glyphicon-user"></span> Adicionar departamentos');
+    
+        echo $template->actions_buttons($btnAdiconar);
+    ?>
+    <div class="middle-content">
+        <?php
+        $thead = '  <tr>   
+                        <th width="160">Nome</th>
+                        <th width="100">Coordenador</th>
+                        <th width="100">Status (Ativo/Inativo)</th>
+                        <th width="100">Ações</th>
+                    </tr>';
+        $tfoot = '  <tr>
+                        <th>Nome</th>
+                        <th>Coordenador</th>
+                        <th>Status (Ativo/Inativo)</th>
+                        <th>Ações</th>
+                    </tr>';	 
+        if($departamentos != false):
+            $tbody = '';
+            foreach ($departamentos as $depart):
+            	$status = ($depart['status_departamento_ebd'] == 'Ativo') ? true : false;
+                $tbody .='  <tr id="'.$depart['id_departamento_ebd'].'">
+                                <td>'.$depart['nome_departamento_ebd'].'</td>
+                                <td>'.$depart['nome_coordenador'].' '.$depart['sobrenome_coordenador'].'</td>
+                                <td>
+                                    '.$template->checkboxStatus($depart['id_departamento_ebd'],'status',$status).'
+                                </td>
+                                <td>
+                                    '.$template->btnEditarRegistro(URL.'ebd/departamentos/editar/'.$depart['id_departamento_ebd']).$template->btnExcluirRegistro('javascript:void(0)',$depart['id_departamento_ebd']).
+                                '</td>
+                            </tr>';
+                
+
+            endforeach;
+            echo $template->tabela($thead, $tfoot, $tbody);
+        else:
+            echo '<h2>Não há registros cadastrados</h2>';
+        endif;
+        ?>
+    </div>
+
+</div>
+<script>
+$(document).ready(function() {
+    var table = $('.dataTable').DataTable({
+    	order: [1,'asc']
+    });
+    table.$('.btn_excluir').on('click',function(){
+        var id = $(this).attr('id');
+        var status = 'Excluído';
+
+        $("#dialogResult").html('Deseja mesmo excluir?');
+		$("#dialogResult").dialog({
+			autoOpen: true,
+			buttons: [
+				{
+					text: "Ok",
+					click: function() {
+						$( this ).dialog( "close" );
+
+				    	$.post(url+'ebd/departamentos/excluir',{id:id,status:status},function(data){
+							if(data == true){
+								$('tr#'+id).hide();
+
+                                $("#dialogResult").html('Registro enviado para a lixeira');
+                                $("#dialogResult").dialog({
+                                    autoOpen: true,
+                                    buttons: [
+                                        {
+                                            text: "Ok",
+                                            click: function() {
+                                                $( this ).dialog( "close" );
+                                            }
+                                        }
+                                    ]
+                                });
+
+
+                            }
+						});
+					}
+				},
+				{
+					text: "Cancelar",
+					click: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			]
+		});
+
+
+
+		
+        
+    });
+
+    table.$('input[name=status]').on('change',function(){
+    	var id = $(this).attr('id')
+    	var status = 'Inativo';
+		if($(this).is(':checked'))
+			status = 'Ativo';
+
+		$.post(url+'ebd/departamentos/atualizarStatus',{id:id,status:status},function(data){
+            console.log(data)
+		});
+    });
+
+
+});
+</script>

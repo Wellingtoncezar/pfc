@@ -1,0 +1,169 @@
+<?php
+/**
+*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+*/
+$template = new template();
+?>
+<link href="<?=URL?>js/croper/cropper.min.css" rel="stylesheet">
+<link href="<?=URL?>js/croper/main.css" rel="stylesheet">
+<script src="<?=URL?>js/croper/cropper.min.js"></script>
+<script src="<?=URL?>js/uploadForm.js"></script>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    
+    <?=$template->page_header('Foto - <small>'.$membro['nome_membro'].'</small>');?>
+    <?php
+        //page-header
+        $btnVoltar = $template->btnVoltar(URL.'rol-de-membros/home/');
+        echo $template->actions_buttons($btnVoltar);
+    ?>
+    <div class="middle-content">
+
+        <!-- Content -->
+        <form action="<?=URL?>rol-de-membros/home/cropAvatar" method="post" enctype="multipart/form-data">
+            <label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file">
+                <input class="sr-only" id="inputImage" name="file" type="file" accept="image/*">
+                <span class="docs-tooltip" data-toggle="tooltip" title="Import image with Blob URLs">
+                    <span class="glyphicon glyphicon-upload"></span>
+                </span>
+                <div class="img-preview preview-lg">
+                    <img src="">
+                </div>
+            </label>
+
+
+            
+
+
+
+            <button class="btn btn-success" type="submit" title="Enviar">
+                <span class="docs-tooltip" data-toggle="tooltip" title="Enviar">
+                    <span class="glyphicon glyphicon-ok"></span>
+                </span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('form').uploadImage({
+            'width': 100,
+            'height': 100
+        });
+    })
+</script>
+
+
+<?php
+
+$texto = '<div class="box_panel_cropper">
+                <div class="panel panel-default panel_cropper">
+                    <div class="panel-heading">
+                        <h4 class="modal-title" id="avatar-modal-label">Editar imagem</h4>
+                        <button class="close cancelCrop" data-dismiss="modal" type="button">×</button>
+                    </div>
+                    <div class="container panel-body">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <!-- <h3 class="page-header">Demo:</h3> -->
+                                <div class="img-container">
+                                    <img src="../assets/img/picture.jpg" alt="Picture">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- <h3 class="page-header">Preview:</h3> -->
+                                <div class="docs-preview clearfix">
+                                    <div class="img-preview preview-lg"></div>
+                                    <div class="img-preview preview-md"></div>
+                                    <div class="img-preview preview-sm"></div>
+                                    <div class="img-preview preview-xs"></div>
+                                </div>
+
+                                <!-- <h3 class="page-header">Data:</h3> -->
+                                <div class="docs-data">
+                                    <div class="input-group">
+                                        <input class="form-control" id="dataX" type="text" placeholder="x" name="x1" style="display:none">
+                                    </div>    
+                                    <div class="input-group">
+                                        <input class="form-control" id="dataY" type="text" placeholder="y" name="y1" style="display:none">
+                                    </div>
+                                    <div class="input-group">
+                                        <input class="form-control" id="dataWidth" type="text" placeholder="width" name="w" style="display:none">
+                                    </div>
+                                    <div class="input-group">
+                                        <input class="form-control" id="dataHeight" type="text" placeholder="height" name="h" style="display:none">
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-9 docs-buttons">
+                                <!-- <h3 class="page-header">Toolbar:</h3> -->
+                                <div class="btn-group">
+                                    <button class="btn btn-primary" data-method="setDragMode" data-option="move" type="button" title="Move">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="Mover">
+                                            <span class="glyphicon glyphicon-move"></span>
+                                        </span>
+                                    </button>
+                              
+                                    <button class="btn btn-primary" data-method="zoom" data-option="0.1" type="button" title="Zoom In">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="zoom in">
+                                            <span class="glyphicon glyphicon-zoom-in"></span>
+                                        </span>
+                                    </button>
+                                    <button class="btn btn-primary" data-method="zoom" data-option="-0.1" type="button" title="Zoom Out">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="zoom out">
+                                            <span class="glyphicon glyphicon-zoom-out"></span>
+                                        </span>
+                                    </button>
+                                </div>
+
+                                <!-- Show the cropped image in modal -->
+                                <div class="modal fade docs-cropped" id="getCroppedCanvasModal" aria-hidden="true" aria-labelledby="getCroppedCanvasTitle" role="dialog" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button class="close" data-dismiss="modal" type="button" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="getCroppedCanvasTitle">Cropped</h4>
+                                            </div>
+                                            <div class="modal-body"></div>
+                                            <!-- 
+                                            <div class="modal-footer">
+                                                <button class="btn btn-primary" data-dismiss="modal" type="button">Close</button>
+                                            </div> 
+                                            -->
+                                        </div>
+                                    </div>
+                                </div><!-- /.modal -->
+                                <!--
+                                <button class="btn btn-primary" data-method="getCropBoxData" data-option="" data-target="#putData" type="button">
+                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;getCropBoxData&quot;)">
+                                        Get Crop Box Data
+                                    </span>
+                                </button>
+                                <button class="btn btn-primary" data-method="setCropBoxData" data-target="#putData" type="button">
+                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;setCropBoxData&quot;, data)">
+                                        Set Crop Box Data
+                                    </span>
+                                </button>
+                                -->
+
+                                <button class="btn btn-success saveCrop"  type="button">
+                                    <span class="docs-tooltip" data-toggle="tooltip" title="Salvar">
+                                        Salvar
+                                    </span>
+                                </button>
+                                <input class="form-control" id="putData" type="hidden" placeholder="Get data to here or set data with this value" name="putData">
+                                
+                            </div><!-- /.docs-buttons -->
+
+                        </div>
+                    </div>
+
+                    <!-- Alert -->
+                    <div class="docs-alert"><span class="warning message"></span></div>
+                </div>
+            </div>';
+//echo htmlspecialchars(str_replace('/n','',$texto));

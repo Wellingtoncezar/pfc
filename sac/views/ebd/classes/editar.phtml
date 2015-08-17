@@ -1,0 +1,142 @@
+<?php
+/**
+*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+*/
+$template = new template();
+?>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="rol_membros">
+    <?=$template->page_header('Escola Bíblica Dominical <small>Editar classe: '.$classe['nome_classe_ebd'].'</small>');?>
+    <?php
+        //page-header
+        $btnVoltar = $template->btnVoltar(URL.'ebd/classes/home/');
+        echo $template->actions_buttons($btnVoltar);
+    ?>
+    <div class="panel generalErrors panel-danger" style="text-align:left; display:none;  background-color: #f2dede;">
+        <h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4>
+        <div class="alert alert-danger" role="alert">
+
+        </div>
+    </div>
+
+    <form id="form_cadastro_classes" action="<?=URL?>ebd/classes/home/atualizar" method="POST">
+        <!--DADOS FAMILIARES-->
+        <div class="classes-ebd">
+            <header class="box_header">
+                <h2>Edição da classe da EBD</h2>
+            </header>
+
+            <div class="content">
+                <div class="form-group input-group">
+                    <span class="input-group-addon" id="basic-addon1">Nome da classe: </span>
+                    <input type="text" class="form-control" placeholder="Nome da classe" name="nome_classe" value="<?=$classe['nome_classe_ebd']?>">
+                </div>
+
+                <div class="form-group input-group">
+                    <span class="input-group-addon">Igreja: </span>
+                    <select name="igreja" id="igreja" class="form-control">
+                        <option selected="selected" disabled="disabled" value="">Igreja:</option>
+                        <?php if($igreja != false):?>
+                        <?php foreach ($igreja as $igj):?>
+                        <option value="<?=$igj['id_igreja']?>" <?=($classe['id_igreja'] == $igj['id_igreja']) ? 'selected="selected"' : ''?>><?=$igj['nome_igreja']?></option>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
+                </div>
+
+
+
+                <div class="form-group input-group">
+                    <span class="input-group-addon">Departamento: </span>
+                    <select name="departamento" id="departamento" class="form-control">
+                        <option selected="selected" disabled="disabled" value="">Departamento:</option>
+                        <?php if($departamentos != false):?>
+                        <?php foreach ($departamentos as $depart):?>
+                        <option value="<?=$depart['id_departamento_ebd']?>" <?=($classe['id_departamento_ebd'] == $depart['id_departamento_ebd']) ? 'selected="selected"' : ''?>><?=$depart['nome_departamento_ebd']?></option>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
+                </div>
+                <div class="form-group input-group">
+                    <span class="input-group-addon" id="basic-addon1">Faixa etária: </span>
+                    <input type="number" class="form-control" placeholder="Mínimo" name="faixa_etaria_min" min="0" max="130" value="<?=$classe['faixa_etaria_min']?>">
+                    <input type="number" class="form-control" placeholder="Máximo" name="faixa_etaria_max" min="<?=$classe['faixa_etaria_min']?>" max="130" value="<?=$classe['faixa_etaria_max']?>">
+                </div>
+
+                <div class="form-group input-group">
+                    <span class="input-group-addon" id="basic-addon1">Descrição geral: </span>
+                    <textarea name="descricao_geral" class="form-control" id="txtTextArea"><?=$classe['descricao_geral_curriculo']?></textarea>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <input type="hidden" name="id_classe" value="<?=$classe['id_classe_ebd']?>">
+                <button type="submit" class="btn btn-success btn_salvar pull-right"><span class="glyphicon glyphicon-ok"></span> Atualizar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="<?=URL?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?=URL?>js/jquery.maskedinput.min.js"></script>
+
+
+
+<script type="text/javascript">
+    $(function(){
+        $('input[name=faixa_etaria_min]').wvmask('numero');
+        $('input[name=faixa_etaria_max]').wvmask('numero');
+
+        $('input[name=faixa_etaria_min]').change(function(event) {
+            $('input[name=faixa_etaria_max]').attr('min',$(this).val())
+        });
+
+
+        $('#form_cadastro_classes').submit(function(){
+            $('#form_cadastro_classes').uploadForm({
+                reload:true
+            });
+            return false;
+        });
+
+        /************************************/
+        //campos select
+        $.widget( "custom.iconselectmenu", $.ui.selectmenu, {
+          _renderItem: function( ul, item ) {
+            var li = $( "<li>", { text: item.label } );
+     
+            if ( item.disabled ) {
+              li.addClass( "ui-state-disabled" );
+            }
+     
+            $( "<span>", {
+              style: item.element.attr( "data-style" ),
+              "class": "ui-icon " + item.element.attr( "data-class" )
+            })
+              .appendTo( li );
+            return li.appendTo( ul );
+          }
+        });
+
+        $( "#coordenador" )
+        .iconselectmenu()
+        .iconselectmenu( "menuWidget")
+        .addClass( "ui-menu-icons avatar" );
+        /************************************/
+
+        $("textarea").bind("input", function(e) {
+            while( $(this).outerHeight() < this.scrollHeight +
+                                           parseFloat($(this).css("borderTopWidth")) +
+                                           parseFloat($(this).css("borderBottomWidth"))
+                   && $(this).height() < 500 // Altura máxima
+            ) {
+                $(this).height($(this).height()+1);
+            };
+        });
+
+    });
+
+</script>
+

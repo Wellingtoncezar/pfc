@@ -1,0 +1,119 @@
+<?php 
+$template = new template();
+
+?>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <?=$template->page_header('Adicionar novo usuário');?>
+    <?php
+    $btnVoltar = $template->btnVoltar(URL.'configuracoes/usuarios/');
+    echo $template->actions_buttons($btnVoltar);
+    ?>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">
+
+    <?php
+    if($gruposUsuarios != false):
+    ?>
+        <form action="<?=URL?>configuracoes/usuarios/usuarios/inserir" id="form_usuarios" method="POST">
+            <div class="form-group has-feedback">
+                <label class="control-label" for="nome">Nome</label>
+                <input type="text" class="form-control" id="nome" placeholder="Nome do usuário" name="nome" >
+            </div>
+
+            <div class="form-group has-feedback">
+                <label for="sobrenome">Sobrenome</label>
+                <input type="text" class="form-control" id="sobrenome" placeholder="Sobrenome do usuário" name="sobrenome">
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <div class="input-group">
+                    <span class="input-group-addon">@</span>
+                    <input type="email" class="form-control" id="email" placeholder="E-mail do usuário" name="email" >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="login">Login</label>
+                <div class="input-group">
+                    <span class="glyphicon glyphicon-user input-group-addon"></span>
+                    <input type="text" class="form-control" id="login" placeholder="Login do usuário" name="login" maxlength="30">
+                </div>
+                <a href="javascript:void(0)" class="btn btn-primary btn-xs" id="verifLogin">Verificar disponibilidade</a>
+                <div class="resp_disponivel"></div>
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <div class="input-group">
+                    <span class="glyphicon glyphicon-lock input-group-addon"></span>
+                    <input type="password" class="form-control" id="senha" placeholder="*****" name="senha" maxlength="30">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="senha">Confirmar Senha</label>
+                <div class="input-group">
+                    <span class="glyphicon glyphicon-lock input-group-addon"></span>
+                    <input type="password" class="form-control" id="confirmsenha" placeholder="*****" name="confirmsenha" maxlength="30">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Status</label>
+                <select class="form-control" name="status">
+                    <option value="Ativo" selected>Ativo</option>
+                    <option value="Inativo">Inativo</option>
+                </select>
+            </div>
+            
+            <div class="form-group has-feedback">
+                <label for="senha">Grupo de permissão</label>
+                <select class="form-control" name="permissao">
+                <?php foreach ($gruposUsuarios as $grupo):?>
+                    <option value="<?=$grupo['id_grupo_permissao']?>"><?=$grupo['nome_permissao']?></option>
+                <?php endforeach;?>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-default" name="btn_salvar">Salvar</button>
+        </form>
+    <?php
+    else:
+    ?>
+        <h2>Cadastre primeiro o grupo de permissão de acesso por usuários. <a href="<?=URL?>configuracoes/usuarios/grupo_usuarios/cadastrar">Clique aqui para cadastrar</a></h2>
+    <?php
+    endif;
+    ?>
+    </div>
+</div>
+<style>
+.popover-content {
+  padding: 0px 0px;
+}
+</style>
+<script>
+$(function() {    
+    $('#form_usuarios').submitForm({
+    	'redirect' : '<?=URL?>configuracoes/usuarios/'
+    });
+    $('#verifLogin').on('click', function() {
+        var login = $('input[name=login]').val();
+        $.post('<?=URL?>configuracoes/usuarios/usuarios/loginDisponivel',{login:login},function(data){
+            console.log(data)
+            $('#disponivel,#indisponivel').remove()
+            if(data){
+                $('.resp_disponivel').html('login disponível');
+                $('input[name=login]').after('<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" id="disponivel"></span>');
+            }else
+            {
+                $('.resp_disponivel').html('login indisponível');
+                $('input[name=login]').after('<span class="glyphicon glyphicon-warning-sign form-control-feedback" aria-hidden="true" id="indisponivel"></span>');
+            }
+        })
+      
+        /* Act on the event */
+    });
+});
+
+
+
+
+</script>
