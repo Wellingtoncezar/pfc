@@ -23,6 +23,8 @@ class home extends Controller{
 	*/
 	public function index()
 	{
+		//echo '<h1>pagina inicial</h1>';
+		
 		$this->saveAction();
 		$data = array(
 			'titulo' => 'Gerenciador Eclesiastico',
@@ -40,6 +42,7 @@ class home extends Controller{
 		$this->loadView('includes/baseTop',$data);
 		$this->loadView('home',$data);
 		$this->loadView('includes/baseBottom',$data);
+		
 	}
 }
 
