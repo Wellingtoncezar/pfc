@@ -57,6 +57,9 @@ $script_start = (float) $sec + (float) $usec;
         </header>
 
         <div class="wrap-content">
+            
+        </div>
+        <div class="menu-container animated fadeOutDown">
             <nav class="navbar-menu">
                 <ul id="freewall" class="free-wall">
                     <li ><a href="" class="brick box1"><figure><img src="img/imagens/1439164733_Home.png"></figure>Home</a></li>
@@ -72,124 +75,22 @@ $script_start = (float) $sec + (float) $usec;
                 </ul>   
             </nav>
         </div>
-
             
-            <div id="nav-icon3">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
+        <div id="nav-icon3">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
             
         
     </div><!--wrap-->
 </body>
-<style type="text/css">
-            html {
-                height: 100%;
-            }
 
-            body {
-                height: 100%;
-            }
-            
-            .free-wall {
-                height: 102%;
-                margin: 15px;
-            }
-
-            @keyframes start {
-                from {
-                    transform: scale(0);
-                }
-                to {
-                    transform: scale(1);
-                }
-            }
-
-            
-            @-webkit-keyframes start {
-                from {
-                    -webkit-transform: scale(0);
-                }
-                to {
-                    -webkit-transform: scale(1);
-                }
-            }
-
-            .free-wall .brick[data-state="init"] {
-                display: none;
-            }
-
-            .free-wall .brick[data-state="start"]  {
-                display: block;
-                animation: start 0.5s;
-                -webkit-animation: start 0.5s;
-            }
-
-            .free-wall .brick[data-state="move"]  {
-                transition: top 0.5s, left 0.5s, width 0.5s, height 0.5s;
-                -webkit-transition: top 0.5s, left 0.5s, width 0.5s, height 0.5s;
-            }
-            
-        </style>
 <script type="text/javascript">
-$(document).ready(function(){
-    $('#nav-icon3').click(function(){
-        $(this).toggleClass('open');
-    });
-});
-            /*
-            var temp = "<div class='brick' style='width:{width}px; height: {height}px; background-color: {color}'><div class='cover'>Demo fit zone</div></div>";
-            var colour = [
-                "rgb(142, 68, 173)",
-                "rgb(243, 156, 18)",
-                "rgb(211, 84, 0)",
-                "rgb(0, 106, 63)",
-                "rgb(41, 128, 185)",
-                "rgb(192, 57, 43)",
-                "rgb(135, 0, 0)",
-                "rgb(39, 174, 96)"
-            ];
-
-            var w = 1, h = 1, html = '', color = '', limitItem = 28;
-            for (var i = 0; i < limitItem; ++i) {
-                h = 1 + 3 * Math.random() << 0;
-                w = 1 + 3 * Math.random() << 0;
-                color = colour[colour.length * Math.random() << 0];
-                html += temp.replace(/\{height\}/g, h*150).replace(/\{width\}/g, w*150).replace("{color}", color);
-            }
-            $("#freewall").html(html);
-            */
-
-            // $(function() {
-            //     var wall = new freewall("#freewall");
-            //     wall.reset({
-            //         selector: '.brick',
-            //         animate: false,
-            //           delay: 30,
-            //         onResize: function() {
-            //             wall.refresh($(window).width() - 30, $(window).height() - 30);
-            //         }
-            //     });
-            //     // caculator width and height for IE7;
-            //     wall.fitZone($(window).width() - 30 , $(window).height() - 30);
-            // });
 
             $(function() {
-                var wall = new freewall("#freewall");
-            wall.reset({
-                selector: '.brick',
-                animate: false,
-                cellW: 150,
-                cellH: 150,
-                delay: 50,
-                onResize: function() {
-                    wall.fitWidth();
-                    //wall.refresh();
-                }
-            });
-            wall.fitWidth();
+                
             });
         </script>
 
