@@ -3,6 +3,8 @@
 // Iniciamos o "contador"
 list($usec, $sec) = explode(' ', microtime());
 $script_start = (float) $sec + (float) $usec;
+
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br" ng-app>
