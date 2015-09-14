@@ -48,16 +48,37 @@ $script_start = (float) $sec + (float) $usec;
                 <img src="img/logo/logo.png">
             </figure>
 
-            <div class="user">
-                <figure>
-                    <img src="img/imagens/1439113442_Client_Male_Light.png">
-                </figure>
-                <p class="username">Nome do usuário</p>
+            <div class="user dropdown">
+                <a href="" class="btn btn-default dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+                    <figure>
+                        <img src="img/imagens/1439113442_Client_Male_Light.png">
+                    </figure>
+                    <p class="username">Nome do usuário</p>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li><a href="#">Separated link</a></li>
+                </ul>
             </div>
         </header>
 
         <div class="wrap-content">
-            
+            <ol class="breadcrumb">
+              <li><a href="#">Home</a></li>
+              <li><a href="#">Library</a></li>
+              <li class="active">Data</li>
+            </ol>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="page-header">
+                  <h1>Example page header <small>Subtext for header</small></h1>
+                </div>
+                <div>
+                    conteudo
+                </div>
+
+            </div>
         </div>
         <div class="menu-container animated fadeOutDown">
             <nav class="navbar-menu">
@@ -82,18 +103,9 @@ $script_start = (float) $sec + (float) $usec;
             <span></span>
             <span></span>
         </div>
-            
-        
+
     </div><!--wrap-->
 </body>
-
-<script type="text/javascript">
-
-            $(function() {
-                
-            });
-        </script>
-
 
 </html>
 

@@ -1,13 +1,17 @@
 <?php
 /**
-*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+*@author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
 */
+define('BASEPATH',dirname(__FILE__).'/');
+
+require_once(BASEPATH.'system'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+
 if(!function_exists('autoload'))
 {
     /*** nullify any existing autoloads ***/
     spl_autoload_register(null, false);
     /*** specify extensions that may be loaded ***/
-    spl_autoload_extensions('.php, .class.php');
+    spl_autoload_extensions('.php, .class.php, .library.php, .model.php, .controller.php');
     /*** register the loader functions ***/ 
             
     function includeFile($file)
@@ -15,49 +19,58 @@ if(!function_exists('autoload'))
         require_once(str_replace('\\', '/', $file));
     }
 
-    function autoload($className)
+    function _autoload($className)
     {
-        //library system
-        $filename   = $className . '.class.php';
-        $file       = BASEPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename;
-        
-        //controller
-        //$filename   = $className . '.controller.php';
-       // $file1      = BASEPATH.DIRECTORY_SEPARATOR.CONTROLLERS.DIRECTORY_SEPARATOR.$filename;
-        
-        //model
+        //library app
+        $filename   = $className . '.library.php';
+        $file       = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename;
+
+        //model app
         $filename   = $className . '.model.php';
-        $file2      = BASEPATH.DIRECTORY_SEPARATOR.MODELS.DIRECTORY_SEPARATOR.$filename;
+        $file1      = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.MODELS.DIRECTORY_SEPARATOR.$filename;
+
+        //controller app
+        $filename   = $className . '.controller.php';
+        $file2      = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.CONTROLLERS.DIRECTORY_SEPARATOR.$filename;
 
         //library system
-        $filename   = $className . '.class.php';
-        $file3      = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename;
+        $filename   = $className . '.library.php';
+        $file3       = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename;
+        
+        //core system
+        $filename   = $className . '.php';
+        $file4       = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$filename;
 
+        
         if (file_exists($file)) 
             includeFile($file);
         else
-       // if(file_exists($file1))
-            //includeFile($file1);
-        //else
+        if(file_exists($file1))
+            includeFile($file1);
+        else
         if(file_exists($file2))
             includeFile($file2);
         else
         if(file_exists($file3))
             includeFile($file3);
+        else
+        if(file_exists($file4))
+            includeFile($file4);
     }
 
-    spl_autoload_register('autoload');
+    spl_autoload_register('_autoload');
 
 }
 
+if(!function_exists('get_instance'))
+{
+    function &get_instance()
+    {
+        return Controller::get_instance();
+    }
+}
 
-//define('DS',DIRECTORY_SEPARATOR);  
-//define('ROOT',dirname(__FILE__));  
-define('BASEPATH',dirname(__FILE__).'/');
-require_once(BASEPATH.'system'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
-require_once(BASEPATH.'system'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'Load.class.php');
-require_once(BASEPATH.'system'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'Controller.class.php');
-//require_once(BASEPATH.DIRECTORY_SEPARATOR.'system'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'Model.class.php');
+
 function checkConfig()
 {
 	if(	!defined('HOSTNAME') 

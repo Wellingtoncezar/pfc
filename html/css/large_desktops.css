@@ -3,9 +3,24 @@
 		top: 0;
 	}
 
+	/***************************************/
+	/** BEGIN HEADER **/
+	/***************************************/
+	.header{
+	    width: 100%;
+	    display: table;
+	    border-bottom: 0px #FFF solid;
+	    box-shadow: 0 0 6px 0px #333;
+	    background: url('../img/imagens/fundo_2.jpg');
+	    background-size: 100%;
+	    height: 10vh;
+	    position: relative;
+	    z-index: 1;
+    }
+
 	.header .logo{
-		width: 150px;
-		float: left;
+	    width: 115px;
+	    float: left;
 	}
 
 	.header .logo img{
@@ -16,11 +31,12 @@
 	}
 
 	.header .user figure{
-		width: 65px;
-		border-radius: 100%;
-		overflow: hidden;
-		background-color: #FFF;
-		text-align: center;
+	    width: 47px;
+	    margin: 0px auto;
+	    border-radius: 100%;
+	    overflow: hidden;
+	    background-color: #FFF;
+	    text-align: center;
 	}
 	.header .user figure img{
 		width: 100%;
@@ -34,9 +50,35 @@
 	    font-size: 14px;
 	}
 
-	body{
-		background: url('../img/imagens/fundo_2.jpg') 100%;
+	.header .user .btn-default {
+	    color: #333;
+	    background-color: transparent;
+	    border: 0;
 	}
+	.header .user .btn-default:active,
+	.header .user .btn-default:focus,
+	.header .user .btn-default:hover{
+		background-color:#387AC8; 
+	}
+	
+	/***************************************/
+	/** END HEADER **/
+	/***************************************/
+	
+	.breadcrumb {
+	    padding: 8px 15px;
+	    margin-bottom: 0px;
+	    list-style: none;
+	    background-color: #f5f5f5;
+	    border-radius: 4px;
+	}
+	.page-header {
+	    padding-bottom: 0px;
+	    margin: 12px 0 0px;
+	    border-bottom: 1px solid #eee;
+	}
+
+
 	#container_login{
 		margin: 0;
 		overflow: auto;
@@ -145,12 +187,11 @@
 
 
 	.wrap-content{
-		position: absolute;
-		top: 20%;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		
+		position: relative;
+		width: 100%;
+		background-color: #FFF;
+		height: 90vh;
+		overflow: auto;
 	}
 
 	.navbar-menu{
@@ -302,6 +343,7 @@
 	    -o-transition: .5s ease-in-out;
 	    transition: .5s ease-in-out;
 	    cursor: pointer;
+	    z-index: 99999999999;
 	}
 
 	#nav-icon3 span {
@@ -368,7 +410,8 @@
 	    right: 0;
 	    bottom: 0;
 	    position: fixed;
-	    background-color: rgba(0, 0, 0, 0.62);
+	    background-color: rgba(0, 0, 0, 0.78) ;
+	    z-index: 99999;
 	}
 	.menu-container .navbar-menu{
 		position: absolute;

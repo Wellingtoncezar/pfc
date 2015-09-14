@@ -3,9 +3,6 @@ $(document).ready(function(){
         $(this).toggleClass('open');
 
         $('.menu-container').toggleClass('fadeInUp').toggleClass('fadeOutDown').toggle();
-
-        
-
         var wall = new freewall("#freewall");
         wall.reset({
             selector: '.brick',
