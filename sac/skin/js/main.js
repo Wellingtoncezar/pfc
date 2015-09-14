@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    var nanobar = new Nanobar();
+
     $('#nav-icon3').click(function(){
         $(this).toggleClass('open');
 
@@ -76,21 +78,27 @@ $(document).ready(function(){
         if(jQuery.inArray( module, openedModules ) ==-1)//se nao tiver
         {
             console.log('abrindo')
+            nanobar.go(10);
             $('#previousTab').load(contentUrl,function(data){
                 openedModules.push(module)
+                nanobar.go(50);
                 openTab(title, data);
                 var indexItem = jQuery.inArray( module, openedModules );
                 selectTab(indexItem);
                 console.log(openedModules)
+                nanobar.go(100);
             });
         }else
         {
             console.log('selecionando ')
+            nanobar.go(10);
             var indexItem = jQuery.inArray( module, openedModules );
             $('#previousTab').load(contentUrl,function(data){
+                nanobar.go(50);
                 loadContent(indexItem,data);
                 selectTab(indexItem);
                 console.log(openedModules)
+                nanobar.go(100);
             });
         }
         if($('#nav-icon3').hasClass('open'))
@@ -113,10 +121,12 @@ $(document).ready(function(){
     })
 
 
-
+/*
     $('#previousTab').load(url+'home/page',function(data){
         openTab('Home', data);
         selectTab(0);
 
     });
+    */
+    
 });
