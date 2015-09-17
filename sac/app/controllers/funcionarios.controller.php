@@ -24,9 +24,23 @@ class funcionarios extends Controller{
 			'titlePage' => 'Funcionários'
 		);
 		
-		//$this->load->view('include/header',$data);
+		$this->load->view('includes/header',$data);
 		$this->load->view('funcionarios/home',$data);
-		//$this->load->view('include/footer',$data);
+		$this->load->view('includes/footer',$data);
+	}
+
+	public function cadastro()
+	{
+		//$this->saveModules();
+		$this->saveAction();
+
+		$data = array(
+			'titlePage' => 'Cadastro'
+		);
+		
+		$this->load->view('includes/header',$data);
+		$this->load->view('funcionarios/cadastro',$data);
+		$this->load->view('includes/footer',$data);
 	}
 
 	

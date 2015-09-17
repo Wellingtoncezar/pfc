@@ -3,9 +3,7 @@
 *@author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class home extends Controller{
-	private $error = array();
-	private $countError = 0;
+class produtos extends Controller{
 	public function __construct(){
 		parent::__construct();
 	}
@@ -14,27 +12,24 @@ class home extends Controller{
 	/********************************************/
 	/****PÁGINAS****/
 	
-
 	/**
 	*Página index
 	*/
 	public function index()
 	{
-		//$this->saveModules();
-		//$this->saveAction();
+		$this->saveModules();
+		$this->saveAction();
 
 		$data = array(
-			'titlePage' => ''
+			'titlePage' => 'Produtos'
 		);
 		
-		$this->load->view('includes/header',$data);
-		$this->load->view('home',$data);
-		$this->load->view('includes/footer',$data);
+		$this->load->view('include/header',$data);
+		$this->load->view('produtos/home',$data);
+		$this->load->view('include/footer',$data);
 	}
-	public function page()
-	{
-		$this->load->view('home');
-	}
+
+	
 }
 
 
