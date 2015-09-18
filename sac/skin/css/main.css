@@ -15,7 +15,6 @@ body{
   background: url('../img/imagens/fundo_2.jpg');
   background-size: 100%;
   background-attachment: fixed;
-  overflow: hidden!important;
 }
 *{
 	/*font-family: 'calibri';*/
@@ -24,8 +23,7 @@ a{
 	text-decoration: none;
 }
 #wrap{
-	display: table;
-	  width: 100%;
+	width: 100%;
 }
 
 
