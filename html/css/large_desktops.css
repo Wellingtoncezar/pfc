@@ -190,7 +190,7 @@
 		position: relative;
 		width: 100%;
 		background-color: #FFF;
-		height: 90vh;
+		/*height: 90vh;*/
 		overflow: auto;
 	}
 
