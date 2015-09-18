@@ -197,7 +197,6 @@
 		position: relative;
 		width: 100%;
 		background-color: #FFF;
-		height: 90vh;
 
 	}
 
@@ -438,7 +437,6 @@
 	.k-tabstrip .k-content {
 	    background-color: #fff;
 	    color: #2e2e2e;
-	    height: 78vh;
 	    background-color: transparent;
 	    border: 0!important;
 	}
