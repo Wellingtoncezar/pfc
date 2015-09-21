@@ -4,10 +4,11 @@
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class home extends Controller{
-	private $error = array();
-	private $countError = 0;
 	public function __construct(){
 		parent::__construct();
+		//$this->load->dao('loginDao');
+		//$this->loginDao->statusLogin();
+		
 	}
 
 

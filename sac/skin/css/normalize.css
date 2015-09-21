@@ -1,162 +1,162 @@
-/*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+/ *! normalize.css v3.0.2 | MIT License | git.io/normalize * /
 
-/**
- * 1. Set default font family to sans-serif.
- * 2. Prevent iOS text size adjust after orientation change, without disabling
- *    user zoom.
- */
+/ **
+ * Set 1. Família de fontes padrão para sans-serif.
+ * 2. Impedir iOS ajustar o tamanho do texto, após a mudança de orientação, sem desabilitar
+ * Zoom usuário.
+ * /
 
 html {
-  font-family: sans-serif; /* 1 */
-  -ms-text-size-adjust: 100%; /* 2 */
-  -webkit-text-size-adjust: 100%; /* 2 */
+  font-family: sans-serif; / * 1 * /
+  -ms--size-adjust texto: 100%; / * 2 * /
+  -size -webkit-text-adjust: 100%; / * 2 * /
 }
 
-/**
- * Remove default margin.
- */
+/ **
+ * Remover margem padrão.
+ * /
 
 body {
   margin: 0;
 }
 
-/* HTML5 display definitions
-   ========================================================================== */
+/ * Definições de exibição HTML5
+   ================================================== ======================== * /
 
-/**
- * Correct `block` display not defined for any HTML5 element in IE 8/9.
- * Correct `block` display not defined for `details` or `summary` in IE 10/11
- * and Firefox.
- * Correct `block` display not defined for `main` in IE 11.
- */
+/ **
+ * Correct `exibição block` não definido para qualquer elemento HTML5 no IE 8/9.
+ * Correct `block` exibição não definido para` `summary` details` ou no IE 10/11
+ * E Firefox.
+ * Correct `exibição block` não definido para` main` no IE 11.
+ * /
 
-article,
-aside,
-details,
+artigo,
+lado,
+detalhes,
 figcaption,
-figure,
-footer,
-header,
+figura,
+rodapé,
+cabeçalho,
 hgroup,
-main,
-menu,
+principal,
+menu
 nav,
-section,
-summary {
+seção,
+Resumo {
   display: block;
 }
 
-/**
- * 1. Correct `inline-block` display not defined in IE 8/9.
- * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.
- */
+/ **
+ * O visor inline-block` 1. Corrija `não definido no IE 8/9.
+ * 2. Normalizar alinhamento vertical do `progress` no Chrome, Firefox e Opera.
+ * /
 
-audio,
+áudio,
 canvas,
-progress,
-video {
-  display: inline-block; /* 1 */
-  vertical-align: baseline; /* 2 */
+progresso,
+vídeo {
+  display: inline-block; / * 1 * /
+  vertical-align: baseline; / * 2 * /
 }
 
-/**
- * Prevent modern browsers from displaying `audio` without controls.
- * Remove excess height in iOS 5 devices.
- */
+/ **
+ * Evitar que os navegadores modernos de exibir `audio` sem controles.
+ * Retire o excesso de altura no iOS 5 dispositivos.
+ * /
 
-audio:not([controls]) {
+audio: não (controles []) {
   display: none;
   height: 0;
 }
 
-/**
- * Address `[hidden]` styling not present in IE 8/9/10.
- * Hide the `template` element in IE 8/9/11, Safari, and Firefox < 22.
- */
+/ **
+ * Endereço `[escondido]` styling não está presente no IE 8/9/10.
+ * Esconder o `template` elemento em 8/9/11 IE, Safari, Firefox e <22.
+ * /
 
-[hidden],
+[Escondido],
 template {
   display: none;
 }
 
-/* Links
-   ========================================================================== */
+/ * Links
+   ================================================== ======================== * /
 
-/**
- * Remove the gray background color from active links in IE 10.
- */
+/ **
+ * Retire a cor cinzenta do fundo de links ativos no IE 10.
+ * /
 
-a {
+uma {
   background-color: transparent;
 }
 
-/**
- * Improve readability when focused and also mouse hovered in all browsers.
- */
+/ **
+ * Melhorar a legibilidade quando focada e também do mouse pairavam em todos os navegadores.
+ * /
 
-a:active,
-a:hover {
-  outline: 0;
+a: active,
+a: hover {
+  esboço: 0;
 }
 
-/* Text-level semantics
-   ========================================================================== */
+/ * Semântica de nível Texto
+   ================================================== ======================== * /
 
-/**
- * Address styling not present in IE 8/9/10/11, Safari, and Chrome.
- */
+/ **
+ * Styling Endereço não está presente no IE 8/9/10/11, Safari e Chrome.
+ * /
 
-abbr[title] {
-  border-bottom: 1px dotted;
+abbr [título] {
+  border-bottom: 1px pontilhada;
 }
 
-/**
- * Address style set to `bolder` in Firefox 4+, Safari, and Chrome.
- */
+/ **
+ * Estilo Endereço ajustado para `bolder` no Firefox 4+, Safari e Chrome.
+ * /
 
 b,
 strong {
   font-weight: bold;
 }
 
-/**
- * Address styling not present in Safari and Chrome.
- */
+/ **
+ * Styling Endereço não apresentar no Safari e Chrome.
+ * /
 
 dfn {
   font-style: italic;
 }
 
-/**
- * Address variable `h1` font-size and margin within `section` and `article`
- * contexts in Firefox 4+, Safari, and Chrome.
- */
+/ **
+ * Morada `font-size e margem h1` variável dentro de` `section` e Article`
+ * Contextos no Firefox 4+, Safari e Chrome.
+ * /
 
 h1 {
   font-size: 2em;
   margin: 0.67em 0;
 }
 
-/**
- * Address styling not present in IE 8/9.
- */
+/ **
+ * Styling Endereço não apresentar no IE 8/9.
+ * /
 
-mark {
-  background: #ff0;
-  color: #000;
+marca {
+  background: # ff0;
+  color: # 000;
 }
 
-/**
- * Address inconsistent and variable font size in all browsers.
- */
+/ **
+ * Endereço inconsistente e tamanho da fonte variável em todos os navegadores.
+ * /
 
-small {
+pequeno {
   font-size: 80%;
 }
 
-/**
- * Prevent `sub` and `sup` affecting `line-height` in all browsers.
- */
+/ **
+ * Prevent `sub` e` `sup` afetando-Altura do linha em todos os navegadores.
+ * /
 
 sub,
 sup {
@@ -174,39 +174,39 @@ sub {
   bottom: -0.25em;
 }
 
-/* Embedded content
-   ========================================================================== */
+/ * Conteúdo incorporado
+   ================================================== ======================== * /
 
-/**
- * Remove border when inside `a` element in IE 8/9/10.
- */
+/ **
+ * Remove a borda quando dentro `a` elemento no IE 8/9/10.
+ * /
 
 img {
   border: 0;
 }
 
-/**
- * Correct overflow not hidden in IE 9/10/11.
- */
+/ **
+ * Estouro correto não escondida no IE 9/10/11.
+ * /
 
-svg:not(:root) {
+svg: não (: root) {
   overflow: hidden;
 }
 
-/* Grouping content
-   ========================================================================== */
+/ * O conteúdo do Agrupamento
+   ================================================== ======================== * /
 
-/**
- * Address margin not present in IE 8/9 and Safari.
- */
+/ **
+ * Margem Endereço não apresentar no IE 8/9 e Safari.
+ * /
 
-figure {
+a figura {
   margin: 1em 40px;
 }
 
-/**
- * Address differences between Firefox and other browsers.
- */
+/ **
+ * Diferenças de endereço entre Firefox e outros navegadores.
+ * /
 
 hr {
   -moz-box-sizing: content-box;
@@ -214,19 +214,19 @@ hr {
   height: 0;
 }
 
-/**
- * Contain overflow in all browsers.
- */
+/ **
+ * Conter estouro em todos os navegadores.
+ * /
 
 pre {
   overflow: auto;
 }
 
-/**
- * Address odd `em`-unit font size rendering in all browsers.
- */
+/ **
+ * Endereço estranho `em`-unit renderização tamanho da fonte em todos os navegadores.
+ * /
 
-code,
+código,
 kbd,
 pre,
 samp {
@@ -234,190 +234,190 @@ samp {
   font-size: 1em;
 }
 
-/* Forms
-   ========================================================================== */
+/ * Forms
+   ================================================== ======================== * /
 
-/**
- * Known limitation: by default, Chrome and Safari on OS X allow very limited
- * styling of `select`, unless a `border` property is set.
- */
+/ **
+ * Limitação conhecida: por padrão, Chrome e Safari no OS X permitem muito limitado
+ * Styling de `select`, a menos que uma propriedade` border` está definido.
+ * /
 
-/**
- * 1. Correct color not being inherited.
- *    Known issue: affects color of disabled elements.
- * 2. Correct font properties not being inherited.
- * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
- */
+/ **
+ * 1. cor correta não ser herdada.
+ * Problema conhecido: afeta a cor de elementos com deficiência.
+ * 2. Propriedades fonte correta não ser herdada.
+ * 3. margens endereço definido de forma diferente no Firefox 4+, Safari e Chrome.
+ * /
 
-button,
-input,
+botão,
+entrada,
 optgroup,
-select,
+selecionar,
 textarea {
-  color: inherit; /* 1 */
-  font: inherit; /* 2 */
-  margin: 0; /* 3 */
+  color: herdar; / * 1 * /
+  font: herdar; / * 2 * /
+  margin: 0; / * * 3 /
 }
 
-/**
- * Address `overflow` set to `hidden` in IE 8/9/10/11.
- */
+/ **
+ * Endereço `overflow` ajustado para` hidden` no IE 8/9/10/11.
+ * /
 
-button {
-  overflow: visible;
+botão {
+  overflow: visível;
 }
 
-/**
- * Address inconsistent `text-transform` inheritance for `button` and `select`.
- * All other form control elements do not inherit `text-transform` values.
- * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.
- * Correct `select` style inheritance in Firefox.
- */
+/ **
+ * Morada inconsistente `herança text-transform` para` `button` e select`.
+ * Todos os outros elementos de controle de forma não herdam `valores text-transform`.
+ * Correct `herança de estilo button` no Firefox, IE 8/9/10/11 e Opera.
+ * Correct `herança de estilo select` no Firefox.
+ * /
 
-button,
-select {
+botão,
+selecionar {
   text-transform: none;
 }
 
-/**
- * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
- *    and `video` controls.
- * 2. Correct inability to style clickable `input` types in iOS.
- * 3. Improve usability and consistency of cursor style between image-type
- *    `input` and others.
- */
+/ **
+ * 1. Evite o bug WebKit no Android 4.0. * Onde (2) destrói `audio` nativa
+ * E `controles video`.
+ * 2. incapacidade correta de estilo clicáveis ​​`tipos input` em iOS.
+ * 3. Melhorar a usabilidade e consistência de estilo cursor entre o tipo de imagem
+ * `Input` e outros.
+ * /
 
-button,
-html input[type="button"], /* 1 */
-input[type="reset"],
-input[type="submit"] {
-  -webkit-appearance: button; /* 2 */
-  cursor: pointer; /* 3 */
+botão,
+entrada html [type = "button"], / * 1 * /
+input [type = "reset"],
+input [type = "submit"] {
+  -webkit-aparência: botão; / * 2 * /
+  cursor: pointer; / * * 3 /
 }
 
-/**
- * Re-set default cursor for disabled elements.
- */
+/ **
+ * Re-set cursor padrão para elementos com deficiência.
+ * /
 
-button[disabled],
-html input[disabled] {
+botão [deficientes],
+entrada html [disabled] {
   cursor: default;
 }
 
-/**
- * Remove inner padding and border in Firefox 4+.
- */
+/ **
+ * Remover o preenchimento interior e borda no Firefox 4+.
+ * /
 
-button::-moz-focus-inner,
-input::-moz-focus-inner {
+botão :: - moz-foco-interior,
+entrada :: --moz-foco interior {
   border: 0;
   padding: 0;
 }
 
-/**
- * Address Firefox 4+ setting `line-height` on `input` using `!important` in
- * the UA stylesheet.
- */
+/ **
+ * Morada Firefox 4+ configuração `line-Altura do on` input` usando `! Important` em
+ * A folha de estilo UA.
+ * /
 
 input {
   line-height: normal;
 }
 
-/**
- * It's recommended that you don't attempt to style these elements.
- * Firefox's implementation doesn't respect box-sizing, padding, or width.
+/ **
+ * É recomendado que você não tente estilo esses elementos.
+ * Implementação do Firefox não respeita box-sizing, estofamento, ou largura.
  *
- * 1. Address box sizing set to `content-box` in IE 8/9/10.
- * 2. Remove excess padding in IE 8/9/10.
- */
+ * 1. caixa Endereço dimensionamento definido como `conteúdo de box` no IE 8/9/10.
+ * 2. Retire o excesso de preenchimento no IE 8/9/10.
+ * /
 
-input[type="checkbox"],
-input[type="radio"] {
-  box-sizing: border-box; /* 1 */
-  padding: 0; /* 2 */
+input [type = "checkbox"],
+input [type = "radio"] {
+  box-sizing: border-box; / * 1 * /
+  padding: 0; / * 2 * /
 }
 
-/**
- * Fix the cursor style for Chrome's increment/decrement buttons. For certain
- * `font-size` values of the `input`, it causes the cursor style of the
- * decrement button to change from `default` to `text`.
- */
+/ **
+ * Corrigir o estilo cursor para os botões de incremento / decremento do Chrome. Para certos
+ * `Valores do` input` font-size`, faz com que o estilo do cursor
+ * Botão decréscimo de mudar de `default` para` text`.
+ * /
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input [= tipo de "número"] :: - webkit-spin-botão-interior,
+input [= "número" type] :: - webkit-spin-botão exterior {
   height: auto;
 }
 
-/**
- * 1. Address `appearance` set to `searchfield` in Safari and Chrome.
- * 2. Address `box-sizing` set to `border-box` in Safari and Chrome
- *    (include `-moz` to future-proof).
- */
+/ **
+ * 1. Endereço `appearance` ajustado para` searchfield` no Safari e Chrome.
+ * 2. Endereço `caixa-sizing` ajustado para` border-box` no Safari e Chrome
+ * (Incluem `-moz` à prova de futuro).
+ * /
 
-input[type="search"] {
-  -webkit-appearance: textfield; /* 1 */
+input [type = "pesquisa"] {
+  -webkit-aparência: campo de texto; / * 1 * /
   -moz-box-sizing: content-box;
-  -webkit-box-sizing: content-box; /* 2 */
+  -webkit-dimensionamento-box: content-box; / * 2 * /
   box-sizing: content-box;
 }
 
-/**
- * Remove inner padding and search cancel button in Safari and Chrome on OS X.
- * Safari (but not Chrome) clips the cancel button when the search input has
- * padding (and `textfield` appearance).
- */
+/ **
+ * Remover o preenchimento interior e procure botão de cancelamento no Safari e Chrome no Mac OS X.
+ * Safari (mas não cromo) clips o botão de cancelamento quando a entrada de pesquisa tem
+ * Preenchimento (e `aparência textfield`).
+ * /
 
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-decoration {
+input [type = "pesquisa"] :: --cancelar botão webkit-search,
+input [type = "pesquisa"] :: - webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-/**
- * Define consistent border, margin, and padding.
- */
+/ **
+ * Definir consistente fronteira, margem, e estofamento.
+ * /
 
 fieldset {
-  border: 1px solid #c0c0c0;
+  border: 1px solid # c0c0c0;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em;
 }
 
-/**
- * 1. Correct `color` not being inherited in IE 8/9/10/11.
- * 2. Remove padding so people aren't caught out if they zero out fieldsets.
- */
+/ **
+ * 1. Corrija `não color` ser herdado no IE 8/9/10/11.
+ * 2. Remova estofamento para que as pessoas não são apanhados se zerar fieldsets.
+ * /
 
-legend {
-  border: 0; /* 1 */
-  padding: 0; /* 2 */
+lenda {
+  border: 0; / * 1 * /
+  padding: 0; / * 2 * /
 }
 
-/**
- * Remove default vertical scrollbar in IE 8/9/10/11.
- */
+/ **
+ * Remover barra de rolagem vertical padrão no IE 8/9/10/11.
+ * /
 
 textarea {
   overflow: auto;
 }
 
-/**
- * Don't inherit the `font-weight` (applied by a rule above).
- * NOTE: the default cannot safely be changed in Chrome and Safari on OS X.
- */
+/ **
+ * Não herdar o `font-weight` (aplicado por uma regra acima).
+ * NOTA: o padrão não pode seguramente ser alterado no Chrome e Safari no OS X.
+ * /
 
 optgroup {
   font-weight: bold;
 }
 
-/* Tables
-   ========================================================================== */
+/ * Quadros
+   ================================================== ======================== * /
 
-/**
- * Remove most spacing between table cells.
- */
+/ **
+ * Remover a maior espaçamento entre as células da tabela.
+ * /
 
 table {
-  border-collapse: collapse;
+  border-collapse: colapso;
   border-spacing: 0;
 }
 

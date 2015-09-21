@@ -16,8 +16,10 @@ class loginDao extends Model{
 	*/
 	public function logar($loginModel)
 	{
+		//validação do formulario
 		if($this->validForm($loginModel) == TRUE)
 		{
+			//número de tentativas de login errado
 			if($_SESSION['ntentativaLogin'] >=5)
 			{
 			    if (empty($_SESSION['captcha']) || trim(strtolower($loginModel->getCaptcha())) != $_SESSION['captcha']) 
@@ -44,11 +46,14 @@ class loginDao extends Model{
 	* Validação do login e senha
 	*/
 	private function validLogin($loginModel){
-		$senha = Bcrypt::hash($loginModel->getSenha());
+		$login = filter_var($loginModel->getLogin());
+		$senha = filter_var($loginModel->getSenha());
+
+		$senha = Bcrypt::hash($senha);
 
 		$this->clear();
-		$this->setTabela(PREFIXTABLE.'usuarios_adm');
-		$this->setCondicao('login_usuario = "'.$loginModel->getLogin().'" and senha_usuario = "'.$loginModel->getSenha().'" AND status_usuario = "Ativo"');
+		$this->setTabela('sys_usuarios');
+		$this->setCondicao('login_usuario = "'.$login.'" and senha_usuario = "'.$senha.'" AND status_usuario = "Ativo"');
 		$this->select();
 		$res = $this->result();
 
@@ -67,7 +72,7 @@ class loginDao extends Model{
 			if($res['permissao_usuario'] != 'Administrador')
 			{
 				$this->clear();
-				$this->setTabela(PREFIXTABLE.'usuario_adm_grupo_permissao');
+				$this->setTabela('usuario_adm_grupo_permissao');
 				$this->setCondicao("id_grupo_permissao = '".$res['permissao_usuario']."'");
 				$this->select();
 				if($this->rowCount() > 0)
@@ -81,7 +86,7 @@ class loginDao extends Model{
 
 
 			$this->clear();
-			$this->setTabela(PREFIXTABLE.'usuario_adm_acesso');
+			$this->setTabela('usuario_adm_acesso');
 			$this->setCondicao("id_usuario = '".$res['id_usuario']."' order by id_acesso desc limit 1");
 			$this->select();
 			$res = $this->result();
@@ -94,7 +99,7 @@ class loginDao extends Model{
 			}
 			
 			$this->clear();
-			$this->setTabela(PREFIXTABLE.'usuario_adm_acesso');
+			$this->setTabela('usuario_adm_acesso');
 			$data = array(
 				'id_usuario' => $_SESSION['login_adm']['id'],
 				'data_acesso' => date('Y-m-d'),
@@ -113,7 +118,7 @@ class loginDao extends Model{
 					'token' => $hash
 				);
 				$this->clear();
-				$this->setTabela(PREFIXTABLE.'usuarios_adm');
+				$this->setTabela('sys_usuarios');
 				$this->setCondicao('id_usuario = "'.$res['id_usuario'].'"');
 				$this->update($dataValue);
 				if($this->rowCount() > 0){
@@ -129,8 +134,8 @@ class loginDao extends Model{
 		{
 			$_SESSION['ntentativaLogin']++;
 			$this->error = array(
-				'error'=>'Login incorreto',
-				'captcha' => FALSE
+				'error'=>'Login e/ou senha incorreto',
+				'captcha' => TRUE
 			);
 			return json_encode($this->error);
 		}
@@ -189,8 +194,8 @@ class loginDao extends Model{
 			$login = $_SESSION['login_adm']['login'];
 			$token = $_SESSION['login_adm']['token'];
 			$this->clear();
-			$this->setTabela(PREFIXTABLE.'usuarios_adm');
-			$this->setCondicao("login_usuario = '".$login."' and token = '".$token."'");
+			$this->setTabela('sys_usuarios');
+			$this->setCondicao("login_usuario = '".$login."' and hash_acesso = '".$token."'");
 			$this->select();
 			$res = $this->result();
 			if($this->rowCount() > 0)
