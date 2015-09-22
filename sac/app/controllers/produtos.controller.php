@@ -29,7 +29,19 @@ class produtos extends Controller{
 		$this->load->view('include/footer',$data);
 	}
 
-	
+	public function cadastro()
+	{
+		//$this->saveModules();
+		$this->saveAction();
+
+		$data = array(
+			'titlePage' => 'Cadastro'
+		);
+		
+		$this->load->view('includes/header',$data);
+		$this->load->view('produtos/cadastro',$data);
+		$this->load->view('includes/footer',$data);
+	}
 }
 
 
