@@ -22,6 +22,7 @@ class select extends error_db
 	{
 		$this->statement->closeCursor();
 	}
+
 	public function __construct($pdo, $table,$column = null, $cond = '', $order = '', $limit = '')
 	{
 
@@ -65,7 +66,7 @@ class select extends error_db
 		    $this->rows_affected = 0;
 			return false;
 		}
-	}	
+	}
 
 
 	public function fetchAll($tipo = 0)

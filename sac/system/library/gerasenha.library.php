@@ -11,7 +11,11 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class geraSenha 
 {
 	private $senha;
-	function __construct($tamanho = 8, $maiusculas = true, $numeros = true, $simbolos = false)
+	function __construct()
+	{
+		
+	}
+	function gerar($tamanho = 8, $maiusculas = true, $numeros = true, $simbolos = false)
 	{
 		$lmin = 'abcdefghijklmnopqrstuvwxyz';
 		$lmai = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';

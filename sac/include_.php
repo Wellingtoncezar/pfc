@@ -41,11 +41,7 @@ if(!function_exists('autoload'))
         $filename   = $className . '.php';
         $file4       = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$filename;
 
-        //database system
-        $filename   = $className . '.php';
-        $file5       = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.$filename;
-
-
+        
         if (file_exists($file)) 
             includeFile($file);
         else
@@ -60,13 +56,18 @@ if(!function_exists('autoload'))
         else
         if(file_exists($file4))
             includeFile($file4);
-        else
-        if(file_exists($file5))
-            includeFile($file5);
     }
 
     spl_autoload_register('_autoload');
 
+}
+
+if(!function_exists('get_instance'))
+{
+    function &get_instance()
+    {
+        return Controller::get_instance();
+    }
 }
 
 

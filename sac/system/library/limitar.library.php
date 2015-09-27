@@ -11,38 +11,75 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class limitar
 {
 	private $string;
-	function __construct($string, $tamanho,  $tipo = 'letra',$cont=' [...]' ,$encode='UTF-8')
-	{
-		if($tipo == 'palavra')//limita por palavras
-		{
-			$palavras = explode(' ',$string);
+	private $tamanho;
+	private $tipo = 'letra';
+	private $continue = ' [...]';
+	private $encode = 'UTF-8';
 
-			if( count($palavras) > $tamanho )
+	public function __construct($arr = array())
+	{
+		//return $this;
+	}
+
+	public function setString($string)
+	{
+		$this->string = $string;
+		return $this;
+	}
+
+	public function setTamanho($tamanho)
+	{
+		$this->tamanho = $tamanho;
+		return $this;
+	}
+
+	public function setTipo($tipo)
+	{
+		$this->tipo = $tipo;
+		return $this;
+	}
+
+	public function setContinue($contnue)
+	{
+		$this->continue = $continue;
+		return $this;
+	}
+
+	public function setEncode($encode)
+	{
+		$this->encode = $encode;
+		return $this;
+	}
+
+
+	function getLimitar()
+	{
+		if($this->tipo == 'palavra')//limita por palavras
+		{
+			$palavras = explode(' ',$this->string);
+
+			if( count($palavras) > $this->tamanho )
 			{
 				$str=$palavras[0];
 				$i=1;
-				while($i < $tamanho)
+				while($i < $this->tamanho)
 				{
 					$str .= ' '.$palavras[$i];
 					$i++;
 				}
-				$this->string = trim($str).$cont;
-		        //$this->string = mb_substr($string, 0, $tamanho - 3, $encode) . '...';
+				$this->string = trim($str).$this->continue;
+		        //$this->string = mb_substr($this->string, 0, $this->tamanho - 3, $encode) . '...';
 			}
 		    else
-		        $this->string = $string;
+		        $this->string = $this->string;
 		}else
 		{
-		    if( strlen($string) > $tamanho )
-		        $this->string = mb_substr($string, 0, $tamanho - 3, $encode) . $cont;
+		    if( strlen($this->string) > $this->tamanho )
+		        $this->string = mb_substr($this->string, 0, $this->tamanho - 3, $this->encode) . $this->continue;
 		    else
-		        $this->string = mb_substr($string, 0, $tamanho, $encode);
+		        $this->string = mb_substr($this->string, 0, $this->tamanho, $this->encode);
 		}
 		return $this->string;
 	}
 
-	function getLimitar()
-	{
-		   return $this->string;
-	}
 }

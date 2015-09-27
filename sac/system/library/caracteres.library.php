@@ -11,9 +11,9 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class caracteres 
 {
 	private $valor;
-	function __construct($val)
-	{
-		$this->valor = $this->toAscii($val);
+	function __construct($val = array())
+	{	
+		$this->valor = $this->toAscii($val[0]);
 	}
 
 	function getValor()

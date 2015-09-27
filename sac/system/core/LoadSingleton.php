@@ -4,23 +4,36 @@
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 
-class Load extends conn{
+class LoadSingleton{
     private static $data = array();
-    protected $load;
-    protected $include;
-    private $instance = 'instance';
-    public function __construct(){
-        parent::__construct();
-        $this->load = $this;
-        $this->_autoloadComplement();
+    
+    protected function __construct(){
     }
+
+    public static function getInstance()
+    {
+        static $instance = null;
+        if (null === $instance) {
+            $instance = new static();
+        }
+        return $instance;
+    }
+
+    private function __clone()
+    {
+    }
+
+    private function __wakeup()
+    {
+    }
+
 
     /**
      *  Autoload das classes 
      * @access private
      * 
      */
-    private function _autoloadComplement(){
+    protected function _autoloadComplement(){
         require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'autoload.php');
         if(!empty($autoload['libraries']))
         {
@@ -72,6 +85,7 @@ class Load extends conn{
         }else
             return false;
     }
+    
     /*
     *Verifica se o diretório existe
     */
@@ -116,6 +130,8 @@ class Load extends conn{
         spl_autoload_register(array($this,'library'));
         $file = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename.'.library.php';
         $file2 = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename.'.library.php';
+        //database system
+        $file3       = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.$filename.'.php';
         if(!$this->_isloaded($name))
         {
             if(file_exists($file)){
@@ -126,6 +142,12 @@ class Load extends conn{
             }else
             if(file_exists($file2)){
                 require_once(str_replace('\\', '/', $file2));
+                if($autoExec == true)
+                    $this->$name = new $name($parameters);
+                return true;
+            }else
+            if(file_exists($file3)){
+                require_once(str_replace('\\', '/', $file3));
                 if($autoExec == true)
                     $this->$name = new $name($parameters);
                 return true;
@@ -191,9 +213,7 @@ class Load extends conn{
         spl_autoload_register(array($this,'view'));
         $filename = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.VIEWS.DIRECTORY_SEPARATOR.$filename.'.phtml';
         if(file_exists($filename)){
-            $instance = '';
-            $instance =& get_instance();
-            //extrai as variaveis
+
 
             if(is_array($param) && !empty($param)){
                 extract($param);

@@ -16,6 +16,9 @@ body{
   background-size: 100%;
   background-attachment: fixed;
 }
+.overflowHidden{
+  overflow: hidden;
+}
 *{
 	/*font-family: 'calibri';*/
 }

@@ -17,8 +17,7 @@ class funcionarios extends Controller{
 	*/
 	public function index()
 	{
-		//$this->saveModules();
-		$this->saveAction();
+		//$this->saveAction();
 
 		$data = array(
 			'titlePage' => 'Funcionários'
@@ -31,8 +30,7 @@ class funcionarios extends Controller{
 
 	public function cadastro()
 	{
-		//$this->saveModules();
-		$this->saveAction();
+		//$this->saveAction();
 
 		$data = array(
 			'titlePage' => 'Cadastro'

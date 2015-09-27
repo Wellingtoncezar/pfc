@@ -1,9 +1,9 @@
 <?php
 /**
-*@author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
+*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-abstract class Model extends Common
+abstract class Dao extends Common
 {
 	public function __construct(){
 		parent::__construct();

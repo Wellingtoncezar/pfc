@@ -17,8 +17,8 @@ class produtos extends Controller{
 	*/
 	public function index()
 	{
-		$this->saveModules();
-		$this->saveAction();
+		//$this->saveModules();
+		//$this->saveAction();
 
 		$data = array(
 			'titlePage' => 'Produtos'
@@ -32,7 +32,7 @@ class produtos extends Controller{
 	public function cadastro()
 	{
 		//$this->saveModules();
-		$this->saveAction();
+		//$this->saveAction();
 
 		$data = array(
 			'titlePage' => 'Cadastro'

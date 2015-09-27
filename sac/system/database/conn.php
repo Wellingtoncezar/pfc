@@ -8,16 +8,41 @@
 *
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-abstract class conn extends db
+class conn
 {
 	public static $pdoConn = null;
 	private $dsn;
+    
+    protected function __construct(){
+    }
+
+    public static function getInstance()
+    {
+        static $dbInstance = null;
+        if (null === $dbInstance) {
+            $dbInstance = new static();
+        }
+        return $dbInstance;
+    }
+
+
 	public function __clone()
     {
         trigger_error('Clone is not allowed.', E_USER_ERROR);
     }
-    
-	public function __construct()
+
+    private function __wakeup()
+    {
+    }
+
+    //Conexão com o banco de dados
+    public function __destruct()
+    {
+    	self::$pdoConn = null;
+    }
+
+    //Conexão com o banco de dados
+	public function connect()
 	{
 		try 
 		{	
@@ -30,9 +55,11 @@ abstract class conn extends db
 				self::$pdoConn->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 				//self::$pdoConn->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 
-				parent::__construct(self::$pdoConn);
-			}else
-				parent::__construct(self::$pdoConn);
+				//parent::__construct(self::$pdoConn);
+			}
+			return self::$pdoConn;
+				//parent::__construct(self::$pdoConn);
+
 		}
 		catch (PDOException $e) 
 		{

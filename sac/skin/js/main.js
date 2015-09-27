@@ -3,8 +3,9 @@ $(document).ready(function(){
 
     $('#nav-icon3').click(function(){
         $(this).toggleClass('open');
+        $('html,body').toggleClass('overflowHidden');
 
-        $('.menu-container').toggleClass('fadeInUp').toggleClass('fadeOutDown').toggle();
+        $('.menu-container').toggleClass('zoomIn').toggleClass('fadeOutDown').toggle();
         var wall = new freewall("#freewall");
         wall.reset({
             selector: '.brick',

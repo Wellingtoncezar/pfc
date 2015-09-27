@@ -1,6 +1,6 @@
 <?php
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class db{
+class db extends Conn{
 	private $res;
 	private $tabela;
 	private $campos = array();
@@ -8,24 +8,12 @@ class db{
 	private $condicao = '';
 	private $orderBy = '';
 	private $limit = '';
-	private static $pdo = null;
+	private $pdo = null;
 
-	public function __construct($conn) 
+	public function __construct() 
 	{
-		if(self::$pdo == null)
-			self::$pdo = $conn;
-		return self::$pdo;
+		$this->pdo = Conn::connect();
 	}
-
-	/*public function __destruct() {
-		$this->tabela = '';
-		$this->campos = array();
-		$this->valores = array();
-		$this->codicao = '';
-		$this->orderBy = '';
-		parent::__destruct();
-		//$this->res = null;
-	}*/
 
 	public function setTabela($tabela)
 	{
@@ -88,11 +76,11 @@ class db{
 		if(!is_string($values))
 		{
 			if(is_array($values))
-				$this->res = new insert(self::$pdo,$this->tabela,$values);
+				$this->res = new insert($this->pdo,$this->tabela,$values);
 			else
 			{
 				$val = $this->prepare_values($this->campos,$this->valores);
-				$this->res = new insert(self::$pdo,$this->tabela,$val);
+				$this->res = new insert($this->pdo,$this->tabela,$val);
 			}
 		}else
 		{
@@ -108,11 +96,11 @@ class db{
 		if(!is_string($values))
 		{
 			if(is_array($values))
-				$this->res = new update(self::$pdo, $this->tabela, $values, $this->condicao );
+				$this->res = new update($this->pdo, $this->tabela, $values, $this->condicao );
 			else
 			{
 				$val = $this->prepare_values( $this->campos, $this->valores );
-				$this->res = new update(self::$pdo, $this->tabela, $val, $this->condicao );
+				$this->res = new update($this->pdo, $this->tabela, $val, $this->condicao );
 			}
 		}else
 		{
@@ -128,14 +116,14 @@ class db{
 		{
 			if(is_array($campos))
 			{
-				$this->res = new select(self::$pdo, $this->tabela, $campos, $this->condicao, $this->orderBy, $this->limit);
+				$this->res = new select($this->pdo, $this->tabela, $campos, $this->condicao, $this->orderBy, $this->limit);
 			}else
 			{
 				die('Parâmetros passados incorretamente. Informe um tipo array para o método select');
 			}
 		}else
 		{
-			$this->res = new select(self::$pdo, $this->tabela, $this->campos, $this->condicao, $this->orderBy, $this->limit);
+			$this->res = new select($this->pdo, $this->tabela, $this->campos, $this->condicao, $this->orderBy, $this->limit);
 		}
 		return $this->res;
 	}
@@ -145,14 +133,14 @@ class db{
 		if($sql == null)
 			die('Informe o comando sql corretamente.');
 		else
-			$this->res = new query(self::$pdo, $sql);
+			$this->res = new query($this->pdo, $sql);
 	}
 
 
 	public function delete()
 	{
 		if($this->condicao != '')
-			$this->res = new delete(self::$pdo, $this->tabela, $this->condicao );
+			$this->res = new delete($this->pdo, $this->tabela, $this->condicao );
 		else
 			die('Informe a condição do delete');
 

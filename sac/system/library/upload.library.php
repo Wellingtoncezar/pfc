@@ -23,7 +23,10 @@ class upload{
 	private $error = FALSE;
 	private $destino; //caminho do arquivo após o upload
 	private $arquivoFinal;//nome do arquivo após o upload 
-	public function __construct($arquivo, $dest, $novo_nome = NULL,$extensao = NULL)
+	public function __construct(){
+	}
+	
+	public function setUpload($arquivo, $dest, $novo_nome = NULL,$extensao = NULL)
 	{
 		if($extensao != null)
 		{

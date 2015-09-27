@@ -17,7 +17,7 @@ define('APPPATH','app');
 
 require_once('include.php');
 
-class _initialize extends Config{
+class _initialize extends Router{
 	public function __construct(){
 		parent::__construct();
 		$this->rout = '';
