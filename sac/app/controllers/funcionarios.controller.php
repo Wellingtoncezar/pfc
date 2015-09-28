@@ -41,6 +41,15 @@ class funcionarios extends Controller{
 		$this->load->view('includes/footer',$data);
 	}
 
+
+	public function inserir()
+	{
+
+		
+		echo json_encode(array('error' => 'Erro de teste'));
+	}
+
+
 	
 }
 

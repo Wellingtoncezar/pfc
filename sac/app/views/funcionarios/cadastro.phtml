@@ -2,14 +2,16 @@
     <div class="page-header">
       <h1>Funcionários <small>Cadastro</small></h1>
     </div>
-    <form action="">
+    <form action="<?=URL?>funcionarios/inserir" method="post" id="form_funcionarios">
         <div class="panel panel-default">
             <div class="panel-heading">Dados Gerais</div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-6 col-md-3">
-                        <label for="foto" class="thumbnail inputFoto">
-                            <img src="<?=URL?>skin/img/imagens/1439113161_provider.png" alt="...">
+                        <label for="foto" class="thumbnail inputFoto preview-lg">
+                            <div class="thumbnail img-preview preview-lg">
+                                <img src="<?=URL?>skin/img/imagens/1439113161_provider.png" id="img_previous">
+                            </div>
                             <input type="file" name="foto" id="foto">
                         </label>
                     </div>
@@ -150,10 +152,29 @@
                 </div>
 
                 <div class="btn-group pull-right" role="group">
-                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
                 </div>
 
             </div>
         </div>
     </form>
 </div>
+
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<link href="<?=URL?>skin/js/croper/cropper.min.css" rel="stylesheet">
+<link href="<?=URL?>skin/js/croper/main.css" rel="stylesheet">
+<script src="<?=URL?>skin/js/croper/cropper.min.js"></script>
+
+<script type="text/javascript">
+    
+ $(function(){
+    $('#form_funcionarios').uploadImage();
+   
+    $('#form_funcionarios').submit(function(){
+            $('#form_funcionarios').uploadForm({
+            });
+            return false;
+    });
+
+ })   
+</script>

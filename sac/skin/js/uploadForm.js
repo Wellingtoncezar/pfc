@@ -206,7 +206,7 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
 		            	$image.one('built.cropper', function () {
 		              		URL.revokeObjectURL(blobURL); // Revoke when load complete
 		            	}).cropper('reset', true).cropper('replace', blobURL);
-		            	$('body').css('overflow','hidden');
+		            	//$('body').css('overflow','hidden');
 		            	$('.box_panel_cropper').slideDown();
 
 		            	//$inputImage.val('');
