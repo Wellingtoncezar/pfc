@@ -33,7 +33,7 @@ class fornecedor extends Controller{
 	public function cadastro()
 	{
 		//$this->saveModules();
-		$this->saveAction();
+		//$this->saveAction();
 
 		$data = array(
 			'titlePage' => 'Cadastro'
