@@ -3,6 +3,9 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class Router extends Common{
 	private $url;
 	private $currentUrl;
+	private $_controller;
+	private $_route;
+	private $_action;
 
 	public function __construct()
 	{
@@ -17,9 +20,7 @@ class Router extends Common{
 			{
 				$base_url = 'http://localhost/';
 			}
-
 			define('URL',$base_url);
-			
 		}
 		
 		$server = 'http://'.$_SERVER['SERVER_NAME'].'/'; 
@@ -42,174 +43,43 @@ class Router extends Common{
 		parent::__construct();
 	}
 
-
-	public function getUrl()
-	{
-		return $this->url;//retorna o array da url
+	public function getRoute(){
+		return $this->_route;
+	}
+	public function getController(){
+		return $this->_controller;
+	}
+	public function getAction(){
+		return $this->_action;
 	}
 
-	public function getCurrentUrl()
+	public function explodeUri()
 	{
-		return $this->currentUrl;
-	}
-
-
-	public function getSegment($chave)//retorna o segmento da url
-	{
-		if(array_key_exists($chave, $this->url))//se existir a categoria
-			return strtolower($this->url[$chave]);
-		else
-			return false;
-	}
-
-
-	/**
-	*@return void
-	*Seta o controller atual para inserir no banco
-	*/
-	public function setController($controller)
-	{
-		$this->controller = $controller;
-	}
-
-
-
-
-	/**
-	*@return void
-	*Seta a action atual para inserir no banco
-	*/
-	public function setAction($action)
-	{
-		$this->action = $action;
-	}
-
-
-	/**
-	*@return void
-	*Seta o rota (caminho até o controller) atual para inserir no banco
-	*/
-	public function setRout($rout)
-	{
-		$this->rout = $rout;
-	}
-
-
-
-	/**
-	*@return void
-	*Salva o módulo, o controller e a action no banco
-	*/
-	public function saveModules(){
-		/*********************************************/
-		/*INSERINDO OS MÓDULOS*/
-		$rota = rtrim($this->rout,DIRECTORY_SEPARATOR); //remove as barras do final da string
-		$rota = ltrim($rota,DIRECTORY_SEPARATOR);
-		$rota = explode(DIRECTORY_SEPARATOR,$rota);
-
-		$this->_idModulo = 0;
-
-		foreach ($rota as $modulo)
-		{
-			$this->db->clear();
-			$this->db->setTabela(PREFIXTABLE.'modulos');
-			$this->db->setCondicao('url_modulo = "'.$modulo.'"');
-			$this->db->select();
-			//verifica se o módulo já está cadastrado
-			if($this->db->rowCount()>0)
-			{
-				//se tiver retorna o id do módulo
-				$res = $this->db->result();
-				$this->_idModulo = $res['id_modulo'];
-			}else
-			{
-				//senão o insere 
-				$dataValue = array(
-					'url_modulo' => $modulo,
-					'id_modulo_pai' =>$this->_idModulo,
-					'status_modulo' =>'Inativo',
-					'data_criacao' => date('Y-m-d H:i:s')
-				);
-				$this->db->insert($dataValue);
-				if($this->db->rowCount() > 0)
+		if(!empty($this->url)){
+			foreach ($this->url as $key => $value) {
+				if($this->checkDir($this->_route.$value))
 				{
-					//retorna o id do módulo inserido
-					$this->db->query('SELECT id_modulo FROM '.PREFIXTABLE.'modulos ORDER BY id_modulo DESC LIMIT 1');
-					$res = $this->db->result();
-					$this->_idModulo = $res['id_modulo'];
-
+					$this->_route .= $value.DIRECTORY_SEPARATOR;
+				
+					if(!isset($this->url[$key+1])){
+						$this->_controller = DEFAULT_CONTROLLER;
+						$this->_action = "index";
+					}
+				}else
+				{
+					$this->_controller 	= $value;
+					if(isset($this->url[$key+1]))
+						$this->_action = $this->url[$key+1];
+					else
+						$this->_action = "index";
+					break;
 				}
-			}
-		}
-
-		$this->_idPagina = 0;
-		//INSERINDO AS PÁGINAS
-		$this->db->clear();
-
-		$this->db->setTabela(PREFIXTABLE.'paginas');
-		$this->db->setCondicao('url_pagina = "'.$this->controller.'" and id_modulo="'.$this->_idModulo.'"');
-		$this->db->select();
-		if($this->db->rowCount() > 0){
-			$res = $this->db->result();
-			$this->_idPagina = $res['id_pagina'];
-		}else
-		{
-			$dataValue = array(
-				'url_pagina'=> $this->controller,
-				'id_modulo' => $this->_idModulo,
-				'status_pagina' => 'Inativo',
-				'data_criacao' => date('Y-m-d H:i:s')
-			);
-			$this->db->insert($dataValue);
-			if($this->db->rowCount() > 0)
-			{
-				//retorna o id do módulo inserido
-				$this->db->query('SELECT id_pagina FROM '.PREFIXTABLE.'paginas ORDER BY id_pagina DESC LIMIT 1');
-				$res = $this->db->result();
-				$this->_idPagina = $res['id_pagina'];
 
 			}
+		}else{
+			$this->_controller = DEFAULT_CONTROLLER;
+			$this->_action = "index";
 		}
-
-
-
 		
-
-		/**************************************/
 	}
-
-
-	public function saveAction(){
-		$this->saveModules();
-		
-		$_idAction = 0;
-		//INSERINDO AS ACTIONS
-		$this->db->clear();
-
-		$this->db->setTabela(PREFIXTABLE.'actions');
-		$this->db->setCondicao('url_action = "'.$this->action.'" and id_pagina="'.$this->_idPagina.'"');
-		$this->db->select();
-		if($this->db->rowCount() > 0){
-			$res = $this->db->result();
-			$_idAction = $res['id_action'];
-		}else
-		{
-			$dataValue = array(
-				'url_action'=> $this->action,
-				'id_pagina' => $this->_idPagina,
-				'status_action' => 'Inativo',
-				'data_criacao' => date('Y-m-d H:i:s')
-			);
-			$this->db->insert($dataValue);
-			if($this->db->rowCount() > 0)
-			{
-				//retorna o id do módulo inserido
-				$this->db->query('SELECT id_action FROM '.PREFIXTABLE.'actions ORDER BY id_action DESC LIMIT 1');
-				$res = $this->db->result();
-				$this->_idPagina = $res['id_action'];
-			}
-		}
-	}
-
-
 }

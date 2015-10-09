@@ -11,17 +11,26 @@
 	    display: table;
 	    border-bottom: 0px #FFF solid;
 	    box-shadow: 0 0 6px 0px #333;
-	    background: url('../img/imagens/fundo_2.jpg');
 	    background-size: 100%;
 	    height: 10vh;
 	    position: relative;
 	    z-index: 1;
+	    background: url('../img/imagens/fundo_menu.jpg');
     }
+    .header .top{
+    	display: table;
+    	width: 100%;
+    }
+    .navbar-default {
+	    background-color: transparent;
+	    border-color: transparent;
+	}
 
 	.header .logo{
 	    width: 115px;
-	    float: left;
-	    margin: 13px;
+	   margin: 13px;
+	   float: left; 
+
 	}
 
 	.header .logo img{
@@ -59,13 +68,34 @@
 	.header .user .btn-default:active,
 	.header .user .btn-default:focus,
 	.header .user .btn-default:hover{
-		background-color:#387AC8; 
+		background-color: #171717;
 	}
 	
 	/***************************************/
 	/** END HEADER **/
 	/***************************************/
 	
+
+
+	/***************************************/
+	/** MENU **/
+	/***************************************/
+	.navbar-default .navbar-brand {
+	    color: #FFF;
+	}
+
+	.navbar-default .navbar-brand span{
+
+	    display: table;
+	    font-size: 50px;
+	    text-align: center;
+	    margin: auto;
+	}
+
+	.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
+	    color: #FFFFFF;
+	    background-color: transparent;
+	}
 
 
 
@@ -247,236 +277,6 @@
     position: relative;
     width: 100%;
     background: #E6E6E6 url('../img/imagens/fundo.png') fixed;
-
-	}
-
-	.navbar-menu{
-   		margin:0 10% 10% 10%;*/
-	}
-	.navbar-menu ul{
-		/*list-style: none;
-	    padding: 0;
-	    display: table;
-	    margin: auto;*/
-	}
-	.navbar-menu ul li{
-		list-style: none;
-		display: table;
-	}
-	.navbar-menu ul li a{
-		display: inline-block;
-		margin: 5px;
-		background-image: url('../img/imagens/efeito.png');
-		background-position: 0;
-		border-radius: 5px;
-		padding: 10px;
-		position: relative;
-		color: #FFF;
-		font-size: 20px;
-		text-align: center;
-		display: block;
-		text-shadow: 2px 1px 1px #000;
-		text-decoration: none;
-	    box-shadow: 0 0 10px 0px #FFF;
-	    min-height: 116px;
-	    min-width: 116px;
-	}
-
-	.navbar-menu ul li a.inactive{
-		opacity: 0.4!important;
-	}
-	.navbar-menu ul li a.inactive{
-
-	}
-
-	.navbar-menu ul li a:hover:not(.inactive){
-	    transform: scale(1.1);
-	}
-
-	.navbar-menu ul li a figure{
-		margin: 0;
-    	width: 100%;
-	}
-
-	.navbar-menu ul li a figure img{
-		width: 73px;
-	    /* border: 2px solid #FFF; */
-	    border-radius: 100%;
-	    padding: 10px;
-	    margin: auto;
-	    box-shadow: 0 0 8px 0px #FFF inset;
-	}
-
-	.navbar-menu ul li .box1{
-	    width: 26vh;
-	    height: 26vh;
-	    display: inline-block;
-	    position: relative;
-	    background-color: rgb(142, 68, 173);
-	    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#7700aa+0,aa41db+100 */
-		background: #7700aa; /* Old browsers */
-		background: -moz-linear-gradient(top,  #7700aa 0%, #aa41db 100%); /* FF3.6+ */
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7700aa), color-stop(100%,#aa41db)); /* Chrome,Safari4+ */
-		background: -webkit-linear-gradient(top,  #7700aa 0%,#aa41db 100%); /* Chrome10+,Safari5.1+ */
-		background: -o-linear-gradient(top,  #7700aa 0%,#aa41db 100%); /* Opera 11.10+ */
-		background: -ms-linear-gradient(top,  #7700aa 0%,#aa41db 100%); /* IE10+ */
-		background: linear-gradient(to bottom,  #7700aa 0%,#aa41db 100%); /* W3C */
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7700aa', endColorstr='#aa41db',GradientType=0 ); /* IE6-9 */
-	}
-	.navbar-menu ul li .box2{
-	    width: 37vh;
-	    height:18vh;
-	    display: inline-block;
-	    position: relative;
-	    background-color: rgb(243, 156, 18);
-	}
-	.navbar-menu ul li .box3{
-	    width: 50vh;
-	    height: 26vh;
-	    display: inline-block;
-	    position: relative;
-	    background-color: rgb(41, 128, 185);
-	    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3400d3+0,5f43db+100 */
-		background: #3400d3; /* Old browsers */
-		background: -moz-linear-gradient(top,  #3400d3 0%, #5f43db 100%); /* FF3.6+ */
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3400d3), color-stop(100%,#5f43db)); /* Chrome,Safari4+ */
-		background: -webkit-linear-gradient(top,  #3400d3 0%,#5f43db 100%); /* Chrome10+,Safari5.1+ */
-		background: -o-linear-gradient(top,  #3400d3 0%,#5f43db 100%); /* Opera 11.10+ */
-		background: -ms-linear-gradient(top,  #3400d3 0%,#5f43db 100%); /* IE10+ */
-		background: linear-gradient(to bottom,  #3400d3 0%,#5f43db 100%); /* W3C */
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3400d3', endColorstr='#5f43db',GradientType=0 ); /* IE6-9 */
-
-	}
-	.navbar-menu ul li .box4{
-	    width: 26vh;
-	    height: 26vh;
-	    display: inline-block;
-	    position: relative;
-	    background-color: rgb(0, 106, 63);
-		    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#005700+0,008a00+100 */
-		background: #005700; /* Old browsers */
-		background: -moz-linear-gradient(top,  #005700 0%, #008a00 100%); /* FF3.6+ */
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#005700), color-stop(100%,#008a00)); /* Chrome,Safari4+ */
-		background: -webkit-linear-gradient(top,  #005700 0%,#008a00 100%); /* Chrome10+,Safari5.1+ */
-		background: -o-linear-gradient(top,  #005700 0%,#008a00 100%); /* Opera 11.10+ */
-		background: -ms-linear-gradient(top,  #005700 0%,#008a00 100%); /* IE10+ */
-		background: linear-gradient(to bottom,  #005700 0%,#008a00 100%); /* W3C */
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#005700', endColorstr='#008a00',GradientType=0 ); /* IE6-9 */
-
-	}
-	.navbar-menu ul li .box5{
-	    width: 35vh;
-	    height: 26vh;
-	    display: inline-block;
-	    position: relative;
-	    background-color: rgb(211, 84, 0);
-	}
-	.navbar-menu ul li .box6{
-	    width: 40vh;
-	    height: 26vh;
-	    display: inline-block;
-	    position: relative;
-	    background-color: rgb(135, 0, 0);
-	}
-
-	
-
-
-	/*icon*/
-	#nav-icon3{
-	    width: 43px;
-	    height: 35px;
-	    position: fixed;
-	    bottom: 0;
-	    right: 0;
-	    margin: 16px;
-	    -webkit-transform: rotate(0deg);
-	    -moz-transform: rotate(0deg);
-	    -o-transform: rotate(0deg);
-	    transform: rotate(0deg);
-	    -webkit-transition: .5s ease-in-out;
-	    -moz-transition: .5s ease-in-out;
-	    -o-transition: .5s ease-in-out;
-	    transition: .5s ease-in-out;
-	    cursor: pointer;
-	    z-index: 99999999999;
-	}
-
-	#nav-icon3 span {
-		display: block;
-		position: absolute;
-		height: 9px;
-		width: 100%;
-		background: #d3531a;
-		border-radius: 9px;
-		opacity: 1;
-		left: 0;
-		-webkit-transform: rotate(0deg);
-		-moz-transform: rotate(0deg);
-		-o-transform: rotate(0deg);
-		transform: rotate(0deg);
-		-webkit-transition: .25s ease-in-out;
-		-moz-transition: .25s ease-in-out;
-		-o-transition: .25s ease-in-out;
-		transition: .25s ease-in-out;
-	}
-
-	#nav-icon3 span:nth-child(1) {
-	  	top: 0px;
-	}
-
-	#nav-icon3 span:nth-child(2),#nav-icon3 span:nth-child(3) {
-	  	top: 14px;
-	}
-
-	#nav-icon3 span:nth-child(4) {
-	    top: 28px;
-	}
-
-	#nav-icon3.open span:nth-child(1) {
-		top: 18px;
-		width: 0%;
-		left: 50%;
-	}
-
-	#nav-icon3.open span:nth-child(2) {
-		-webkit-transform: rotate(45deg);
-		-moz-transform: rotate(45deg);
-		-o-transform: rotate(45deg);
-		transform: rotate(45deg);
-	}
-
-	#nav-icon3.open span:nth-child(3) {
-		-webkit-transform: rotate(-45deg);
-		-moz-transform: rotate(-45deg);
-		-o-transform: rotate(-45deg);
-		transform: rotate(-45deg);
-	}
-
-	#nav-icon3.open span:nth-child(4) {
-		top: 18px;
-		width: 0%;
-		left: 50%;
-	}
-	/* Icon 3 */
-	.menu-container{
-    display: none;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    position: fixed;
-    z-index: 99999;
-    background-image: url('../img/imagens/fundo_2.jpg');
-    background-size: 100%;
-    background-attachment: fixed;
-        overflow: auto;
-	}
-	.menu-container .navbar-menu{
-		position: absolute;
-		top: 10%;
-		left: 0;
-		right: 0;
 
 	}
 

@@ -70,20 +70,20 @@ if(!function_exists('autoload'))
 }
 
 
-function checkConfig()
-{
-	if(	!defined('HOSTNAME') 
-		|| !defined('USERNAME') 
-		|| !defined('PASSWORD') 
-		|| !defined('DBNAME') 
-		|| !defined('MYSQLPORT')
-		|| !defined('BASEPATH')
-		|| !defined('MODELS')
-		|| !defined('VIEWS')
-		|| !defined('CONTROLLERS')
-	){
-		die('Arquivo de configuração não está configurado corretamente. Configure o caminho do servidor mysql, com porta login e senha.');
-	}
-}
+// function checkConfig()
+// {
+// 	if(	!defined('HOSTNAME') 
+// 		|| !defined('USERNAME') 
+// 		|| !defined('PASSWORD') 
+// 		|| !defined('DBNAME') 
+// 		|| !defined('MYSQLPORT')
+// 		|| !defined('BASEPATH')
+// 		|| !defined('MODELS')
+// 		|| !defined('VIEWS')
+// 		|| !defined('CONTROLLERS')
+// 	){
+// 		die('Arquivo de configuração não está configurado corretamente. Configure o caminho do servidor mysql, com porta login e senha.');
+// 	}
+// }
 
-checkConfig();
+// checkConfig();

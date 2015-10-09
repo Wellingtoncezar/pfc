@@ -4,7 +4,7 @@
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 
-class LoadSingleton{
+class Load{
     private static $data = array();
     
     protected function __construct(){
@@ -23,6 +23,11 @@ class LoadSingleton{
     {
     }
 
+
+    /**
+     * @access private
+     * @return void
+     */
     private function __wakeup()
     {
     }
@@ -30,8 +35,8 @@ class LoadSingleton{
 
     /**
      *  Autoload das classes 
-     * @access private
-     * 
+     * @access protected
+     * @return void
      */
     protected function _autoloadComplement(){
         require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'autoload.php');
@@ -51,11 +56,18 @@ class LoadSingleton{
     }
 
 
-
+    /**
+     * @access public
+     * @return void
+     */
     public function __set($name , $value ){
         self::$data[$name] = $value;
     }
 
+    /**
+     * @access public
+     * @return object, null
+     */
     public function __get($name)
     {   
         if (array_key_exists($name, self::$data)) {
@@ -70,25 +82,33 @@ class LoadSingleton{
         return null;
     }
 
-
+    /**
+     * @access public
+     * @return void
+     */
     /**  As of PHP 5.1.0  */
     public function __isset($name)
     {
         return isset($this->data[$name]);
     }
 
-
+    /**
+     * @access private
+     * @return booleam
+     */
     private function _isloaded($class)
     {
+
         if (array_key_exists($class, self::$data)) {
             return true;
         }else
             return false;
     }
     
-    /*
-    *Verifica se o diretório existe
-    */
+    /**
+     * @access public
+     * @return booleam
+     */
     public function checkDir($dir){
         if(is_dir(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.CONTROLLERS.DIRECTORY_SEPARATOR.$dir))
             return true;
@@ -96,8 +116,11 @@ class LoadSingleton{
             return false;
     }
 
-
-    /*LOADCONTROLLER*/
+    /**
+    * inclui e instancia o controller requisitado
+     * @access public
+     * @return booleam
+     */
     public function controller($filename, $autoExec = true)
     {
         $filename = str_replace('\\', '/', $filename);
@@ -119,8 +142,11 @@ class LoadSingleton{
     }
 
 
-
-    /*LOADLIBRARY*/
+    /**
+    * inclui e instancia a biblioteca requisitada
+     * @access public
+     * @return booleam
+     */
     public function library($filename, $parameters = null, $autoExec = true)
     {
         $filename = str_replace('\\', '/', $filename);
@@ -159,8 +185,11 @@ class LoadSingleton{
     }
 
 
-
-    /*LOADMODEL*/
+    /**
+    * inclui e instancia o model requisitada
+     * @access public
+     * @return booleam
+     */
     public function model($filename , $parameters = null, $autoExec = true)
     {
         $filename = str_replace('\\', '/', $filename);
@@ -183,7 +212,11 @@ class LoadSingleton{
             return false;
     }
 
-    /*LOADMODEL*/
+    /**
+    * inclui e instancia a dao requisitada
+     * @access public
+     * @return booleam
+     */
     public function dao($filename , $parameters = null, $autoExec = true)
     {
         $filename = str_replace('\\', '/', $filename);
@@ -207,7 +240,11 @@ class LoadSingleton{
     }
 
 
-    /*LOADVIEW*/
+    /**
+    * inclui e instancia a biblioteca requisitada
+     * @access public
+     * @return  booleam, null
+     */
     public function view($filename, $param = array())
     {
         spl_autoload_register(array($this,'view'));
