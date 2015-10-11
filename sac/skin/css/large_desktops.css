@@ -8,11 +8,9 @@
 	/***************************************/
 	.header{
 	    width: 100%;
-	    display: table;
 	    border-bottom: 0px #FFF solid;
 	    box-shadow: 0 0 6px 0px #333;
 	    background-size: 100%;
-	    height: 10vh;
 	    position: relative;
 	    z-index: 1;
 	    background: url('../img/imagens/fundo_menu.jpg');
@@ -20,10 +18,12 @@
     .header .top{
     	display: table;
     	width: 100%;
+    	border-bottom: 1px solid #121212;
     }
     .navbar-default {
 	    background-color: transparent;
 	    border-color: transparent;
+	    margin: 0;
 	}
 
 	.header .logo{
@@ -81,22 +81,66 @@
 	/** MENU **/
 	/***************************************/
 	.navbar-default .navbar-brand {
-	    color: #FFF;
+	color: #FFF;
+    min-width: 126px;
+    display: block;
+    text-align: center;
+    height: auto;
+    transition:0.5s;
 	}
+
+
 
 	.navbar-default .navbar-brand span{
-
-	    display: table;
-	    font-size: 50px;
-	    text-align: center;
-	    margin: auto;
+    display: table;
+    font-size: 30px;
+    text-align: center;
+    margin: 6px auto;
 	}
 
-	.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
-	    color: #FFFFFF;
-	    background-color: transparent;
+	.navbar-default .navbar-brand p{
+	    font-size: 15px;
 	}
 
+	.navbar-default .navbar-brand:focus, 
+	.navbar-default .navbar-brand:hover,
+	.navbar-default .navbar-brand.active{
+	    color: #FFF;
+	    background-color: #121212;
+	}
+	.navbar-default .navbar-brand:focus span, 
+	.navbar-default .navbar-brand:hover span,{
+		text-shadow: 0 0 10px #FFF;
+	}
+	.navbar-default .navbar-nav>li>a {
+    text-align: center;
+    color: #FFF;
+    min-width: 126px;
+    transition:0.5s;
+	}
+	.navbar-default .navbar-nav>li>a:focus, 
+	.navbar-default .navbar-nav>li>a:hover,
+	.navbar-default .navbar-nav>li>a.active{
+	    color: #FFF;
+	    background-color: #121212;
+	}
+	.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+	    color: #FFF;
+	    background-color: #121212;
+	}
+	.navbar-default .navbar-nav>li>a:focus span, 
+	.navbar-default .navbar-nav>li>a:hover span{
+		text-shadow: 0 0 10px #FFF;
+	}
+	.navbar-default .navbar-nav>li>a span{
+    display: table;
+    font-size: 30px;
+    text-align: center;
+    margin: 6px auto;
+	}
+	.navbar-default .navbar-nav>li>a p{
+    font-size: 15px;
+	}
 
 
 
@@ -116,8 +160,8 @@
     border-bottom: 2px solid #FB6C2C;
 	}
 	.page-header h1{
-	    color: #FB6C2C;
-    	font-weight: bold;
+	    color: #282828;
+    font-weight: bold;
 	}
 	.panel-default>.panel-heading {
 	background-color: #3285B9;
@@ -160,7 +204,7 @@
     font-size: 14px;
     font-weight: bold;
     line-height: 1;
-    color: #09517D;
+    color: #343434;
     text-align: center;
     background-color: #DEDEDE;
     border: 0;
@@ -174,7 +218,7 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: url('../img/imagens/fundo_2.jpg') 100%;
+		background: url('../img/imagens/fundo_menu.jpg') 100%;
 	}
 	#container_login .box_login{
 	    position: absolute;
@@ -223,19 +267,19 @@
 	}
 
 	#container_login .box_login .btn_login{
-	    background-color: #1B5CB6;
-	    background-image: url('../img/imagens/efeito.png');
-	    background-size: 100%;
-	    box-shadow: 0 0 9px 7px rgba(16, 82, 165, 0.69) inset;
-	    margin: 0 10px;
-	    border-radius: 8px;
-	    border: 0;
-	    width: 94%;
-	    margin-bottom: 10px;
-	    color: #FFF;
-	    font-size: 23px;
-	    padding: 3px;
-	    font-weight: bold;
+    background-color: #3B3B3B;
+    background-image: url('../img/imagens/efeito.png');
+    background-size: 100%;
+    box-shadow: 0 0 9px 7px rgb(37, 37, 37) inset;
+    margin: 0 10px;
+    border-radius: 8px;
+    border: 0;
+    width: 94%;
+    margin-bottom: 10px;
+    color: #FFF;
+    font-size: 23px;
+    padding: 3px;
+    font-weight: bold;
 	}
 	#container_login .box_login .recupera{
 		float: right;
