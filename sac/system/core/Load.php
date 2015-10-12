@@ -262,7 +262,8 @@ class Load{
         }else{
             $_message_error = "<p><strong>DESCULPE-NOS</strong></p>
                                 <p>A página que você procura não foi encontrada.</p>
-                                <p>Verifique o endereço digitado ou tente novamente mais tarde.</p>";
+                                <p>Verifique o endereço digitado ou tente novamente mais tarde. </p>
+                                <p>View não definida</p>";
             require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.ERRORDIR.DIRECTORY_SEPARATOR.'error_404.php');
             //return false;
         }

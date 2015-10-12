@@ -21,7 +21,7 @@ body{
   overflow: hidden;
 }
 *{
-	/*font-family: 'calibri';*/
+	    font-family: monospace;
 }
 a{
 	text-decoration: none;

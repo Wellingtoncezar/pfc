@@ -155,9 +155,9 @@
 	    border-radius: 4px;
 	}
 	.page-header {
-	        padding-bottom: 0px;
+	padding-bottom: 0px;
     margin: 26px 0 15px;
-    border-bottom: 2px solid #FB6C2C;
+	border-bottom: 2px solid #121212;	
 	}
 	.page-header h1{
 	    color: #282828;
@@ -320,7 +320,6 @@
 	.wrap-content{
     position: relative;
     width: 100%;
-    background: #E6E6E6 url('../img/imagens/fundo.png') fixed;
 
 	}
 
