@@ -16,6 +16,7 @@ body{
   background-size: 100%;
   background-attachment: fixed;
   */
+      background: url('../img/imagens/background.jpg') 100%; 
 }
 .overflowHidden{
   overflow: hidden;

@@ -155,13 +155,14 @@
 	    border-radius: 4px;
 	}
 	.page-header {
-	padding-bottom: 0px;
-    margin: 26px 0 15px;
-	border-bottom: 2px solid #121212;	
+    padding-bottom: 0px;
+    margin: 20px 0 15px;
+    border-bottom: 3px groove #3E8FD4;
 	}
 	.page-header h1{
-	    color: #282828;
+    color: #3C8FD6;
     font-weight: bold;
+    text-shadow: 1px 1px 1px #000;
 	}
 	.panel-default>.panel-heading {
 	background-color: #3285B9;
@@ -320,6 +321,7 @@
 	.wrap-content{
     position: relative;
     width: 100%;
+
 
 	}
 
