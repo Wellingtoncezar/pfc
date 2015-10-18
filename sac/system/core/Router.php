@@ -67,7 +67,7 @@ class Router extends Common{
 					}
 				}else
 				{
-					$this->_controller 	= $value;
+					$this->_controller 	= ucfirst($value);
 					if(isset($this->url[$key+1]))
 						$this->_action = $this->url[$key+1];
 					else
@@ -82,4 +82,15 @@ class Router extends Common{
 		}
 		
 	}
+
+	/**
+     * @access public
+     * @return booleam
+     */
+    public function checkDir($dir){
+        if(is_dir(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.CONTROLLERS.DIRECTORY_SEPARATOR.$dir))
+            return true;
+        else
+            return false;
+    }
 }

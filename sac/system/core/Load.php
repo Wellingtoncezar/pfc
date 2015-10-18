@@ -105,16 +105,8 @@ class Load{
             return false;
     }
     
-    /**
-     * @access public
-     * @return booleam
-     */
-    public function checkDir($dir){
-        if(is_dir(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.CONTROLLERS.DIRECTORY_SEPARATOR.$dir))
-            return true;
-        else
-            return false;
-    }
+
+
 
     /**
     * inclui e instancia o controller requisitado

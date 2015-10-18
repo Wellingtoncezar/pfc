@@ -2,14 +2,14 @@
 /**
 *@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
 */
-if(!defined('BASEPATH')) die('Acesso não permitido');
-class template extends Controller{
+if(!defined('URL')) die('Acesso não permitido');
+class template extends Library{
 	private $_modulos = array();
 	private $_menu = '';
 	private $checkPermissao;
 	public function __construct()
 	{
-		$this->checkPermissao = new checkPermissao();//validação das permissões de acesso
+		//$this->checkPermissao = new checkPermissao();//validação das permissões de acesso
 	}
 
 
@@ -55,19 +55,19 @@ class template extends Controller{
 	/**
 	*Retorna o botão de adicionar
 	*/
-	public function btnAdicionarRegistro($href,$title = 'Adicionar',$moreContent = '')
+	public function btnCadastrar($href,$title = 'Cadastrar',$moreContent = '')
 	{
-		if($this->checkPermissao->acao('cadastrar'))//verifica a permissão do botão
-		{
+		//if($this->checkPermissao->acao('cadastrar'))//verifica a permissão do botão
+		//{
 			$data = array(
 				'title' => $title,
 				'href' => $href,
 				'moreContent' => $moreContent
 			);
 			//$data = array();
-			return $this->getContent('template/actions_buttons/btnAdicionarRegistro',$data);
-		}else
-			return '';
+			return $this->getContent('template/actions_buttons/btnCadastrar',$data);
+		//}else
+			//return '';
 	}
 
 	/**
@@ -122,117 +122,6 @@ class template extends Controller{
 			return '';
 	}
 
-
-	/**
-	*Retorna o botão de imagem
-	*/
-	public function btnImagensRegistro($href, $title = 'Imagens', $moreContent = '')
-	{
-		if($this->checkPermissao->acao('imagens'))
-		{
-			$data = array(
-				'title' => $title,
-				'href' => $href,
-				'moreContent' => $moreContent
-			);
-			return $this->getContent('template/actions_buttons/btnImagensRegistro',$data);
-		}else
-			return '';
-	}
-
-
-	/**
-	*Retorna o botão de restaurar
-	*/
-	public function btnRestaurarRegistro($href, $id, $title='Restaurar', $moreContent = '')
-	{
-		if($this->checkPermissao->acao('restaurar'))
-		{
-			$data = array(
-				'title' => $title,
-				'href' => $href,
-				'id' => $id,
-				'moreContent' => $moreContent
-			);
-			return $this->getContent('template/actions_buttons/btnRestaurarRegistro',$data);
-		}else
-			return '';
-	}
-
-
-
-	/**
-	*Retorna o botão de alunos
-	*/
-	public function btnAlunos($href,$title = 'Alunos',$moreContent = '')
-	{
-		if($this->checkPermissao->acao('alunos'))//verifica a permissão do botão
-		{
-			$data = array(
-				'title' => $title,
-				'href' => $href,
-				'moreContent' => $moreContent
-			);
-			//$data = array();
-			return $this->getContent('template/actions_buttons/btnAlunos',$data);
-		}else
-			return '';
-	}
-
-	/**
-	*Retorna o botão dos professores
-	*/
-	public function btnProfessores($href,$title = 'Professores',$moreContent = '')
-	{
-		if($this->checkPermissao->acao('professores'))//verifica a permissão do botão
-		{
-			$data = array(
-				'title' => $title,
-				'href' => $href,
-				'moreContent' => $moreContent
-			);
-			//$data = array();
-			return $this->getContent('template/actions_buttons/btnProfessores',$data);
-		}else
-			return '';
-	}
-
-	/**
-	*Retorna o botão das chamadas da EBD
-	*/
-	public function btnChamadas($href,$title = 'Alunos',$moreContent = '')
-	{
-		if($this->checkPermissao->acao('chamadas'))//verifica a permissão do botão
-		{
-			$data = array(
-				'title' => $title,
-				'href' => $href,
-				'moreContent' => $moreContent
-			);
-			//$data = array();
-			return $this->getContent('template/actions_buttons/btnChamadas',$data);
-		}else
-			return '';
-	}
-
-	
-	/**
-	*Retorna o botão de adicionar alunos na EBD
-	*/
-	public function btnAdicionarAlunos($href,$title = 'Adicionar Alunos',$moreContent = '')
-	{
-		if($this->checkPermissao->acao('cadastrarAlunos'))//verifica a permissão do botão
-		{
-			$data = array(
-				'title' => $title,
-				'href' => $href,
-				'moreContent' => $moreContent
-			);
-			//$data = array();
-			return $this->getContent('template/actions_buttons/btnAdicionarAlunos',$data);
-		}else
-			return '';
-	}
 
 
 	/**
@@ -316,6 +205,25 @@ class template extends Controller{
 	}
 
 
+	/**
+	*Retorna checkbox para status (Ativo/Inativo)
+	*/
+	public function checkbox($id, $name, $ativo = 'Ativo', $inativo = 'Inativo', $checked =false, $moreContent = '')
+	{
+		if($checked == true)
+			$checked = 'checked';
+		else
+			$checked = '';
+		$data = array(
+			'id' => $id,
+			'name' => $name,
+			'ativo' => $ativo,
+			'inativo' => $inativo,
+			'checked' => $checked,
+			'moreContent' => $moreContent
+		);
+		return $this->getContent('template/status/checkbox',$data);
+	}
 	
 	/**
 	*Retorna o botão de conversão para xls
