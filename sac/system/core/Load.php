@@ -190,8 +190,8 @@ class Load{
         spl_autoload_register(array($this,'model'));
         $file = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.MODELS.DIRECTORY_SEPARATOR.$filename.'.model.php';
         
-        if(!$this->_isloaded($name))
-        {
+        //if(!$this->_isloaded($name))
+        //{
             if(file_exists($file)){
                 require_once(str_replace('\\', '/', $file));
                 if($autoExec == true)
@@ -200,8 +200,8 @@ class Load{
             }else{
                 return false;
             }
-        }else
-            return false;
+       // }else
+            //return $this->$name;
     }
 
     /**

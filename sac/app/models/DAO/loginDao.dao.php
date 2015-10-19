@@ -3,7 +3,7 @@
 *@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class loginDao extends Model{
+class loginDao extends Dao{
 	public function __construct(){
 		parent::__construct();
 	}

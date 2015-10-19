@@ -30,6 +30,7 @@ class home extends Controller{
 		$this->load->view('includes/footer',$data);
 	}
 
+
 	public function cadastrar()
 	{
 		//$this->saveAction();
@@ -56,19 +57,40 @@ class home extends Controller{
 		$this->load->view('includes/footer',$data);
 	}
 
+
+
+
+
+
+	/*---------------------------
+	- AÇÕES
+	=============================*/
+
 	public function inserir()
 	{
-		echo json_encode(array('error' => 'Erro de teste'));
+		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
+		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
+		$sobrenome = isset($_POST['sobrenome']) ? filter_var($_POST['sobrenome']) : '';
+		$dataNascimento = isset($_POST['dataNascimento']) ? filter_var(trim($_POST['dataNascimento'])) : '';
+
+		//validação dos dados
+		$validate = new DataValidator();
+		$validate->set('Nome', $nome, 'nome')->is_required()->min_length(2);
+		$validate->set('Sobrenome', $sobrenome, 'sobrenome')->is_required()->min_length(2);
+		$validate->set('Data de nascimento', $dataNascimento, 'data_nascimento')->is_required()->is_date('d/m/Y');
+
+		
+		if ($validate->validate())
+		{
+
+			// $this->load->dao('funcionarios/funcionariosDao');
+			// echo $this->funcionariosDao->inserir('algas asdf dsfads dfaso');
+		}else
+	    {
+			$todos_erros = $validate->get_errors();
+			echo json_encode($todos_erros);
+	    }
+
 	}
 
-
-	
 }
-
-
-/**
-*
-*class: home
-*
-*location : controllers/home.controller.php
-*/

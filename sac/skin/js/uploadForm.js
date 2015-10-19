@@ -287,111 +287,6 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
     }
 })(jQuery);
 
-/*
-<div class="box_panel_cropper">
-                <div class="panel panel-default panel_cropper">
-                    <div class="panel-heading">Editar imagem</div>
-                    <div class="container panel-body">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <!-- <h3 class="page-header">Demo:</h3> -->
-                                <div class="img-container">
-                                    <img src="../assets/img/picture.jpg" alt="Picture">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <!-- <h3 class="page-header">Preview:</h3> -->
-                                <div class="docs-preview clearfix">
-                                    <div class="img-preview preview-lg"></div>
-                                    <div class="img-preview preview-md"></div>
-                                    <div class="img-preview preview-sm"></div>
-                                    <div class="img-preview preview-xs"></div>
-                                </div>
-
-                                <!-- <h3 class="page-header">Data:</h3> -->
-                                <div class="docs-data">
-                                    <div class="input-group">
-                                        <input class="form-control" id="dataX" type="text" placeholder="x" name="x1" style="display:none">
-                                    </div>    
-                                    <div class="input-group">
-                                        <input class="form-control" id="dataY" type="text" placeholder="y" name="y1" style="display:none">
-                                    </div>
-                                    <div class="input-group">
-                                        <input class="form-control" id="dataWidth" type="text" placeholder="width" name="w" style="display:none">
-                                    </div>
-                                    <div class="input-group">
-                                        <input class="form-control" id="dataHeight" type="text" placeholder="height" name="h" style="display:none">
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-9 docs-buttons">
-                                <!-- <h3 class="page-header">Toolbar:</h3> -->
-                                <div class="btn-group">
-                                    <button class="btn btn-primary" data-method="setDragMode" data-option="move" type="button" title="Move">
-                                        <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;setDragMode&quot;, &quot;move&quot;)">
-                                            <span class="glyphicon glyphicon-move"></span>
-                                        </span>
-                                    </button>
-                              
-                                    <button class="btn btn-primary" data-method="zoom" data-option="0.1" type="button" title="Zoom In">
-                                        <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, 0.1)">
-                                            <span class="glyphicon glyphicon-zoom-in"></span>
-                                        </span>
-                                    </button>
-                                    <button class="btn btn-primary" data-method="zoom" data-option="-0.1" type="button" title="Zoom Out">
-                                        <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, -0.1)">
-                                            <span class="glyphicon glyphicon-zoom-out"></span>
-                                        </span>
-                                    </button>
-                                </div>
-
-                                <!-- Show the cropped image in modal -->
-                                <div class="modal fade docs-cropped" id="getCroppedCanvasModal" aria-hidden="true" aria-labelledby="getCroppedCanvasTitle" role="dialog" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button class="close" data-dismiss="modal" type="button" aria-hidden="true">&times;</button>
-                                                <h4 class="modal-title" id="getCroppedCanvasTitle">Cropped</h4>
-                                            </div>
-                                            <div class="modal-body"></div>
-                                            <!-- 
-                                            <div class="modal-footer">
-                                                <button class="btn btn-primary" data-dismiss="modal" type="button">Close</button>
-                                            </div> 
-                                            -->
-                                        </div>
-                                    </div>
-                                </div><!-- /.modal -->
-                         
-                                <button class="btn btn-primary" data-method="getCropBoxData" data-option="" data-target="#putData" type="button">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;getCropBoxData&quot;)">
-                                        Get Crop Box Data
-                                    </span>
-                                </button>
-                                <button class="btn btn-primary" data-method="setCropBoxData" data-target="#putData" type="button">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;setCropBoxData&quot;, data)">
-                                        Set Crop Box Data
-                                    </span>
-                                </button>
-                                <input class="form-control" id="putData" type="text" placeholder="Get data to here or set data with this value" name="putData">
-                                
-                            </div><!-- /.docs-buttons -->
-
-                        </div>
-                    </div>
-
-                    <!-- Alert -->
-                    <div class="docs-alert"><span class="warning message"></span></div>
-                </div>
-            </div>
-
-
-
-*/
-
 
 (function($){
     $.fn.uploadForm = function(options) {
@@ -413,11 +308,12 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
 
 
         $('.generalErrors').remove();
-        form.before('<div class="panel generalErrors panel-danger" style="text-align:left; display:none;  background-color: #f2dede;"><h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4><div class="alert alert-danger" role="alert"></div></div>');
+        form.before('<div class="panel generalErrors panel-danger" style="text-align:left; display:none;  background-color: #f2dede;"><h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4><div class="alert" role="alert"></div></div>');
 
        	// pre-submit callback
 		function showRequest(formData, jqForm, options)
 		{ 
+
 			/*console.log('INICIO REQUEST')
 			console.log(formData)
 			console.log(jqForm)
@@ -446,6 +342,7 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
 			
 			console.log(data)
 			*/
+
    			$('input, select, textarea',form).css('box-shadow','none');
 		    $('.generalErrors .alert').html('');
 		    $('.generalErrors').hide();
@@ -482,9 +379,10 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
 			}
 			catch(e)
 			{
-				console.log(e)
-				console.log(data)
 				$('#carregando').fadeOut();
+	        	var erroTop = ($('.generalErrors').offset().top)
+		       	$('body,html').animate({scrollTop : erroTop},600);
+	        	$('.generalErrors .alert').html(data)
 			}
 			return true;
 
@@ -504,7 +402,12 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
 	 		data:  settings.parameters,
 	        // $.ajax options can be used here too, for example: 
 	        //timeout:   3000 
-	        error : true
+	        error : function(e){
+	        	$('#carregando').fadeOut();
+	        	var erroTop = ($('.generalErrors').offset().top)
+		       	$('body,html').animate({scrollTop : erroTop},600);
+	        	$('.generalErrors .alert').html(e.responseText)
+	        }
 	    }; 
 
 	    
