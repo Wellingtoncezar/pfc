@@ -3,7 +3,7 @@
 *@author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class loginModel extends Model{
+class loginModel{
 	private $error = array();
 	private $id;
 	private $nome;
@@ -88,10 +88,5 @@ class loginModel extends Model{
 
 
 
-	public function __construct(){
-		parent::__construct();
-	}
 
-
-	
 }

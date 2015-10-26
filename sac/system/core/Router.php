@@ -56,7 +56,8 @@ class Router extends Common{
 	public function explodeUri()
 	{
 		if(!empty($this->url)){
-			foreach ($this->url as $key => $value) {
+			foreach ($this->url as $key => $value) 
+			{
 				if($this->checkDir($this->_route.$value))
 				{
 					$this->_route .= $value.DIRECTORY_SEPARATOR;

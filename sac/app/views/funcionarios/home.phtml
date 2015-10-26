@@ -7,16 +7,106 @@ echo $template->actions_buttons($btnCadastrar);
     <div class="page-header">
       <h1>Funcionários</h1>
     </div>
-    <div>
-        <br><br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br><br><br><br><br><br><br><br><p>conteudo</p>
-        <br><br><br><br><br><br><br><br><p>conteudo</p>
-        <br><br><br><br><br><br><br><p>fim</p>
+    <div class="middle-content">
+        <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
+        <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
+            <thead>
+                <tr>   
+                    <th width="160">Código</th>
+                    <th width="40">Foto</th>
+                    <th width="160">Nome</th>
+                    <th width="160">Cargo</th>
+                    <th width="120">CPF</th>
+                    <th width="100">Status (Ativo/Inativo)</th>
+                    <th width="100">Ações</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Código</th>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>Cargo</th>
+                    <th>CPF</th>
+                    <th>Status (Ativo/Inativo)</th>
+                    <th>Ações</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr>
+                    <td>Código</td>
+                    <td>Foto</td>
+                    <td>Nome</td>
+                    <td>Cargo</td>
+                    <td>CPF</td>
+                    <td>Status (Ativo/Inativo)</td>
+                    <td>Ações</td>
+                </tr>
+                <tr>
+                    <td>Código</td>
+                    <td>Foto</td>
+                    <td>Nome</td>
+                    <td>Cargo</td>
+                    <td>CPF</td>
+                    <td>Status (Ativo/Inativo)</td>
+                    <td>Ações</td>
+                </tr>
+                <tr>
+                    <td>Código</td>
+                    <td>Foto</td>
+                    <td>Nome</td>
+                    <td>Cargo</td>
+                    <td>CPF</td>
+                    <td>Status (Ativo/Inativo)</td>
+                    <td>Ações</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+
 </div>
+<script type="text/javascript">
+    $(function(){
+
+        $(window).load(function() {
+            $('#loadTable').hide();
+            $('.dataTable').fadeIn();
+        });
+        if($(this).width() <= '765')
+            responsiveTable();
+        $(window).resize(function() {
+            //console.log($(this).width())
+            if($(this).width() <= '765')
+                responsiveTable();
+            else
+                responsiveTableRemove()
+        });
+
+
+        function responsiveTable(){
+            var th = Array();
+            $('.rwd-table thead th').each(function(){
+                th.push($(this).html())
+            });
+
+            //console.log(th);
+            var i = 0;
+            $('.rwd-table tbody td').each(function(a,b){
+                if(!$('div',$(this)).hasClass('dataTables-th')){
+                    $(this).prepend('<div class="dataTables-th">'+th[i]+'</div>');
+                    i++;
+                    if(i == th.length)
+                        i=0;
+                }
+            });
+        }
+        function responsiveTableRemove(){
+            $('.rwd-table tbody td .dataTables-th').remove()
+        }
+
+        var table = $('.dataTable').DataTable({
+            order: [1,'asc']
+        });
+
+    })
+</script>

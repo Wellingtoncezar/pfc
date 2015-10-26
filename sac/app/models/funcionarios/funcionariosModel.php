@@ -3,7 +3,9 @@
 *@author Wellington cezar, Diego Hernandes, Jessica Azevedo
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class funcionariosModel extends Model{
+class funcionariosModel{
+	private $id;
+	private $foto;
 	private $nome;
 	private $sobrenome;
 	private $dataNascimento;
@@ -13,18 +15,25 @@ class funcionariosModel extends Model{
 	private $estadoCivil;
 	private $escolaridade;
 	private $endereco;
-	private $telefone;
-	private $email;
+	private $telefones = Array();
+	private $email = Array();
 	private $codigo;
 	private $cargo;
+	private $dataAdmissao;
 	private $salario;
+	private $status;
+	private $dataCadastro;
 	
 
-	public function __construct(){
-		parent::__construct();
-	}
-
  	//SETERS
+ 	public function setId($id)
+ 	{
+ 		$this->id = $id;
+ 	}
+ 	public function setFoto($foto)
+	{
+		$this->foto = $foto;
+	}
 	public function setNome($nome)
 	{
 		$this->nome = $nome;
@@ -61,9 +70,9 @@ class funcionariosModel extends Model{
 	{
 		$this->endereco = $endereco;
 	}
-	public function setTelefone($telefone)
+	public function setTelefones($telefones)
 	{
-		$this->telefone = $telefone;
+		$this->telefones = $telefones;
 	}
 	public function setEmail($email)
 	{
@@ -77,14 +86,32 @@ class funcionariosModel extends Model{
 	{
 		$this->cargo = $cargo;
 	}
+	public function setDataAdmissao($dataAdmissao)
+	{
+		$this->dataAdmissao = $dataAdmissao;
+	}
 	public function setSalario($salario)
 	{
 		$this->salario = $salario;
 	}
-
-
+	public function setStatus($status)
+	{
+		$this->status = $status;
+	}
+	public function setDataCadastro($dataCadastro)
+	{	
+		$this->dataCadastro = $dataCadastro;
+	}
 
 	//GETERS
+	public function getId()
+	{
+		return $this->id;
+	}
+	public function getFoto()
+	{
+		return $this->foto;
+	}
 	public function getNome()
 	{
 		return $this->nome;
@@ -121,9 +148,9 @@ class funcionariosModel extends Model{
 	{
 		return $this->endereco;
 	}
-	public function getTelefone()
+	public function getTelefones()
 	{
-		return $this->telefone;
+		return $this->telefones;
 	}
 	public function getEmail()
 	{
@@ -137,9 +164,21 @@ class funcionariosModel extends Model{
 	{
 		return $this->cargo;
 	}
+	public function getDataAdmissao()
+	{
+		return $this->dataAdmissao;
+	}
 	public function getSalario()
 	{
 		return $this->salario;
+	}
+	public function getStatus()
+	{
+		return $this->status;
+	}
+	public function getDataCadastro()
+	{	
+		return $this->dataCadastro;
 	}
 
 

@@ -3,7 +3,7 @@
 *@author Wellington cezar, Diego Hernandes, Jessica Azevedo
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class enderecoModel extends Model{
+class enderecoModel{
 	private $id;
 	private $cep;
 	private $numero;
@@ -12,11 +12,7 @@ class enderecoModel extends Model{
 	private $bairro;
 	private $cidade;
 	private $estado;
-	
 
-	public function __construct(){
-		parent::__construct();
-	}
 
  	//SETERS
 	public function setId($id)

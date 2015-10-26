@@ -3,17 +3,12 @@
 *@author Wellington cezar, Diego Hernandes, Jessica Azevedo
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class telefoneModel extends Model{
+class emailModel{
 	private $id;
+	private $email;
 	private $tipo;
-	private $numero;
 	
-
-	public function __construct(){
-		parent::__construct();
-	}
-
- 	//SETERS
+	//SETERS
 	public function setId($id)
 	{
 		$this->id = $id;
@@ -22,10 +17,11 @@ class telefoneModel extends Model{
 	{
 		$this->tipo = $tipo;
 	}
-	public function setNumero($numero)
+	public function setEmail($email)
 	{
-		$this->numero = $numero;
+		$this->email = $email;
 	}
+
 	
 
 	//GETERS
@@ -37,8 +33,10 @@ class telefoneModel extends Model{
 	{
 		return $this->tipo;
 	}
-	public function getNumero()
+	public function getEmail()
 	{
-		return $this->numero;
+		return $this->email;
 	}
+
+
 }

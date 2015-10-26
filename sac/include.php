@@ -21,52 +21,31 @@ if(!function_exists('autoload'))
 
     function _autoload($className)
     {
-        //library app
-        $filename   = $className . '.library.php';
-        $file       = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename;
+        $filesPath = array(
+            //library app
+            BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$className . '.library.php',
+            //model app
+            BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.MODELS.DIRECTORY_SEPARATOR.$className . '.php',
+            //controller app
+            BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.CONTROLLERS.DIRECTORY_SEPARATOR.$className . '.controller.php',
+            //library system
+            BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$className . '.library.php',
+            //core system
+            BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$className . '.php',
+            //database system
+            BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.$className . '.php'
+        );
 
-        //model app
-        $filename   = $className . '.model.php';
-        $file1      = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.MODELS.DIRECTORY_SEPARATOR.$filename;
-
-        //controller app
-        $filename   = $className . '.controller.php';
-        $file2      = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.CONTROLLERS.DIRECTORY_SEPARATOR.$filename;
-
-        //library system
-        $filename   = $className . '.library.php';
-        $file3       = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename;
-        
-        //core system
-        $filename   = $className . '.php';
-        $file4       = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$filename;
-
-        //database system
-        $filename   = $className . '.php';
-        $file5       = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.$filename;
-
-
-        if (file_exists($file)) 
-            includeFile($file);
-        else
-        if(file_exists($file1))
-            includeFile($file1);
-        else
-        if(file_exists($file2))
-            includeFile($file2);
-        else
-        if(file_exists($file3))
-            includeFile($file3);
-        else
-        if(file_exists($file4))
-            includeFile($file4);
-        else
-        if(file_exists($file5))
-            includeFile($file5);
+        foreach ($filesPath as $file)
+        {
+            if (file_exists($file)){
+                includeFile($file);
+                break;
+            }
+        }
     }
 
     spl_autoload_register('_autoload');
-
 }
 
 

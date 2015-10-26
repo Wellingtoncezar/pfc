@@ -6,7 +6,10 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 
 class Load{
     private static $data = array();
-    
+    /**
+     * Construtor do tipo protegido previne que uma nova instância da
+     * Classe seja criada através do operador `new` de fora dessa classe.
+     */
     protected function __construct(){
     }
 
@@ -18,14 +21,21 @@ class Load{
         }
         return $instance;
     }
-
+    /**
+     * Método clone do tipo privado previne a clonagem dessa instância
+     * da classe
+     *
+     * @return void
+     */
     private function __clone()
     {
     }
 
 
     /**
-     * @access private
+     * Método unserialize do tipo privado para prevenir a desserialização
+     * da instância dessa classe.
+     *
      * @return void
      */
     private function __wakeup()
@@ -104,9 +114,6 @@ class Load{
         }else
             return false;
     }
-    
-
-
 
     /**
     * inclui e instancia o controller requisitado
@@ -129,7 +136,6 @@ class Load{
                 return true;
             }else
                 return false;
-                //die('Class controller '.$name .' not found');
         }
     }
 
@@ -146,83 +152,64 @@ class Load{
         $name = end($name);
 
         spl_autoload_register(array($this,'library'));
-        $file = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename.'.library.php';
-        $file2 = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename.'.library.php';
-        //database system
-        $file3       = BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.$filename.'.php';
+        $files = array(
+            BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename.'.library.php',
+            BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.LIBRARYPATH.DIRECTORY_SEPARATOR.$filename.'.library.php',
+            BASEPATH.DIRECTORY_SEPARATOR.SYSTEMPATH.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.$filename.'.php'
+        );
+
         if(!$this->_isloaded($name))
         {
-            if(file_exists($file)){
-                require_once(str_replace('\\', '/', $file));
-                if($autoExec == true)
-                    $this->$name = new $name($parameters);
-                return true;
-            }else
-            if(file_exists($file2)){
-                require_once(str_replace('\\', '/', $file2));
-                if($autoExec == true)
-                    $this->$name = new $name($parameters);
-                return true;
-            }else
-            if(file_exists($file3)){
-                require_once(str_replace('\\', '/', $file3));
-                if($autoExec == true)
-                    $this->$name = new $name($parameters);
-                return true;
-            }else{
-                return false;
+            foreach ($files as $file)
+            {
+                if(file_exists($file)){
+                    require_once(str_replace('\\', '/', $file));
+                    if($autoExec === true)
+                        $this->$name = new $name($parameters);
+                    return true;
+                }
             }
+            return false;
         }else
             return false;
     }
 
 
     /**
-    * inclui e instancia o model requisitada
+    * inclui o model requisitado
      * @access public
      * @return booleam
      */
-    public function model($filename , $parameters = null, $autoExec = true)
+    public function model($filename)
     {
         $filename = str_replace('\\', '/', $filename);
-        $name = explode('/',rtrim($filename));
-        $name = end($name);
         spl_autoload_register(array($this,'model'));
-        $file = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.MODELS.DIRECTORY_SEPARATOR.$filename.'.model.php';
-        
-        //if(!$this->_isloaded($name))
-        //{
-            if(file_exists($file)){
-                require_once(str_replace('\\', '/', $file));
-                if($autoExec == true)
-                    $this->$name = new $name($parameters);
-                return true;
-            }else{
-                return false;
-            }
-       // }else
-            //return $this->$name;
+        $file = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.MODELS.DIRECTORY_SEPARATOR.$filename.'.php';
+        if(file_exists($file)){
+            require_once(str_replace('\\', '/', $file));
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
-    * inclui e instancia a dao requisitada
+    * inclui a dao requisitada
      * @access public
      * @return booleam
      */
-    public function dao($filename , $parameters = null, $autoExec = true)
+    public function dao($filename)
     {
         $filename = str_replace('\\', '/', $filename);
         $name = explode('/',rtrim($filename));
         $name = end($name);
-        spl_autoload_register(array($this,'model'));
-        $file = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.MODELS.DIRECTORY_SEPARATOR.'DAO'.DIRECTORY_SEPARATOR.$filename.'.dao.php';
+        spl_autoload_register(array($this,'dao'));
+        $file = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.MODELS.DIRECTORY_SEPARATOR.'DAO'.DIRECTORY_SEPARATOR.$filename.'.php';
         
         if(!$this->_isloaded($name))
         {
             if(file_exists($file)){
                 require_once(str_replace('\\', '/', $file));
-                if($autoExec == true)
-                    $this->$name = new $name($parameters);
                 return true;
             }else{
                 return false;
@@ -239,15 +226,11 @@ class Load{
      */
     public function view($filename, $param = array())
     {
-        spl_autoload_register(array($this,'view'));
         $filename = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.VIEWS.DIRECTORY_SEPARATOR.$filename.'.phtml';
         if(file_exists($filename)){
-
-
             if(is_array($param) && !empty($param)){
                 extract($param);
             }
-            //$titulo = 'testeee';
       
             require_once(str_replace('\\', '/', $filename));
             return true;

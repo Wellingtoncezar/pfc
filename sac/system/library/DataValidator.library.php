@@ -1,13 +1,6 @@
 <?php
-/**
- * Class for validation of data
- *
- * @author Rafael Wendel Pinheiro (http://www.rafaelwendel.com)
- * @version 1.0
- * @link https://github.com/rafaelwendel/DataValidator/
- */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class DataValidator {
+class dataValidator {
     
     protected $_data     = array();
     protected $_errors   = array();

@@ -6,6 +6,59 @@
 		top: 0;
 	}
 
+	.rwd-table{
+
+	}
+
+	.rwd-table thead,
+	.rwd-table tbody{
+		display: table;
+  width: 100%;
+	}
+	.rwd-table thead th,
+	.rwd-table tfoot th{
+		display: table;
+  		width: 90%!important;
+	}
+
+	.rwd-table thead td{
+		
+	}
+	.rwd-table tbody tr{
+		margin-bottom: 10px;
+		display: table;
+		width: 100%;
+	}
+	.rwd-table tbody td{
+		width: 100%;
+		padding: 8px 11px;
+		display: block;
+		width: auto;
+	}
+
+	.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+	  clear: both;
+	  text-align: center;
+	  width: auto;
+	  display: table;
+	  float: left;
+	}
+
+	.dataTables-th{
+		display: block;
+		padding: 1px;
+		height: 100%;
+		width: 100%;
+		font-weight: bold;
+		font-size: 15px;
+		border-bottom: 1px solid rgba(102, 102, 102, 0.45);
+		margin-bottom: 4px;
+	}
+	.dataTables_wrapper .dataTables_filter input {
+	  margin-left: 0.5em;
+	  width: 66%;
+	}
+
 	.header .logo{
 		width: 150px;
 		float: left;
