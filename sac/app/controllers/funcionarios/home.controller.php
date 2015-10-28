@@ -1,6 +1,6 @@
 <?php
 /**
-*@author Wellington cezar, Diego Hernandes, Jessica Azevedo
+*@author Wellington cezar, Diego Hernandes
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class home extends Controller{
@@ -24,11 +24,13 @@ class home extends Controller{
 
 		$data = array(
 			'titlePage' => 'Funcionários'
+			
 		);
 		
 		$this->load->view('includes/header',$data);
 		$this->load->view('funcionarios/home',$data);
 		$this->load->view('includes/footer',$data);
+
 	}
 
 
