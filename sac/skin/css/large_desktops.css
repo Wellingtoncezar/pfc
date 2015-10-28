@@ -173,7 +173,7 @@
 	background: -webkit-linear-gradient(top,  #498db7 41%,#2a81b7 57%); /* Chrome10+,Safari5.1+ */
 	background: -o-linear-gradient(top,  #498db7 41%,#2a81b7 57%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  #498db7 41%,#2a81b7 57%); /* IE10+ */
-	background: linear-gradient(to bottom,  #498db7 41%,#2a81b7 57%); /* W3C */
+	background: linear-gradient(to bottom, rgba(20,72,140,0.87) 41%,rgba(42, 92, 140, 0.85) 57%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#498db7', endColorstr='#2a81b7',GradientType=0 ); /* IE6-9 */
 
     border-color: #09517D;
