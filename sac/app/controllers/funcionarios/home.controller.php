@@ -116,6 +116,8 @@ class home extends Controller{
 		$this->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
 		$this->dataValidator->set('Estado', $estado, 'estado')->is_required();
 
+		
+
 		if ($this->dataValidator->validate())
 		{
 			//TELEFONES

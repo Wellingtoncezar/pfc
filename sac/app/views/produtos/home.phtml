@@ -1,17 +1,68 @@
+<?php
+$template = new Template();
+$btnCadastrar = $template->btnCadastrar(URL.'produtos/home/cadastrar');
+echo $template->actions_buttons($btnCadastrar);
+?>
 <div class="container">
     <div class="page-header">
-      <h1>Página de produtos<small>subtitulo</small></h1>
+      <h1>Produtos</h1>
     </div>
-    <div>
-        <br><br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br><br><br><br><br><br><br><br><p>conteudo</p>
-        <br><br><br><br><br><br><br><br><p>conteudo</p>
-        <br><br><br><br><br><br><br><p>fim</p>
-    </div>
-</div>
+    <div class="middle-content">
+        <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
+        <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
+            <thead>
+                <tr>   
+                    <th width="160">Código</th>
+                    <th width="40">Nome</th>
+                    <th width="160">Categoria</th>
+                    <th width="160">Fornecedor</th>
+                    <th width="120">Estoque Máximo</th>
+                    <th width="100">Estoque Mínimo</th>
+                    <th width="100">Ações</th>
+                </tr>
+            </thead>
+<script type="text/javascript">
+    $(function(){
+
+        $(window).load(function() {
+            $('#loadTable').hide();
+            $('.dataTable').fadeIn();
+        });
+        if($(this).width() <= '765')
+            responsiveTable();
+        $(window).resize(function() {
+            //console.log($(this).width())
+            if($(this).width() <= '765')
+                responsiveTable();
+            else
+                responsiveTableRemove()
+        });
+
+
+        function responsiveTable(){
+            var th = Array();
+            $('.rwd-table thead th').each(function(){
+                th.push($(this).html())
+            });
+
+            //console.log(th);
+            var i = 0;
+            $('.rwd-table tbody td').each(function(a,b){
+                if(!$('div',$(this)).hasClass('dataTables-th')){
+                    $(this).prepend('<div class="dataTables-th">'+th[i]+'</div>');
+                    i++;
+                    if(i == th.length)
+                        i=0;
+                }
+            });
+        }
+        function responsiveTableRemove(){
+            $('.rwd-table tbody td .dataTables-th').remove()
+        }
+
+        var table = $('.dataTable').DataTable({
+            order: [1,'asc']
+        });
+
+    })
+</script>
