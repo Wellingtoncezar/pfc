@@ -1,6 +1,6 @@
 <?php
 /**
-*@author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
+*@author Wellington cezar, Diego Hernandes
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class home extends Controller{
@@ -26,12 +26,12 @@ class home extends Controller{
 			'titlePage' => 'Produtos'
 		);
 		
-		$this->load->view('include/header',$data);
+		$this->load->view('includes/header',$data);
 		$this->load->view('produtos/home',$data);
-		$this->load->view('include/footer',$data);
+		$this->load->view('includes/footer',$data);
 	}
 
-	public function cadastro()
+	public function cadastrar()
 	{
 		//$this->saveModules();
 		//$this->saveAction();
