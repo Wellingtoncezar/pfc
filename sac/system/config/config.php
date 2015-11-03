@@ -10,14 +10,6 @@ header('Content-Type: text/html; charset=utf-8');
 */
 require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
 
-define('STATUS_ACTIVE','Ativo');
-define('STATUS_INACTIVE','Inativo');
-define('STATUS_DELETED','Excluído');
-
-define('PREFIXTABLE','');
-
-
-
 define('SYSTEMPATH','system');
 define('LIBRARYPATH','library');
 

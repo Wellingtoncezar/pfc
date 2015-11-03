@@ -54,6 +54,21 @@ a{
 }
 
 
+.statusSelect{
+  border-radius: 5px;
+  padding: 4px;
+}
+.statusSelect option.active,
+.statusSelect.active{
+    background: #337AB7;
+    color: #FFF;
+}
+.statusSelect option.inactive,
+.statusSelect.inactive{
+  background-color: #D9534F;
+  color: #FFF;
+}
+
 /* CROPPER
  * ========================================================================== */
 /* Icons

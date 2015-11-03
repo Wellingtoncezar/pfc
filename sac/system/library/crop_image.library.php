@@ -1,4 +1,11 @@
 <?php
+/**
+ * Classe auxiliadora do crop de imagens
+ * @author Wellington cezar - wellington-cezar@hotmail.com
+ * 
+ */
+require_once("wideimage/WideImage.php");
+
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class crop_image{
 	private $data = array();
@@ -22,7 +29,7 @@ class crop_image{
 			$y= $dt['y'];
 			$w= $dt['w'];
 			$h= $dt['h'];
-			$img = imagem::load($dt['origem']);
+			$img = WideImage::load($dt['origem']);
 			$img = $img->crop("$x", "$y",$w, $h);
 			$img = $img->saveToFile($dt['destino']);
 		}
@@ -35,7 +42,7 @@ class crop_image{
 			$y= $dt['y'];
 			$w= $dt['w'];
 			$h= $dt['h'];
-			$img = imagem::load($dt['origem']);
+			$img = WideImage::load($dt['origem']);
 			$img = $img->crop("$x", "$y",$w, $h)->resize($dt['resizeH'],$dt['resizeW'],"outside");
 			$img = $img->saveToFile($dt['destino']);
 		}
@@ -48,7 +55,7 @@ class crop_image{
 			$y= $dt['y'];
 			$w= $dt['w'];
 			$h= $dt['h'];
-			$img = imagem::load($dt['origem']);
+			$img = WideImage::load($dt['origem']);
 			$img->resize($dt['resizeH'],$dt['resizeW'],"outside");
 			$img = $img->saveToFile($dt['destino']);
 		}

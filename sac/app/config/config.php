@@ -28,38 +28,18 @@ $_config['errordir'] 		= 'errors';
 $_config['SHOWLOGMESSAGE'] = false;
 
 
-//Banco de dados, url
-if($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] == '192.168.25.32')
-{
-	//banco de dados
-	$_config['hostname'] 	='localhost';
-	$_config['username'] 	= 'root';
-	$_config['password'] 	= '';
-	$_config['dbname'] 		= 'sac';
-	$_config['mysqlport'] 	= '3306';
+//banco de dados
+$_config['hostname'] 	='localhost';
+$_config['username'] 	= 'root';
+$_config['password'] 	= '';
+$_config['dbname'] 		= 'sac';
+$_config['mysqlport'] 	= '3306';
 
-	//url
-	$_config['url'] 		= 'http://'.$_SERVER['SERVER_NAME'].'/pfc/sac/';
+//url
+$_config['url'] 		= 'http://'.$_SERVER['SERVER_NAME'].'/pfc/sac/';
 
-	//error reporting	
-	$_config['errorreporting'] = 'E_ALL';//E_ALL ou 0
-}else
-{
+//error reporting	
+$_config['errorreporting'] = 'E_ALL';//E_ALL ou 0
 	
-	/*
-	//banco de dados
-	$_config['hostname'] 	='mysql.webdahora.com.br';
-	$_config['username'] 	= 'webdahora';
-	$_config['password'] 	= '4321!@#$';
-	$_config['dbname'] 		= 'webdahora';
-	$_config['mysqlport'] 	= '3306';
-
-	//url
-	$_config['url'] 		= 'http://'.$_SERVER['SERVER_NAME'].'/gerenciador_eclesiastico/';
-
-	//error reporting	
-	$_config['errorreporting'] = 'E_ALL';//E_ALL ou 0
-	*/
-}	
 
 ?>

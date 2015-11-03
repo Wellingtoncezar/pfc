@@ -16,7 +16,7 @@ class limitar
 	private $continue = ' [...]';
 	private $encode = 'UTF-8';
 
-	public function __construct($arr = array())
+	public function __construct()
 	{
 		//return $this;
 	}

@@ -16,17 +16,18 @@ class home extends Controller{
 
 
 	/**
-	*Página index
-	*/
+	 * Página index
+	 */
 	public function index()
 	{
-		//$this->saveAction();
-
 		$data = array(
 			'titlePage' => 'Funcionários'
-			
 		);
-		
+
+		$this->load->dao('funcionarios/funcionariosDao');
+		$funcionarios = new funcionariosDao();
+		$data['funcionarios'] = $funcionarios->listar();
+
 		$this->load->view('includes/header',$data);
 		$this->load->view('funcionarios/home',$data);
 		$this->load->view('includes/footer',$data);
@@ -34,10 +35,11 @@ class home extends Controller{
 	}
 
 
+	/**
+	 * Página de cadastro
+	 */
 	public function cadastrar()
 	{
-		//$this->saveAction();
-
 		$data = array(
 			'titlePage' => 'Cadastrar funcionário'
 		);
@@ -47,10 +49,12 @@ class home extends Controller{
 		$this->load->view('includes/footer',$data);
 	}
 
+
+	/**
+	 * Página de edição
+	 */
 	public function editar()
 	{
-		//$this->saveAction();
-
 		$data = array(
 			'titlePage' => 'Editar funcionário'
 		);
@@ -64,11 +68,12 @@ class home extends Controller{
 
 
 
-
 	/*----------------------------
 	- AÇÕES
 	=============================*/
-
+	/**
+	 * Ação do cadastrar
+	 */
 	public function inserir()
 	{
 		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
@@ -148,6 +153,7 @@ class home extends Controller{
 			}
 
 
+
 			//ENDEREÇO
 			$this->load->model('enderecoModel');
 			$enderecoModel = new enderecoModel();
@@ -159,6 +165,7 @@ class home extends Controller{
 			$enderecoModel->setCidade($cidade);
 			$enderecoModel->setEstado($estado);
 			
+
 			//FORMATAÇÃO DOS DADOS
 			$this->load->library('dataFormat');
 			$dataNascimento = $this->dataFormat->formatar($dataNascimento,'data','banco');
@@ -200,6 +207,42 @@ class home extends Controller{
 			echo json_encode($todos_erros);
 	    }
 
+	}
+
+
+
+	/**
+	 * Ação do editar
+	 */
+	public function atualizar()
+	{
+		echo 'atualizar';
+	}
+
+	/**
+	 * Ãção de atualizar status
+	 */
+	public function atualizarStatus()
+	{
+		$idFuncionario = intval($_POST['id']);
+		$status = filter_var($_POST['status']);
+
+		//FUNCIONARIO MODEL
+		$this->load->model('funcionarios/funcionariosModel');
+		$funcionariosModel = new funcionariosModel();
+		$funcionariosModel->setId( $idFuncionario );
+		$funcionariosModel->setStatus( $status );
+
+		//FUNCIONARIO DAO
+		$this->load->dao('funcionarios/funcionariosDao');
+		$funcionariosDao = new funcionariosDao();
+		echo $funcionariosDao->atualizarStatus($funcionariosModel);
+
+	}
+
+	public function excluir()
+	{
+		$this->atualizarStatus();
 	}
 
 }

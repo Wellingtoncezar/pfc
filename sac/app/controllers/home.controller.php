@@ -1,6 +1,6 @@
 <?php
 /**
-*@author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
+*@author Wellington cezar, Diego Hernandes
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class home extends Controller{

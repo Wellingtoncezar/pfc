@@ -2,7 +2,7 @@
 /**
 * Classe que converte os caracteres de um texto que não são aceitos em uma url
 * @access 
-* @author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+* @author Wellington cezar - wellington-cezar@hotmail.com
 * @since 18/06/2014
 * @version 1.0
 *
@@ -11,9 +11,9 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class caracteres 
 {
 	private $valor;
-	function __construct($val = array())
+	function __construct($val)
 	{	
-		$this->valor = $this->toAscii($val[0]);
+		$this->valor = $this->toAscii($val);
 	}
 
 	function getValor()

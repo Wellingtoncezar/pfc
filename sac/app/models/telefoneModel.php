@@ -52,7 +52,7 @@ class telefoneModel{
 	{
 		return $this->operadora;
 	}
-	public function getCategia()
+	public function getCategoria()
 	{
 		return $this->categoria;
 	}

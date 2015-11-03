@@ -1,8 +1,9 @@
-<?php
-$template = new Template();
-$btnCadastrar = $template->btnCadastrar(URL.'funcionarios/home/cadastrar');
-echo $template->actions_buttons($btnCadastrar);
-?>
+<div class="actions-buttons">
+    <div class="container">
+        <a class="btn btn-primary pull-right btn_adicionar" href="<?=URL?>funcionarios/home/cadastrar" role="button" id="btn_adicionar"><span class="glyphicon glyphicon-plus"></span>Cadastrar</a>
+    </div>
+</div>
+
 <div class="container">
     <div class="page-header">
       <h1>Funcionários</h1>
@@ -12,13 +13,13 @@ echo $template->actions_buttons($btnCadastrar);
         <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
             <thead>
                 <tr>   
-                    <th width="160">Código</th>
+                    <th width="100">Código</th>
                     <th width="40">Foto</th>
                     <th width="160">Nome</th>
                     <th width="160">Cargo</th>
                     <th width="120">CPF</th>
                     <th width="100">Status (Ativo/Inativo)</th>
-                    <th width="100">Ações</th>
+                    <th width="180">Ações</th>
                 </tr>
             </thead>
             <tfoot>
@@ -33,80 +34,77 @@ echo $template->actions_buttons($btnCadastrar);
                 </tr>
             </tfoot>
             <tbody>
-                <tr>
-                    <td>Código</td>
-                    <td>Foto</td>
-                    <td>Nome</td>
-                    <td>Cargo</td>
-                    <td>CPF</td>
-                    <td>Status (Ativo/Inativo)</td>
-                    <td>Ações</td>
+            <?php
+            if(!empty($funcionarios)):
+                foreach ($funcionarios as $func):
+                    $foto = $func->getFoto() != '' ? URL.'skin/uploads/funcionarios/p/'.$func->getFoto() : URL.'skin/img/imagens/semfoto.jpg';
+            ?>
+                <tr id="<?=$func->getId()?>">
+                    <td><?=$func->getCodigo()?></td>
+                    <td><img src="<?=$foto?>" style=" width: 60px; height: 60px;"></td>
+                    <td><?=$func->getNome().' '.$func->getSobrenome()?></td>
+                    <td><?=$func->getCargo()?></td>
+                    <td><?=$func->getCpf()?></td>
+                    <td>
+                        <select name="status" id="<?=$func->getId()?>" class="statusSelect">
+                            <option value="<?=status::ATIVO?>" class="active" <?=($func->getStatus() == status::ATIVO) ? 'selected="selected"' : ''?>>Ativo</option>
+                            <option value="<?=status::INATIVO?>" class="inactive" <?=($func->getStatus() == status::INATIVO) ? 'selected="selected"' : ''?>>Inativo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>funcionarios/home/editar/<?=$func->getId()?>" role="button" id-record="<?=$func->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
+                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$func->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span>Excluir</a>
+                    </td>
                 </tr>
-                <tr>
-                    <td>Código</td>
-                    <td>Foto</td>
-                    <td>Nome</td>
-                    <td>Cargo</td>
-                    <td>CPF</td>
-                    <td>Status (Ativo/Inativo)</td>
-                    <td>Ações</td>
-                </tr>
-                <tr>
-                    <td>Código</td>
-                    <td>Foto</td>
-                    <td>Nome</td>
-                    <td>Cargo</td>
-                    <td>CPF</td>
-                    <td>Status (Ativo/Inativo)</td>
-                    <td>Ações</td>
-                </tr>
+            <?php
+                endforeach;
+            endif;
+            ?>
+                
             </tbody>
         </table>
     </div>
 
 </div>
+
 <script type="text/javascript">
     $(function(){
-
-        $(window).load(function() {
-            $('#loadTable').hide();
-            $('.dataTable').fadeIn();
-        });
-        if($(this).width() <= '765')
-            responsiveTable();
-        $(window).resize(function() {
-            //console.log($(this).width())
-            if($(this).width() <= '765')
-                responsiveTable();
-            else
-                responsiveTableRemove()
-        });
-
-
-        function responsiveTable(){
-            var th = Array();
-            $('.rwd-table thead th').each(function(){
-                th.push($(this).html())
-            });
-
-            //console.log(th);
-            var i = 0;
-            $('.rwd-table tbody td').each(function(a,b){
-                if(!$('div',$(this)).hasClass('dataTables-th')){
-                    $(this).prepend('<div class="dataTables-th">'+th[i]+'</div>');
-                    i++;
-                    if(i == th.length)
-                        i=0;
-                }
-            });
-        }
-        function responsiveTableRemove(){
-            $('.rwd-table tbody td .dataTables-th').remove()
-        }
-
+        //DATATABLE
         var table = $('.dataTable').DataTable({
-            order: [1,'asc']
+            order: [0,'asc']
         });
+
+        //STATUS
+        table.$('select[name=status]').on('change',function(){
+            var id = $(this).attr('id');
+            var status = $(this).val();
+            $.post(url+'funcionarios/home/atualizarStatus',{id:id,status:status},function(data){
+                console.log(data)
+                if(data == true)
+                    messageDialog('Status atualizado','success',false,null);
+                else
+                    messageDialog('Erro ao atualizar','warning',false,null);
+            });
+
+        });
+
+        //EXCLUIR
+        table.$('.btn_excluir').on('click',function(){
+            var id = $(this).attr('id');
+            var status = $(this).data('value');
+            var modalDelete = $('#modalDelete').modal('show')
+            $('.btn_ok','#modalDelete').on('click', function(event) {
+                $.post(url+'funcionarios/home/excluir',{id:id,status:status},function(data){
+                    console.log(data)
+                    if(data == true){
+                        $('#modalDelete').modal('hide');
+                        $('tr#'+id).hide();
+                    }
+                });
+            });
+        });
+
 
     })
 </script>
+
