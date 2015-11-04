@@ -42,8 +42,18 @@
                                         <li><a href="<?=URL?>funcionarios/home">Gerenciar Funcionários</a></li>
                                     </ul>
                                 </li>
-                                <li ><a href="<?=URL?>fornecedores"><span class="glyphicons glyphicons-handshake"></span><p>Fornecedores</p></a></li>
-                                <li ><a href="<?=URL?>produtos"><span class="glyphicons glyphicons-package"></span><p>Produtos</p></a></li>
+                               
+                               <li class="dropdown "><a href="<?=URL?>fornecedores" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicons glyphicons-handshake"></span><p>fornecedores</p></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="<?=URL?>fornecedores/home">Gerenciar Fornecedores</a></li>
+                                    </ul>
+                                </li>
+                                
+                                <li class="dropdown "><a href="<?=URL?>produtos" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicons glyphicons-package"></span><p>produtos</p></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="<?=URL?>produtos/home">Gerenciar Produtos</a></li>
+                                    </ul>
+                                </li>
                                 <li ><a href="<?=URL?>vendas"><span class="glyphicons glyphicons-notes"></span><p>Vendas</p></a></li>
                                 <li ><a href="<?=URL?>caixa"><span class="glyphicons glyphicons-calculator"></span><p>Caixa</p></a></li>
                                 <li ><a href="<?=URL?>estoque"><span class="glyphicons glyphicons-cargo"></span><p>Estoque</p></a></li>
@@ -56,3 +66,5 @@
             </header>
             
         <div class="wrap-content">
+
+      
