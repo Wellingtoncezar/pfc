@@ -9,6 +9,7 @@ class telefoneModel{
 	private $numero;
 	private $tipo;
 	private $operadora;
+	private $telefonesExcluir;
 	
 
  	//SETERS
@@ -31,6 +32,11 @@ class telefoneModel{
 	public function setCategoria($categoria)
 	{
 		$this->categoria = $categoria;
+	}
+
+	public function setExcluidos($telefonesExcluir)
+	{
+		$this->telefonesExcluir = $telefonesExcluir;
 	}
 
 	
@@ -57,6 +63,9 @@ class telefoneModel{
 		return $this->categoria;
 	}
 
-
+	public function getExcluidos()
+	{
+		return $this->telefonesExcluir;
+	}
 
 }

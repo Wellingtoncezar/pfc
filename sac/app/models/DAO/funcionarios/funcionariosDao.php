@@ -48,10 +48,114 @@ class funcionariosDao extends Dao{
 	}
 
 
-	// public function consultar(funcionariosModel $funcionario)
-	// {
+	/**
+	 * Retorna a consulta de um funcionário pelo id
+	 * @return object [funcionariosModel]
+	 */
+	public function consultar(funcionariosModel $funcionario)
+	{
+		$this->db->clear();
+		$this->db->setTabela('funcionarios');
+		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+		$this->db->select();
 
-	// }
+		//FUNCIONARIO
+		if($this->db->rowCount() > 0):
+			$result = $this->db->result();
+
+			//TELEFONES
+			$this->db->clear();
+			$this->db->setTabela('telefones');
+			$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+			$this->db->select();
+			
+			$telefonesList = Array();
+			if($this->db->rowCount() > 0):
+				$resultTel = $this->db->resultAll();
+
+				$this->load->model('telefoneModel');
+				foreach ($resultTel as $telefone)
+				{
+					$telefoneModel = new telefoneModel();
+					$telefoneModel->setId( $telefone['id_telefone'] );
+					$telefoneModel->setCategoria( $telefone['categoria_telefone'] );
+					$telefoneModel->setNumero( $telefone['numero_telefone'] );
+					$telefoneModel->setOperadora( $telefone['operadora_telefone'] );
+					$telefoneModel->setTipo( $telefone['tipo_telefone'] );
+					array_push($telefonesList, $telefoneModel);
+					unset($telefoneModel);
+				}
+			endif;
+
+
+			//EMAILS
+			$this->db->clear();
+			$this->db->setTabela('emails');
+			$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+			$this->db->select();
+			
+			$emailsList = Array();
+			if($this->db->rowCount() > 0):
+				$resultEmail = $this->db->resultAll();
+
+				$this->load->model('emailModel');
+				foreach ($resultEmail as $email)
+				{
+
+					$emailModel = new emailModel();
+					$emailModel->setId( $email['id_email'] );
+					$emailModel->setEmail( $email['endereco_email'] );
+					$emailModel->setTipo( $email['tipo_email'] );
+					array_push($emailsList, $emailModel);
+					unset($emailModel);
+				}
+			endif;
+
+
+			//ENDERECO
+			$this->db->clear();
+			$this->db->setTabela('enderecos');
+			$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+			$this->db->select();
+			
+			$this->load->model('enderecoModel');
+			$endereco = new enderecoModel();
+			if($this->db->rowCount() > 0):
+				$resultEnd = $this->db->result();
+
+				$endereco->setId($resultEnd['id_endereco']);
+				$endereco->setCep($resultEnd['cep_endereco']);
+				$endereco->setNumero($resultEnd['numero_endereco']);
+				$endereco->setComplemento($resultEnd['complemento_endereco']);
+				$endereco->setLogradouro($resultEnd['rua_endereco']);
+				$endereco->setBairro($resultEnd['bairro_endereco']);
+				$endereco->setCidade($resultEnd['cidade_endereco']);
+				$endereco->setEstado($resultEnd['estado_endereco']);
+			endif;
+
+			$funcionario->setFoto($result['foto_funcionario']);
+			$funcionario->setNome($result['nome_funcionario']);
+			$funcionario->setSobrenome($result['sobrenome_funcionario']);
+			$funcionario->setDataNascimento($result['data_nascimento_funcionario']);
+			$funcionario->setSexo($result['sexo_funcionario']);
+			$funcionario->setRg($result['rg_funcionario']);
+			$funcionario->setCpf($result['cpf_funcionario']);
+			$funcionario->setEstadoCivil($result['estado_civil_funcionario']);
+			$funcionario->setEscolaridade($result['escolaridade_funcionario']);
+			$funcionario->setEndereco($endereco);
+			$funcionario->setTelefones($telefonesList);
+			$funcionario->setEmail($emailsList);
+			$funcionario->setCodigo($result['codigo_funcionario']);
+			$funcionario->setCargo($result['cargo_funcionario']);
+			$funcionario->setDataAdmissao($result['data_admissao_funcionario']);
+			$funcionario->setSalario($result['salario_funcionario']);
+			$funcionario->setStatus(status::getAttribute($result['status_funcionario']));
+			return $funcionario;
+		else:
+			echo 'nada';
+			return $funcionariosModel;
+		endif;
+	}
 
 
 
@@ -61,8 +165,6 @@ class funcionariosDao extends Dao{
 	 */
  	public function inserir(funcionariosModel $funcionario)
  	{
-
-
 		if($funcionario->getFoto() != '')
 		{
 	 		//nome da imagem
@@ -109,6 +211,7 @@ class funcionariosDao extends Dao{
 		{
 			$funcionario->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
 
+			$this->atualizaEndereco($funcionario);
 			//TELEFONES
 			if(!empty($funcionario->getTelefones()))
 				$this->atualizaTelefones($funcionario);
@@ -220,6 +323,35 @@ class funcionariosDao extends Dao{
 			}
 		}
 	}
+
+
+	/*
+	private function excluiTelefones()
+	{
+		foreach ($this->telefonesExcluir as $value)
+		{
+			$this->clear();
+			$this->setTabela('telefones');
+			$this->setCondicao('id_telefone = "'.$value.'"');
+			$this->delete();
+		}
+	}
+
+	private function excluiEmails()
+	{
+		foreach ($this->emailsExcluir as $value)
+		{
+			$this->clear();
+			$this->setTabela('emails');
+			$this->setCondicao('id_email = "'.$value.'"');
+			$this->delete();
+		}
+	}
+	*/
+
+
+
+
 
 	/**
  	 * Atualiza o status
