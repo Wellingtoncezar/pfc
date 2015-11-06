@@ -99,38 +99,32 @@ class home extends Controller{
 		$cpf = isset($_POST['cpf']) ? filter_var($_POST['cpf']) : '';
 		$pessoa = isset($_POST['pessoa']) ? filter_var($_POST['pessoa']) : '';
 		$site = isset($_POST['site']) ? filter_var($_POST['site']) : '';
-		$estadoCivil = isset($_POST['estadoCivil']) ? filter_var($_POST['estadoCivil']) : '';
-		$escolaridade = isset($_POST['escolaridade']) ? filter_var($_POST['escolaridade']) : '';
+		$observacoes = isset($_POST['observacoes']) ? filter_var($_POST['observacoes']) : '';
+		
 
 		//endereço
 		$cep = isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
 		$logradouro = isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
 		$numero = isset($_POST['numero']) ? filter_var(trim($_POST['numero'])) : '';
-		$complemento = isset($_POST['complemento']) ? filter_var(trim($_POST['complemento'])) : '';
-		$bairro = isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
 		$cidade = isset($_POST['cidade']) ? filter_var(trim($_POST['cidade'])) : '';
+		$bairro = isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
 		$estado = isset($_POST['estado']) ? filter_var(trim($_POST['estado'])) : '';
-
+        $pais = isset($_POST['pais']) ? filter_var(trim($_POST['pais'])) :'';
 		//contato
+		$nomeContato = isset($_POST['nomeContato']) ? filter_var($_POST['nomeContato']) : '';
 		$telefones = isset($_POST['telefones']) ? filter_var_array($_POST['telefones']) : Array();
-		$emails = isset($_POST['emails']) ? filter_var_array($_POST['emails']) : Array();
-		
-		//DADOS ADMISSIONAIS
-		$codigoAdmissao = isset($_POST['codigoAdmissao']) ? filter_var(trim($_POST['codigoAdmissao'])) : '';
-		$cargo = isset($_POST['cargo']) ? filter_var(trim($_POST['cargo'])) : '';
-		$dataAdmissao = isset($_POST['dataAdmissao']) ? filter_var(trim($_POST['dataAdmissao'])) : '';
-		$salario = isset($_POST['salario']) ? filter_var(trim($_POST['salario'])) : '';
+		$email = isset($_POST['email']) ? filter_var_array($_POST['email']) : Array();
 
 
 
 		//validação dos dados
 		$this->load->library('dataValidator');
 		
-		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
-		$this->dataValidator->set('Sobrenome', $sobrenome, 'sobrenome')->is_required()->min_length(2);
-		$this->dataValidator->set('Data de nascimento', $dataNascimento, 'dataNascimento')->is_required()->is_date('d/m/Y');
-		$this->dataValidator->set('Sexo', $sexo, 'sexo')->is_required();
-		$this->dataValidator->set('CEP', $cep, 'cep')->is_required();
+		$this->dataValidator->set('Razao Social', $razaoSocial, 'razaoSocial')->is_required()->min_length(2);
+		$this->dataValidator->set('Nome Fantasia', $nomeFantasia, 'nomeFantasia')->is_required()->min_length(2);
+		$this->dataValidator->set('CNPJ', $cnpj, 'cnpj')->is_required()->is_required();
+		$this->dataValidator->set('CPF', $cpf, 'cpf')->is_required();
+		$this->dataValidator->set('Pessoa', $pessoa, 'pessoa')->is_required();
 		$this->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
 		$this->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
 		$this->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
@@ -163,7 +157,6 @@ class home extends Controller{
 			{
 				$emailModel = new emailModel();
 				$emailModel->setEmail( $email['email'] );
-				$emailModel->setTipo( $email['tipo_email'] );
 				array_push($emailList, $emailModel);
 				unset($emailModel);
 			}
@@ -174,49 +167,36 @@ class home extends Controller{
 			$this->load->model('enderecoModel');
 			$enderecoModel = new enderecoModel();
 			$enderecoModel->setCep($cep);
-			$enderecoModel->setNumero($numero);
-			$enderecoModel->setComplemento($complemento);
 			$enderecoModel->setLogradouro($logradouro);
-			$enderecoModel->setBairro($bairro);
+			$enderecoModel->setNumero($numero);
 			$enderecoModel->setCidade($cidade);
+			$enderecoModel->setBairro($bairro);
 			$enderecoModel->setEstado($estado);
+			$enderecoModel->setPais($pais);
 			
 
-			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat');
-			$dataNascimento = $this->dataFormat->formatar($dataNascimento,'data','banco');
-			$dataAdmissao = $this->dataFormat->formatar($dataAdmissao,'data','banco');
-			$salario = $this->dataFormat->formatar($salario,'decimal','banco');
-
-			
-
-			//FUNCIONARIO
-			$this->load->model('funcionarios/funcionariosModel');
-			$funcionariosModel = new funcionariosModel();
-			$funcionariosModel->setFoto($foto);
-			$funcionariosModel->setNome($nome);
-			$funcionariosModel->setSobrenome($sobrenome);
-			$funcionariosModel->setDataNascimento($dataNascimento);
-			$funcionariosModel->setSexo($sexo);
-			$funcionariosModel->setRg($rg);
-			$funcionariosModel->setCpf($cpf);
-			$funcionariosModel->setEstadoCivil($estadoCivil);
-			$funcionariosModel->setEscolaridade($escolaridade);
-			$funcionariosModel->setEndereco($enderecoModel);
-			$funcionariosModel->setTelefones($telefonesList);
-			$funcionariosModel->setEmail($emailList);
-			$funcionariosModel->setCodigo($codigoAdmissao);
-			$funcionariosModel->setCargo($cargo);
-			$funcionariosModel->setDataAdmissao($dataAdmissao);
-			$funcionariosModel->setSalario($salario);
-			$funcionariosModel->setStatus(status::ATIVO);
-			$funcionariosModel->setDataCadastro(date('Y-m-d h:i:s'));
+			//FORNECEDOR
+			$this->load->model('fornecedores/fornecedoresModel');
+			$fornecedoresModel = new fornecedoresModel();
+			$fornecedoresModel->setFoto($foto);
+			$fornecedoresModel->setRazaoSocial($razaoSocial);
+			$fornecedoresModel->setNomeFantasia($nomeFantasia);
+			$fornecedoresModel->setCNPJ($cnpj);
+			$fornecedoresModel->setCpf($cpf);
+			$fornecedoresModel->setPessoa($pessoa);
+			$fornecedoresModel->setSite($site);
+			$fornecedoresModel->setObservacoes($observacoes);
+			$fornecedoresModel->setEndereco($enderecoModel);
+			$fornecedoresModel->setTelefones($telefonesList);
+			$fornecedoresModel->setEmail($emailList);
+			$fornecedoresModel->setStatus(status::ATIVO);
+			$fornecedoresModel->setDataCadastro(date('Y-m-d h:i:s'));
 
 
-			//FUNCIONARIO DAO
-			$this->load->dao('funcionarios/funcionariosDao');
-			$funcionariosDao = new funcionariosDao();
-			echo $funcionariosDao->inserir($funcionariosModel);
+			//FORNECEDOR DAO
+			$this->load->dao('fornecedores/fornecedoresDao');
+			$fornecedoresDao = new fornecedoresDao();
+			echo $fornecedoresDao->inserir($fornecedoresModel);
 		}else
 	    {
 			$todos_erros = $this->dataValidator->get_errors();
@@ -235,49 +215,40 @@ class home extends Controller{
 	 */
 	public function atualizar()
 	{
-		$idFuncionario = isset($_POST['id_funcionario']) ? filter_var($_POST['id_funcionario']) : '';
+		$idFornecedor = isset($_POST['id_fornecedor']) ? filter_var($_POST['id_fornecedor']) : '';
 		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
-		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-		$sobrenome = isset($_POST['sobrenome']) ? filter_var($_POST['sobrenome']) : '';
-		$dataNascimento = isset($_POST['dataNascimento']) ? filter_var(trim($_POST['dataNascimento'])) : '';
-		$sexo = isset($_POST['sexo']) ? filter_var($_POST['sexo']) : '';
-		$rg = isset($_POST['rg']) ? filter_var($_POST['rg']) : '';
+		$razaoSocial = isset($_POST['razaoSocial']) ? filter_var($_POST['razaoSocial']) : '';
+		$nomeFantasia = isset($_POST['nomeFantasia']) ? filter_var($_POST['nomeFantasia']) : '';
+		$cnpj = isset($_POST['cnpj']) ? filter_var(trim($_POST['cnpj'])) : '';
 		$cpf = isset($_POST['cpf']) ? filter_var($_POST['cpf']) : '';
-		$estadoCivil = isset($_POST['estadoCivil']) ? filter_var($_POST['estadoCivil']) : '';
-		$escolaridade = isset($_POST['escolaridade']) ? filter_var($_POST['escolaridade']) : '';
+		$pessoa = isset($_POST['pessoa']) ? filter_var($_POST['pessoa']) : '';
+		$site = isset($_POST['site']) ? filter_var($_POST['site']) : '';
+		$observacoes = isset($_POST['observacoes']) ? filter_var($_POST['observacoes']) : '';
+		
 
 		//endereço
 		$cep = isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
 		$logradouro = isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
 		$numero = isset($_POST['numero']) ? filter_var(trim($_POST['numero'])) : '';
-		$complemento = isset($_POST['complemento']) ? filter_var(trim($_POST['complemento'])) : '';
-		$bairro = isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
 		$cidade = isset($_POST['cidade']) ? filter_var(trim($_POST['cidade'])) : '';
+		$bairro = isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
 		$estado = isset($_POST['estado']) ? filter_var(trim($_POST['estado'])) : '';
-
+        $pais = isset($_POST['pais']) ? filter_var(trim($_POST['pais'])) :'';
 		//contato
+		$nomeContato = isset($_POST['nomeContato']) ? filter_var($_POST['nomeContato']) : '';
 		$telefones = isset($_POST['telefones']) ? filter_var_array($_POST['telefones']) : Array();
-		$emails = isset($_POST['emails']) ? filter_var_array($_POST['emails']) : Array();
-		
-		$telefonesExcluir = isset($_POST['telefonesExcluir']) ? filter_var_array($_POST['telefonesExcluir']) : Array();
-		$emailsExcluir = isset($_POST['emailsExcluir']) ? filter_var_array($_POST['emailsExcluir']) : Array();
-
-		//DADOS ADMISSIONAIS
-		$codigoAdmissao = isset($_POST['codigoAdmissao']) ? filter_var(trim($_POST['codigoAdmissao'])) : '';
-		$cargo = isset($_POST['cargo']) ? filter_var(trim($_POST['cargo'])) : '';
-		$dataAdmissao = isset($_POST['dataAdmissao']) ? filter_var(trim($_POST['dataAdmissao'])) : '';
-		$salario = isset($_POST['salario']) ? filter_var(trim($_POST['salario'])) : '';
+		$email = isset($_POST['email']) ? filter_var_array($_POST['email']) : Array();
 
 
 
 		//validação dos dados
 		$this->load->library('dataValidator');
 		
-		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
-		$this->dataValidator->set('Sobrenome', $sobrenome, 'sobrenome')->is_required()->min_length(2);
-		$this->dataValidator->set('Data de nascimento', $dataNascimento, 'dataNascimento')->is_required()->is_date('d/m/Y');
-		$this->dataValidator->set('Sexo', $sexo, 'sexo')->is_required();
-		$this->dataValidator->set('CEP', $cep, 'cep')->is_required();
+		$this->dataValidator->set('Razao Social', $razaoSocial, 'razaoSocial')->is_required()->min_length(2);
+		$this->dataValidator->set('Nome Fantasia', $nomeFantasia, 'nomeFantasia')->is_required()->min_length(2);
+		$this->dataValidator->set('CNPJ', $cnpj, 'cnpj')->is_required()->is_required();
+		$this->dataValidator->set('CPF', $cpf, 'cpf')->is_required();
+		$this->dataValidator->set('Pessoa', $pessoa, 'pessoa')->is_required();
 		$this->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
 		$this->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
 		$this->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
@@ -289,7 +260,6 @@ class home extends Controller{
 		if ($this->dataValidator->validate())
 		{
 			//TELEFONES
-			$arrTelefones = Array();
 			$telefonesList = Array();
 			$this->load->model('telefoneModel');
 			foreach ($telefones as $telefone)
@@ -303,32 +273,17 @@ class home extends Controller{
 				unset($telefoneModel);
 			}
 
-			$arrTelefones['telefonesList'] = $telefonesList;
-
-			//EMAILS EXCLUIR
-			$emailModel = new emailModel();
-			$emailModel->setExcluidos($emailsExcluir);
-			$arrEmail['emailExcluir'] = $emailModel;
 
 			//EMAILS
-			$arrEmail = Array();
 			$emailList = Array();
 			$this->load->model('emailModel');
 			foreach ($emails as $email)
 			{
 				$emailModel = new emailModel();
 				$emailModel->setEmail( $email['email'] );
-				$emailModel->setTipo( $email['tipo_email'] );
 				array_push($emailList, $emailModel);
 				unset($emailModel);
 			}
-			$arrEmail['emailList'] = $emailList;
-
-			//EMAILS EXCLUIR
-			$emailModel = new emailModel();
-			$emailModel->setExcluidos($emailsExcluir);
-			$arrEmail['emailExcluir'] = $emailModel;
-
 
 
 
@@ -336,49 +291,36 @@ class home extends Controller{
 			$this->load->model('enderecoModel');
 			$enderecoModel = new enderecoModel();
 			$enderecoModel->setCep($cep);
-			$enderecoModel->setNumero($numero);
-			$enderecoModel->setComplemento($complemento);
 			$enderecoModel->setLogradouro($logradouro);
-			$enderecoModel->setBairro($bairro);
+			$enderecoModel->setNumero($numero);
 			$enderecoModel->setCidade($cidade);
+			$enderecoModel->setBairro($bairro);
 			$enderecoModel->setEstado($estado);
+			$enderecoModel->setPais($pais);
 			
 
-			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat');
-			$dataNascimento = $this->dataFormat->formatar($dataNascimento,'data','banco');
-			$dataAdmissao = $this->dataFormat->formatar($dataAdmissao,'data','banco');
-			$salario = $this->dataFormat->formatar($salario,'decimal','banco');
-
-			
-
-			//FUNCIONARIO
-			$this->load->model('funcionarios/funcionariosModel');
-			$funcionariosModel = new funcionariosModel();
-			$funcionariosModel->setFoto($foto);
-			$funcionariosModel->setNome($nome);
-			$funcionariosModel->setSobrenome($sobrenome);
-			$funcionariosModel->setDataNascimento($dataNascimento);
-			$funcionariosModel->setSexo($sexo);
-			$funcionariosModel->setRg($rg);
-			$funcionariosModel->setCpf($cpf);
-			$funcionariosModel->setEstadoCivil($estadoCivil);
-			$funcionariosModel->setEscolaridade($escolaridade);
-			$funcionariosModel->setEndereco($enderecoModel);
-			$funcionariosModel->setTelefones($telefonesList);
-			$funcionariosModel->setEmail($arrEmail);
-			$funcionariosModel->setCodigo($codigoAdmissao);
-			$funcionariosModel->setCargo($cargo);
-			$funcionariosModel->setDataAdmissao($dataAdmissao);
-			$funcionariosModel->setSalario($salario);
-			$funcionariosModel->setStatus(status::ATIVO);
-			$funcionariosModel->setDataCadastro(date('Y-m-d h:i:s'));
+			//FORNECEDOR
+			$this->load->model('fornecedores/fornecedoresModel');
+			$fornecedoresModel = new fornecedoresModel();
+			$fornecedoresModel->setFoto($foto);
+			$fornecedoresModel->setRazaoSocial($razaoSocial);
+			$fornecedoresModel->setNomeFantasia($nomeFantasia);
+			$fornecedoresModel->setCNPJ($cnpj);
+			$fornecedoresModel->setCpf($cpf);
+			$fornecedoresModel->setPessoa($pessoa);
+			$fornecedoresModel->setSite($site);
+			$fornecedoresModel->setObservacoes($observacoes);
+			$fornecedoresModel->setEndereco($enderecoModel);
+			$fornecedoresModel->setTelefones($telefonesList);
+			$fornecedoresModel->setEmail($emailList);
+			$fornecedoresModel->setStatus(status::ATIVO);
+			$fornecedoresModel->setDataCadastro(date('Y-m-d h:i:s'));
 
 
-			//FUNCIONARIO DAO
-			$this->load->dao('funcionarios/funcionariosDao');
-			$funcionariosDao = new funcionariosDao();
-			echo $funcionariosDao->inserir($funcionariosModel);
+			//FORNECEDOR DAO
+			$this->load->dao('fornecedores/fornecedoresDao');
+			$fornecedoresDao = new fornecedoresDao();
+			echo $fornecedoresDao->inserir($fornecedoresModel);
 		}else
 	    {
 			$todos_erros = $this->dataValidator->get_errors();
@@ -387,24 +329,24 @@ class home extends Controller{
 
 	}
 
-	/**
+     /*
 	 * Ãção de atualizar status
 	 */
 	public function atualizarStatus()
 	{
-		$idFuncionario = intval($_POST['id']);
+		$idFornecedor = intval($_POST['id']);
 		$status = filter_var($_POST['status']);
 
 		//FUNCIONARIO MODEL
-		$this->load->model('funcionarios/funcionariosModel');
-		$funcionariosModel = new funcionariosModel();
-		$funcionariosModel->setId( $idFuncionario );
-		$funcionariosModel->setStatus( $status );
+		$this->load->model('fornecedores/fornecedoresModel');
+		$fornecedoresModel = new fornecedoresModel();
+		$fornecedoresModel->setId( $idFornecedor );
+		$fornecedoresModel->setStatus( $status );
 
 		//FUNCIONARIO DAO
-		$this->load->dao('funcionarios/funcionariosDao');
-		$funcionariosDao = new funcionariosDao();
-		echo $funcionariosDao->atualizarStatus($funcionariosModel);
+		$this->load->dao('fornecedores/fornecedoresDao');
+		$fornecedoresDao = new fornecedoresDao();
+		echo $fornecedoresDao->atualizarStatus($fornecedoresModel);
 
 	}
 
