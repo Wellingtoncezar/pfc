@@ -195,6 +195,7 @@
     margin: 5px 0;
     border: 1px solid #498DB7;
     border-radius: 4px;
+    width: 100%;
 	}
 	
 	.inputFoto input[type=file]{
