@@ -6,6 +6,7 @@
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class funcionariosDao extends Dao{
 	private $nomeArquivoFoto;
+	private $nUpdates = 0;
 	public function __construct(){
 		parent::__construct();
 	}
@@ -165,11 +166,14 @@ class funcionariosDao extends Dao{
 	 */
  	public function inserir(funcionariosModel $funcionario)
  	{
+ 		
+
 		if($funcionario->getFoto() != '')
 		{
 	 		//nome da imagem
 			$char = new caracteres($funcionario->getNome());
 			$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
+			
 			$upload = $this->uploadFoto($this->nomeArquivoFoto, $funcionario->getFoto()); //upload da foto
 			if($upload)
 				return $this->insertData($funcionario);
@@ -178,6 +182,40 @@ class funcionariosDao extends Dao{
 		}else
 		{
 			return $this->insertData($funcionario);
+		}
+
+	}
+
+	/**
+	 * Atualiza funcionários
+	 * @return boolean, json
+	 */
+ 	public function atualizar(funcionariosModel $funcionario)
+ 	{
+ 		$this->db->clear();
+ 		$this->db->setTabela('funcionarios');
+ 		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+ 		$this->db->select(array('foto_funcionario'));
+ 		$res = $this->db->result();
+ 		$this->nomeArquivoFoto = $res['foto_funcionario'];
+
+		if($funcionario->getFoto() != '')
+		{
+			if($this->nomeArquivoFoto == '')
+			{
+		 		//nome da imagem
+				$char = new caracteres($funcionario->getNome());
+				$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
+			}
+				
+			$upload = $this->uploadFoto($this->nomeArquivoFoto, $funcionario->getFoto()); //upload da foto
+			if($upload)
+				return $this->updateData($funcionario);
+			else
+				return $upload;
+		}else
+		{
+			return $this->updateData($funcionario);
 		}
 
 	}
@@ -228,6 +266,48 @@ class funcionariosDao extends Dao{
  		
  	}
 
+ 	private function updateData(funcionariosModel $funcionario)
+	{
+
+ 		$data = array(
+ 			'foto_funcionario' => $this->nomeArquivoFoto,
+ 			'nome_funcionario' => $funcionario->getNome(),
+ 			'sobrenome_funcionario' => $funcionario->getSobrenome(),
+ 			'data_nascimento_funcionario' => $funcionario->getDataNascimento(),
+ 			'sexo_funcionario' => $funcionario->getSexo(),
+ 			'rg_funcionario' => $funcionario->getRg(),
+ 			'cpf_funcionario' => $funcionario->getCpf(),
+ 			'estado_civil_funcionario' => $funcionario->getEstadoCivil(),
+ 			'escolaridade_funcionario' => $funcionario->getEscolaridade(),
+ 			'codigo_funcionario' => $funcionario->getCodigo(),
+ 			'cargo_funcionario' => $funcionario->getCargo(),
+ 			'data_admissao_funcionario' => $funcionario->getDataAdmissao(),
+ 			'salario_funcionario' => $funcionario->getSalario(),
+ 			'status_funcionario' => $funcionario->getStatus(),
+ 			'data_cadastro_funcionario' => $funcionario->getDataCadastro()
+ 		);
+
+ 		$this->db->clear();
+		$this->db->setTabela('funcionarios');
+		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+		$this->db->update($data);
+		if($this->db->rowCount() > 0)
+			$this->nUpdates++;
+		
+		//ENDEREÇO
+		$this->atualizaEndereco($funcionario);
+		//TELEFONES
+		$this->atualizaTelefones($funcionario);
+		//EMAILS
+		$this->atualizaEmails($funcionario);
+
+ 		if($this->nUpdates > 0)
+			return true;
+ 		else
+ 		{
+ 			return json_encode(array('erro'=>'Erro ao editar registro'));
+ 		}
+ 	}
 
 
  	/**
@@ -258,6 +338,11 @@ class funcionariosDao extends Dao{
 			$this->db->update($data);
 		}else
 			$this->db->insert($data);
+
+		if($this->db->rowCount() > 0)
+			$this->nUpdates++;
+		else
+			return false;
  	}
 
 
@@ -269,9 +354,27 @@ class funcionariosDao extends Dao{
  	 */
  	private function atualizaTelefones(funcionariosModel $funcionario)
 	{
+
+		//excluir
+		$telefonesExcluir = array();
+		foreach ($funcionario->getTelefones() as $telefones)
+		{
+			if($telefones->getId() != '')
+				array_push($telefonesExcluir,$telefones->getId());
+		}
+		$cond = '';
+		if(!empty($telefonesExcluir))
+		{
+			$telefonesExcluir = implode(',', $telefonesExcluir);
+			$this->db->clear();
+			$cond = " AND id_telefone not in (".$telefonesExcluir.")";
+		}
+		$sql = "DELETE FROM telefones WHERE id_funcionario = '".$funcionario->getId()."' $cond";
+		$this->db->query($sql);
+		if($this->db->rowCount() > 0)
+
 		$this->db->clear();
 		$this->db->setTabela('telefones');
-		
 		foreach ($funcionario->getTelefones() as $telefones)
 		{
 			if(!empty($telefones))
@@ -287,10 +390,16 @@ class funcionariosDao extends Dao{
 				{
 					$this->db->setCondicao('id_telefone = "'.$telefones->getId().'"');
 					$this->db->update($data);
-				}else
+				}else{
 					$this->db->insert($data);
+				}
+
+				if($this->db->rowCount() > 0)
+					$this->nUpdates++;
 			}
 		}
+
+
 	}
 
 
@@ -301,9 +410,26 @@ class funcionariosDao extends Dao{
  	 */
 	private function atualizaEmails(funcionariosModel $funcionario)
 	{
+		//excluir
+		$emailExcluir = array();
+		foreach ($funcionario->getEmail() as $email)
+		{
+			if($email->getId() != '')
+				array_push($emailExcluir,$email->getId());
+		}
+		$cond = '';
+		if(!empty($emailExcluir))
+		{
+			$emailExcluir = implode(',', $emailExcluir);
+			$this->db->clear();
+			$cond = " AND id_email not in (".$emailExcluir.")";
+		}
+		$sql = "DELETE FROM emails WHERE id_funcionario = '".$funcionario->getId()."' $cond";
+		$this->db->query($sql);
+
+
 		$this->db->clear();
 		$this->db->setTabela('emails');
-		
 		foreach ($funcionario->getEmail() as $emails)
 		{
 			if(!empty($emails))
@@ -320,37 +446,12 @@ class funcionariosDao extends Dao{
 					$this->db->update($data);
 				}else
 					$this->db->insert($data);
+
+				if($this->db->rowCount() > 0)
+					$this->nUpdates++;
 			}
 		}
 	}
-
-
-	/*
-	private function excluiTelefones()
-	{
-		foreach ($this->telefonesExcluir as $value)
-		{
-			$this->clear();
-			$this->setTabela('telefones');
-			$this->setCondicao('id_telefone = "'.$value.'"');
-			$this->delete();
-		}
-	}
-
-	private function excluiEmails()
-	{
-		foreach ($this->emailsExcluir as $value)
-		{
-			$this->clear();
-			$this->setTabela('emails');
-			$this->setCondicao('id_email = "'.$value.'"');
-			$this->delete();
-		}
-	}
-	*/
-
-
-
 
 
 	/**

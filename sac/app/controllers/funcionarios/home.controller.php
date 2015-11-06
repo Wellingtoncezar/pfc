@@ -259,9 +259,6 @@ class home extends Controller{
 		$telefones = isset($_POST['telefones']) ? filter_var_array($_POST['telefones']) : Array();
 		$emails = isset($_POST['emails']) ? filter_var_array($_POST['emails']) : Array();
 		
-		$telefonesExcluir = isset($_POST['telefonesExcluir']) ? filter_var_array($_POST['telefonesExcluir']) : Array();
-		$emailsExcluir = isset($_POST['emailsExcluir']) ? filter_var_array($_POST['emailsExcluir']) : Array();
-
 		//DADOS ADMISSIONAIS
 		$codigoAdmissao = isset($_POST['codigoAdmissao']) ? filter_var(trim($_POST['codigoAdmissao'])) : '';
 		$cargo = isset($_POST['cargo']) ? filter_var(trim($_POST['cargo'])) : '';
@@ -289,12 +286,13 @@ class home extends Controller{
 		if ($this->dataValidator->validate())
 		{
 			//TELEFONES
-			$arrTelefones = Array();
 			$telefonesList = Array();
 			$this->load->model('telefoneModel');
-			foreach ($telefones as $telefone)
+			foreach ($telefones as $key => $telefone)
 			{
+				$telefone['idtelefone'] = isset($telefone['idtelefone']) ? $telefone['idtelefone'] : '';
 				$telefoneModel = new telefoneModel();
+				$telefoneModel->setId($telefone['idtelefone']);
 				$telefoneModel->setCategoria( $telefone['categoria'] );
 				$telefoneModel->setNumero( $telefone['telefone'] );
 				$telefoneModel->setOperadora( $telefone['operadora'] );
@@ -303,32 +301,20 @@ class home extends Controller{
 				unset($telefoneModel);
 			}
 
-			$arrTelefones['telefonesList'] = $telefonesList;
-
-			//EMAILS EXCLUIR
-			$emailModel = new emailModel();
-			$emailModel->setExcluidos($emailsExcluir);
-			$arrEmail['emailExcluir'] = $emailModel;
 
 			//EMAILS
-			$arrEmail = Array();
 			$emailList = Array();
 			$this->load->model('emailModel');
 			foreach ($emails as $email)
 			{
+				$email['idemail'] = isset($email['idemail']) ? $email['idemail'] : '';
 				$emailModel = new emailModel();
+				$emailModel->setId( $email['idemail'] );
 				$emailModel->setEmail( $email['email'] );
 				$emailModel->setTipo( $email['tipo_email'] );
 				array_push($emailList, $emailModel);
 				unset($emailModel);
 			}
-			$arrEmail['emailList'] = $emailList;
-
-			//EMAILS EXCLUIR
-			$emailModel = new emailModel();
-			$emailModel->setExcluidos($emailsExcluir);
-			$arrEmail['emailExcluir'] = $emailModel;
-
 
 
 
@@ -355,6 +341,7 @@ class home extends Controller{
 			//FUNCIONARIO
 			$this->load->model('funcionarios/funcionariosModel');
 			$funcionariosModel = new funcionariosModel();
+			$funcionariosModel->setId($idFuncionario);
 			$funcionariosModel->setFoto($foto);
 			$funcionariosModel->setNome($nome);
 			$funcionariosModel->setSobrenome($sobrenome);
@@ -366,7 +353,7 @@ class home extends Controller{
 			$funcionariosModel->setEscolaridade($escolaridade);
 			$funcionariosModel->setEndereco($enderecoModel);
 			$funcionariosModel->setTelefones($telefonesList);
-			$funcionariosModel->setEmail($arrEmail);
+			$funcionariosModel->setEmail($emailList);
 			$funcionariosModel->setCodigo($codigoAdmissao);
 			$funcionariosModel->setCargo($cargo);
 			$funcionariosModel->setDataAdmissao($dataAdmissao);
@@ -378,7 +365,7 @@ class home extends Controller{
 			//FUNCIONARIO DAO
 			$this->load->dao('funcionarios/funcionariosDao');
 			$funcionariosDao = new funcionariosDao();
-			echo $funcionariosDao->inserir($funcionariosModel);
+			echo $funcionariosDao->atualizar($funcionariosModel);
 		}else
 	    {
 			$todos_erros = $this->dataValidator->get_errors();

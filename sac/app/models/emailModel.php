@@ -7,7 +7,6 @@ class emailModel{
 	private $id;
 	private $email;
 	private $tipo;
-	private $emailExcluir;
 	//SETERS
 	public function setId($id)
 	{
@@ -22,10 +21,6 @@ class emailModel{
 		$this->email = $email;
 	}
 
-	public function setExcluidos($emailExcluir)
-	{
-		$this->emailExcluir = $emailExcluir;
-	}
 	
 
 	//GETERS
@@ -42,10 +37,6 @@ class emailModel{
 		return $this->email;
 	}
 
-	public function getExcluidos()
-	{
-		return $this->emailExcluir;
-	}
 
 
 }
