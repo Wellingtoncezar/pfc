@@ -1,7 +1,7 @@
 <?php
 /**
  * Classe DAO de funcionários
- * @author Wellington cezar, Diego Hernandes, Jessica Azevedo
+ * @author Wellington cezar, Diego Hernandes
  */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class funcionariosDao extends Dao{
@@ -153,7 +153,7 @@ class funcionariosDao extends Dao{
 			$funcionario->setStatus(status::getAttribute($result['status_funcionario']));
 			return $funcionario;
 		else:
-			echo 'nada';
+			
 			return $funcionariosModel;
 		endif;
 	}

@@ -1,6 +1,6 @@
 <?php
 /**
-*@author Wellington cezar, Diego Hernandes, Jessica Azevedo
+*@author Wellington cezar, Diego Hernandes
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class telefoneModel{
