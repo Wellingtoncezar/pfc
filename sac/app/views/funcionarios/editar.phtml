@@ -306,6 +306,25 @@
                     <span class="input-group-addon" id="basic-addon1">Salário</span>
                     <input type="text" class="form-control" placeholder="Salário" name="salario" value="<?=$dataFormat->formatar($funcionario->getSalario(),'decimal');?>">
                 </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default ">
+            <div class="panel-heading">Dados de usuário</div>
+            <div class="panel-body">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Login</span>
+                    <input type="text" class="form-control" placeholder="Login" name="login" value="">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Senha</span>
+                    <input type="password" class="form-control" placeholder="Senha" name="senha" value="">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Confirma Senha</span>
+                    <input type="password" class="form-control" placeholder="Confirma Senha" name="confirmSenha" value="">
+                </div>
+                
 
                 <input type="hidden" name="id_funcionario" value="<?=$funcionario->getId()?>">
                 <div class="btn-group pull-right" role="group">
