@@ -40,14 +40,14 @@ class insert extends error_db{
 			if( $i < $n-1 )
 			{
 				$campos .= $key.", ";
-				$param .= ":".$key.", ";
+				$param .= ":".htmlentities($key).", ";
 			}
 			else
 			{
 				$campos .= $key."";
-				$param .= ":".$key."";
+				$param .= ":".htmlentities($key)."";
 			}
-			$paramArray[":".$key.""]= filter_var(trim($val));
+			$paramArray[":".$key.""]= filter_var(trim(htmlentities($val)));
 			$i++;
 		}
 

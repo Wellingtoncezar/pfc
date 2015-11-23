@@ -38,14 +38,14 @@ class update extends error_db
 			if( $i < $n-1 )
 			{
 				$campos .= $key.", ";
-				$param .= "".$key." = :".$key.", ";
+				$param .= "".$key." = :".htmlentities($key).", ";
 			}
 			else
 			{
 				$campos .= $key."";
-				$param .= "".$key." = :".$key."";
+				$param .= "".$key." = :".htmlentities($key)."";
 			}
-			$paramArray[":".$key.""]= filter_var(trim($val));
+			$paramArray[":".$key.""]= filter_var(trim(htmlentities($val)));
 			$i++;
 		}
 

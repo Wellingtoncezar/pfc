@@ -6,17 +6,17 @@
 
 <div class="container">
     <div class="page-header">
-      <h1>Funcionários</h1>
+      <h1>Fornecedores</h1>
     </div>
     <div class="middle-content">
         <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
         <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
             <thead>
                 <tr>   
-                    <th width="100">Código</th>
                     <th width="40">Foto</th>
-                    <th width="160">Razão Social</th>
+                    <th width="100">Razão social</th>
                     <th width="160">Nome Fantasia</th>
+                    <th width="160">CPF</th>
                     <th width="120">CNPJ</th>
                     <th width="100">Status (Ativo/Inativo)</th>
                     <th width="180">Ações</th>
@@ -24,10 +24,10 @@
             </thead>
             <tfoot>
                 <tr>
-                    <th>Código</th>
                     <th>Foto</th>
-                    <th>Razão Social</th>
+                    <th>Razão social</th>
                     <th>Nome Fantasia</th>
+                    <th>CPF</th>
                     <th>CNPJ</th>
                     <th>Status (Ativo/Inativo)</th>
                     <th>Ações</th>
@@ -36,24 +36,24 @@
             <tbody>
             <?php
             if(!empty($fornecedores)):
-                foreach ($fornecedores as $forn):
-                    $foto = $forn->getFoto() != '' ? URL.'skin/uploads/fornecedores/p/'.$forn->getFoto() : URL.'skin/img/imagens/semfoto.jpg';
+                foreach ($fornecedores as $fornec):
+                    $foto = $fornec->getFoto() != '' ? URL.'skin/uploads/fornecedores/p/'.$fornec->getFoto() : URL.'skin/img/imagens/logoaqui.png';
             ?>
-                <tr id="<?=$forn->getId()?>">
-                    <td><?=$forn->getCodigo()?></td>
+                <tr id="<?=$fornec->getId()?>">
                     <td><img src="<?=$foto?>" style=" width: 60px; height: 60px;"></td>
-                    <td><?=$forn->getNome().' '.$forn->getSobrenome()?></td>
-                    <td><?=$forn->getCargo()?></td>
-                    <td><?=$forn->getCpf()?></td>
+                    <td><?=$fornec->getRazaoSocial()?></td>
+                    <td><?=$fornec->getNomeFantasia()?></td>
+                    <td><?=$fornec->getCpf()?></td>
+                    <td><?=$fornec->getCnpj()?></td>
                     <td>
-                        <select name="status" id="<?=$forn->getId()?>" class="statusSelect">
-                            <option value="<?=status::ATIVO?>" class="active" <?=($forn->getStatus() == status::ATIVO) ? 'selected="selected"' : ''?>>Ativo</option>
-                            <option value="<?=status::INATIVO?>" class="inactive" <?=($forn->getStatus() == status::INATIVO) ? 'selected="selected"' : ''?>>Inativo</option>
+                        <select name="status" id="<?=$fornec->getId()?>" class="statusSelect">
+                            <option value="<?=status::ATIVO?>" class="active" <?=($fornec->getStatus() == status::ATIVO) ? 'selected="selected"' : ''?>>Ativo</option>
+                            <option value="<?=status::INATIVO?>" class="inactive" <?=($fornec->getStatus() == status::INATIVO) ? 'selected="selected"' : ''?>>Inativo</option>
                         </select>
                     </td>
                     <td>
-                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>fornecedores/home/editar/<?=$forn->getId()?>" role="button" id-record="<?=$forn->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
-                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$forn->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span>Excluir</a>
+                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>fornecedores/home/editar/<?=$fornec->getId()?>" role="button" id-record="<?=$fornec->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
+                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$fornec->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span>Excluir</a>
                     </td>
                 </tr>
             <?php
@@ -107,3 +107,4 @@
 
     })
 </script>
+

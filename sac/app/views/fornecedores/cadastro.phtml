@@ -2,179 +2,335 @@
     <div class="page-header">
       <h1>Fornecedores<small> Cadastro</small></h1>
     </div>
-    <form action="">
-
+    <form action="<?=URL?>fornecedores/home/inserir" method="post" id="form_fornecedores">
         <div class="panel panel-default">
-          <div class="panel-heading">Dados Empresáriais</div>
-          <div class="panel-body">
+            <div class="panel-heading">Dados Empresariais</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6 col-md-3">
+                        <label for="foto" class="thumbnail inputFoto preview-lg">
+                            <div class="thumbnail img-preview preview-lg">
+                                <img src="<?=URL?>skin/img/imagens/logoaqui.png" id="img_previous">
+                            </div>
+                            <input type="file" name="foto" id="foto" accept="image/*">
+                        </label>
+                    </div>
+                </div>
 
-            <div class="row">
-            <div class="col-xs-6 col-md-3">
-                <a href="#" class="thumbnail">
-                    <img src="<?=URL?>skin/img/imagens/cola.jpg" alt="...">
-                </a>
-            </div>
-        </div>
-             <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Razão Social</span>
-                <input type="text" class="form-control" placeholder="Razão Social" aria-describedby="basic-addon1">
-            </div>
-        </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Razão Social</span>
+                    <input type="text" class="form-control" placeholder="Razão Social" aria-describedby="basic-addon1" name="razao_social">
+                </div>
 
-        <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Nome Fantasia</span>
-                <input type="text" class="form-control" placeholder="Nome Fantasia" aria-describedby="basic-addon1">
-            </div>
-        </div>
 
-        <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">CNPJ</span>
-                <input type="text" class="form-control" placeholder="CNPJ" aria-describedby="basic-addon1">
-            </div>
-        </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Nome Fantasia</span>
+                    <input type="text" class="form-control" placeholder="Nome Fantasia" aria-describedby="basic-addon1" name="nome_fantasia">
+                </div>
 
-        <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">CPF</span>
-                <input type="text" class="form-control" placeholder="CPF" aria-describedby="basic-addon1">
-            </div>
-        </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">CNPJ</span>
+                    <input type="text" class="form-control" placeholder="CNPJ" aria-describedby="basic-addon1" name="cnpj">
+                </div>
 
-       <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Pessoa</span>
-                <select class="form-control">
-                    <option value="" selected="selected" disabled="disabled">..Selecione..</option>
-                    <option value="g">Física</option>
-                    <option value="kg">Jurídica</option>
-                </select>
-            </div>
-        </div>
-        <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Site</span>
-                <input type="text" class="form-control" placeholder="Site" aria-describedby="basic-addon1">
-            </div>
-        </div>
-        <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Observações</span>
-                <input type="text" class="form-control" placeholder="Observações" aria-describedby="basic-addon1">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">CPF</span>
+                    <input type="text" class="form-control" placeholder="CPF" aria-describedby="basic-addon1" name="cpf">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Pessoa</span>
+                    <select class="form-control" name="pessoa">
+                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                        <option value="PF">Física</option>
+                        <option value="PJ">Jurídica</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Site</span>
+                    <input type="text" class="form-control" placeholder="Site" aria-describedby="basic-addon1" name="site">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Observações</span>
+                    <textarea class="form-control" placeholder="Observações" name="observacoes"></textarea>
+                </div>
             </div>
         </div>
         
+        <div id="defaultCampos">
+            <div class="radio telefones" id="defaultTel" style="margin-bottom:5px;display:none">
+                <span class="input-group-addon">
+                    <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Categoria</span>
+                        <select name="categoria" class="form-control">
+                            <option value="telefone" selected="selected">Telefone</option>
+                            <option value="celular">Celular</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Número</span>
+                        <input type="tel" name="telefone" placeholder="Número" class="form-control" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Operadora</span>
+                        <input type="text" name="operadora" placeholder="Operadora" class="form-control" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Tipo</span>
+                        <select name="tipo_telefone" class="form-control">
+                            <option value="" selected="selected" disabled="disabled">Selecione um tipo</option>
+                            <option value="Pessoal">Pessoal</option>
+                            <option value="Profissional">Profissional</option>
+                        </select>
+                    </div>
+                </span>
+            </div>
+
+            <div class="radio emails" id="defaultEmail" style="margin-bottom:5px;display:none">
+                <span class="input-group-addon">
+                    <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Tipo</span>
+                        <select name="tipo_email" class="form-control">
+                            <option value="" disabled="disabled">Tipo</option>
+                            <option value="Pessoal">Pessoal</option>
+                            <option value="Profissional">Profissional</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">E-mail</span>
+                        <input type="email" name="email" placeholder="E-mail" class="form-control" />
+                    </div>
+                </span>
+            </div>
+
+        </div>
+
+
+
         <div class="panel panel-default">
             <div class="panel-heading">Contatos</div>
             <div class="panel-body">
-            
-            <div >
                 <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Nome Para Contato</span>
-                <input type="text" class="form-control" placeholder="Nome Para Contato" aria-describedby="basic-addon1">
+                    <span class="input-group-addon" id="basic-addon1">Nome para contato</span>
+                    <input type="text" name="nomeContato" placeholder="Nome para contato" class="form-control" />
                 </div>
-            </div>
-            <div>
-                <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Telefone</span>
-                <input type="text" class="form-control" placeholder="Telefone" aria-describedby="basic-addon1">
+                <div class="form-group group_tel">
+                    <a href="javascript:void(0)" class="addTel addCel"><span class="glyphicons glyphicons-earphone"></span> Adicionar o telefone</a>
                 </div>
-            </div>
-            <div >
-                <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">E-mail</span>
-                <input type="text" class="form-control" placeholder="E-mail" aria-describedby="basic-addon1">
+
+                <div class="form-group group_email">
+                    <a href="javascript:void(0)" class="addEmail addCel"><span class="glyphicons glyphicons-envelope"></span> Adicionar E-mail</a>
                 </div>
+               
             </div>
-            
-        </div> 
+        </div>
 
 
 
-        </div> <!-- fim panel dados gerais -->
+
 
         
        
        <div class="panel panel-default">
-       <div class="panel-heading">Endereço</div>
-       <div class="panel-body">
-   
-        <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">CEP</span>
-                <input type="text" class="form-control" placeholder="CEP" aria-describedby="basic-addon1">
-            </div>
-        </div>
-       <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Logradouro</span>
-                <input type="text" class="form-control" placeholder="Logradouro" aria-describedby="basic-addon1">
-            </div>
-        </div>
+            <div class="panel-heading">Endereço</div>
+            <div class="panel-body">
 
-        <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Número</span>
-                <input type="text" class="form-control" placeholder="Número" aria-describedby="basic-addon1">
-            </div>
-        </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">CEP</span>
+                    <input type="text" class="form-control" placeholder="CEP" name="cep" id="cep">
+                </div>
 
-        
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Logradouro</span>
+                    <input type="text" class="form-control" placeholder="Lougradouro" name="logradouro" id="rua">
+                </div>
 
-        <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Cidade</span>
-                <input type="text" class="form-control" placeholder="Cidade" aria-describedby="basic-addon1">
-            </div>
-        </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Número</span>
+                    <input type="text" class="form-control" placeholder="Número" name="numero" id="numero">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Complemento</span>
+                    <input type="text" class="form-control" placeholder="Complemento" name="complemento" id="complemento">
+                </div>
 
-        <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Bairro</span>
-                <input type="text" class="form-control" placeholder="Bairro" aria-describedby="basic-addon1">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Bairro</span>
+                    <input type="text" class="form-control" placeholder="Bairro" name="bairro" id="bairro">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Cidade</span>
+                    <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">UF</span>
+                    <select class="form-control" name="estado" id="uf">
+                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                        <option value="AC">AC - Acre</option>
+                        <option value="AL">AL - Alagoas</option>
+                        <option value="AP">AP - Amapá</option>
+                        <option value="AM">AM - Amazonas</option>
+                        <option value="BA">BA - Bahia</option>
+                        <option value="CE">CE - Ceará</option>
+                        <option value="DF">DF - Distrito Federal</option>
+                        <option value="GO">GO - Goiás</option>
+                        <option value="ES">ES - Espírito Santo</option>
+                        <option value="MA">MA - Maranhão</option>
+                        <option value="MT">MT - Mato Grosso</option>
+                        <option value="MS">MS - Mato Grosso do Sul</option>
+                        <option value="MG">MG - Minas Gerais</option>
+                        <option value="PA">PA - Pará</option>
+                        <option value="PB">PB - Paraiba</option>
+                        <option value="PR">PR - Paraná</option>
+                        <option value="PE">PE - Pernambuco</option>
+                        <option value="PI">PI - Piauí­</option>
+                        <option value="RJ">RJ - Rio de Janeiro</option>
+                        <option value="RN">RN - Rio Grande do Norte</option>
+                        <option value="RS">RS - Rio Grande do Sul</option>
+                        <option value="RO">RO - Rondônia</option>
+                        <option value="RR">RR - Roraima</option>
+                        <option value="SP">SP - São Paulo</option>
+                        <option value="SC">SC - Santa Catarina</option>
+                        <option value="SE">SE - Sergipe</option>
+                        <option value="TO">TO - Tocantins</option>
+                    </select>
+                </div>
+                
             </div>
-        </div>
-        <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">UF</span>
-                <input type="text" class="form-control" placeholder="UF" aria-describedby="basic-addon1">
-            </div>
-        </div>
-         <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">País</span>
-                <input type="text" class="form-control" placeholder="País" aria-describedby="basic-addon1">
-            </div>
-        </div>
-    </div>
-         
-</div><!-- fim panel Endereço -->
+        </div><!-- fim panel endereco -->
+             
+
         
         <div class="panel panel-default">
             <div class="panel-heading">Agenda</div>
             <div class="panel-body">
-            
-            <div >
                 <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Data da Visita</span>
-                <input type="text" class="form-control" placeholder="Data da Visita" aria-describedby="basic-addon1">
+                    <span class="input-group-addon" id="basic-addon1">Data da Visita</span>
+                    <input type="text" class="form-control" placeholder="Data da Visita" aria-describedby="basic-addon1" name="data_visita">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Retorno</span>
+                    <input type="text" class="form-control" placeholder="Retorno" aria-describedby="basic-addon1" name="retorno">
+                </div>
+                <div class="btn-group pull-right" role="group">
+                    <button type="submit" class="btn btn-success">Enviar</button>
                 </div>
             </div>
-            <div>
-                <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Retorno</span>
-                <input type="text" class="form-control" placeholder="Retorno" aria-describedby="basic-addon1">
-                
-                </div>
-            </div>
-        </div> 
-    </div>
-
-</div>
-        <div class="btn-group" role="group">
-            <button type="submit" class="btn btn-default">Enviar</button>
         </div>
+
     </form>
 </div>
+
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<link href="<?=URL?>skin/js/croper/cropper.min.css" rel="stylesheet">
+<link href="<?=URL?>skin/js/croper/main.css" rel="stylesheet">
+<script src="<?=URL?>skin/js/croper/cropper.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskedinput.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
+<script type="text/javascript">
+    
+ $(function(){
+    /*MASCARAS DE CAMPOS*/
+    $('input[name=data_visita]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true,yearRange: "-100:+0" });
+    $('input[name=retorno]').wvmask('numero')
+    $('input[name=cep]').wvmask('cep')
+    $('input[name=numero]').wvmask('numero')
+    $('input[name=cpf]').mask('999.999.999-99');
+
+    $('input[name=cnpj]').mask('99.999.999/9999-99');
+    $('#form_fornecedores').validaCep();
+    //mascara para telefones de 8 e 9 dígitos
+    var maskBehavior = function (val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+    },
+    options = {onKeyPress: function(val, e, field, options) {
+        field.mask(maskBehavior.apply({}, arguments), options);
+        }
+    };
+    $('input[name=telefone]').mask(maskBehavior, options);
+
+
+    //UPLOAD DA IMAGEM
+    $('#form_fornecedores').uploadImage();
+    //SUBMIT DO FORMULÁRIO
+    $('#form_fornecedores').submit(function(){
+        var telefones = Object();
+        //telefones
+        var iTel = 0;
+        $('.group_tel .telefones').each(function(){
+            var aux = Object();
+            var categoria = $('select[name=categoria] option:selected',this).val();
+            var telefone = $('input[name=telefone]',this).val();
+            var operadora = $('input[name=operadora]',this).val();
+            var tipo_telefone = $('select[name=tipo_telefone] option:selected',this).val();
+
+            aux['categoria'] = categoria;
+            aux['telefone'] = telefone;
+            aux['operadora'] = operadora;
+            aux['tipo_telefone'] = tipo_telefone;
+
+            telefones[iTel] = aux;
+            iTel++;
+        });
+
+        //email
+        var emails = Object();
+        var iEmail = 0;
+        $('.group_email .emails').each(function(){
+            var aux = Object();
+            var tipo_email = $('select[name=tipo_email] option:selected',this).val();
+            var email = $('input[name=email]',this).val();
+            aux['tipo_email'] = tipo_email;
+            aux['email'] = email;
+            emails[iEmail] = aux;
+            iEmail++;
+        });
+
+
+        var parameters = Object();
+        parameters['telefones'] = telefones;
+        parameters['emails'] = emails;
+
+        $('#form_fornecedores').uploadForm({
+            'parameters': parameters,
+            'reload':true
+        });
+        return false;
+    });
+
+
+    /************************************/
+    //telefone
+    $('.addTel').on('click',function(){
+        var error = 0;
+        var campTel = $('#defaultCampos #defaultTel').clone().removeAttr('id').removeAttr('style');
+        campTel.find('input').val('');
+        $(this).before(campTel);
+        $('input[name=telefone]').mask(maskBehavior, options);
+    });
+    
+    $(document).on('click','.delCel',function(){
+        $(this).parent().parent().remove();
+    });
+
+
+    //email
+    $('.addEmail').on('click',function(){
+        var error = 0;
+        var campTel = $('#defaultCampos #defaultEmail').clone().removeAttr('id').removeAttr('style');
+        campTel.find('input').val('');
+        $(this).before(campTel);
+    });
+    
+    $(document).on('click','.delEmail',function(){
+        $(this).parent().parent().remove();
+    });
+    /************************************/
+
+ });
+</script>

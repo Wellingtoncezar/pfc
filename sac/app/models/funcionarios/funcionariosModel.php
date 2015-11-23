@@ -23,6 +23,7 @@ class funcionariosModel{
 	private $salario;
 	private $status;
 	private $dataCadastro;
+	private $usuario;
 	
 
  	//SETERS
@@ -102,6 +103,11 @@ class funcionariosModel{
 	{	
 		$this->dataCadastro = $dataCadastro;
 	}
+	public function setUsuario($usuario)
+	{
+		$this->usuario = $usuario;
+	}
+
 
 	//GETERS
 	public function getId()
@@ -180,7 +186,10 @@ class funcionariosModel{
 	{	
 		return $this->dataCadastro;
 	}
-
+	public function getUsuario()
+	{
+		return $this->usuario;
+	}
 
 
 }

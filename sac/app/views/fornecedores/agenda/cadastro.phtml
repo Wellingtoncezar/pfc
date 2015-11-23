@@ -1,0 +1,94 @@
+<div class="container">
+    <div class="page-header">
+      <h1>Agenda de fornecedores<small> Cadastrar</small></h1>
+    </div>
+    <form action="<?=URL?>fornecedores/agenda/inserir" method="post" id="form_agenda">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dados da agenda</div>
+            <div class="panel-body">
+                <div class="form-group input-group">
+                    <span class="input-group-addon">Fornecedores:</span>
+                    <select name="fornecedores" id="fornecedores" class="form-control">
+                        <option selected="selected" disabled="disabled" value="">..Selecione..</option>
+                        <?php if(!empty($fornecedores)):?>
+                        <?php foreach ($fornecedores as $fornecedor):?>
+                        <?php $fotoM = ($fornecedor->getFoto() != '') ? URL.'skin/uploads/fornecedores/p/'.$fornecedor->getFoto() : URL.'skin/img/imagens/logoaqui.png'?>
+                        <option value="<?=$fornecedor->getId()?>" data-class="avatar" data-style="background-image: url('<?=$fotoM?>');  background-size: 100%;  width: 22px;  height: 22px;"><?=$fornecedor->getNomeFantasia()?></option>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
+                </div>
+
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Data</span>
+                    <input type="text" class="form-control" placeholder="Data" aria-describedby="basic-addon1" name="data">
+                </div>
+
+                
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Título</span>
+                    <input type="text" class="form-control" placeholder="Título" aria-describedby="basic-addon1" name="titulo">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Observações</span>
+                    <textarea class="form-control" placeholder="Observações" name="observacoes"></textarea>
+                </div>
+
+                <div class="btn-group pull-right" role="group">
+                    <button type="submit" class="btn btn-success">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<link href="<?=URL?>skin/js/croper/cropper.min.css" rel="stylesheet">
+<link href="<?=URL?>skin/js/croper/main.css" rel="stylesheet">
+<script src="<?=URL?>skin/js/croper/cropper.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskedinput.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
+<script type="text/javascript">
+    
+$(function(){
+    /*MASCARAS DE CAMPOS*/
+    $('input[name=data]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true,yearRange: "-3:+2" });
+
+    //SUBMIT DO FORMULÁRIO
+    $('#form_agenda').submit(function(){
+        $('#form_agenda').uploadForm({
+            'reload':true
+        });
+        return false;
+    });
+
+
+    /************************************/
+        //campos select
+    $.widget( "custom.iconselectmenu", $.ui.selectmenu, {
+      _renderItem: function( ul, item ) {
+        var li = $( "<li>", { text: item.label } );
+ 
+        if ( item.disabled ) {
+          li.addClass( "ui-state-disabled" );
+        }
+ 
+        $( "<span>", {
+          style: item.element.attr( "data-style" ),
+          "class": "ui-icon " + item.element.attr( "data-class" )
+        })
+          .appendTo( li );
+        return li.appendTo( ul );
+      }
+    });
+
+    $( "#fornecedores" )
+    .iconselectmenu()
+    .iconselectmenu( "menuWidget")
+    .addClass( "ui-menu-icons avatar" );
+    /************************************/
+});
+</script>

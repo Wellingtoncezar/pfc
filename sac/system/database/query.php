@@ -10,6 +10,7 @@ class query extends error_db{
 	{
 		parent::__construct();
 		$this->pdo = $con;
+		$sql = htmlentities($sql);
 		if($sql != null)
 			$this->setQuery($sql);
 	}

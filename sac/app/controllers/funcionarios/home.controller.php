@@ -247,6 +247,8 @@ class home extends Controller{
 		$escolaridade = isset($_POST['escolaridade']) ? filter_var($_POST['escolaridade']) : '';
 
 		//endereço
+		
+		$id_endereco = isset($_POST['id_endereco']) ? filter_var(trim($_POST['id_endereco'])) : '';
 		$cep = isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
 		$logradouro = isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
 		$numero = isset($_POST['numero']) ? filter_var(trim($_POST['numero'])) : '';
@@ -321,6 +323,7 @@ class home extends Controller{
 			//ENDEREÇO
 			$this->load->model('enderecoModel');
 			$enderecoModel = new enderecoModel();
+			$enderecoModel->setId($id_endereco);
 			$enderecoModel->setCep($cep);
 			$enderecoModel->setNumero($numero);
 			$enderecoModel->setComplemento($complemento);

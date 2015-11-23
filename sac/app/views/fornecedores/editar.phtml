@@ -1,0 +1,437 @@
+<div class="container">
+    <div class="page-header">
+      <h1>Fornecedores<small> Edição</small></h1>
+    </div>
+    <form action="<?=URL?>fornecedores/home/atualizar" method="post" id="form_fornecedores">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dados Empresariais</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6 col-md-3">
+                        <label for="foto" class="thumbnail inputFoto preview-lg">
+                            <div class="thumbnail img-preview preview-lg">
+                            <?php
+                            $foto = $fornecedor->getFoto() != '' ? URL.'skin/uploads/fornecedores/'.$fornecedor->getFoto(): URL.'skin/img/imagens/semfoto.jpg';
+                            ?>
+                                <img src="<?=$foto?>" id="img_previous">
+                            </div>
+                            <input type="hidden" name="nome_foto" value="<?=$fornecedor->getFoto()?>">
+                            <input type="file" name="foto" id="foto" accept="image/*">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Razão Social</span>
+                    <input type="text" class="form-control" placeholder="Razão Social" aria-describedby="basic-addon1" name="razao_social" value="<?=$fornecedor->getRazaoSocial()?>">
+                </div>
+
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Nome Fantasia</span>
+                    <input type="text" class="form-control" placeholder="Nome Fantasia" aria-describedby="basic-addon1" name="nome_fantasia" value="<?=$fornecedor->getNomeFantasia()?>">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">CNPJ</span>
+                    <input type="text" class="form-control" placeholder="CNPJ" aria-describedby="basic-addon1" name="cnpj" value="<?=$fornecedor->getCnpj()?>">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">CPF</span>
+                    <input type="text" class="form-control" placeholder="CPF" aria-describedby="basic-addon1" name="cpf" value="<?=$fornecedor->getCpf()?>">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Pessoa</span>
+                    <select class="form-control" name="pessoa">
+                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                        <option value="PF" <?=$fornecedor->getPessoa() == "PF" ? 'selected="selected"' : ''?>>Física</option>
+                        <option value="PJ" <?=$fornecedor->getPessoa() == "PJ" ? 'selected="selected"' : ''?>>Jurídica</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Site</span>
+                    <input type="text" class="form-control" placeholder="Site" aria-describedby="basic-addon1" name="site" value="<?=$fornecedor->getSite()?>"> 
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Observações</span>
+                    <textarea class="form-control" placeholder="Observações" name="observacoes"><?=$fornecedor->getObservacoes()?></textarea>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+
+        <div id="defaultCampos">
+            <div class="radio telefones" id="defaultTel" style="margin-bottom:5px;display:none">
+                <span class="input-group-addon">
+                    <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Categoria</span>
+                        <select name="categoria" class="form-control">
+                            <option value="telefone" selected="selected">Telefone</option>
+                            <option value="celular">Celular</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Número</span>
+                        <input type="tel" name="telefone" placeholder="Número" class="form-control" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Operadora</span>
+                        <input type="text" name="operadora" placeholder="Operadora" class="form-control" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Tipo</span>
+                        <select name="tipo_telefone" class="form-control">
+                            <option value="" selected="selected" disabled="disabled">Selecione um tipo</option>
+                            <option value="Pessoal">Pessoal</option>
+                            <option value="Profissional">Profissional</option>
+                        </select>
+                    </div>
+                </span>
+                <input type="hidden" id="idTelefone" value="">
+            </div>
+
+            <div class="radio emails" id="defaultEmail" style="margin-bottom:5px;display:none">
+                <span class="input-group-addon">
+                    <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Tipo</span>
+                        <select name="tipo_email" class="form-control">
+                            <option value="" disabled="disabled">Tipo</option>
+                            <option value="Pessoal">Pessoal</option>
+                            <option value="Profissional">Profissional</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">E-mail</span>
+                        <input type="email" name="email" placeholder="E-mail" class="form-control" />
+                    </div>
+                <input type="hidden" id="idTelefone" value="" name="idTelefone">
+                </span>
+            </div>
+
+        </div>
+
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Contatos</div>
+            <div class="panel-body">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Nome para contato</span>
+                    <input type="text" name="nomeContato" placeholder="Nome para contato" class="form-control" value="<?=$fornecedor->getNomeContato()?>"/>
+                </div>    
+
+
+                <div class="form-group group_tel">
+                    <!--TELEFONES-->
+                    <?php
+                    if(!empty($fornecedor->getTelefones())):
+                        foreach ($fornecedor->getTelefones() as $telefone):
+                    ?>
+                        <div class="radio telefones" style="margin-bottom:5px;display:block">
+                            <span class="input-group-addon">
+                                <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">Categoria</span>
+                                    <select name="categoria" class="form-control">
+                                        <option value="telefone" <?=$telefone->getCategoria() == 'telefone' ? 'selected="selected"' : ''?>>Telefone</option>
+                                        <option value="celular" <?=$telefone->getCategoria() == 'celular' ? 'selected="selected"' : ''?>>Celular</option>
+                                        </select>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">Número</span>
+                                    <input type="tel" name="telefone" placeholder="Número" class="form-control" value="<?=$telefone->getNumero()?>" />
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">Operadora</span>
+                                    <input type="text" name="operadora" placeholder="Operadora" class="form-control"  value="<?=$telefone->getOperadora()?>"/>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">Tipo</span>
+                                    <select name="tipo_telefone" class="form-control">
+                                        <option value="" selected="selected" disabled="disabled">Selecione um tipo</option>
+                                        <option value="Pessoal" <?=$telefone->getTipo() == 'Pessoal' ? 'selected="selected"' : ''?>>Pessoal</option>
+                                        <option value="Profissional" <?=$telefone->getTipo() == 'Profissional' ? 'selected="selected"' : ''?>>Profissional</option>
+                                    </select>
+                                </div>
+                            </span>
+                            <input type="hidden" id="idTelefone" name="idTelefone" value="<?=$telefone->getId()?>">
+                        </div>
+
+                    <?php 
+                        endforeach;
+                    endif;
+                    ?>
+                    <a href="javascript:void(0)" class="addTel addCel"><span class="glyphicons glyphicons-earphone"></span> Adicionar o telefone</a>
+                </div>
+
+                <div class="form-group group_email">
+                    <!--EMAILS-->
+                    <?php
+                    if(!empty($fornecedor->getEmail())):
+                        foreach ($fornecedor->getEmail() as $email):
+                    ?>
+                        <div class="radio emails" style="margin-bottom:5px;display:block">
+                            <span class="input-group-addon">
+                                <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">Tipo</span>
+                                    <select name="tipo_email" class="form-control">
+                                        <option value="" disabled="disabled">Tipo</option>
+                                        <option value="Pessoal" <?=$email->getTipo() == 'Pessoal' ? 'selected="selected"' : ''?>>Pessoal</option>
+                                        <option value="Profissional" <?=$email->getTipo() == 'Profissional' ? 'selected="selected"' : ''?>>Profissional</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">E-mail</span>
+                                    <input type="email" name="email" placeholder="E-mail" class="form-control" value="<?=$email->getEmail()?>" />
+                                </div>
+                            </span>
+                            <input type="hidden" id="idEmail" name="idEmail" value="<?=$email->getId()?>">
+                        </div>
+
+                    <?php 
+                        endforeach;
+                    endif;
+                    ?>
+                
+                    <a href="javascript:void(0)" class="addEmail addCel"><span class="glyphicons glyphicons-envelope"></span> Adicionar E-mail</a>
+                </div>
+               
+            </div>
+        </div>
+
+
+
+
+
+        
+       
+       <div class="panel panel-default">
+            <div class="panel-heading">Endereço</div>
+            <div class="panel-body">
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">CEP</span>
+                    <input type="text" class="form-control" placeholder="CEP" name="cep" id="cep" value="<?=$fornecedor->getEndereco()->getCep()?>">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Logradouro</span>
+                    <input type="text" class="form-control" placeholder="Lougradouro" name="logradouro" id="rua"  value="<?=$fornecedor->getEndereco()->getLogradouro()?>">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Número</span>
+                    <input type="text" class="form-control" placeholder="Número" name="numero" id="numero"  value="<?=$fornecedor->getEndereco()->getNumero()?>">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Complemento</span>
+                    <input type="text" class="form-control" placeholder="Complemento" name="complemento" id="complemento"  value="<?=$fornecedor->getEndereco()->getComplemento()?>">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Bairro</span>
+                    <input type="text" class="form-control" placeholder="Bairro" name="bairro" id="bairro"  value="<?=$fornecedor->getEndereco()->getBairro()?>">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Cidade</span>
+                    <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade"  value="<?=$fornecedor->getEndereco()->getCidade()?>">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">UF</span>
+                    <select class="form-control" name="estado" id="uf">
+                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                        <option value="AC" <?=$fornecedor->getEndereco()->getEstado() == 'AC' ? 'selected="selected"' : ''?>>AC - Acre</option>
+                        <option value="AL" <?=$fornecedor->getEndereco()->getEstado() == 'AL' ? 'selected="selected"' : ''?>>AL - Alagoas</option>
+                        <option value="AP" <?=$fornecedor->getEndereco()->getEstado() == 'AP' ? 'selected="selected"' : ''?>>AP - Amapá</option>
+                        <option value="AM" <?=$fornecedor->getEndereco()->getEstado() == 'AM' ? 'selected="selected"' : ''?>>AM - Amazonas</option>
+                        <option value="BA" <?=$fornecedor->getEndereco()->getEstado() == 'BA' ? 'selected="selected"' : ''?>>BA - Bahia</option>
+                        <option value="CE" <?=$fornecedor->getEndereco()->getEstado() == 'CE' ? 'selected="selected"' : ''?>>CE - Ceará</option>
+                        <option value="DF" <?=$fornecedor->getEndereco()->getEstado() == 'DF' ? 'selected="selected"' : ''?>>DF - Distrito Federal</option>
+                        <option value="GO" <?=$fornecedor->getEndereco()->getEstado() == 'GO' ? 'selected="selected"' : ''?>>GO - Goiás</option>
+                        <option value="ES" <?=$fornecedor->getEndereco()->getEstado() == 'ES' ? 'selected="selected"' : ''?>>ES - Espírito Santo</option>
+                        <option value="MA" <?=$fornecedor->getEndereco()->getEstado() == 'MA' ? 'selected="selected"' : ''?>>MA - Maranhão</option>
+                        <option value="MT" <?=$fornecedor->getEndereco()->getEstado() == 'MT' ? 'selected="selected"' : ''?>>MT - Mato Grosso</option>
+                        <option value="MS" <?=$fornecedor->getEndereco()->getEstado() == 'MS' ? 'selected="selected"' : ''?>>MS - Mato Grosso do Sul</option>
+                        <option value="MG" <?=$fornecedor->getEndereco()->getEstado() == 'MG' ? 'selected="selected"' : ''?>>MG - Minas Gerais</option>
+                        <option value="PA" <?=$fornecedor->getEndereco()->getEstado() == 'PA' ? 'selected="selected"' : ''?>>PA - Pará</option>
+                        <option value="PB" <?=$fornecedor->getEndereco()->getEstado() == 'PB' ? 'selected="selected"' : ''?>>PB - Paraiba</option>
+                        <option value="PR" <?=$fornecedor->getEndereco()->getEstado() == 'PR' ? 'selected="selected"' : ''?>>PR - Paraná</option>
+                        <option value="PE" <?=$fornecedor->getEndereco()->getEstado() == 'PE' ? 'selected="selected"' : ''?>>PE - Pernambuco</option>
+                        <option value="PI" <?=$fornecedor->getEndereco()->getEstado() == 'PI' ? 'selected="selected"' : ''?>>PI - Piauí­</option>
+                        <option value="RJ" <?=$fornecedor->getEndereco()->getEstado() == 'RJ' ? 'selected="selected"' : ''?>>RJ - Rio de Janeiro</option>
+                        <option value="RN" <?=$fornecedor->getEndereco()->getEstado() == 'RN' ? 'selected="selected"' : ''?>>RN - Rio Grande do Norte</option>
+                        <option value="RS" <?=$fornecedor->getEndereco()->getEstado() == 'RS' ? 'selected="selected"' : ''?>>RS - Rio Grande do Sul</option>
+                        <option value="RO" <?=$fornecedor->getEndereco()->getEstado() == 'RO' ? 'selected="selected"' : ''?>>RO - Rondônia</option>
+                        <option value="RR" <?=$fornecedor->getEndereco()->getEstado() == 'RR' ? 'selected="selected"' : ''?>>RR - Roraima</option>
+                        <option value="SP" <?=$fornecedor->getEndereco()->getEstado() == 'SP' ? 'selected="selected"' : ''?>>SP - São Paulo</option>
+                        <option value="SC" <?=$fornecedor->getEndereco()->getEstado() == 'SC' ? 'selected="selected"' : ''?>>SC - Santa Catarina</option>
+                        <option value="SE" <?=$fornecedor->getEndereco()->getEstado() == 'SE' ? 'selected="selected"' : ''?>>SE - Sergipe</option>
+                        <option value="TO" <?=$fornecedor->getEndereco()->getEstado() == 'TO' ? 'selected="selected"' : ''?>>TO - Tocantins</option>
+                    </select>
+                    <input type="hidden" name="id_endereco" value="<?=$fornecedor->getEndereco()->getId()?>">
+                </div>
+                
+            </div>
+        </div><!-- fim panel endereco -->
+             
+
+        
+        <div class="panel panel-default">
+            <div class="panel-heading">Agenda</div>
+            <div class="panel-body">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Data da Visita</span>
+                    <input type="text" class="form-control" placeholder="Data da Visita" aria-describedby="basic-addon1" name="data_visita" value="<?=$dataFormat->formatar($fornecedor->getDataVisita(),'data');?>">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Retorno</span>
+                    <input type="text" class="form-control" placeholder="Retorno" aria-describedby="basic-addon1" name="retorno" value="<?=$fornecedor->getRetorno();?>">
+                </div>
+                <input type="hidden" name="id_fornecedor" value="<?=$fornecedor->getId()?>">
+                <div class="btn-group pull-right" role="group">
+                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<link href="<?=URL?>skin/js/croper/cropper.min.css" rel="stylesheet">
+<link href="<?=URL?>skin/js/croper/main.css" rel="stylesheet">
+<script src="<?=URL?>skin/js/croper/cropper.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskedinput.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
+<script type="text/javascript">
+$(function(){
+    /*MASCARAS DE CAMPOS*/
+    $('input[name=data_visita]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true,yearRange: "-100:+0" });
+    $('input[name=cep]').wvmask('cep')
+    $('input[name=numero]').wvmask('numero')
+    $('input[name=retorno]').wvmask('numero')
+    $('input[name=cpf]').mask('999.999.999-99');
+    $('input[name=cnpj]').mask('99.999.999/9999-99');
+    $('#form_fornecedores').validaCep();
+    $('input[name=salario]').maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', decimal:',', affixesStay: false});
+    //mascara para telefones de 8 e 9 dígitos
+    var maskBehavior = function (val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+    },
+    options = {onKeyPress: function(val, e, field, options) {
+        field.mask(maskBehavior.apply({}, arguments), options);
+        }
+    };
+    $('input[name=telefone]').mask(maskBehavior, options);
+
+
+    //UPLOAD DA IMAGEM
+    $('#form_fornecedores').uploadImage();
+    //SUBMIT DO FORMULÁRIO
+
+    var telefonesExcluir = Array();
+    var emailsExcluir = Array();
+    $('#form_fornecedores').submit(function(){
+
+        var telefones = Object();
+        //telefones
+        var iTel = 0;
+        $('.group_tel .telefones').each(function(){
+            var aux = Object();
+            var idtelefone = $('input[name=idTelefone]',this).val();
+            var categoria = $('select[name=categoria] option:selected',this).val();
+            var telefone = $('input[name=telefone]',this).val();
+            var operadora = $('input[name=operadora]',this).val();
+            var tipo_telefone = $('select[name=tipo_telefone] option:selected',this).val();
+
+            aux['idtelefone'] = idtelefone;
+            aux['categoria'] = categoria;
+            aux['telefone'] = telefone;
+            aux['operadora'] = operadora;
+            aux['tipo_telefone'] = tipo_telefone;
+
+            telefones[iTel] = aux;
+            iTel++;
+        });
+
+        //email
+        var emails = Object();
+        var iEmail = 0;
+        $('.group_email .emails').each(function(){
+            var aux = Object();
+
+            var idemail = $('input[name=idEmail]',this).val();
+            var tipo_email = $('select[name=tipo_email] option:selected',this).val();
+            var email = $('input[name=email]',this).val();
+
+            aux['idemail'] = idemail;
+            aux['tipo_email'] = tipo_email;
+            aux['email'] = email;
+            emails[iEmail] = aux;
+            iEmail++;
+        });
+
+
+        var parameters = Object();
+        parameters['telefones'] = telefones;
+        parameters['emails'] = emails;
+
+        $('#form_fornecedores').uploadForm({
+            'parameters': parameters,
+            'reload':true
+        });
+
+        return false;
+    });
+
+
+    /************************************/
+    //telefone
+    $('.addTel').on('click',function(){
+        var error = 0;
+        var campTel = $('#defaultCampos #defaultTel').clone().removeAttr('id').removeAttr('style');
+        campTel.find('input').val('');
+        $(this).before(campTel);
+        $('input[name=telefone]').mask(maskBehavior, options);
+    });
+    
+    //telefone DEL
+    $(document).on('click','.delCel',function()
+    {
+        if($('input[name=idTelefone]',$(this).parent()).val() != '')
+            telefonesExcluir.push($('input[name=idTelefone]',$(this).parent()).val())
+
+        $(this).parent().parent().remove();
+    });
+
+
+    //email
+    $('.addEmail').on('click',function(){
+        var error = 0;
+        var campTel = $('#defaultCampos #defaultEmail').clone().removeAttr('id').removeAttr('style');
+        campTel.find('input').val('');
+        $(this).before(campTel);
+    });
+    
+    //email DEL
+    $(document).on('click','.delEmail',function(){
+        if($('input[name=idEmail]',$(this).parent()).val() != '')
+            emailsExcluir.push($('input[name=idEmail]',$(this).parent()).val())
+        $(this).parent().parent().remove();
+    });
+    /************************************/
+
+ })   
+</script>

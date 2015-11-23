@@ -192,15 +192,15 @@ class funcionariosDao extends Dao{
 	 */
  	public function atualizar(funcionariosModel $funcionario)
  	{
- 		$this->db->clear();
- 		$this->db->setTabela('funcionarios');
- 		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
- 		$this->db->select(array('foto_funcionario'));
- 		$res = $this->db->result();
- 		$this->nomeArquivoFoto = $res['foto_funcionario'];
 
 		if($funcionario->getFoto() != '')
 		{
+	 		$this->db->clear();
+	 		$this->db->setTabela('funcionarios');
+	 		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+	 		$this->db->select(array('foto_funcionario'));
+	 		$res = $this->db->result();
+	 		$this->nomeArquivoFoto = pathinfo($res['foto_funcionario'],PATHINFO_FILENAME);
 			if($this->nomeArquivoFoto == '')
 			{
 		 		//nome da imagem
@@ -334,7 +334,7 @@ class funcionariosDao extends Dao{
 
 		if($funcionario->getEndereco()->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
 		{
-			$this->db->setCondicao('id_telefone = "'.$funcionario->getEndereco()->getId().'"');
+			$this->db->setCondicao('id_endereco = "'.$funcionario->getEndereco()->getId().'"');
 			$this->db->update($data);
 		}else
 			$this->db->insert($data);
