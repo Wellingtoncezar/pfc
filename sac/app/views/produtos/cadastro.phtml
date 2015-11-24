@@ -62,7 +62,7 @@
       <div>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Preço de Compra</span>
-                <input type="text" class="form-control" placeholder="Preço de Compra" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" placeholder="Preço de Compra" aria-describedby="basic-addon1"name="preco_compra">
             </div>
         </div>
 
@@ -76,7 +76,7 @@
         <div>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Preço de Venda</span>
-                <input type="text" class="form-control" placeholder="Preço de Venda" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" placeholder="Preço de Venda" aria-describedby="basic-addon1" name="preco_venda">
             </div>
         </div>
 
@@ -95,8 +95,8 @@
         </div>
         <div>
             <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Quantidade</span>
-                <input type="text" class="form-control" placeholder="Quantidade" aria-describedby="basic-addon1">
+                <span class="input-group-addon" id="basic-addon1">Quantidade </span>
+                <input type="text" class="form-control" placeholder="Quantidade em Estoque" aria-describedby="basic-addon1">
             </div>
         </div>
          <div>
@@ -109,12 +109,6 @@
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Estoque Mínimo</span>
                 <input type="text" class="form-control" placeholder="Estoque Mínimo" aria-describedby="basic-addon1">
-            </div>
-        </div>
-         <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Total em Estoque</span>
-                <input type="text" class="form-control" placeholder="Total em Estoque" aria-describedby="basic-addon1">
             </div>
         </div>
          <div>
@@ -135,18 +129,33 @@
                 </select>
             </div>
         </div>
+                <div class="btn-group pull-right" role="group">
+                    <button type="submit" class="btn btn-success">Enviar</button>
+                </div>
   </div>
-</div><!-- fim panel Valores -->
-     
-        <div class="btn-group" role="group">
-            <button type="submit" class="btn btn-default">Enviar</button>
-        </div>
+</div><!-- fim panel Valores --> 
+                 
     </form>
 </div>
 
 
 
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<link href="<?=URL?>skin/js/croper/cropper.min.css" rel="stylesheet">
+<link href="<?=URL?>skin/js/croper/main.css" rel="stylesheet">
+<script src="<?=URL?>skin/js/croper/cropper.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskedinput.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
+<script type="text/javascript">
 
+ $(function(){
+            $("input[name=preco_compra],input[name=preco_venda]").maskMoney({symbol:"R$",decimal:",",thousands:"."});
+            
+
+
+ })
+ </script>
 
 
 
