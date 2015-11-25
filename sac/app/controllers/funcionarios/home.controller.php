@@ -332,6 +332,7 @@ class home extends Controller{
 			$enderecoModel->setCidade($cidade);
 			$enderecoModel->setEstado($estado);
 			
+			
 
 			//FORMATAÇÃO DOS DADOS
 			$this->load->library('dataFormat');

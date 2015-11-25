@@ -1,0 +1,78 @@
+<div class="actions-buttons">
+    <div class="container">
+        <a class="btn btn-primary pull-right btn_adicionar" href="<?=URL?>produtos/marca/cadastrar" role="button" id="btn_adicionar"><span class="glyphicon glyphicon-plus"></span>Cadastrar</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="page-header">
+      <h1>Marcas</h1>
+    </div>
+    <div class="middle-content">
+        <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
+        <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
+            <thead>
+                <tr>   
+                    <th width="100">Código</th>
+                    <th width="160">Nome</th>
+                    <th width="180">Ações</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Ações</th>
+                </tr>
+            </tfoot>
+            <tbody>
+            <?php
+            if(!empty($Marcas)):
+                foreach ($Marcas as $marc):
+            ?>
+                <tr id="<?=$marc->getId()?>">
+                    <td><?=$marc->getCodigo()?></td>
+                    <td><?=$marc->getNome()?></td>
+                    <td>
+                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/marca/editar/<?=$marc->getId()?>" role="button" id-record="<?=$marc->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
+                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$marc->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span>Excluir</a>
+                    </td>
+                </tr>
+            <?php
+                endforeach;
+            endif;
+            ?>
+                
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        //DATATABLE
+        var table = $('.dataTable').DataTable({
+            order: [0,'asc']
+        });
+
+        //EXCLUIR
+        table.$('.btn_excluir').on('click',function(){
+            var id = $(this).attr('id');
+            var status = $(this).data('value');
+            var modalDelete = $('#modalDelete').modal('show')
+            $('.btn_ok','#modalDelete').on('click', function(event) {
+                $.post(url+'produtos/marca/excluir',{id:id,status:status},function(data){
+                    console.log(data)
+                    if(data == true){
+                        $('#modalDelete').modal('hide');
+                        $('tr#'+id).hide();
+                    }
+                });
+            });
+        });
+
+
+    })
+</script>
+

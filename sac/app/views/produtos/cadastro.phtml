@@ -8,45 +8,53 @@
           <div class="panel-body">
 
             <div class="row">
-            <div class="col-xs-6 col-md-3">
-                <a href="#" class="thumbnail">
-                    <img src="<?=URL?>skin/img/imagens/produtosemimagem.JPG" alt="...">
-                </a>
-            </div>
-        </div>
+                    <div class="col-xs-6 col-md-3">
+                        <label for="foto" class="thumbnail inputFoto preview-lg">
+                            <div class="thumbnail img-preview preview-lg">
+                                <img src="<?=URL?>skin/img/imagens/forn.jpg" id="img_previous">
+                            </div>
+                            <input type="file" name="foto" id="foto" accept="image/*">
+                        </label>
+                    </div>
+                </div>
              <div >
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Nome</span>
-                <input type="text" class="form-control" placeholder="Nome" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" placeholder="Nome" aria-describedby="basic-addon1" name="nome">
             </div>
         </div>
 
-        <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Marca</span>
-                <input type="text" class="form-control" placeholder="Marca" aria-describedby="basic-addon1">
-            </div>
+        <div class="input-group">
+             <span class="input-group-addon" id="basic-addon1">Marca</span>
+             <select class="form-control" name="marca" >                                                                           
+                <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                <option value="PF">Física</option>
+                <option value="PJ">Jurídica</option>
+            </select>
         </div>
-
-        <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Categoria</span>
-                <input type="text" class="form-control" placeholder="Categoria" aria-describedby="basic-addon1">
-            </div>
+        <div class="input-group">
+             <span class="input-group-addon" id="basic-addon1">Categoria</span>
+             <select class="form-control" name="categoria" >                                                                           
+                <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                <option value="PF">Física</option>
+                <option value="PJ">Jurídica</option>
+            </select>
         </div>
 
         <div >
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Descrição</span>
-                <input type="text" class="form-control" placeholder="Descrição" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" placeholder="Descrição" aria-describedby="basic-addon1" name="descricao">
             </div>
         </div>
 
-        <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Fornecedor</span>
-                <input type="text" class="form-control" placeholder="Fornecedor" aria-describedby="basic-addon1">
-            </div>
+         <div class="input-group">
+             <span class="input-group-addon" id="basic-addon1">Fornecedor</span>
+             <select class="form-control" name="fornecedor" >                                                                           
+                <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                <option value="PF">Física</option>
+                <option value="PJ">Jurídica</option>
+            </select>
         </div>
         </div> 
 
@@ -69,64 +77,52 @@
         <div>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Porcentagem de Lucro</span>
-                <input type="text" class="form-control" placeholder="Porcentagem de Lucro" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" placeholder="Porcentagem de Lucro" aria-describedby="basic-addon1" name="porcentagem_lucro">
             </div>
         </div>
 
         <div>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Preço de Venda</span>
-                <input type="text" class="form-control" placeholder="Preço de Venda" aria-describedby="basic-addon1" name="preco_venda">
+                <input type="text" class="form-control" placeholder="Preço de Venda" aria-describedby="basic-addon1" name="preco_venda" disabled="disabled" name="preco_venda">
             </div>
         </div>
 
         <div>
             <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Peso Líquido</span>
-                <input type="text" class="form-control" placeholder="Peso Líquido " aria-describedby="basic-addon1">
+                <span class="input-group-addon" id="basic-addon1">Peso </span>
+                <input type="text" class="form-control" placeholder="Peso " aria-describedby="basic-addon1" name="peso">
             </div>
         </div>
 
-        <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Peso Bruto</span>
-                <input type="text" class="form-control" placeholder="Peso Bruto" aria-describedby="basic-addon1">
-            </div>
-        </div>
         <div>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Quantidade </span>
-                <input type="text" class="form-control" placeholder="Quantidade em Estoque" aria-describedby="basic-addon1">
-            </div>
-        </div>
-         <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Estoque Máximo</span>
-                <input type="text" class="form-control" placeholder="Estoque Máximo" aria-describedby="basic-addon1">
-            </div>
-        </div>
-         <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Estoque Mínimo</span>
-                <input type="text" class="form-control" placeholder="Estoque Mínimo" aria-describedby="basic-addon1">
-            </div>
-        </div>
-         <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Dimensões</span>
-                <input type="text" class="form-control" placeholder="Dimensões" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" placeholder="Quantidade em Estoque" aria-describedby="basic-addon1" name="quantidade">
             </div>
         </div>
           <div>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Unidade de Medida</span>
-                <select class="form-control">
+                <select class="form-control" name="uni_medida">
                     <option value="" selected="selected" disabled="disabled">..Selecione..</option>
                     <option value="g"> Gramas (g)</option>
                     <option value="kg">Kilograma (Kg)</option>
-                    <option value="ml">Mililitros (ml)</option>
-                    <option value="l">Litros (l)</option>
+                    <option value="cx">Caixa (Cx)</option>
+
                 </select>
+            </div>
+        </div>
+         <div>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Estoque Máximo</span>
+                <input type="text" class="form-control" placeholder="Estoque Máximo" aria-describedby="basic-addon1" name="estoque_max">
+            </div>
+        </div>
+         <div>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Estoque Mínimo</span>
+                <input type="text" class="form-control" placeholder="Estoque Mínimo" aria-describedby="basic-addon1" name="estoque_min">
             </div>
         </div>
                 <div class="btn-group pull-right" role="group">

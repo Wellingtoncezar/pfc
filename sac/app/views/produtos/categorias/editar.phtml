@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="page-header">
+      <h1>Categoria <small>Edição</small></h1>
+    </div>
+    <form action="<?=URL?>produtos/categoria/atualizar" method="post" id="form_categoria">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dados Gerais</div>
+            <div class="panel-body">
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Nome</span>
+                    <input type="text" class="form-control" placeholder="Nome" name="nome" value="<?=$categoria->getNome()?>">
+                </div>
+                
+            </div>
+        </div>    
+    </form>
+</div>
+
+
+
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<link href="<?=URL?>skin/js/croper/cropper.min.css" rel="stylesheet">
+<link href="<?=URL?>skin/js/croper/main.css" rel="stylesheet">
+<script src="<?=URL?>skin/js/croper/cropper.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskedinput.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/produtos/categorias_editar.js"></script>
