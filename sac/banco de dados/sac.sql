@@ -1,3 +1,7 @@
+--
+-- Estrutura da tabela `emails`
+--
+
 CREATE TABLE IF NOT EXISTS `emails` (
 `id_email` int(11) NOT NULL,
   `id_funcionario` int(11) DEFAULT NULL,
@@ -6,6 +10,12 @@ CREATE TABLE IF NOT EXISTS `emails` (
   `tipo_email` varchar(255) DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `enderecos`
+--
 
 CREATE TABLE IF NOT EXISTS `enderecos` (
 `id_endereco` int(11) NOT NULL,
@@ -21,6 +31,12 @@ CREATE TABLE IF NOT EXISTS `enderecos` (
   `data_cadastro_endereco` datetime DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `fornecedores`
+--
 
 CREATE TABLE IF NOT EXISTS `fornecedores` (
 `id_fornecedor` int(11) NOT NULL,
@@ -40,6 +56,12 @@ CREATE TABLE IF NOT EXISTS `fornecedores` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `fornecedores_agenda`
+--
+
 CREATE TABLE IF NOT EXISTS `fornecedores_agenda` (
 `id_fornecedor_agenda` int(11) NOT NULL,
   `id_fornecedor` int(11) DEFAULT NULL,
@@ -49,6 +71,24 @@ CREATE TABLE IF NOT EXISTS `fornecedores_agenda` (
   `data_cadastro_agenda` datetime NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `fornecedores_agenda_notificado`
+--
+
+CREATE TABLE IF NOT EXISTS `fornecedores_agenda_notificado` (
+`id_agenda_notificado` int(11) NOT NULL,
+  `id_fornecedor_agenda` int(11) DEFAULT NULL,
+  `data_notificacao` date DEFAULT NULL
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `funcionarios`
+--
 
 CREATE TABLE IF NOT EXISTS `funcionarios` (
 `id_funcionario` int(11) NOT NULL,
@@ -70,6 +110,12 @@ CREATE TABLE IF NOT EXISTS `funcionarios` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `telefones`
+--
+
 CREATE TABLE IF NOT EXISTS `telefones` (
 `id_telefone` int(11) NOT NULL,
   `id_funcionario` int(11) DEFAULT NULL,
@@ -81,54 +127,120 @@ CREATE TABLE IF NOT EXISTS `telefones` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+--
+-- Indexes for table `emails`
+--
 ALTER TABLE `emails`
  ADD PRIMARY KEY (`id_email`), ADD KEY `id_funcionario` (`id_funcionario`), ADD KEY `id_fornecedor` (`id_fornecedor`);
 
+--
+-- Indexes for table `enderecos`
+--
 ALTER TABLE `enderecos`
  ADD PRIMARY KEY (`id_endereco`), ADD KEY `id_funcionario` (`id_funcionario`), ADD KEY `id_fornecedor` (`id_fornecedor`);
 
+--
+-- Indexes for table `fornecedores`
+--
 ALTER TABLE `fornecedores`
  ADD PRIMARY KEY (`id_fornecedor`);
 
+--
+-- Indexes for table `fornecedores_agenda`
+--
 ALTER TABLE `fornecedores_agenda`
  ADD PRIMARY KEY (`id_fornecedor_agenda`), ADD KEY `id_fornecedor` (`id_fornecedor`);
 
+--
+-- Indexes for table `fornecedores_agenda_notificado`
+--
+ALTER TABLE `fornecedores_agenda_notificado`
+ ADD PRIMARY KEY (`id_agenda_notificado`), ADD KEY `id_fornecedor_agenda` (`id_fornecedor_agenda`);
+
+--
+-- Indexes for table `funcionarios`
+--
 ALTER TABLE `funcionarios`
  ADD PRIMARY KEY (`id_funcionario`), ADD KEY `id_estado_civil` (`estado_civil_funcionario`), ADD KEY `id_escolaridade` (`escolaridade_funcionario`), ADD KEY `id_cargo` (`cargo_funcionario`);
 
+--
+-- Indexes for table `telefones`
+--
 ALTER TABLE `telefones`
  ADD PRIMARY KEY (`id_telefone`), ADD KEY `id_funcionario` (`id_funcionario`), ADD KEY `id_fornecedor` (`id_fornecedor`);
 
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `emails`
+--
 ALTER TABLE `emails`
-MODIFY `id_email` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
-
+MODIFY `id_email` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `enderecos`
+--
 ALTER TABLE `enderecos`
-MODIFY `id_endereco` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
-
+MODIFY `id_endereco` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `fornecedores`
+--
 ALTER TABLE `fornecedores`
-MODIFY `id_fornecedor` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
-
+MODIFY `id_fornecedor` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `fornecedores_agenda`
+--
 ALTER TABLE `fornecedores_agenda`
 MODIFY `id_fornecedor_agenda` int(11) NOT NULL AUTO_INCREMENT;
-
+--
+-- AUTO_INCREMENT for table `fornecedores_agenda_notificado`
+--
+ALTER TABLE `fornecedores_agenda_notificado`
+MODIFY `id_agenda_notificado` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `funcionarios`
+--
 ALTER TABLE `funcionarios`
-MODIFY `id_funcionario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=53;
-
+MODIFY `id_funcionario` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `telefones`
+--
 ALTER TABLE `telefones`
-MODIFY `id_telefone` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
+MODIFY `id_telefone` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Constraints for dumped tables
+--
 
+--
+-- Limitadores para a tabela `emails`
+--
 ALTER TABLE `emails`
 ADD CONSTRAINT `emails_ibfk_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `emails_ibfk_2` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+--
+-- Limitadores para a tabela `enderecos`
+--
 ALTER TABLE `enderecos`
 ADD CONSTRAINT `enderecos_ibfk_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `enderecos_ibfk_2` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+--
+-- Limitadores para a tabela `fornecedores_agenda`
+--
 ALTER TABLE `fornecedores_agenda`
 ADD CONSTRAINT `fornecedores_agenda_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+--
+-- Limitadores para a tabela `fornecedores_agenda_notificado`
+--
+ALTER TABLE `fornecedores_agenda_notificado`
+ADD CONSTRAINT `fornecedores_agenda_notificado_ibfk_1` FOREIGN KEY (`id_fornecedor_agenda`) REFERENCES `fornecedores_agenda` (`id_fornecedor_agenda`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `telefones`
+--
 ALTER TABLE `telefones`
 ADD CONSTRAINT `telefones_ibfk_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `telefones_ibfk_2` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE;
-
