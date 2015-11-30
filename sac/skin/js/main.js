@@ -49,4 +49,27 @@ $(document).ready(function(){
     function responsiveTableRemove(){
         $('.rwd-table tbody td .dataTables-th').remove()
     }
+
+    //notificação de agendamento de fornecedores
+    $.post(url+'fornecedores/agenda/notificar',{},function(data){
+        
+        data = jQuery.parseJSON(data);
+        if(!jQuery.isEmptyObject(data))
+        {
+            $.each(data, function(index, val) {
+                var content = "<tr>"+
+                                    "<td>"+val.data+"</td>"+
+                                    "<td>"+val.nome_fornecedor+"</td>"+
+                                    "<td>"+val.titulo+"</td>"+
+                                "</th>"
+
+
+                $('#tableNotificacaoAgendaFornec').append(content)
+            });
+            $('#modalNotificacaoFornecedores').modal('show')
+        }
+
+    })
+
+
 });

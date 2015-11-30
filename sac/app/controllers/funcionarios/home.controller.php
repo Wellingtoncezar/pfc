@@ -390,7 +390,7 @@ class home extends Controller{
 		$this->load->model('funcionarios/funcionariosModel');
 		$funcionariosModel = new funcionariosModel();
 		$funcionariosModel->setId( $idFuncionario );
-		$funcionariosModel->setStatus( $status );
+		$funcionariosModel->setStatus( status::getAttribute($status));
 
 		//FUNCIONARIO DAO
 		$this->load->dao('funcionarios/funcionariosDao');
