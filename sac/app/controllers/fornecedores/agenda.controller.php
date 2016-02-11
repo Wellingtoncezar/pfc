@@ -19,6 +19,9 @@ class agenda extends Controller{
 	 */
 	public function index()
 	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
 		$data = array(
 			'titlePage' => 'Agenda de fornecedores'
 		);

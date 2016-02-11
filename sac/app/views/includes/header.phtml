@@ -13,7 +13,7 @@ $menus = array(
   'configuracoes' => ''
   );
 $pag = $this->url->getSegment(0);
-if($pag == false || $pag == 'home')
+if($pag == false || $pag == 'gerenciar')
   $pag = 'dashboard';
 
 $menus[$pag] = 'active';
@@ -57,16 +57,23 @@ $menus[$pag] = 'active';
 
                         <!-- Collect the nav links, forms, and other content for toggling -->
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <?php
+                            $menu = new menu();
+                            echo $menu->geraMenu();
+                            ?>
+                            <?php
+                            /*
+        
                             <ul class="nav navbar-nav">
                                 <li class="dropdown "><a href="<?=URL?>funcionarios" class="dropdown-toggle <?=$menus['funcionarios']?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicons glyphicons-group"></span><p>Funcionários</p></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="<?=URL?>funcionarios/home">Gerenciar Funcionários</a></li>
+                                        <li><a href="<?=URL?>funcionarios/gerenciar">Gerenciar Funcionários</a></li>
                                     </ul>
                                 </li>
                                
                                <li class="dropdown "><a href="<?=URL?>fornecedores" class="dropdown-toggle <?=$menus['fornecedores']?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicons glyphicons-handshake"></span><p>fornecedores</p></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="<?=URL?>fornecedores/home">Gerenciar Fornecedores</a></li>
+                                        <li><a href="<?=URL?>fornecedores/gerenciar">Gerenciar Fornecedores</a></li>
                                          <li><a href="<?=URL?>fornecedores/agenda">Agenda</a></li>
                                     </ul>
                                 </li>
@@ -74,8 +81,8 @@ $menus[$pag] = 'active';
                                 <li class="dropdown "><a href="<?=URL?>produtos" class="dropdown-toggle <?=$menus['produtos']?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicons glyphicons-package"></span><p>produtos</p></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="<?=URL?>produtos/categoria">Gerenciar Categoria</a></li>
-                                         <li><a href="<?=URL?>produtos/marca">Gerenciar Marca</a></li>
-                                        <li><a href="<?=URL?>produtos/home">Gerenciar Produtos</a></li> 
+                                        <li><a href="<?=URL?>produtos/marca">Gerenciar Marca</a></li>
+                                        <li><a href="<?=URL?>produtos/gerenciar">Gerenciar Produtos</a></li> 
                                     </ul>
                                 </li>
                                 <li ><a href="<?=URL?>vendas" class="<?=$menus['vendas']?>"><span class="glyphicons glyphicons-notes"></span><p>Vendas</p></a></li>
@@ -83,8 +90,15 @@ $menus[$pag] = 'active';
                                 <li ><a href="<?=URL?>orcamentos" class="<?=$menus['orcamentos']?>"><span class="glyphicons glyphicons-coins"></span><p>Orçamentos</p></a></li>
                                 <li ><a href="<?=URL?>estoque" class="<?=$menus['estoque']?>"><span class="glyphicons glyphicons-cargo"></span><p>Estoque</p></a></li>
                                 <li ><a href="<?=URL?>relatorios" class="<?=$menus['relatorios']?>"><span class="glyphicons glyphicons-stats"></span><p>Relatórios</p></a></li>
-                                <li ><a href="<?=URL?>configuracoes" class="<?=$menus['configuracoes']?>"><span class="glyphicons glyphicons-cogwheels"></span><p>Configurações</p></a></li>
+                                <li class="dropdown "><a href="<?=URL?>configuracoes" class="<?=$menus['configuracoes']?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicons glyphicons-cogwheels"></span><p>Configurações</p></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="<?=URL?>configuracoes">Gerenciar</a></li>
+                                        <li><a href="<?=URL?>configuracoes/modulos">Módulos</a></li>
+                                    </ul>
+                                </li>
                             </ul>
+                            */
+                            ?>
                         </div><!-- /.navbar-collapse -->
                     </div><!-- /.container-fluid -->
                 </nav>

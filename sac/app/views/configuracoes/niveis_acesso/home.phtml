@@ -1,0 +1,47 @@
+<div class="container">
+    <div class="page-header">
+      <h1>Níveis de acesso</h1>
+    </div>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="middle-content">
+
+        <?php
+        
+        $thead = '  <tr>
+                        <th>Nome</th>
+                        <th width="180">Ações</th>
+                    </tr>';
+        $tfoot = '  <tr>
+                        <th>Nome</th>
+                        <th>Ações</th>
+                    </tr>';	 
+        if(!empty($niveis)):
+            $tbody = '';
+            foreach ($niveis as $grupo):
+                $tbody .='  <tr id="'.$grupo->getId().'">
+                                <td>'.$grupo->getNome().'</td>
+                                <td>
+                                    '.$template->btnEditar(URL.'configuracoes/niveis_acesso/gerenciar/editar/'.$grupo->getId()).
+                                '</td>
+                            </tr>';
+            endforeach;
+            echo $template->tabela($thead, $tfoot, $tbody);
+        else:
+            echo '<h2>Não há registros cadastrados</h2>';
+        endif;
+        
+        ?>
+    </div>
+
+</div>
+</div>
+<script>
+$(document).ready(function() {
+    var table = $('.dataTable').DataTable({
+    	order: []
+    });
+    
+
+
+});
+</script>

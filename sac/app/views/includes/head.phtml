@@ -5,7 +5,7 @@
     <!--[if lt IE 9]>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <![endif]-->
-    <title><?=$titlePage?> - Sistema de Automação Comercial</title>
+    <title><?=isset($titlePage) && !empty($titlePage) ? $titlePage.' - ' : '' ?> SAC - Sistema de Automação Comercial</title>
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -34,6 +34,9 @@
         <link rel="shortcut icon" href="img/favicon.ico">
     <![endif]-->
     <link rel="icon" href="<?=URL?>skin/img/favicon.png" />
+    <script>
+        var url = "<?=URL?>";
+    </script>
     
 
     <script type="text/javascript" src="<?=URL?>skin/js/jquery-1.11.2.min.js"></script>
@@ -42,14 +45,11 @@
     <script src="<?=URL?>skin/js/kendoui/js/kendo.all.min.js"></script>
     <script type="text/javascript" src="<?=URL?>skin/js/jquery-ui.js"></script>
     <script type="text/javascript" src="<?=URL?>skin/js/cep.js"></script>
-    <script src="<?=URL?>skin/js/nanobar.js"></script>
+
     <script type="text/javascript" src="<?=URL?>skin/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="<?=URL?>skin/js/dataTables.bootstrap.js"></script>
     <script type="text/javascript" src="<?=URL?>skin/js/main.js"></script>
     <script type="text/javascript" src="<?=URL?>skin/js/jquery.toastmessage.js"></script>
 
     
-    <script>
-        var url = "<?=URL?>";
-    </script>
 </head>

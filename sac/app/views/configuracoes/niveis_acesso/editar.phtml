@@ -1,0 +1,216 @@
+<?php 
+$template = new template();
+?>
+<div class="container">
+    <?php //=$template->page_header('Editar grupo de usuários');?>
+    <?php
+    // $btnVoltar = $template->btnVoltar(URL.'configuracoes/usuarios/grupo_usuarios/');
+    // echo $template->actions_buttons($btnVoltar);
+    if($nivel->getPermissoes() == '*')
+        $permissao = array();
+    else
+        $permissao = json_decode(html_entity_decode($nivel->getPermissoes()),true);
+    ?>
+    <div class="page-header">
+      <h1>Níveis de acesso <small><?=$nivel->getNome()?></small></h1>
+    </div>
+    <div class="text-left list_grupo_usuario" >
+        <form action="<?=URL?>configuracoes/niveis_acesso/gerenciar/atualizar" id="form_nivel_acesso" method="POST">
+
+
+            <button class="btn btn-defult checkAll">Selecionar todos</button><button class="btn btn-defult uncheckAll">Remover seleção</button>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <input type="checkbox" name="administrador" value="*" <?=$nivel->getPermissoes() == '*' ? 'checked="checked"' : ''?> >
+                </span>
+                <input type="text" class="form-control" placeholder="Administrador" value="Administrador" disabled="disabled">
+            </div>
+            <div class="tree" style="padding-top: 14px;padding-right: 14px;">
+            <?php
+            if($modulos != false):
+            ?>
+                <ul>
+                <?php
+                foreach ($modulos as $keyMod => $mod):
+                    $selMod = '';
+                    if($nivel->getPermissoes() == '*' || array_key_exists($mod->getUrl(), $permissao))
+                        $selMod = 'checked';
+
+                ?>
+                    <li><!--modulo-->
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <input type="checkbox" name="status" id="<?=$mod->getId()?>" mod-pai="0" tipo="modulo" campo="status_modulo" <?=$selMod?> url="<?=$mod->getUrl()?>">
+                                </span>
+                                <input type="text" class="form-control" placeholder="<?=$mod->getUrl()?>" value="<?=$mod->getNome()?>" tipo="modulo" id="<?=$mod->getId()?>" campo="nome_modulo" disabled>
+                            </div>
+                        </div>
+                        
+
+
+
+
+                        <!--SUBMODULOS-->
+
+                        <?php
+                        if(!empty($mod->getSubModulos())):
+                            
+                        ?>
+                        <ul>
+                            <?php
+                            foreach ($mod->getSubModulos() as $keyModSubmod => $modSubmod):
+                                $selModSubmod = '';
+                                if($nivel->getPermissoes() == '*' || array_key_exists($mod->getUrl(),$permissao))
+                                {
+                                    if( $nivel->getPermissoes() == '*' || array_key_exists($modSubmod->getUrl(), $permissao[$mod->getUrl()]['submodulos']))
+                                    {
+                                        $selModSubmod = 'checked';
+                                    }
+                                }
+                                
+                            ?>
+                            <li>
+                                <div class="form-group">
+                                    <div class="input-group has-feedback">
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="status" id="<?=$modSubmod->getId()?>" tipo="submodulo" campo="status_modulo" <?=$selModSubmod?> url="<?=$modSubmod->getUrl()?>">
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="<?=$modSubmod->getUrl()?>" value="<?=$modSubmod->getNome()?>" tipo="submodulo" id="<?=$modSubmod->getId()?>" campo="nome_modulo" disabled>
+                                    </div>
+                                </div>
+                               
+                            </li>
+                            <?php
+                            endforeach;
+                            ?>
+                        </ul>
+                        <?php
+                        endif;
+                        ?>
+                    </li>
+                <?php
+                endforeach;
+                ?>
+
+                </ul>
+            <?php
+            endif;
+            ?>
+            </div>
+            <input type="hidden" name="id_nivel" value="<?=$nivel->getId()?>">
+            <input type="submit" name="btn_salvar" value="Salvar" class="btn btn-default text-right" style="float:right"/>
+        </form>
+    </div>
+</div>
+<style>
+.popover-content {
+  padding: 0px 0px;
+}
+</style>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery-tree/js/jquery.tree.js"></script>
+<link rel="stylesheet" type="text/css" href="<?=URL?>skin/js/jquery-tree/css/jquery.tree.css"/>
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<script>
+$(function() {   
+     $('#form_nivel_acesso').submit(function(e) { 
+
+        var modulos = Object();
+
+        //pegando os modulos
+        $('.tree>ul>li').each(function(){
+            if($('input[type=checkbox]:checked',this).is(':checked'))
+            {
+                var auxMod = Object();
+                var auxPag = Object();
+                //pegando os submodulos
+                $('>ul>li',this).each(function(){
+                    if($('input[type=checkbox]:checked',this).is(':checked') && $('input[type=checkbox]:checked',this).attr('tipo') == 'submodulo')
+                    {
+                        var aux2 = Object();
+                        //pegando as paginas
+                        $('>ul>li',this).each(function(){
+                            if($('input[type=checkbox]:checked',this).is(':checked'))
+                            {
+                                var aux3 = Object();
+                                
+                                aux2[$('input[type=checkbox]:checked',this).attr('url')] = aux3;
+                            }
+                        });
+                        auxMod[$('input[type=checkbox]:checked',this).attr('url')] = aux2;
+                    }
+                });
+
+                modulos[$('input[type=checkbox]:checked',this).attr('url')] = {
+                                                                                'submodulos' : auxMod
+                                                                                };
+            }
+        });
+
+
+        modulos = JSON.stringify(modulos);
+
+        var sendInfo = {
+            'permissoes' : modulos,
+            'id' : $('input[name=id_nivel]').val()
+        }
+        
+        //console.log(sendInfo);
+  
+
+        //console.log(sendInfo)
+        $(this).uploadForm({
+            'parameters': sendInfo,
+            'reload' : true,
+            'resetform':false
+            //'redirect' : '<?=URL?>configuracoes/usuarios/grupo_usuarios' 
+        });
+     
+        return false;
+    });
+
+
+
+
+
+    $('.tree').tree({
+        collapseUiIcon: 'ui-icon-plus',
+        expandUiIcon: 'ui-icon-minus',
+        leafUiIcon: 'ui-icon-bullet'
+    });
+
+    $('.checkAll').click(function(){
+        $('.tree').tree('checkAll');
+        return false;
+    });
+
+    $('input[name=administrador]').change(function(){
+        if($(this).is(':checked'))
+            $('.tree').tree('checkAll');
+        else
+            $('.tree').tree('uncheckAll');
+    });
+
+    $('input[name=status]').change(function(){
+        var stCheck = 0;
+        $('input[name=status]').each(function(index, el) {
+            if(!$(el).is(':checked'))
+               stCheck++;
+        });
+
+        if(stCheck == 0)
+            $('input[name=administrador]').prop( "checked", true );
+        else
+            $('input[name=administrador]').prop( "checked", false );
+        console.log(stCheck)
+    });
+
+    $('.uncheckAll').click(function(){
+        $('.tree').tree('uncheckAll');
+        return false;
+    });
+
+ $('.ui-icon-minus').trigger('click')
+
+});
+</script>

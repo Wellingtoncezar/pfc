@@ -33,6 +33,11 @@ class _initialize extends Router{
 		echo '<p>NOME METODO: '.$this->getAction().'</p>';
 		echo '</pre>';
 		*/
+
+		define('ROUTE', $this->getRoute());
+		define('CONTROLLER', $this->getController());
+		define('ACTION', $this->getAction());
+		
 		if($this->load->controller($this->getRoute().$this->getController()))
 		{
 			$_controller = $this->getController();

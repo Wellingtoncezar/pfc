@@ -1,0 +1,95 @@
+<div class="container">
+    <?php
+        $btnCadastrarFunc = $template->btnCadastrar(URL.'funcionarios/grupo_funcionarios/gerenciar/cadastrar/funcionarios','Grupo de Funcionários');
+        $btnCadastrarGere = $template->btnCadastrar(URL.'funcionarios/grupo_funcionarios/gerenciar/cadastrar/gerente','Grupo de Gerente');
+        echo $template->actions_buttons($btnCadastrarFunc.$btnCadastrarGere);
+    ?>
+    <div class="page-header">
+      <h1>Grupos de permissões de funcionários e gerentes</h1>
+    </div>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="middle-content">
+
+        <?php
+        
+        $thead = '  <tr>
+                        <th>Nome</th>
+                        <th width="180">Ações</th>
+                    </tr>';
+        $tfoot = '  <tr>
+                        <th>Nome</th>
+
+                        <th>Ações</th>
+                    </tr>';	 
+
+        $tbody = '';
+        foreach ($gruposFuncionarios as $grupo):
+            $tbody .='  <tr id="'.$grupo->getId().'">
+                            <td>'.$grupo->getNome().'</td>
+                            <td>
+                                '.$template->btnEditar(URL.'funcionarios/grupo_funcionarios/gerenciar/editar/'.$grupo->getId()).
+                                $template->btnExcluir('javascript:void(0)',$grupo->getId(), status::EXCLUIDO).
+                            '</td>
+                        </tr>';
+        endforeach;
+        echo $template->tabela($thead, $tfoot, $tbody);
+       ?>
+    </div>
+
+</div>
+</div>
+<script>
+$(document).ready(function() {
+    var table = $('.dataTable').DataTable({
+    	order: []
+    });
+    table.$('.btn_excluir').on('click',function(){
+        var id = $(this).attr('id');
+        var status = 'Excluído';
+
+        $("#dialogResult").html('Deseja mesmo excluir?');
+		$("#dialogResult").dialog({
+			autoOpen: true,
+			buttons: [
+				{
+					text: "Ok",
+					click: function() {
+						$( this ).dialog( "close" );
+
+				    	$.post(url+'funcionarios/grupo_funcionarios/gerenciar/excluir',{id:id,status:status},function(data){
+							 console.log(data);
+                            if(data == true)
+								$('tr#'+id).hide();
+						});
+					}
+				},
+				{
+					text: "Cancelar",
+					click: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			]
+		});
+
+
+
+		
+        
+    });
+
+    table.$('input[name=status]').on('change',function(){
+    	var id = $(this).attr('id')
+    	var status = 'Inativo';
+		if($(this).is(':checked'))
+			status = 'Ativo';
+
+		$.post(url+'configuracoes/tabelas/usuario/atualizarStatus',{id:id,status:status},function(data){
+
+		})
+
+    });
+
+
+});
+</script>

@@ -1,0 +1,409 @@
+<div class="container">
+    <div class="page-header">
+      <h1>Configurações<small> Módulos</small></h1>
+    </div>
+    <div class="body-content">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left list_grupo_usuario" >
+            <form action="javascript:void(0)" id="form_modulos" method="POST">
+                <button class="btn btn-defult checkAll">Selecionar todos</button><button class="btn btn-defult uncheckAll">Remover seleção</button>
+                <div class="tree" style="padding-top: 14px;padding-right: 14px;">
+                <?php
+                if($modulos != false):
+                ?>
+                    <ul id="update-position">
+                    <?php
+                    foreach ($modulos as $keyMod => $mod):
+                    ?>
+                        <li id="listItem_<?=$mod->getId()?>"><!--modulo-->
+                            <div class="form-group has-feedback">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="checkbox" name="status" id="<?=$mod->getId()?>" tipo="modulo" campo="status_modulo" <?=($mod->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                    </span>
+                                    <?php
+                                        $ATIVO = '';
+                                        $INATIVO = '';
+                                        $status = $mod->getStatusSelecao();
+                                        $$status = 'selected';
+                                        //$$mod->getStatusSelecao() = 'selected';
+                                    ?>
+                                    <span class="input-group-addon">
+                                        <select name="status" id="<?=$mod->getId()?>" id="<?=$mod->getId()?>" tipo="modulo" campo="status_selecao_modulo" <?=($mod->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                            <option value="" disabled="disabled" selected="selected">Indefinido</option>
+                                            <option value="<?=status::ATIVO?>" <?=$ATIVO?>>ATIVO</option>
+                                            <option value="<?=status::INATIVO?>" <?=$INATIVO?>>INATIVO</option>
+                                        </select>
+                                    </span>
+                                    <input type="text" class="form-control" placeholder="<?=$mod->getUrl()?>" value="<?=$mod->getNome()?>" tipo="modulo" id="<?=$mod->getId()?>" campo="nome_modulo">
+                                    <!--
+                                    <span class="input-group-addon">
+                                        <button>Excluir</button>
+                                    </span>
+                                    -->
+                                </div>
+                            </div>
+                            <?php
+                            if(!empty($mod->getPaginas())):
+                            ?>
+                            <ul>
+                                <?php
+                                foreach ($mod->getPaginas() as $keyModPag => $modPag):
+                                    
+                                ?>
+                                <li>
+                                    <div class="form-group has-feedback">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <input type="checkbox" name="status" id="<?=$modPag->getId()?>" tipo="pagina" campo="status_pagina" <?=($modPag->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                            </span>
+                                            <?php
+                                                $ATIVO = '';
+                                                $INATIVO = '';
+                                                $status = $modPag->getStatusSelecao();
+                                                $$status = 'selected';
+                                            ?>
+                                            <span class="input-group-addon">
+                                                <select name="status" id="<?=$modPag->getId()?>" tipo="pagina" campo="status_selecao_pagina" <?=($modPag->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                                    <option value="" disabled="disabled" selected="selected">Indefinido</option>
+                                                    <option value="ATIVO" <?=$ATIVO?>>ATIVO</option>
+                                                    <option value="INATIVO" <?=$INATIVO?>>INATIVO</option>
+                                                </select>
+                                            </span>
+                                            <input type="text" class="form-control" placeholder="<?=$modPag->getUrl()?>" value="<?=$modPag->getNome()?>" tipo="pagina" id="<?=$modPag->getId()?>" campo="nome_pagina">
+                                        </div>
+                                    </div>
+                                    <?php
+                                    if(!empty($modPag->getActions())):
+                                    ?>
+                                    <ul>
+                                        <?php
+                                        foreach ($modPag->getActions() as $keyModPagAct => $modPagAct):
+                                        ?>
+                                        <li>
+                                            <div class="form-group has-feedback">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <input type="checkbox" name="status" id="<?=$modPagAct->getId()?>" tipo="acao" campo="status_action" <?=($modPagAct->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                                    </span>
+                                                    <?php
+                                                        $ATIVO = '';
+                                                        $INATIVO = '';
+                                                        $status = $modPagAct->getStatusSelecao();
+                                                        $$status = 'selected';
+                                                    ?>
+                                                    <span class="input-group-addon">
+                                                        <select name="status" id="<?=$modPagAct->getId()?>" tipo="acao" campo="status_selecao_action" <?=($modPagAct->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                                            <option value="" disabled="disabled" selected="selected">Indefinido</option>
+                                                            <option value="ATIVO" <?=$ATIVO?>>ATIVO</option>
+                                                            <option value="INATIVO" <?=$INATIVO?>>INATIVO</option>
+                                                        </select>
+                                                    </span>
+                                                    <input type="text" class="form-control" placeholder="<?=$modPagAct->getUrl()?>" value="<?=$modPagAct->getNome()?>" tipo="acao" id="<?=$modPagAct->getId()?>" campo="nome_action">
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <?php
+                                        endforeach;
+                                        ?>
+                                    </ul>
+                                    <?php
+                                    endif;
+                                    ?>
+
+
+
+                                </li>
+                                <?php
+                                endforeach;
+                                ?>
+                            </ul>
+                            <?php
+                            endif;
+                            ?>
+
+
+
+
+
+                            <?php
+                            if(!empty($mod->getSubmodulos())):
+                                
+                            ?>
+                            <ul>
+                                <?php
+                                foreach ($mod->getSubmodulos() as $keyModSubmod => $modSubmod):
+                                    
+                                    
+                                ?>
+                                <li>
+                                    <div class="form-group">
+                                        <div class="input-group has-feedback">
+                                            <span class="input-group-addon">
+                                                <input type="checkbox" name="status" id="<?=$modSubmod->getId()?>" tipo="submodulo" campo="status_modulo" <?=($modSubmod->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                            </span>
+                                            <?php
+                                                $ATIVO = '';
+                                                $INATIVO = '';
+                                                $status = $modSubmod->getStatusSelecao(); 
+                                                $$status = 'selected';
+                                            ?>
+                                            <span class="input-group-addon">
+                                                <select name="status" id="<?=$modSubmod->getId()?>" tipo="submodulo" campo="status_selecao" <?=($modSubmod->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                                    <option value="" disabled="disabled" selected="selected">Indefinido</option>
+                                                    <option value="ATIVO" <?=$ATIVO?>>ATIVO</option>
+                                                    <option value="INATIVO" <?=$INATIVO?>>INATIVO</option>
+                                                </select>
+                                            </span>
+                                            <input type="text" class="form-control" placeholder="<?=$modSubmod->getUrl()?>" value="<?=$modSubmod->getNome()?>" tipo="submodulo" id="<?=$modSubmod->getId()?>" campo="nome_modulo">
+                                        </div>
+                                    </div>
+                                    <?php
+                                    if(!empty($modSubmod->getPaginas())):
+                                    ?>
+                                    <ul>
+                                        <?php
+                                        foreach ($modSubmod->getPaginas() as $keyModSubmodPag => $modSubmodPag):
+                                        ?>
+                                        <li>
+                                            <div class="form-group has-feedback">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <input type="checkbox" name="status" id="<?=$modSubmodPag->getId()?>" tipo="pagina" campo="status_pagina" <?=($modSubmodPag->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                                    </span>
+                                                    <?php
+                                                        $ATIVO = '';
+                                                        $INATIVO = '';
+                                                        $status = $modSubmodPag->getStatusSelecao();
+                                                        $$status = 'selected';
+                                                    ?>
+                                                    <span class="input-group-addon">
+                                                        <select name="status" id="<?=$modSubmodPag->getId()?>" tipo="pagina" campo="status_selecao" <?=($modSubmodPag->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                                            <option value="" disabled="disabled" selected="selected">Indefinido</option>
+                                                            <option value="ATIVO" <?=$ATIVO?>>ATIVO</option>
+                                                            <option value="INATIVO" <?=$INATIVO?>>INATIVO</option>
+                                                        </select>
+                                                    </span>
+                                                    <input type="text" class="form-control" placeholder="<?=$modSubmodPag->getUrl()?>" value="<?=$modSubmodPag->getNome()?>" tipo="pagina" id="<?=$modSubmodPag->getId()?>" campo="nome_pagina">
+                                                </div>
+                                            </div>
+
+                                            <?php
+                                            if(!empty($modSubmodPag->getActions())):
+                                            ?>
+                                            <ul>
+                                                <?php
+                                                foreach ($modSubmodPag->getActions() as $keyModSubmodPagAct => $modSubmodPagAct):
+                                                ?>
+                                                <li>
+                                                    <div class="form-group has-feedback">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                <input type="checkbox" name="status" id="<?=$modSubmodPagAct->getId()?>" tipo="acao" campo="status_action" <?=($modSubmodPagAct->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                                            </span>
+                                                            <?php
+                                                                $ATIVO = '';
+                                                                $INATIVO = '';
+                                                                $status = $modSubmodPagAct->getStatusSelecao();
+                                                                $$status = 'selected';
+                                                            ?>
+                                                            <span class="input-group-addon">
+                                                                <select name="status" id="<?=$modSubmodPagAct->getId()?>" tipo="acao" campo="status_selecao" <?=($modSubmodPagAct->getStatus() == 'ATIVO') ? 'checked' : ''?>>
+                                                                    <option value="" disabled="disabled" selected="selected">Indefinido</option>
+                                                                    <option value="ATIVO" <?=$ATIVO?>>ATIVO</option>
+                                                                    <option value="INATIVO" <?=$INATIVO?>>INATIVO</option>
+                                                                </select>
+                                                            </span>
+                                                            <input type="text" class="form-control" placeholder="<?=$modSubmodPagAct->getUrl()?>" value="<?=$modSubmodPagAct->getNome()?>" tipo="acao" id="<?=$modSubmodPagAct->getId()?>" campo="nome_action"> 
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <?php
+                                                endforeach;
+                                                ?>
+                                            </ul>
+                                            <?php
+                                            endif;
+                                            ?>
+
+
+                                        </li>
+                                        <?php
+                                        endforeach;
+                                        ?>
+                                    </ul>
+                                    <?php
+                                    endif;
+                                    ?>
+                                </li>
+                                <?php
+                                endforeach;
+                                ?>
+                            </ul>
+                            <?php
+                            endif;
+                            ?>
+                        </li>
+                    <?php
+                    endforeach;
+                    ?>
+
+                    </ul>
+                <?php
+                endif;
+                ?>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.popover-content {
+  padding: 0px 0px;
+}
+</style>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery-tree/js/jquery.tree.js"></script>
+<link rel="stylesheet" type="text/css" href="<?=URL?>skin/js/jquery-tree/css/jquery.tree.css"/>
+<script>
+$(function() {    
+    // $('#form_usuarios').submitForm({
+    // 	'reload' : true
+    // });
+    
+    $('.tree').tree({
+        collapseUiIcon: 'ui-icon-plus',
+        expandUiIcon: 'ui-icon-minus',
+        leafUiIcon: 'ui-icon-bullet'
+    });
+            
+    $('.checkAll').click(function(){
+        $('.tree').tree('checkAll');
+        return false;
+    });
+
+    $('.uncheckAll').click(function(){
+        $('.tree').tree('uncheckAll');
+        return false;
+    });
+    //atualiza o nome dos módulos, submodulos, paginas e ações
+    var valueAnt = '';
+    $('#form_modulos input[type=text]').on('focusin',function(event) {
+        valueAnt = $(this).val();
+    });
+
+    $('#form_modulos input[type=text]').on('focusout',function(event) {
+        var input = $(this);
+        if(valueAnt != $(this).val())
+        {
+            var id = $(this).attr('id');
+            var campo = $(this).attr('campo');
+            var tipo = $(this).attr('tipo'); 
+            var valor = $(this).val();//status
+            $.post('<?=URL?>configuracoes/modulos/gerenciar/atualizar',{tipo:tipo, id:id, campo:campo, valor:valor},function(data){
+                if(data)
+                {
+                    input.after('<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>');
+                    setTimeout(function(){
+                        $('.form-control-feedback').remove();
+                    },2000);
+                }
+            })
+        }
+    });
+
+    //atualiza o status geral
+    $('#form_modulos input[name=status]').on('change',function(event) {
+        var input = $(this);
+        var id = $(this).attr('id');
+        var campo = $(this).attr('campo');
+        var tipo = $(this).attr('tipo');
+        var valor = $(this).val();
+
+        if($(this).is(':checked'))
+            valor = 'ATIVO';
+        else
+            valor = 'INATIVO';
+
+        $.post('<?=URL?>configuracoes/modulos/gerenciar/atualizar',{tipo:tipo, id:id, campo:campo, valor:valor},function(data){
+            console.log(data)
+            if(data)
+            {
+                input.after('<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>');
+                setTimeout(function(){
+                    $('.form-control-feedback').remove();
+                },2000);
+            }
+        });
+    });
+
+
+    //atualiza o status geral
+    $('#form_modulos select[name=status]').on('change',function(event) {
+        var input = $(this);
+        var id = $(this).attr('id');
+        var campo = $(this).attr('campo');
+        var tipo = $(this).attr('tipo');
+        var valor = $(this).val();
+
+
+
+        $.post('<?=URL?>configuracoes/modulos/gerenciar/atualizar',{tipo:tipo, id:id, campo:campo, valor:valor},function(data){
+            console.log(data)
+            if(data)
+            {
+                input.after('<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>');
+                setTimeout(function(){
+                    $('.form-control-feedback').remove();
+                },2000);
+            }
+        });
+    });
+
+
+
+
+    $('#update-position').sortable({
+        update : function () {
+        var order = $('#update-position').sortable('toArray'); 
+        //console.log(order)
+        var obj = $('#result');
+        
+        $.post('<?=URL?>configuracoes/modulos/gerenciar/updatePosition',{ordem:order},function(data){
+                console.log(order)
+                if(data == true)
+                {
+                    $("#dialogResult").html("Atualizado com sucesso");
+                    $("#dialogResult").dialog({
+                        autoOpen: true,
+                        buttons: [
+                            {
+                                text: "Ok",
+                                click: function() {
+                                    $( this ).dialog( "close" );
+                                }
+                            }
+                        ]
+                    });
+                }else
+                {
+                    $("#dialogResult").html(data);
+                    $("#dialogResult").dialog({
+                        autoOpen: true,
+                        buttons: [
+                            {
+                                text: "Ok",
+                                click: function() {
+                                    $( this ).dialog( "close" );
+                                }
+                            }
+                        ]
+                    });
+                }
+                
+            });
+        }
+    });
+    $( "#update-position" ).disableSelection();
+    $('.ui-icon-minus').trigger('click')
+});
+</script>

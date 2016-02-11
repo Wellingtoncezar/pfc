@@ -1,11 +1,11 @@
-GRUPO: nº16
+GRUPO: nÂº16
 ---------------------------------------------------------
 INTEGRANTES:
 	Diego Hernandes        RGM: 11131101472
-	Jéssica A. Santos      RGM: 11142500943  
+	JÃ©ssica A. Santos      RGM: 11142500943  
 	Wellington Cesar       RGM: 11131503022
 ---------------------------------------------------------
-TEMA : Sistema de Automação Comercial
+TEMA : Sistema de AutomaÃ§Ã£o Comercial
 ---------------------------------------------------------
 PROFESSORES: 
 	Daisy
@@ -14,11 +14,65 @@ PROFESSORES:
 ---------------------------------------------------------
 NOME DAS DISCIPLINAS:
 	ENGENHARIA DE REQUISITOS
-	INSTRUMENTAÇÃO PARA DESENVOLVIMENTO DE SOFTWARE I
+	INSTRUMENTAÃ‡ÃƒO PARA DESENVOLVIMENTO DE SOFTWARE I
 ---------------------------------------------------------
-2º 2015 SI 6ºA
+2Âº 2015 SI 6ÂºA
 ---------------------------------------------------------
 =========================================================
 
-Orientações para rodar a aplicação.
+OrientaÃ§Ãµes para rodar a aplicaÃ§Ã£o.
 ---------------------------------------------------------
+
+
+modulos do sistema:
+
+dashboard
+funcionarios
+fornecedores
+produtos
+vendas
+caixa
+orcamento
+estoque
+relatorios
+configuracoes
+
+Acessos por niveis:
+
+Gerente:
+	dashboard
+	funcionarios
+	fornecedores
+	produtos
+	vendas
+	caixa
+	orcamento
+	estoque
+	relatorios
+	configuracoes
+FuncionÃ¡rio
+	dashboard
+	fornecedores
+	produtos
+	caixa
+	orcamento
+	estoque
+
+	funcionario 
+		id_nivel
+
+	gerente
+
+
+
+
+	criar um arquivo xml com as conexoes do banco
+CRIAR UM USUARIO
+CREATE USER 'userlogin'@'localhost' IDENTIFIED BY 'vvCD74vE5sQWvrd6';
+GRANT SELECT ON *.* TO 'userlogin'@'localhost' IDENTIFIED BY 'vvCD74vE5sQWvrd6' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+GRANT SELECT ON `sac`.`sys_usuarios` TO 'userlogin'@'localhost';
+GRANT SELECT ON `sac`.`funcionarios` TO 'userlogin'@'localhost';
+
+
+DEFINIR ACESSO
+GRANT SELECT, INSERT, UPDATE, REFERENCES ON `sac`.`fornecedores` TO 'funcionarios'@'localhost';

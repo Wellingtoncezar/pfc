@@ -13,7 +13,7 @@
 	    background-size: 100%;
 	    position: relative;
 	    z-index: 1;
-	    background: url('../img/imagens/fundo_menu.jpg');
+	    background-image: url('../img/imagens/fundo_menu.jpg');
     }
     .header .top{
     	display: table;
@@ -156,33 +156,32 @@
 	}
 	.page-header {
     padding-bottom: 0px;
-    margin: 20px 0 15px;
-    border-bottom: 3px groove #3E8FD4;
+    margin: 10px 0 15px;
+    border-bottom: 2px solid #009688;
+    clear: both;
+    display: block;
 	}
 	.page-header h1{
-    color: #3C8FD6;
+	color: #009688;
     font-weight: bold;
-    text-shadow: 1px 1px 1px #000;
+    font-size: 30px;
 	}
 	.panel-default>.panel-heading {
-	background-color: #3285B9;
-	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#498db7+41,2a81b7+57 */
-	background: #498db7; /* Old browsers */
-	background: -moz-linear-gradient(top,  #498db7 41%, #2a81b7 57%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(41%,#498db7), color-stop(57%,#2a81b7)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #498db7 41%,#2a81b7 57%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #498db7 41%,#2a81b7 57%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #498db7 41%,#2a81b7 57%); /* IE10+ */
-	background: linear-gradient(to bottom, rgba(20,72,140,0.87) 41%,rgba(42, 92, 140, 0.85) 57%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#498db7', endColorstr='#2a81b7',GradientType=0 ); /* IE6-9 */
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#2d2d2d+20,636363+87 */
+	background: #2d2d2d; /* Old browsers */
+	background: -moz-linear-gradient(top,  #2d2d2d 20%, #636363 87%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  #2d2d2d 20%,#636363 87%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  #2d2d2d 20%,#636363 87%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2d2d2d', endColorstr='#636363',GradientType=0 ); /* IE6-9 */
 
-    border-color: #09517D;
+    border-color: #2d2d2d;
     border-width: 5px;
     font-size: 18px;
     color: #FFFFFF;
     font-weight: bold;
     text-shadow: 1px 2px 0px #333;
 	}
+	rgba(36, 36, 36, 0.9) 41%,rgba(48, 48, 48, 0.9) 57%
 	.panel-default {
     background-color: #FFF;
     box-shadow: 0px 2px 5px 0px #333;
@@ -252,9 +251,10 @@
 	}
 
 	#container_login .box_login label{
-	    display: table;
-	    margin: 12px;
-	    padding: 0px;
+	display: table;
+    margin: 0px;
+    padding: 10px;
+    border: 0;
 	}
 	#container_login .box_login label img{
 		float: left;
@@ -314,22 +314,6 @@
 	}
 
 	
-
-
-
-
-
-	.wrap-content{
-    position: relative;
-    width: 100%;
-
-
-	}
-
-
-
-
-
 	.k-tabstrip .k-tabstrip-items .k-link {
 	    padding: 6px 13px !important;
 	}

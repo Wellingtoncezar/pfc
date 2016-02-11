@@ -13,7 +13,7 @@
 	    background-size: 100%;
 	    position: relative;
 	    z-index: 1;
-	    background: url('../img/imagens/fundo_menu.jpg');
+	    background-image: url('../img/imagens/fundo_menu.jpg');
     }
     .header .top{
     	display: table;
@@ -117,6 +117,7 @@
     color: #FFF;
     min-width: 80px;
     transition:0.5s;
+    padding: 15px 10px;
 	}
 	.navbar-default .navbar-nav>li>a:focus, 
 	.navbar-default .navbar-nav>li>a:hover,

@@ -60,7 +60,7 @@ class Load{
         if(!empty($autoload['model']))
         {
             foreach ($autoload['model'] as $loadModel){
-                $this->load->library($loadModel);
+                $this->load->library($loadModel,true);
             }
         }
     }
@@ -180,13 +180,17 @@ class Load{
      * @access public
      * @return booleam
      */
-    public function model($filename)
+    public function model($filename, $autoExec = false)
     {
         $filename = str_replace('\\', '/', $filename);
+        $name = explode('/',rtrim($filename));
+        $name = end($name);
         spl_autoload_register(array($this,'model'));
         $file = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.MODELS.DIRECTORY_SEPARATOR.$filename.'.php';
         if(file_exists($file)){
             require_once(str_replace('\\', '/', $file));
+            if($autoExec === true)
+                $this->$name = new $name($parameters);
             return true;
         }else{
             return false;
@@ -198,18 +202,20 @@ class Load{
      * @access public
      * @return booleam
      */
-    public function dao($filename)
+    public function dao($filename, $autoExec = false)
     {
         $filename = str_replace('\\', '/', $filename);
         $name = explode('/',rtrim($filename));
         $name = end($name);
         spl_autoload_register(array($this,'dao'));
-        $file = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.MODELS.DIRECTORY_SEPARATOR.'DAO'.DIRECTORY_SEPARATOR.$filename.'.php';
+        $file = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.DAO.DIRECTORY_SEPARATOR.$filename.'.php';
         
         if(!$this->_isloaded($name))
         {
             if(file_exists($file)){
                 require_once(str_replace('\\', '/', $file));
+                if($autoExec === true)
+                    $this->$name = new $name($parameters);
                 return true;
             }else{
                 return false;

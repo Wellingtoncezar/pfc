@@ -13,7 +13,7 @@
 	    background-size: 100%;
 	    position: relative;
 	    z-index: 1;
-	    background: url('../img/imagens/fundo_menu.jpg');
+	    background-image: url('../img/imagens/fundo_menu.jpg');
     }
     .header .top{
     	display: table;
@@ -115,7 +115,7 @@
 	.navbar-default .navbar-nav>li>a {
     text-align: center;
     color: #FFF;
-    min-width: 80px;
+    min-width: 57px;
     transition:0.5s;
     padding: 10px 3px;
 	}

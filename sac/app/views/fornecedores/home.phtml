@@ -1,63 +1,60 @@
-<div class="actions-buttons">
-    <div class="container">
-        <a class="btn btn-primary pull-right btn_adicionar" href="<?=URL?>fornecedores/home/cadastrar" role="button" id="btn_adicionar"><span class="glyphicon glyphicon-plus"></span>Cadastrar</a>
-    </div>
-</div>
-
 <div class="container">
+    <?php
+        $btnCadastrar = $template->btnCadastrar(URL.'fornecedores/gerenciar/cadastrar');
+        echo $template->actions_buttons($btnCadastrar);
+    ?>
     <div class="page-header">
       <h1>Fornecedores</h1>
     </div>
     <div class="middle-content">
-        <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
-        <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
-            <thead>
-                <tr>   
-                    <th width="40">Foto</th>
-                    <th width="100">Razão social</th>
-                    <th width="160">Nome Fantasia</th>
-                    <th width="160">CPF</th>
-                    <th width="120">CNPJ</th>
-                    <th width="100">Status (Ativo/Inativo)</th>
-                    <th width="180">Ações</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th>Foto</th>
-                    <th>Razão social</th>
-                    <th>Nome Fantasia</th>
-                    <th>CPF</th>
-                    <th>CNPJ</th>
-                    <th>Status (Ativo/Inativo)</th>
-                    <th>Ações</th>
-                </tr>
-            </tfoot>
-            <tbody>
-            <?php
+        <?php
+            $thead = '  <tr>
+                            <th width="40">Foto</th>
+                            <th width="100">Razão social</th>
+                            <th width="160">Nome Fantasia</th>
+                            <th width="160">CPF</th>
+                            <th width="120">CNPJ</th>
+                            <th width="100">Status (Ativo/Inativo)</th>
+                            <th width="180">Ações</th>
+                        </tr>';
+            $tfoot = '  <tr>
+                            <th>Foto</th>
+                            <th>Razão social</th>
+                            <th>Nome Fantasia</th>
+                            <th>CPF</th>
+                            <th>CNPJ</th>
+                            <th>Status (Ativo/Inativo)</th>
+                            <th>Ações</th>
+                        </tr>';  
             if(!empty($fornecedores)):
+                $tbody = '';
                 foreach ($fornecedores as $fornec):
                     $foto = $fornec->getFoto() != '' ? URL.'skin/uploads/fornecedores/p/'.$fornec->getFoto() : URL.'skin/img/imagens/logoaqui.png';
-            ?>
-                <tr id="<?=$fornec->getId()?>">
-                    <td><img src="<?=$foto?>" style=" width: 60px; height: 60px;"></td>
-                    <td><?=$fornec->getRazaoSocial()?></td>
-                    <td><?=$fornec->getNomeFantasia()?></td>
-                    <td><?=$fornec->getCpf()?></td>
-                    <td><?=$fornec->getCnpj()?></td>
+                    $ativo = ($fornec->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
+                    $inativo = ($fornec->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
+
+    $tbody .= ' <tr id="'.$fornec->getId().'">
+                    <td><img src="'.$foto.'" style=" width: 60px; height: 60px;"></td>
+                    <td>'.$fornec->getRazaoSocial().'</td>
+                    <td>'.$fornec->getNomeFantasia().'</td>
+                    <td>'.$fornec->getCpf().'</td>
+                    <td>'.$fornec->getCnpj().'</td>
                     <td>
-                        <select name="status" id="<?=$fornec->getId()?>" class="statusSelect">
-                            <option value="<?=status::ATIVO?>" class="active" <?=($fornec->getStatus() == status::ATIVO) ? 'selected="selected"' : ''?>>Ativo</option>
-                            <option value="<?=status::INATIVO?>" class="inactive" <?=($fornec->getStatus() == status::INATIVO) ? 'selected="selected"' : ''?>>Inativo</option>
+                        <select name="status" id="'.$fornec->getId().'" class="statusSelect">
+                            <option value="'.status::ATIVO.'" class="active" '.$ativo.'>Ativo</option>
+                            <option value="'.status::INATIVO.'" class="inactive" '.$inativo.'>Inativo</option>
                         </select>
                     </td>
-                    <td>
-                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>fornecedores/home/editar/<?=$fornec->getId()?>" role="button" id-record="<?=$fornec->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
-                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$fornec->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span>Excluir</a>
-                    </td>
-                </tr>
-            <?php
+                    <td>'
+                        .$template->btnEditar(URL.'fornecedores/gerenciar/editar/'.$fornec->getId())
+                        .$template->btnExcluir("javascript:void(0)", $fornec->getId(), status::EXCLUIDO).
+                    '</td>
+                </tr>';
+        
                 endforeach;
+                echo $template->tabela($thead, $tfoot, $tbody);
+            else:
+                echo '<h2>Não há registros cadastrados</h2>';
             endif;
             ?>
                 
@@ -78,7 +75,7 @@
         table.$('select[name=status]').on('change',function(){
             var id = $(this).attr('id');
             var status = $(this).val();
-            $.post(url+'fornecedores/home/atualizarStatus',{id:id,status:status},function(data){
+            $.post(url+'fornecedores/gerenciar/atualizarStatus',{id:id,status:status},function(data){
                 console.log(data)
                 if(data == true)
                     messageDialog('Status atualizado','success',false,null);
@@ -94,7 +91,7 @@
             var status = $(this).data('value');
             var modalDelete = $('#modalDelete').modal('show')
             $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'fornecedores/home/excluir',{id:id,status:status},function(data){
+                $.post(url+'fornecedores/gerenciar/excluir',{id:id,status:status},function(data){
                     console.log(data)
                     if(data == true){
                         $('#modalDelete').modal('hide');
