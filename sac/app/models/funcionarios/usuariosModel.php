@@ -1,14 +1,18 @@
 <?php
 /**
-*@author Wellington cezar, Diego Hernandes, Jessica Azevedo
+*@author Wellington cezar, Diego Hernandes.
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class usuariosModel{
 	private $id;
+	private $funcionario;
 	private $login;
 	private $senha;
+	private $grupoFuncionario;
 	private $status;
 	private $dataCadastro;
+	
+
 		
 
  	//SETERS
@@ -16,18 +20,27 @@ class usuariosModel{
  	{
  		$this->id = $id;
  	}
- 	public function setLogin($login)
+ 	public function setFuncionario($funcionario)
 	{
-		$this->foto = $login;
+		$this->funcionario = $funcionario;
+	}
+    public function setLogin($login)
+	{
+		$this->login = $login;
 	}
 	public function setSenha($senha)
 	{
 		$this->senha = $senha;
 	}
+	public function setGrupoFuncionario ($grupoFuncionario)
+	{
+		$this->grupoFuncionario = $grupoFuncionario;
+	}
 	public function setStatus($status)
 	{
 		$this->status = $status;
 	}
+
 	public function setDataCadastro($dataCadastro)
 	{	
 		$this->dataCadastro = $dataCadastro;
@@ -38,9 +51,9 @@ class usuariosModel{
 	{
 		return $this->id;
 	}
-	public function getFoto()
+	public function getFuncionario()
 	{
-		return $this->foto;
+		return $this->funcionario;
 	}
 	public function getLogin()
 	{
@@ -49,6 +62,10 @@ class usuariosModel{
 	public function getSenha()
 	{
 		return $this->senha;
+	}
+	public function getGrupoFuncionario()
+	{
+		return $this->grupoFuncionario;
 	}
 	public function getStatus()
 	{

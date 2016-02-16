@@ -1,8 +1,7 @@
-GRUPO: nº16
+﻿GRUPO: nº16
 ---------------------------------------------------------
 INTEGRANTES:
 	Diego Hernandes        RGM: 11131101472
-	Jéssica A. Santos      RGM: 11142500943  
 	Wellington Cesar       RGM: 11131503022
 ---------------------------------------------------------
 TEMA : Sistema de Automação Comercial
