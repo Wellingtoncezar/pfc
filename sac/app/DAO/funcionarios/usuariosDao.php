@@ -54,115 +54,44 @@ class usuariosDao extends Dao{
 		endif;
 	}
 
-
-	/**
-	 * Retorna a consulta de um funcionário pelo id
-	 * @return object [usuariosModel]
-	 */
-	public function consultar(usuariosModel $funcionario)
+	public function consultar(usuariosModel $usuariosModel)
 	{
-		$this->db->clear();
-		$this->db->setTabela('sys_usuarios');
-		$this->db->setCondicao("id_usuario = '".$usuarios->getId()."'");
-		$this->db->select();
+		$this->load->model('funcionarios/usuariosModel');
+		$this->load->model('funcionarios/gruposFuncionariosModel');
+		$this->load->model('funcionarios/funcionariosModel');
 
-		//FUNCIONARIO
+		$this->db->clear();
+		$sql="select * from sys_usuarios as a 
+								inner join sys_usuarios_grupo as b on a.id_usuarios_grupo = b.id_usuarios_grupo
+							    inner join funcionarios as c on a.id_funcionario = c.id_funcionario 
+							    where a.id_usuario = '".$usuariosModel->getId()."' and a.status_usuario <> '".status::EXCLUIDO."'"; 
+		$this->db->query($sql);
+
 		if($this->db->rowCount() > 0):
 			$result = $this->db->result();
-
-			//TELEFONES
-			$this->db->clear();
-			$this->db->setTabela('telefones AS A, telefones_funcionarios AS B');
-			$this->db->setCondicao("B.id_funcionario = '".$funcionario->getId()."' AND A.id_telefone = B.id_telefone");
-			$this->db->select();
 			
-			$telefonesList = Array();
-			if($this->db->rowCount() > 0):
-				$resultTel = $this->db->resultAll();
-
-				$this->load->model('telefoneModel');
-				foreach ($resultTel as $telefone)
-				{
-					$telefoneModel = new telefoneModel();
-					$telefoneModel->setId( $telefone['id_telefone'] );
-					$telefoneModel->setCategoria( $telefone['categoria_telefone'] );
-					$telefoneModel->setNumero( $telefone['numero_telefone'] );
-					$telefoneModel->setOperadora( $telefone['operadora_telefone'] );
-					$telefoneModel->setTipo( $telefone['tipo_telefone'] );
-					array_push($telefonesList, $telefoneModel);
-					unset($telefoneModel);
-				}
-			endif;
-
-
-			//EMAILS
-			$this->db->clear();
-			$this->db->setTabela('emails as A, emails_funcionarios AS B');
-			$this->db->setCondicao("B.id_funcionario = '".$funcionario->getId()."' AND B.id_email = A.id_email");
-			$this->db->select();
+			$gruposFuncionariosModel = new gruposFuncionariosModel();
+			$funcionariosModel = new funcionariosModel();
+			$usuariosModel->setId($result['id_usuario']);
+			$gruposFuncionariosModel->setId($result['id_usuarios_grupo']);
+			$gruposFuncionariosModel->setNome($result['nome_usuarios_grupo']);
+			$funcionariosModel->setId($result['id_funcionario']);
+			$funcionariosModel->setNome($result['nome_funcionario']);
+			$funcionariosModel->setSobrenome($result['sobrenome_funcionario']);
+	        $usuariosModel->setGrupoFuncionario($gruposFuncionariosModel);
+			$usuariosModel->setFuncionario($funcionariosModel);
+			$usuariosModel->setLogin($result['login_usuario']);
+			$usuariosModel->setEmail($result['email_usuario']);
+			$usuariosModel->setStatus(status::getAttribute($result['status_usuario']));
+	
 			
-			$emailsList = Array();
-			if($this->db->rowCount() > 0):
-				$resultEmail = $this->db->resultAll();
 
-				$this->load->model('emailModel');
-				foreach ($resultEmail as $email)
-				{
-
-					$emailModel = new emailModel();
-					$emailModel->setId( $email['id_email'] );
-					$emailModel->setEmail( $email['endereco_email'] );
-					$emailModel->setTipo( $email['tipo_email'] );
-					array_push($emailsList, $emailModel);
-					unset($emailModel);
-				}
-			endif;
-
-
-			//ENDERECO
-			$this->db->clear();
-			$this->db->setTabela('enderecos as A, enderecos_funcionarios AS B');
-			$this->db->setCondicao("B.id_funcionario = '".$funcionario->getId()."' AND A.id_endereco = B.id_endereco ");
-			$this->db->select();
-			
-			$this->load->model('enderecoModel');
-			$endereco = new enderecoModel();
-			if($this->db->rowCount() > 0):
-				$resultEnd = $this->db->result();
-
-				$endereco->setId($resultEnd['id_endereco']);
-				$endereco->setCep($resultEnd['cep_endereco']);
-				$endereco->setNumero($resultEnd['numero_endereco']);
-				$endereco->setComplemento($resultEnd['complemento_endereco']);
-				$endereco->setLogradouro($resultEnd['rua_endereco']);
-				$endereco->setBairro($resultEnd['bairro_endereco']);
-				$endereco->setCidade($resultEnd['cidade_endereco']);
-				$endereco->setEstado($resultEnd['estado_endereco']);
-			endif;
-
-			$funcionario->setFoto($result['foto_funcionario']);
-			$funcionario->setNome($result['nome_funcionario']);
-			$funcionario->setSobrenome($result['sobrenome_funcionario']);
-			$funcionario->setDataNascimento($result['data_nascimento_funcionario']);
-			$funcionario->setSexo($result['sexo_funcionario']);
-			$funcionario->setRg($result['rg_funcionario']);
-			$funcionario->setCpf($result['cpf_funcionario']);
-			$funcionario->setEstadoCivil($result['estado_civil_funcionario']);
-			$funcionario->setEscolaridade($result['escolaridade_funcionario']);
-			$funcionario->setEndereco($endereco);
-			$funcionario->setTelefones($telefonesList);
-			$funcionario->setEmail($emailsList);
-			$funcionario->setCodigo($result['codigo_funcionario']);
-			$funcionario->setCargo($result['cargo_funcionario']);
-			$funcionario->setDataAdmissao($result['data_admissao_funcionario']);
-			$funcionario->setSalario($result['salario_funcionario']);
-			$funcionario->setStatus(status::getAttribute($result['status_funcionario']));
-			return $funcionario;
-		else:
-			
-			return $usuariosModel;
 		endif;
+		
+		return $usuariosModel;
 	}
+
+	
 
 
 
@@ -202,288 +131,47 @@ class usuariosDao extends Dao{
 	 * Atualiza funcionários
 	 * @return boolean, json
 	 */
- 	public function atualizar(usuariosModel $funcionario)
+ 	public function atualizar(usuariosModel $usuarios)
  	{
 
-		if($funcionario->getFoto() != '')
-		{
-	 		$this->db->clear();
-	 		$this->db->setTabela('funcionarios');
-	 		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
-	 		$this->db->select(array('foto_funcionario'));
-	 		$res = $this->db->result();
-	 		$this->nomeArquivoFoto = pathinfo($res['foto_funcionario'],PATHINFO_FILENAME);
-			if($this->nomeArquivoFoto == '')
-			{
-		 		//nome da imagem
-				$char = new caracteres($funcionario->getNome());
-				$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
-			}
-				
-			$upload = $this->uploadFoto($this->nomeArquivoFoto, $funcionario->getFoto()); //upload da foto
-			if($upload)
-				return $this->updateData($funcionario);
-			else
-				return $upload;
-		}else
-		{
-			return $this->updateData($funcionario);
-		}
+		$data = array(
+ 			'id_usuarios_grupo' => $usuarios->getGrupoFuncionario(),
+ 			'email_usuario' => $usuarios->getEmail(),
+ 			'login_usuario' => $usuarios->getLogin(),
 
-	}
-
-
-	private function insertData(usuariosModel $funcionario)
-	{
-
- 		$data = array(
- 			'foto_funcionario' => $this->nomeArquivoFoto,
- 			'nome_funcionario' => $funcionario->getNome(),
- 			'sobrenome_funcionario' => $funcionario->getSobrenome(),
- 			'data_nascimento_funcionario' => $funcionario->getDataNascimento(),
- 			'sexo_funcionario' => $funcionario->getSexo(),
- 			'rg_funcionario' => $funcionario->getRg(),
- 			'cpf_funcionario' => $funcionario->getCpf(),
- 			'estado_civil_funcionario' => $funcionario->getEstadoCivil(),
- 			'escolaridade_funcionario' => $funcionario->getEscolaridade(),
- 			'codigo_funcionario' => $funcionario->getCodigo(),
- 			'cargo_funcionario' => $funcionario->getCargo(),
- 			'data_admissao_funcionario' => $funcionario->getDataAdmissao(),
- 			'salario_funcionario' => $funcionario->getSalario(),
- 			'status_funcionario' => $funcionario->getStatus(),
- 			'data_cadastro_funcionario' => $funcionario->getDataCadastro()
  		);
 
- 		$this->db->clear();
-		$this->db->setTabela('funcionarios');
-		$this->db->insert($data);
+
+		$this->db->clear();
+		$this->db->setTabela('sys_usuarios');
+		$this->db->setCondicao("id_usuario = '".$usuarios->getId()."'");
+		$this->db->update($data);
 		if($this->db->rowCount() > 0)
 		{
-			$funcionario->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
-
-			$this->atualizaEndereco($funcionario);
-			//TELEFONES
-			if(!empty($funcionario->getTelefones()))
-				$this->atualizaTelefones($funcionario);
-
-			//EMAILS
-			if(!empty($funcionario->getEmail()))
-				$this->atualizaEmails($funcionario);
-
 			return true;
  		}else
  		{
- 			return json_encode(array('erro'=>'Erro ao inserir registro'));
+ 			return $this->db->getError();
  		}
- 		
- 	}
-
- 	private function updateData(usuariosModel $funcionario)
-	{
-
- 		$data = array(
- 			'foto_funcionario' => $this->nomeArquivoFoto,
- 			'nome_funcionario' => $funcionario->getNome(),
- 			'sobrenome_funcionario' => $funcionario->getSobrenome(),
- 			'data_nascimento_funcionario' => $funcionario->getDataNascimento(),
- 			'sexo_funcionario' => $funcionario->getSexo(),
- 			'rg_funcionario' => $funcionario->getRg(),
- 			'cpf_funcionario' => $funcionario->getCpf(),
- 			'estado_civil_funcionario' => $funcionario->getEstadoCivil(),
- 			'escolaridade_funcionario' => $funcionario->getEscolaridade(),
- 			'codigo_funcionario' => $funcionario->getCodigo(),
- 			'cargo_funcionario' => $funcionario->getCargo(),
- 			'data_admissao_funcionario' => $funcionario->getDataAdmissao(),
- 			'salario_funcionario' => $funcionario->getSalario(),
- 			'status_funcionario' => $funcionario->getStatus(),
- 			'data_cadastro_funcionario' => $funcionario->getDataCadastro()
- 		);
-
- 		$this->db->clear();
-		$this->db->setTabela('funcionarios');
-		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
-		$this->db->update($data);
-		if($this->db->rowCount() > 0)
-			$this->nUpdates++;
-		
-		//ENDEREÇO
-		$this->atualizaEndereco($funcionario);
-		//TELEFONES
-		$this->atualizaTelefones($funcionario);
-		//EMAILS
-		$this->atualizaEmails($funcionario);
-
- 		if($this->nUpdates > 0)
-			return true;
- 		else
- 		{
- 			return json_encode(array('erro'=>'Erro ao editar registro'));
- 		}
- 	}
-
-
- 	/**
- 	 * Atualiza ou insere o endereço
- 	 * @return void
- 	 * */
- 	public function atualizaEndereco(usuariosModel $funcionario)
- 	{
-
-	 	$this->db->clear();
-		$this->db->setTabela('enderecos');
-		$data = array(
-			'cep_endereco' => $funcionario->getEndereco()->getCep(),
-			'rua_endereco' => $funcionario->getEndereco()->getLogradouro(),
-			'numero_endereco' => $funcionario->getEndereco()->getNumero(),
-			'complemento_endereco' => $funcionario->getEndereco()->getComplemento(),
-			'bairro_endereco' => $funcionario->getEndereco()->getBairro(),
-			'cidade_endereco' => $funcionario->getEndereco()->getCidade(),
-			'estado_endereco' => $funcionario->getEndereco()->getEstado(),
-			'data_cadastro_endereco' => date('Y-m-d h:i:s')
-		);
-		
-
-		if($funcionario->getEndereco()->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
-		{
-			$this->db->setCondicao('id_endereco = "'.$funcionario->getEndereco()->getId().'"');
-			$this->db->update($data);
-		}else{
-			$this->db->insert($data);
-			$idEndereco = $this->db->getUltimoId();
-			$idFuncionario = $funcionario->getId();
-			$this->db->query("INSERT INTO enderecos_funcionarios VALUES ('$idFuncionario','$idEndereco')");
-		}
-
-		if($this->db->rowCount() > 0)
-			$this->nUpdates++;
-		else
-			return false;
- 	}
-
-
-
- 	/**
- 	 * 
- 	 * Atualiza ou insere os telefones
- 	 * @return void
- 	 */
- 	private function atualizaTelefones(usuariosModel $funcionario)
-	{
-
-		//excluir
-		$telefonesExcluir = array();
-		foreach ($funcionario->getTelefones() as $telefones)
-		{
-			if($telefones->getId() != '')
-				array_push($telefonesExcluir,$telefones->getId());
-		}
-		$cond = '';
-		if(!empty($telefonesExcluir))
-		{
-			$telefonesExcluir = implode(',', $telefonesExcluir);
-			$this->db->clear();
-			$cond = " AND id_telefone not in (".$telefonesExcluir.")";
-		}
-		$sql = "DELETE FROM telefones WHERE id_telefone in( SELECT B.id_telefone FROM telefones_funcionarios AS B WHERE B.id_funcionario = '".$funcionario->getId()."' AND id_telefone = B.id_telefone) $cond";
-		$this->db->query($sql);
-
-		$this->db->clear();
-		$this->db->setTabela('telefones');
-		foreach ($funcionario->getTelefones() as $telefones)
-		{
-			if(!empty($telefones))
-			{
-				$data = array(
-					'categoria_telefone' => $telefones->getCategoria(),
-					'numero_telefone' => $telefones->getNumero(),
-					'tipo_telefone' => $telefones->getTipo(),
-					'operadora_telefone' => $telefones->getOperadora()
-				);
-				if($telefones->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
-				{
-					$this->db->setCondicao('id_telefone = "'.$telefones->getId().'"');
-					$this->db->update($data);
-				}else{
-					$this->db->insert($data);
-					$idTelefone = $this->db->getUltimoId();
-					$idFuncionario = $funcionario->getId();
-					$this->db->query("INSERT INTO telefones_funcionarios VALUES ('$idFuncionario','$idTelefone')");
-				}
-
-				if($this->db->rowCount() > 0)
-					$this->nUpdates++;
-			}
-		}
-
+			
 
 	}
 
 
+	
 
-	/**
- 	 * Atualiza ou insere os emails
- 	 * @return void
- 	 */
-	private function atualizaEmails(usuariosModel $funcionario)
-	{
-		//excluir
-		$emailExcluir = array();
-		foreach ($funcionario->getEmail() as $email)
-		{
-			if($email->getId() != '')
-				array_push($emailExcluir,$email->getId());
-		}
-		$cond = '';
-		if(!empty($emailExcluir))
-		{
-			$emailExcluir = implode(',', $emailExcluir);
-			$this->db->clear();
-			$cond = " AND id_email not in (".$emailExcluir.")";
-		}
-
-		$sql = "DELETE FROM emails WHERE id_email in( SELECT B.id_email FROM emails_funcionarios AS B WHERE B.id_funcionario = '".$funcionario->getId()."' AND id_email = B.id_email) $cond";
-		$this->db->query($sql);
-
-
-		$this->db->clear();
-		$this->db->setTabela('emails');
-		foreach ($funcionario->getEmail() as $emails)
-		{
-			if(!empty($emails))
-			{
-				$data = array(
-					'tipo_email' => $emails->getTipo(),
-					'endereco_email' => $emails->getEmail()
-				);
-
-				if($emails->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
-				{
-					$this->db->setCondicao('id_email = "'.$emails->getId().'"');
-					$this->db->update($data);
-				}else{
-					$this->db->insert($data);
-					$idEmail = $this->db->getUltimoId();
-					$idFuncionario = $funcionario->getId();
-					$this->db->query("INSERT INTO emails_funcionarios VALUES ('$idFuncionario','$idEmail')");
-				}
-
-				if($this->db->rowCount() > 0)
-					$this->nUpdates++;
-			}
-		}
-	}
 
 
 	/**
  	 * Atualiza o status
  	 * @return boolean
  	 */
-	public function atualizarStatus(usuariosModel $funcionario)
+	public function atualizarStatus(usuariosModel $usuarios)
 	{
-		$data = array('status_funcionario'=>$funcionario->getStatus());
+		$data = array('status_usuario'=>$usuarios->getStatus());
 		$this->db->clear();
-		$this->db->setTabela('funcionarios');
-		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+		$this->db->setTabela('sys_usuarios');
+		$this->db->setCondicao("id_usuario = '".$usuarios->getId()."'");
 		$this->db->update($data);
 		if($this->db->rowCount()>0)
 			return true;
@@ -492,70 +180,7 @@ class usuariosDao extends Dao{
 	}
 
 
-	/**
- 	 * faz o upload do arquivo
- 	 * @return boolean, String
- 	 */
-	public function uploadFoto($nomeArquivo, $arquivo)
-	{
-
-		//verifica se o diretório existe
-		if(is_dir(BASEPATH.'skin/uploads/funcionarios/'))
-		{
-			$destino = BASEPATH.'skin/uploads/funcionarios/';
-			$destino_p = BASEPATH.'skin/uploads/funcionarios/p/';
-
-			if(!is_dir($destino))
-				mkdir($destino);
-
-			if(!is_dir($destino_p))
-				mkdir($destino_p);
-
-			$img = new upload($arquivo,$destino, $nomeArquivo);
-			
-			if($img->getError() == false)
-			{
-				$dest = $destino.$img->getArquivo();
-				$dest_p = $destino_p.$img->getArquivo();
-				if(
-					(isset($_POST['w']) && $_POST['w'] != '') ||
-					(isset($_POST['h']) && $_POST['h'] != '') ||
-					(isset($_POST['x1']) && $_POST['x1'] != '') ||
-					(isset($_POST['y1']) && $_POST['y1'] != '')
-					){
-						$w = $_POST['w'] ;
-						$h =  $_POST['h'];
-						$x1 = $_POST['x1'];
-						$y1 = $_POST['y1'];
-						
-						$crop = new crop_image();
-						$crop->setImage($dest,$dest_p,$w, $h,$x1, $y1,404, 158);
-						$crop->cropResize();
-						$crop->setImage($dest,$dest,$w, $h,$x1, $y1,1349, 527);
-						$crop->cropResize();
-					}else
-					{
-						$w = $_POST['w'] ;
-						$h =  $_POST['h'];
-						$x1 = $_POST['x1'];
-						$y1 = $_POST['y1'];
-
-						$crop = new crop_image();
-						$crop->setImage($dest,$dest_p,$w, $h,$x1, $y1,404, 158);
-						$crop->setImage($dest,$dest,$w, $h,$x1, $y1,1349, 527);
-						$crop->resize();
-					}
-
-				$this->nomeArquivoFoto = $img->getArquivo();
-				return true;
-			
-			}else
-				return $img->getError();
-		}else
-			return 'Erro ao efetuar o upload. O diretório não existe';
-
-
-	}
+	
 
 
 }

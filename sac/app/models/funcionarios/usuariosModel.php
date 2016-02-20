@@ -8,6 +8,7 @@ class usuariosModel{
 	private $funcionario;
 	private $login;
 	private $senha;
+	private $email;
 	private $grupoFuncionario;
 	private $status;
 	private $dataCadastro;

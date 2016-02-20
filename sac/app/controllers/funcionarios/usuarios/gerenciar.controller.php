@@ -79,17 +79,23 @@ class gerenciar extends Controller{
 			'template' => new template()
 		);
 		//ID
-		$idFuncionario = intval($this->url->getSegment(3));
+		$idUsuario = intval($this->url->getSegment(4));
 		
 		//USUARIO MODEL
 		$this->load->model('funcionarios/usuariosModel');
 		$usuariosModel = new usuariosModel();
 		$usuariosModel->setId($idUsuario);
 
-		//FUNCIONARIO DAO
+		//USUARIOS DAO
 		$this->load->dao('funcionarios/usuariosDao');
 		$usuariosDao = new usuariosDao();
-		$data['funcionario'] = $usuariosDao->consultar($usuariosModel);
+		$data['usuarios'] = $usuariosDao->consultar($usuariosModel);
+
+
+		$this->load->dao('funcionarios/gruposFuncionariosDao');
+		$gruposfuncionarios = new gruposFuncionariosDao;
+		$data['grupo_funcionarios']=$gruposfuncionarios->listar();
+		
 		
 		//DATAFORMAT
 		$this->load->library('dataFormat');
@@ -165,116 +171,34 @@ class gerenciar extends Controller{
 	 */
 	public function atualizar()
 	{
-		$idFuncionario = isset($_POST['id_funcionario']) ? filter_var($_POST['id_funcionario']) : '';
-		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
-		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-		$sobrenome = isset($_POST['sobrenome']) ? filter_var($_POST['sobrenome']) : '';
-		$dataNascimento = isset($_POST['dataNascimento']) ? filter_var(trim($_POST['dataNascimento'])) : '';
-		$sexo = isset($_POST['sexo']) ? filter_var($_POST['sexo']) : '';
-		$rg = isset($_POST['rg']) ? filter_var($_POST['rg']) : '';
-		$cpf = isset($_POST['cpf']) ? filter_var($_POST['cpf']) : '';
-		$estadoCivil = isset($_POST['estadoCivil']) ? filter_var($_POST['estadoCivil']) : '';
-		$escolaridade = isset($_POST['escolaridade']) ? filter_var($_POST['escolaridade']) : '';
+		$id = isset($_POST['id']) ? intval($_POST['id']):'';
+		$grupo = isset($_POST['grupo']) ? intval($_POST['grupo']) : '';
+		$email = isset($_POST['email']) ? filter_var(trim($_POST['email'])) : '';
+		$login = isset($_POST['login']) ? filter_var($_POST['login']) : '';
 
 
 		//validação dos dados
 		$this->load->library('dataValidator');
 		
-		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
-		$this->dataValidator->set('Sobrenome', $sobrenome, 'sobrenome')->is_required()->min_length(2);
-		$this->dataValidator->set('Data de nascimento', $dataNascimento, 'dataNascimento')->is_required()->is_date('d/m/Y');
-		$this->dataValidator->set('Sexo', $sexo, 'sexo')->is_required();
-		$this->dataValidator->set('CEP', $cep, 'cep')->is_required();
-		$this->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
-		$this->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
-		$this->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
-		$this->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
-		$this->dataValidator->set('Estado', $estado, 'estado')->is_required();
-
+		$this->dataValidator->set('Grupo', $grupo, 'grupo')->is_required();
+		$this->dataValidator->set('Email', $email, 'email')->is_required();
+		$this->dataValidator->set('Login', $login, 'login')->is_required();
+		
 		
 
 		if ($this->dataValidator->validate())
 		{
-			//TELEFONES
-			$telefonesList = Array();
-			$this->load->model('telefoneModel');
-			foreach ($telefones as $key => $telefone)
-			{
-				$telefone['idtelefone'] = isset($telefone['idtelefone']) ? $telefone['idtelefone'] : '';
-				$telefoneModel = new telefoneModel();
-				$telefoneModel->setId($telefone['idtelefone']);
-				$telefoneModel->setCategoria( $telefone['categoria'] );
-				$telefoneModel->setNumero( $telefone['telefone'] );
-				$telefoneModel->setOperadora( $telefone['operadora'] );
-				$telefoneModel->setTipo( $telefone['tipo_telefone'] );
-				array_push($telefonesList, $telefoneModel);
-				unset($telefoneModel);
-			}
-
-
-			//EMAILS
-			$emailList = Array();
-			$this->load->model('emailModel');
-			foreach ($emails as $email)
-			{
-				$email['idemail'] = isset($email['idemail']) ? $email['idemail'] : '';
-				$emailModel = new emailModel();
-				$emailModel->setId( $email['idemail'] );
-				$emailModel->setEmail( $email['email'] );
-				$emailModel->setTipo( $email['tipo_email'] );
-				array_push($emailList, $emailModel);
-				unset($emailModel);
-			}
-
-
-
-			//ENDEREÇO
-			$this->load->model('enderecoModel');
-			$enderecoModel = new enderecoModel();
-			$enderecoModel->setId($id_endereco);
-			$enderecoModel->setCep($cep);
-			$enderecoModel->setNumero($numero);
-			$enderecoModel->setComplemento($complemento);
-			$enderecoModel->setLogradouro($logradouro);
-			$enderecoModel->setBairro($bairro);
-			$enderecoModel->setCidade($cidade);
-			$enderecoModel->setEstado($estado);
-			
-			
-
-			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat');
-			$dataNascimento = $this->dataFormat->formatar($dataNascimento,'data','banco');
-			$dataAdmissao = $this->dataFormat->formatar($dataAdmissao,'data','banco');
-			$salario = $this->dataFormat->formatar($salario,'decimal','banco');
-
-			
-
-			//FUNCIONARIO
+            //USUARIO
 			$this->load->model('funcionarios/usuariosModel');
 			$usuariosModel = new usuariosModel();
-			$usuariosModel->setId($idFuncionario);
-			$usuariosModel->setFoto($foto);
-			$usuariosModel->setNome($nome);
-			$usuariosModel->setSobrenome($sobrenome);
-			$usuariosModel->setDataNascimento($dataNascimento);
-			$usuariosModel->setSexo($sexo);
-			$usuariosModel->setRg($rg);
-			$usuariosModel->setCpf($cpf);
-			$usuariosModel->setEstadoCivil($estadoCivil);
-			$usuariosModel->setEscolaridade($escolaridade);
-			$usuariosModel->setEndereco($enderecoModel);
-			$usuariosModel->setTelefones($telefonesList);
-			$usuariosModel->setEmail($emailList);
-			$usuariosModel->setCodigo($codigoAdmissao);
-			$usuariosModel->setCargo($cargo);
-			$usuariosModel->setDataAdmissao($dataAdmissao);
-			$usuariosModel->setSalario($salario);
-			$usuariosModel->setStatus(status::ATIVO);
-			$usuariosModel->setDataCadastro(date('Y-m-d h:i:s'));
+			$usuariosModel->setId($id);
+			$usuariosModel->setGrupoFuncionario($grupo);
+			$usuariosModel->setEmail($email);
+			$usuariosModel->setLogin($login);
+		
+            
 
-
-			//FUNCIONARIO DAO
+			//USUARIO DAO
 			$this->load->dao('funcionarios/usuariosDao');
 			$usuariosDao = new usuariosDao();
 			echo $usuariosDao->atualizar($usuariosModel);
@@ -291,13 +215,13 @@ class gerenciar extends Controller{
 	 */
 	public function atualizarStatus()
 	{
-		$idFuncionario = intval($_POST['id']);
+		$idUsuario = intval($_POST['id']);
 		$status = filter_var($_POST['status']);
 
 		//FUNCIONARIO MODEL
 		$this->load->model('funcionarios/usuariosModel');
 		$usuariosModel = new usuariosModel();
-		$usuariosModel->setId( $idFuncionario );
+		$usuariosModel->setId( $idUsuario );
 		$usuariosModel->setStatus( status::getAttribute($status));
 
 		//FUNCIONARIO DAO

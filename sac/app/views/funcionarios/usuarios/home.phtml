@@ -33,7 +33,7 @@
                     $ativo = ($usu->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
                     $inativo = ($usu->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
 
-            $tbody .='  <tr id="'.$usu->getGrupoFuncionario()->getId().'">
+            $tbody .='  <tr id="'.$usu->getId().'">
                             <td>'.$usu->getGrupoFuncionario()->getNome().'</td>
                             <td>'.$usu->getFuncionario()->getNome().' '.$usu->getFuncionario()->getSobrenome().'</td>
                             <td>'.$usu->getEmail().'</td>
@@ -45,7 +45,7 @@
                                 </select>
                             </td>
                             <td>'
-                                .$template->btnEditar(URL.'funcionarios/usuarios/editar/'.$usu->getId())
+                                .$template->btnEditar(URL.'funcionarios/usuarios/gerenciar/editar/'.$usu->getId())
                                 .$template->btnExcluir("javascript:void(0)", $usu->getId(), status::EXCLUIDO).
                             '</td>
                         </tr>';
@@ -71,7 +71,7 @@
         table.$('select[name=status]').on('change',function(){
             var id = $(this).attr('id');
             var status = $(this).val();
-            $.post(url+'funcionarios/usuarios/atualizarStatus',{id:id,status:status},function(data){
+            $.post(url+'funcionarios/usuarios/gerenciar/atualizarStatus',{id:id,status:status},function(data){
                 console.log(data)
                 if(data == true)
                     messageDialog('Status atualizado','success',false,null);
@@ -87,7 +87,7 @@
             var status = $(this).data('value');
             var modalDelete = $('#modalDelete').modal('show')
             $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'funcionarios/gerenciar/excluir',{id:id,status:status},function(data){
+                $.post(url+'funcionarios/usuarios/gerenciar/excluir',{id:id,status:status},function(data){
                     console.log(data)
                     if(data == true){
                         $('#modalDelete').modal('hide');

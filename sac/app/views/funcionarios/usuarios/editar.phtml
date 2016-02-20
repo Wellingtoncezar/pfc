@@ -1,0 +1,50 @@
+<div class="container">
+    <?php
+        $btnVoltar = $template->btnVoltar(URL.'funcionarios/usuarios');
+        echo $template->actions_buttons($btnVoltar);
+    ?>
+    <div class="page-header">
+      <h1>Usuários <small>Editar </small></h1>
+    </div>
+    <form action="<?=URL?>funcionarios/usuarios/gerenciar/atualizar" method="post" id="form_usuarios">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dados Gerais</div>
+            <div class="panel-body">
+                 <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Grupo</span>
+                    <select name="grupo" id="grupo" class="form-control">
+                        <option selected="selected" disabled="disabled" value="">..Selecione..</option>
+                        <?php if(!empty($grupo_funcionarios)):?>
+                        <?php foreach ($grupo_funcionarios as $grupo_funcionarios):?>
+                        <option value="<?= $grupo_funcionarios->getId()?>" <?= ($grupo_funcionarios->getId()== $usuarios->getGrupoFuncionario()->getId())?'selected = "selected"':'' ?>><?= $grupo_funcionarios->getNome()?></option>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Email</span>
+                    <input type="text" class="form-control" placeholder="Email" name="email" value="<?=$usuarios->getEmail()?>">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Login</span>
+                    <input type="text" class="form-control" placeholder="Login" name="login"  value="<?=$usuarios->getLogin()?>">
+                </div>
+                 <input type="hidden" class="form-control" name="id"  value="<?=$usuarios->getId()?>">
+                <div class="btn-group pull-right" role="group">
+                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
+                </div>
+
+            </div>
+        </div>
+     </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<link href="<?=URL?>skin/js/croper/cropper.min.css" rel="stylesheet">
+<link href="<?=URL?>skin/js/croper/main.css" rel="stylesheet">
+<script src="<?=URL?>skin/js/croper/cropper.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskedinput.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/funcionarios/usuarios/editar.js"></script>
