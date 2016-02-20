@@ -36,6 +36,10 @@ class usuariosModel{
 	{
 		$this->grupoFuncionario = $grupoFuncionario;
 	}
+	public function setEmail ($email)
+	{
+		$this->email = $email;
+	}
 	public function setStatus($status)
 	{
 		$this->status = $status;
@@ -67,6 +71,11 @@ class usuariosModel{
 	{
 		return $this->grupoFuncionario;
 	}
+	public function getEmail()
+	{
+		return $this->email;
+	}
+
 	public function getStatus()
 	{
 		return $this->status;

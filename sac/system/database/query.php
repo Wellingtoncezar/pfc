@@ -5,7 +5,7 @@ class query{
 	private $sql;
 	public function __construct($sql = null)
 	{
-		$this->sql = htmlentities($sql);
+		$this->sql = ($sql);
 	}
 
 	

@@ -17,26 +17,34 @@ class usuariosDao extends Dao{
 	public function listar()
 	{
 		$this->load->model('funcionarios/usuariosModel');
+		$this->load->model('funcionarios/gruposFuncionariosModel');
+		$this->load->model('funcionarios/funcionariosModel');
 		$usuarios = Array();
 
 		$this->db->clear();
-		$this->db->setTabela('sys_usuarios');
-		$this->db->setCondicao(" status_usuario in('".status::ATIVO."','".status::INATIVO."') ");
-		$campos = array('id_funcionario','codigo_funcionario','foto_funcionario','nome_funcionario','sobrenome_funcionario','cargo_funcionario','cpf_funcionario','status_funcionario');
-		$this->db->select($campos);
+		$sql="select * from sys_usuarios as a inner join sys_usuarios_grupo as b on a.id_usuarios_grupo = b.id_usuarios_grupo inner join funcionarios as c on a.id_funcionario = c.id_funcionario where a.status_usuario <> '".status::EXCLUIDO."'"; 
+		$this->db->query($sql);
+
 		if($this->db->rowCount() > 0):
+
 			$result = $this->db->resultAll();
+
 			foreach ($result as $value)
 			{
 				$usuariosModel = new usuariosModel();
-				$usuariosModel->setId($value['id_funcionario']);
-				$usuariosModel->setFoto($value['foto_funcionario']);
-				$usuariosModel->setNome($value['nome_funcionario']);
-				$usuariosModel->setSobrenome($value['sobrenome_funcionario']);
-				$usuariosModel->setCpf($value['cpf_funcionario']);
-				$usuariosModel->setCodigo($value['codigo_funcionario']);
-				$usuariosModel->setCargo($value['cargo_funcionario']);
-				$usuariosModel->setStatus(status::getAttribute($value['status_funcionario']));
+				$gruposFuncionariosModel = new gruposFuncionariosModel();
+				$funcionariosModel = new funcionariosModel();
+				$usuariosModel->setId($value['id_usuario']);
+				$gruposFuncionariosModel->setId($value['id_usuarios_grupo']);
+				$gruposFuncionariosModel->setNome($value['nome_usuarios_grupo']);
+				$funcionariosModel->setId($value['id_funcionario']);
+				$funcionariosModel->setNome($value['nome_funcionario']);
+				$funcionariosModel->setSobrenome($value['sobrenome_funcionario']);
+                $usuariosModel->setGrupoFuncionario($gruposFuncionariosModel);
+				$usuariosModel->setFuncionario($funcionariosModel);
+				$usuariosModel->setLogin($value['login_usuario']);
+				$usuariosModel->setEmail($value['email_usuario']);
+				$usuariosModel->setStatus(status::getAttribute($value['status_usuario']));
 				array_push($usuarios, $usuariosModel);
 				unset($usuariosModel);
 			}
@@ -159,26 +167,34 @@ class usuariosDao extends Dao{
 
 
 	/**
-	 * Insere novos funcionários
+	 * Insere novos usuarios
 	 * @return boolean, json
 	 */
- 	public function inserir(usuariosModel $funcionario)
+ 	public function inserir(usuariosModel $usuarios)
  	{
-		if($funcionario->getFoto() != '')
+ 		$senha=bcrypt::hash( $usuarios->getSenha());
+		$data = array(
+ 			'id_funcionario' => $usuarios->getFuncionario(),
+ 			'id_usuarios_grupo' => $usuarios->getGrupoFuncionario(),
+ 			'email_usuario' => $usuarios->getEmail(),
+ 			'login_usuario' => $usuarios->getLogin(),
+ 			'senha_usuario' => $senha,
+ 			'status_usuario' => $usuarios->getStatus(),
+ 			'data_criacao_usuario' => $usuarios->getDataCadastro()
+ 		);
+
+
+
+ 		$this->db->clear();
+		$this->db->setTabela('sys_usuarios');
+		$this->db->insert($data);
+		if($this->db->rowCount() > 0)
 		{
-	 		//nome da imagem
-			$char = new caracteres($funcionario->getNome());
-			$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
-			
-			$upload = $this->uploadFoto($this->nomeArquivoFoto, $funcionario->getFoto()); //upload da foto
-			if($upload)
-				return $this->insertData($funcionario);
-			else
-				return $upload;
-		}else
-		{
-			return $this->insertData($funcionario);
-		}
+			return true;
+ 		}else
+ 		{
+ 			return $this->db->getError();
+ 		}
 
 	}
 

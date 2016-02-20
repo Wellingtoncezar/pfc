@@ -2,6 +2,8 @@
     <?php
         $btnCadastrar = $template->btnCadastrar(URL.'funcionarios/usuarios/gerenciar/cadastrar');
         echo $template->actions_buttons($btnCadastrar);
+
+
     ?>
     <div class="page-header">
       <h1>Usuários</h1>
@@ -9,46 +11,42 @@
     <div class="middle-content">
             <?php
             $thead = '  <tr>
-                            <th width="100">Código</th>
-                            <th width="160">Funcionario</th>
+                            <th width="100">Grupo</th>
+                            <th width="160">Funcionário</th>
                             <th width="160">Email</th>
                             <th width="160">Login</th>
-                            <th width="120">Grupo</th>
                             <th width="100">Status (Ativo/Inativo)</th>
                             <th width="180">Ações</th>
                         </tr>';
             $tfoot = '  <tr>
-                            <th>Código</th>
+                            <th>Grupo</th>
                             <th>Funcionario</th>
                             <th>Email</th>
-                            <th>Nome</th>
                             <th>Login</th>
-                            <th>Grupo</th>
                             <th>Status(Ativo/Inativo)</th>
                             <th>Ações</th>
                         </tr>';  
-            if(!empty($funcionarios)):
+            if(!empty($usuarios)):
                 $tbody = '';
-                foreach ($funcionarios as $func):
+                foreach ($usuarios as $usu):
 
-                    $ativo = ($func->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
-                    $inativo = ($func->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
+                    $ativo = ($usu->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
+                    $inativo = ($usu->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
 
-            $tbody .='  <tr id="'.$func->getId().'">
-                            <td>'.$func->getCodigo().'</td>
-                            <td>'.$func->getFuncionario().'</td>
-                            <td>'.$func->getEmail().'</td>
-                            <td>'.$func->getLogin().'</td>
-                            <td>'.$func->getGrupo().'</td>
+            $tbody .='  <tr id="'.$usu->getGrupoFuncionario()->getId().'">
+                            <td>'.$usu->getGrupoFuncionario()->getNome().'</td>
+                            <td>'.$usu->getFuncionario()->getNome().' '.$usu->getFuncionario()->getSobrenome().'</td>
+                            <td>'.$usu->getEmail().'</td>
+                            <td>'.$usu->getLogin().'</td>
                             <td>
-                                <select name="status" id="'.$func->getId().'" class="statusSelect">
+                                <select name="status" id="'.$usu->getId().'" class="statusSelect">
                                     <option value="'.status::ATIVO.'" class="active" '.$ativo.'>Ativo</option>
                                     <option value="'.status::INATIVO.'" class="inactive" '.$inativo.'>Inativo</option>
                                 </select>
                             </td>
                             <td>'
-                                .$template->btnEditar(URL.'funcionarios/usuarios/editar/'.$func->getId())
-                                .$template->btnExcluir("javascript:void(0)", $func->getId(), status::EXCLUIDO).
+                                .$template->btnEditar(URL.'funcionarios/usuarios/editar/'.$usu->getId())
+                                .$template->btnExcluir("javascript:void(0)", $usu->getId(), status::EXCLUIDO).
                             '</td>
                         </tr>';
                 endforeach;
