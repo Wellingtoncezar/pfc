@@ -25,8 +25,7 @@ class gerenciar extends Controller{
 		$saveRouter->saveAction();
 		$data = array(
 			'titlePage' => 'Funcionários',
-			'template' => new template()
-
+			'template' => new templateFactory()
 		);
 
 		$this->load->dao('funcionarios/funcionariosDao');
@@ -50,7 +49,7 @@ class gerenciar extends Controller{
 		$saveRouter->saveAction();
 		$data = array(
 			'titlePage' => 'Cadastrar funcionário',
-			'template' => new template()
+			'template' => new templateFactory()
 		);
 		
 		$this->load->view('includes/header',$data);
@@ -69,7 +68,7 @@ class gerenciar extends Controller{
 		$saveRouter->saveAction();
 		$data = array(
 			'titlePage' => 'Editar funcionário',
-			'template' => new template()
+			'template' => new templateFactory()
 		);
 		//ID
 		$idFuncionario = intval($this->url->getSegment(3));

@@ -23,7 +23,8 @@ class agenda extends Controller{
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
 		$data = array(
-			'titlePage' => 'Agenda de fornecedores'
+			'titlePage' => 'Agenda de fornecedores',
+			'template' => new templateFactory()
 		);
 
 		

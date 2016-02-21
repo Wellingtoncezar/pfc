@@ -26,7 +26,7 @@ class gerenciar extends Controller{
 
 		$data = array(
 			'titlePage' => 'Fornecedores',
-			'template' => new template()
+			'template' => new templateFactory()
 		);
 
 		$this->load->dao('fornecedores/fornecedoresDao');
@@ -47,7 +47,7 @@ class gerenciar extends Controller{
 	{
 		$data = array(
 			'titlePage' => 'Cadastrar fornecedores',
-			'template' => new template()
+			'template' => new templateFactory()
 		);
 		
 		$this->load->view('includes/header',$data);
@@ -63,7 +63,7 @@ class gerenciar extends Controller{
 	{
 		$data = array(
 			'titlePage' => 'Editar fornecedores',
-			'template' => new template()
+			'template' => new templateFactory()
 		);
 		//ID
 		$idFornecedor = intval($this->url->getSegment(3));

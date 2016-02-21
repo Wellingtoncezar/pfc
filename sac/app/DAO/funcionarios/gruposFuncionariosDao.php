@@ -58,19 +58,29 @@ class gruposFuncionariosDao extends Dao{
 	*/
 	public function listar(){
 		$this->db->clear();
-		$this->db->setTabela('sys_usuarios_grupo');
+		$this->db->setTabela('sys_usuarios_grupo AS A, nivel_acesso AS B');
+		$this->db->setCondicao("A.id_nivel_acesso = B.id_nivel_acesso");
 		$this->db->select();
 		$gruposFuncionarios = array();
 		if($this->db->rowCount() > 0)
 		{
 			$grupos = $this->db->resultAll();
 			$this->load->model('funcionarios/gruposFuncionariosModel');
+			$this->load->model('configuracoes/niveis_acesso/niveisAcessoModel');
 			foreach ($grupos as $gr)
 			{
 				$gruposFuncionariosModel = new gruposFuncionariosModel();
 				$gruposFuncionariosModel->setId($gr['id_usuarios_grupo']);
 				$gruposFuncionariosModel->setNome($gr['nome_usuarios_grupo']);
 				$gruposFuncionariosModel->setPermissao($gr['permissao']);
+
+				$niveisAcessoModel = new niveisAcessoModel();
+				$niveisAcessoModel->setId($gr['id_nivel_acesso']);
+				$niveisAcessoModel->setNome($gr['nome_nivel_acesso']);
+				$niveisAcessoModel->setIndice($gr['index_access_db_name']);
+
+				$gruposFuncionariosModel->setNivel($niveisAcessoModel);
+				
 				array_push($gruposFuncionarios, $gruposFuncionariosModel);
 				unset($gruposFuncionariosModel);
 			}

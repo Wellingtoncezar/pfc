@@ -30,7 +30,7 @@ class gerenciar extends Controller{
 		// $checkPermissao->checkPermissaoPagina();
 		$data = array(
 			'titlePage' => 'Grupos de Permissões de Funcionários',
-			'template' => new template()
+			'template' => new templateFactory()
 		);
 
 		//grupos de usuarios
@@ -54,12 +54,14 @@ class gerenciar extends Controller{
 		// $checkPermissao->checkPermissaoPagina();
 		$data = array(
 			'titlePage' => 'Cadastrar Grupos de Permissões de Usuários',
+			'template' => new templateFactory()
 		);
 
 		$this->load->dao('configuracoes/modulosDao');
 		$modulosDao = new modulosDao();
 
 		$data['modulos'] = $modulosDao->listar(0);
+
 		
 		//modulos
 		//$modulos->setStatus('"Ativo"');
@@ -72,22 +74,6 @@ class gerenciar extends Controller{
 		$niveisAcessoDao = new niveisAcessoDao();
 		$data['niveis'] = $niveisAcessoDao->getNivelAcesso($tipo, 'index_access_db_name');
 		
-
-		// $permissao = "{\"fornecedores\":{\"submodulos\":{}},\"produtos\":{\"submodulos\":{}},\"estoque\":{\"submodulos\":{}},\"caixa\":{\"submodulos\":{}}}";
-		// $permissao = json_decode($permissao,true);
-		// echo '<pre>';
-		// print_r($permissao);
-		// echo '</pre>';
-
-		// echo '<pre>';
-		// print_r($data['modulos']);
-		// // foreach ($data['modulos'] as $mod){
-		// // 	if(isset($permissao[$mod->getUrl()]))
-		// // 		echo $mod->getUrl();
-		// // }
-		// echo '</pre>';
-
-
 		$this->load->view('includes/header',$data);
 		$this->load->view('funcionarios/grupo_funcionarios/cadastrar',$data);
 		$this->load->view('includes/footer',$data);
@@ -122,6 +108,7 @@ class gerenciar extends Controller{
 		// $checkPermissao->checkPermissaoPagina();
 		$data = array(
 			'titlePage' => 'Editar Grupo de Permissões para Usuários',
+			'template' => new templateFactory()
 		);
 
 
@@ -129,15 +116,14 @@ class gerenciar extends Controller{
 		//modulos
 		$this->load->dao('configuracoes/modulosDao');
 		$modulosDao = new modulosDao();
-		//$modulos->setStatus('"Ativo"');
-		//$modulos->setStatusSelecao('"Ativo"');
 		$data['modulos'] = $modulosDao->listar(0);
 
-		$url = new url();
-		$id = intval($url->getSegment(4));
-		$this->load->dao('funcionarios/gruposFuncionariosDao');
-		$grupo = new gruposFuncionariosDao();
-		$data['grupoFuncionario'] = $grupo->getGrupoFuncionario($id);
+		$tipo = $this->url->getSegment(4);
+		
+		$tipo = filter_var($tipo);
+		$this->load->dao('configuracoes/niveisAcessoDao');
+		$niveisAcessoDao = new niveisAcessoDao();
+		$data['niveis'] = $niveisAcessoDao->getNivelAcesso($tipo, 'index_access_db_name');
 
 
 		$this->load->view('includes/header',$data);

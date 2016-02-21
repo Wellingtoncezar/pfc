@@ -21,11 +21,11 @@
                 $tbody .='  <tr id="'.$grupo->getId().'">
                                 <td>'.$grupo->getNome().'</td>
                                 <td>
-                                    '.$template->btnEditar(URL.'configuracoes/niveis_acesso/gerenciar/editar/'.$grupo->getId()).
+                                    '.$template->getButton('editar',array('href'=> URL.'configuracoes/niveis_acesso/gerenciar/editar/'.$grupo->getId())).
                                 '</td>
                             </tr>';
             endforeach;
-            echo $template->tabela($thead, $tfoot, $tbody);
+            echo $template->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
         else:
             echo '<h2>Não há registros cadastrados</h2>';
         endif;

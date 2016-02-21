@@ -1,7 +1,8 @@
 <div class="container">
     <?php
-        $btnCadastrar = $template->btnCadastrar(URL.'funcionarios/gerenciar/cadastrar');
-        echo $template->actions_buttons($btnCadastrar);
+
+        $btnCadastrar = $template->getButton("cadastrar",array('href'=>URL.'funcionarios/gerenciar/cadastrar'));
+        echo $template->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
     <div class="page-header">
       <h1>Funcionários</h1>
@@ -33,7 +34,7 @@
                     $foto = $func->getFoto() != '' ? URL.'skin/uploads/funcionarios/p/'.$func->getFoto() : URL.'skin/img/imagens/semfoto.jpg';
                     $ativo = ($func->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
                     $inativo = ($func->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
-
+                    
             $tbody .='  <tr id="'.$func->getId().'">
                             <td>'.$func->getCodigo().'</td>
                             <td><img src="'.$foto.'" style=" width: 60px; height: 60px;"></td>
@@ -47,12 +48,12 @@
                                 </select>
                             </td>
                             <td>'
-                                .$template->btnEditar(URL.'funcionarios/gerenciar/editar/'.$func->getId())
-                                .$template->btnExcluir("javascript:void(0)", $func->getId(), status::EXCLUIDO).
+                                .$template->getButton('editar',array('href'=> URL.'funcionarios/gerenciar/editar/'.$func->getId()))
+                                .$template->getButton('excluir', array('id'=> $func->getId())).
                             '</td>
                         </tr>';
                 endforeach;
-                echo $template->tabela($thead, $tfoot, $tbody);
+                echo $template->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
             else:
                 echo '<h2>Não há registros cadastrados</h2>';
             endif;

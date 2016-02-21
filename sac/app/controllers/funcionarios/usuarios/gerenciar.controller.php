@@ -25,7 +25,7 @@ class gerenciar extends Controller{
 		$saveRouter->saveAction();
 		$data = array(
 			'titlePage' => 'Usuários',
-			'template' => new template()
+			'template' => new templateFactory()
 
 		);
 
@@ -50,7 +50,7 @@ class gerenciar extends Controller{
 		$saveRouter->saveAction();
 		$data = array(
 			'titlePage' => 'Cadastrar Usuários',
-			'template' => new template()
+			'template' => new templateFactory()
 		);
 		$this->load->dao('funcionarios/funcionariosDao');
 		$funcionarios = new funcionariosDao;
@@ -76,7 +76,7 @@ class gerenciar extends Controller{
 		$saveRouter->saveAction();
 		$data = array(
 			'titlePage' => 'Editar Usuários',
-			'template' => new template()
+			'template' => new templateFactory()
 		);
 		//ID
 		$idUsuario = intval($this->url->getSegment(4));
@@ -130,7 +130,7 @@ class gerenciar extends Controller{
 		
 		$this->dataValidator->set('Grupo', $grupo, 'grupo')->is_required();
 		$this->dataValidator->set('Funcionario', $funcionario, 'funcionario')->is_required();
-		$this->dataValidator->set('Email', $email, 'email')->is_required();
+		$this->dataValidator->set('Email', $email, 'email')->is_required()->is_email();
 		$this->dataValidator->set('Login', $login, 'login')->is_required();
 		$this->dataValidator->set('Senha', $senha, 'senha')->is_required();
 		

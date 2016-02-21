@@ -32,7 +32,7 @@ class gerenciar extends Controller{
 
 		$data = array(
 			'titulo' => 'Níveis de acesso ao sistema',
-			'template' => new template()
+			'template' => new templateFactory()
 		);
 
 		$this->load->dao('configuracoes/niveisAcessoDao');

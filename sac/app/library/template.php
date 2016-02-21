@@ -1,7 +1,4 @@
 <?php
-/**
-*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
-*/
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class template extends Library{
 	private $_modulos = array();
