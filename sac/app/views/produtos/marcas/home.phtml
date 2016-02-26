@@ -1,6 +1,6 @@
 <div class="actions-buttons">
     <div class="container">
-        <a class="btn btn-primary pull-right btn_adicionar" href="<?=URL?>produtos/marca/cadastrar" role="button" id="btn_adicionar"><span class="glyphicon glyphicon-plus"></span>Cadastrar</a>
+        <a class="btn btn-primary pull-right btn_adicionar" href="<?=URL?>produtos/marcas/gerenciar/cadastrar" role="button" id="btn_adicionar"><span class="glyphicon glyphicon-plus"></span>Cadastrar</a>
     </div>
 </div>
 
@@ -27,14 +27,14 @@
             </tfoot>
             <tbody>
             <?php
-            if(!empty($Marcas)):
-                foreach ($Marcas as $marc):
+            if(!empty($marcas)):
+                foreach ($marcas as $marc):
             ?>
                 <tr id="<?=$marc->getId()?>">
-                    <td><?=$marc->getCodigo()?></td>
+                    <td><?=$marc->getId()?></td>
                     <td><?=$marc->getNome()?></td>
                     <td>
-                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/marca/editar/<?=$marc->getId()?>" role="button" id-record="<?=$marc->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
+                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/marcas/gerenciar/editar/<?=$marc->getId()?>" role="button" id-record="<?=$marc->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
                         <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$marc->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span>Excluir</a>
                     </td>
                 </tr>

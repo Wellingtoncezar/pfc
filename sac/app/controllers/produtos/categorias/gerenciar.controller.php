@@ -3,7 +3,7 @@
 *@author Wellington cezar, Diego Hernandes
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class categoria extends Controller{
+class gerenciar extends Controller{
 	public function __construct(){
 		parent::__construct();
 
@@ -21,7 +21,8 @@ class categoria extends Controller{
 	public function index()
 	{
 		$data = array(
-			'titlePage' => 'Gerenciar Categoria'
+			'titlePage' => 'Gerenciar Categoria',
+			'template' => new templateFactory()
 		);
 
 		$this->load->dao('produtos/categoriasDao');
@@ -29,7 +30,7 @@ class categoria extends Controller{
 		$data['categorias'] = $categorias->listar();
 
 		$this->load->view('includes/header',$data);
-		$this->load->view('categorias/home',$data);
+		$this->load->view('produtos/categorias/home',$data);
 		$this->load->view('includes/footer',$data);
 
 	}
@@ -41,11 +42,12 @@ class categoria extends Controller{
 	public function cadastrar()
 	{
 		$data = array(
-			'titlePage' => 'Cadastrar categoria'
+			'titlePage' => 'Cadastrar categoria',
+			'template' => new templateFactory()
 		);
 		
 		$this->load->view('includes/header',$data);
-		$this->load->view('categorias/cadastro',$data);
+		$this->load->view('produtos/categorias/cadastro',$data);
 		$this->load->view('includes/footer',$data);
 	}
 
@@ -56,10 +58,11 @@ class categoria extends Controller{
 	public function editar()
 	{
 		$data = array(
-			'titlePage' => 'Editar categoria'
+			'titlePage' => 'Editar categoria',
+			'template' => new templateFactory()
 		);
 		//ID
-		$idFuncionario = intval($this->url->getSegment(3));
+		$idCategoria = intval($this->url->getSegment(4));
 		
 		//FUNCIONARIO MODEL
 		$this->load->model('produtos/categoriasModel');
@@ -67,16 +70,14 @@ class categoria extends Controller{
 		$categoriasModel->setId($idCategoria);
 
 		//FUNCIONARIO DAO
-		$this->load->dao('categorias/categoriasDao');
+		$this->load->dao('produtos/categoriasDao');
 		$categoriasDao = new categoriasDao();
-		$data['funcionario'] = $categoriasDao->consultar($categoriasModel);
+		$data['categoria'] = $categoriasDao->consultar($categoriasModel);
 		
-		//DATAFORMAT
-		$this->load->library('dataFormat');
-		$data['dataFormat'] = $this->dataFormat;
+
 
 		$this->load->view('includes/header',$data);
-		$this->load->view('categorias/editar',$data);
+		$this->load->view('produtos/categorias/editar',$data);
 		$this->load->view('includes/footer',$data);
 	}
 
@@ -102,8 +103,9 @@ class categoria extends Controller{
 		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
 
 		
+		if ($this->dataValidator->validate())
+		{
 
-		
 			//CATEGORIA
 			$this->load->model('produtos/categoriasModel');
 			$categoriasModel = new categoriasModel();
@@ -146,21 +148,22 @@ class categoria extends Controller{
 		
 
 		
-
+		if ($this->dataValidator->validate())
+		{
 		
 			//CATEGORIA
 			$this->load->model('produtos/categoriasModel');
-			$categoriasDao = new categoriasDao();
-			$categoriasDao->setId($idCategoria);
-			$categoriasDao->setNome($nome);
-			$categoriasDao->setStatus(status::ATIVO);
-			$categoriasDao->setDataCadastro(date('Y-m-d h:i:s'));
+			$categoriasModel = new categoriasModel();
+			$categoriasModel->setId($idCategoria);
+			$categoriasModel->setNome($nome);
+			$categoriasModel->setStatus(status::ATIVO);
+			$categoriasModel->setDataCadastro(date('Y-m-d h:i:s'));
 
 
 			//CATEGORIA DAO
 			$this->load->dao('produtos/categoriasDao');
 			$categoriasDao = new categoriasDao();
-			echo $categoriasDao->atualizar($categoriasDao);
+			echo $categoriasDao->atualizar($categoriasModel);
 		}else
 	    {
 			$todos_erros = $this->dataValidator->get_errors();

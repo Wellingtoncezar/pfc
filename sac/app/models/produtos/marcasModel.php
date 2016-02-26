@@ -6,6 +6,7 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class marcasModel{
 	private $id;
 	private $nome;
+	private $status;
 	private $dataCadastro;
 	
 
@@ -18,6 +19,10 @@ class marcasModel{
  	public function setNome($nome)
 	{
 		$this->nome = $nome;
+	}
+	public function setStatus($status)
+	{
+		$this->status = $status;
 	}
 	public function setDataCadastro($dataCadastro)
 	{
@@ -32,6 +37,10 @@ class marcasModel{
  	public function getNome()
 	{
 		return $this->nome;
+	}
+	public function getStatus()
+	{
+		return $this->status;
 	}
 	public function getDataCadastro()
 	{

@@ -1,10 +1,9 @@
+<div class="container">
 <div class="actions-buttons">
     <div class="container">
-        <a class="btn btn-primary pull-right btn_adicionar" href="<?=URL?>produtos/categoria/cadastrar" role="button" id="btn_adicionar"><span class="glyphicon glyphicon-plus"></span>Cadastrar</a>
+        <a class="btn btn-primary pull-right btn_adicionar" href="<?=URL?>produtos/categorias/gerenciar/cadastrar" role="button" id="btn_adicionar"><span class="glyphicon glyphicon-plus"></span>Cadastrar</a>
     </div>
 </div>
-
-<div class="container">
     <div class="page-header">
       <h1>Categorias</h1>
     </div>
@@ -27,14 +26,14 @@
             </tfoot>
             <tbody>
             <?php
-            if(!empty($Categorias)):
-                foreach ($Categorias as $cat):
+            if(!empty($categorias)):
+                foreach ($categorias as $cat):
             ?>
                 <tr id="<?=$cat->getId()?>">
-                    <td><?=$cat->getCodigo()?></td>
+                    <td><?=$cat->getId()?></td>
                     <td><?=$cat->getNome()?></td>
                     <td>
-                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/categoria/editar/<?=$cat->getId()?>" role="button" id-record="<?=$cat->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
+                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/categorias/gerenciar/editar/<?=$cat->getId()?>" role="button" id-record="<?=$cat->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
                         <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$cat->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span>Excluir</a>
                     </td>
                 </tr>

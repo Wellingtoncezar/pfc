@@ -3,7 +3,7 @@
 *@author Wellington cezar, Diego Hernandes
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class marca extends Controller{
+class gerenciar extends Controller{
 	public function __construct(){
 		parent::__construct();
 
@@ -21,7 +21,8 @@ class marca extends Controller{
 	public function index()
 	{
 		$data = array(
-			'titlePage' => 'Gerenciar Marca'
+			'titlePage' => 'Gerenciar Marca',
+			'template' => new templateFactory()
 		);
 
 		$this->load->dao('produtos/marcasDao');
@@ -56,7 +57,8 @@ class marca extends Controller{
 	public function editar()
 	{
 		$data = array(
-			'titlePage' => 'Editar marca'
+			'titlePage' => 'Editar marca',
+			'template' => new templateFactory()
 		);
 		//ID
 		$idMarcas = intval($this->url->getSegment(3));
@@ -102,7 +104,8 @@ class marca extends Controller{
 		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
 
 		
-
+		if ($this->dataValidator->validate())
+		{
 		
 			//MARCAS
 			$this->load->model('produtos/marcasModel');
@@ -146,21 +149,22 @@ class marca extends Controller{
 		
 
 		
-
+		if ($this->dataValidator->validate())
+		{
 		
 			//CATEGORIA
 			$this->load->model('produtos/marcasModel');
-			$marcasDao = new marcasDao();
-			$marcasDao->setId($idMarcas);
-			$marcasDao->setNome($nome);
-			$marcasDao->setStatus(status::ATIVO);
-			$marcasDao->setDataCadastro(date('Y-m-d h:i:s'));
+			$marcasModel = new marcasModel();
+			$marcasModel->setId($idMarcas);
+			$marcasModel->setNome($nome);
+			$marcasModel->setStatus(status::ATIVO);
+			$marcasModel->setDataCadastro(date('Y-m-d h:i:s'));
 
 
 			//CATEGORIA DAO
 			$this->load->dao('produtos/marcasDao');
 			$marcasDao = new marcasDao();
-			echo $marcasDao->atualizar($marcasDao);
+			echo $marcasDao->atualizar($marcasModel);
 		}else
 	    {
 			$todos_erros = $this->dataValidator->get_errors();
