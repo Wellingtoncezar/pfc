@@ -21,7 +21,6 @@ class _initialize extends Router{
 	public function __construct(){
 		parent::__construct();
 		
-		$this->rout = '';
 		$this->explodeUri();
 
 		/*

@@ -1,9 +1,15 @@
 <?php
+/**
+* Classe de instancialização dos eventos.
+* @author Wellington cézar
+* @version 2.3
+*
+*/
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class db extends activeRecord{
 	private $res;
 	private $pdo = null;
-	private $statement;
+	private $statement = null;
 	private $sql;
 	private $error;
 	private $errorCode;
@@ -61,7 +67,7 @@ class db extends activeRecord{
 		$this->sql = $this->res->getQuery();
 		$this->errorCode = 'NULLINSERT';
 		$this->errorCodeName = 'inserir';
-		return $this->prepareQuery();
+		return $this->prepareQuery($this->sql);
 	}
 
 
@@ -85,7 +91,7 @@ class db extends activeRecord{
 		$this->sql = $this->res->getQuery();
 		$this->errorCode = 'NULLUPDATE';
 		$this->errorCodeName = 'editar';
-		return $this->prepareQuery();
+		return $this->prepareQuery($this->sql);
 	}
 
 
@@ -106,7 +112,7 @@ class db extends activeRecord{
 		$this->sql = $this->res->getQuery();
 		$this->errorCode = 'NULLSELECT';
 		$this->errorCodeName = 'selecionar';
-		return $this->prepareQuery();
+		return $this->prepareQuery($this->sql);
 	}
 
 
@@ -116,7 +122,7 @@ class db extends activeRecord{
 		$this->sql = $this->res->getQuery();
 		$this->errorCode = 'NULLDELETE';
 		$this->errorCodeName = 'excluir';
-		return $this->prepareQuery();
+		return $this->prepareQuery($this->sql);
 	}
 
 
@@ -125,11 +131,11 @@ class db extends activeRecord{
 		if($sql == null)
 			die('Informe o comando sql corretamente.');
 		else{
-			$this->res = new query($sql);
+			$this->res = new query($this->getElementQuery(), $sql);
 			$this->sql = $this->res->getQuery();
 			$this->errorCode = 'NULLQUERY';
 			$this->errorCodeName = 'query';
-			return $this->prepareQuery();
+			return $this->prepareQuery($this->sql);
 		}
 	}
 
@@ -205,7 +211,12 @@ class db extends activeRecord{
 
 	public function getError()
 	{
-		return $this->error->getMensagemErro($this->errorCode, $this->errorCodeName);
+		return $this->error->getMensagemErro($this->errorCode, $this->errorCodeName);	
+	}
+
+	public function getErrorCode()
+	{
+		return $this->errorCode;	
 	}
 
 	

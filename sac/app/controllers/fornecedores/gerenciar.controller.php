@@ -79,7 +79,7 @@ class gerenciar extends Controller{
 		$data['fornecedor'] = $fornecedoresDao->consultar($fornecedoresModel);
 		
 		//DATAFORMAT
-		$this->load->library('dataFormat');
+		$this->load->library('dataFormat', null, true);
 		$data['dataFormat'] = $this->dataFormat;
 
 		$this->load->view('includes/header',$data);
@@ -127,7 +127,7 @@ class gerenciar extends Controller{
 
 
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator', null, true);
 		
 		$this->dataValidator->set('Razao Social', $razaoSocial, 'razao_social')->is_required()->min_length(2);
 		$this->dataValidator->set('Nome Fantasia', $nomeFantasia, 'nome_fantasia')->is_required()->min_length(2);
@@ -186,7 +186,7 @@ class gerenciar extends Controller{
 			
 
 			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat');
+			$this->load->library('dataFormat', null, true);
 			$data_visita = $this->dataFormat->formatar($data_visita,'data','banco');
 
 
@@ -263,7 +263,7 @@ class gerenciar extends Controller{
 
 
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator', null, true);
 		
 		$this->dataValidator->set('Razao Social', $razaoSocial, 'razao_social')->is_required()->min_length(2);
 		$this->dataValidator->set('Nome Fantasia', $nomeFantasia, 'nome_fantasia')->is_required()->min_length(2);
@@ -328,7 +328,7 @@ class gerenciar extends Controller{
 
 
 			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat');
+			$this->load->library('dataFormat', null, true);
 			$data_visita = $this->dataFormat->formatar($data_visita,'data','banco');
 
 

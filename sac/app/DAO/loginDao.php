@@ -3,41 +3,14 @@
 *@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
 */
 if(!defined('URL')) die('Acesso negado');
-class loginModel extends Load{
+class loginDao extends Dao{
 	private $error = array();
 	public function __construct(){
 		parent::__construct();
 	}
 
-
-	/**
-	*Logar
-	*@return boolean | string
-	* Validação do login e captcha
-	*/
-	public function logar($login,$senha,$captcha)
-	{
-		if($this->validForm($login,$senha) == TRUE)
-		{
-			if($_SESSION['ntentativaLogin'] >=5)
-			{
-			    if (empty($_SESSION['captcha']) || trim(strtolower($captcha)) != $_SESSION['captcha']) 
-			    {
-			    	$this->error = array(
-						'error'=>'Código incorreto',
-						'captcha' => TRUE
-					);
-					return json_encode($this->error);
-			    }else
-			    {
-			    	return $this->validLogin($login, $senha);
-			    }
-			}else
-				return $this->validLogin($login,$senha);
-		}else
-			return json_encode($this->error);
-		
-	}
+	
+	
 
 
 	/**
@@ -45,28 +18,28 @@ class loginModel extends Load{
 	*@return boolean | string
 	* Validação do login e senha
 	*/
-	private function validLogin($login, $senha){
-		$this->clear();
-		$this->setTabela('usuarios_adm');
-		$this->setCondicao('login_usuario = "'.$login.'" AND status_usuario = "Ativo"');
-		$this->select(array('*','AES_DECRYPT(senha_usuario,"'.$login.'") AS senha_usuario'));
-		$res = $this->result();
+	public function validLogin(usuariosModel $usuariosModel){
+		$this->db->clear();
+		$this->db->setTabela('sys_usuarios as B, funcionarios as B');
+		$this->db->setCondicao('A.login_usuario = "'.$usuariosModel->getLogin().'" AND A.status_usuario = "'.status::ATIVO.'"');
+		$this->db->select();
+		$res = $this->db->result();
 
 		//echo $res['senha_usuario'];
 
 		if($res != FALSE)
 		{
-			if(Bcrypt::check($senha,$res['senha_usuario']))
+			if(Bcrypt::check($usuariosModel->getSenha(),$res['senha_usuario']))
 			{
 				unset($_SESSION['ntentativaLogin']);
 				$_SESSION['login_adm']['id'] = $res['id_usuario'];
-				$_SESSION['login_adm']['nome'] = $res['nome_usuario'];
-				$_SESSION['login_adm']['sobrenome'] = $res['sobrenome_usuario'];
+				//$_SESSION['login_adm']['nome'] = $res['nome_usuario'];
+				//$_SESSION['login_adm']['sobrenome'] = $res['sobrenome_usuario'];
 				$_SESSION['login_adm']['email'] = $res['email_usuario'];
 				$_SESSION['login_adm']['login'] = $res['login_usuario'];
-				$_SESSION['login_adm']['permissao'] = $res['permissao_usuario'];
-				$_SESSION['login_adm']['foto'] = $res['foto_usuario'];
-				$_SESSION['login_adm']['listaPermissao'] = '';
+				//$_SESSION['login_adm']['permissao'] = $res['permissao_usuario'];
+				//$_SESSION['login_adm']['foto'] = $res['foto_usuario'];
+				//$_SESSION['login_adm']['listaPermissao'] = '';
 				
 				if($res['permissao_usuario'] != 'Administrador')
 				{
@@ -149,28 +122,7 @@ class loginModel extends Load{
 	}
 
 
-	/**
-	*validForm
-	*@return boolean | string
-	* Validação dos campos formulário
-	*/
-	private function validForm($login, $senha)
-	{
-		$valid = new validate();
-		if(!$valid->string($login))
-		{
-			$this->error['campo'] = 'login';
-			$this->error['error'] = 'Informe o seu login de acesso';
-			return FALSE;
-		}else
-		if(!$valid->string($senha))
-		{
-			$this->error['campo'] = 'senha';
-			$this->error['error'] = 'Informe a senha';
-			return FALSE;
-		}else
-			return TRUE;
-	}
+	
 
 	/**
 	*Retorna o ip do usuário

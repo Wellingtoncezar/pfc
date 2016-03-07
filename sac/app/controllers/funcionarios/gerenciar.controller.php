@@ -84,7 +84,7 @@ class gerenciar extends Controller{
 		$data['funcionario'] = $funcionariosDao->consultar($funcionariosModel);
 		
 		//DATAFORMAT
-		$this->load->library('dataFormat');
+		$this->load->library('dataFormat',null,true);
 		$data['dataFormat'] = $this->dataFormat;
 
 		$this->load->view('includes/header',$data);
@@ -136,7 +136,7 @@ class gerenciar extends Controller{
 
 
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator', null, true);
 		
 		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
 		$this->dataValidator->set('Sobrenome', $sobrenome, 'sobrenome')->is_required()->min_length(2);
@@ -195,7 +195,7 @@ class gerenciar extends Controller{
 			
 
 			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat');
+			$this->load->library('dataFormat',null, true);
 			$dataNascimento = $this->dataFormat->formatar($dataNascimento,'data','banco');
 			$dataAdmissao = $this->dataFormat->formatar($dataAdmissao,'data','banco');
 			$salario = $this->dataFormat->formatar($salario,'decimal','banco');
@@ -282,7 +282,7 @@ class gerenciar extends Controller{
 
 
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator', null, true);
 		
 		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
 		$this->dataValidator->set('Sobrenome', $sobrenome, 'sobrenome')->is_required()->min_length(2);
@@ -347,7 +347,7 @@ class gerenciar extends Controller{
 			
 
 			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat');
+			$this->load->library('dataFormat', null,true);
 			$dataNascimento = $this->dataFormat->formatar($dataNascimento,'data','banco');
 			$dataAdmissao = $this->dataFormat->formatar($dataAdmissao,'data','banco');
 			$salario = $this->dataFormat->formatar($salario,'decimal','banco');

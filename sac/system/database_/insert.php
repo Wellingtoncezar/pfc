@@ -8,34 +8,19 @@
 *
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class insert extends error_db{
-	private $rows_affected;
-	private $pdo;
-	private $statement;
+class insert{
+	private $paramArray;
 	private $sql;
-	private $error;
-	private $ultimoId;
+	public function __construct($elements)
+	{
 
-	public function __construct($pdo,$table,$value)
-	{
-		parent::__construct();
-		$this->pdo = $pdo;
-		$this->insert($table,$value);
-	}
-
-	public function __destruct()
-	{
-		$this->statement->closeCursor();
-	}
-	public function insert($table, $value)
-	{
 		$campos='';
 		$valores = '';
 		$param = '';
-		$n = count($value);
+		$n = count($elements['valores']);
 		$i = 0;
 
-		foreach($value AS $key => $val)
+		foreach($elements['valores'] AS $key => $val)
 		{
 			$key = trim($key);
 			if( $i < $n-1 )
@@ -48,46 +33,20 @@ class insert extends error_db{
 				$campos .= $key."";
 				$param .= ":".htmlentities($key)."";
 			}
-			$paramArray[":".$key.""]= filter_var(trim(htmlentities($val)));
+			$this->paramArray[":".$key.""]= filter_var(trim(htmlentities($val)));
 			$i++;
 		}
 
-		$this->sql  = "INSERT INTO ".$table." (".$campos.") VALUES (".$param.")";
-		$this->statement = $this->pdo->prepare($this->sql);
-		
-		try{
-			$this->statement->execute($paramArray);
-
-			$this->rows_affected = $this->statement->rowCount();
-
-			if($this->rows_affected > 0){
-				$this->ultimoId = $this->pdo->lastInsertId();
-				return true;
-			}else
-			{
-				$this->error = $this->getMensagemErro('NULLINSERT','inserir');
-				return false;
-			}
-		} catch (PDOException $e){
-
-		    $this->error = $this->getMensagemErro($e,'inserir',$param);
-		    $this->rows_affected = 0;
-			return false;
-		} 
+		$this->sql  = "INSERT INTO ".$elements['tabela']." (".$campos.") VALUES (".$param.")";
 	}
 
-	public function rows_affected()
+	public function getQuery()
 	{
-		return $this->rows_affected;
+		return $this->sql;
 	}
 
-	public function getUltimoId(){
-		return intval($this->ultimoId);
-	}
-
-
-	public function getError()
+	public function getParamArray()
 	{
-		return $this->error;
+		return $this->paramArray;
 	}
 }

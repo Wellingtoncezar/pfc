@@ -95,7 +95,7 @@ class gerenciar extends Controller{
 
 		
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator', null, true);
 		
 		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(3);
 		$this->dataValidator->set('Fornecedor', $fornecedor, 'fornecedor')->is_required();
@@ -131,7 +131,7 @@ class gerenciar extends Controller{
 			$fornecedoresModel->setRazaoSocial($$razao_social);
 
 			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat');
+			$this->load->library('dataFormat', null, true);
 			$precocompra = $this->dataFormat->formatar($precocompra,'decimal','banco');
 			$porcentagemlucro = $this->dataFormat->formatar($porcentagemlucro,'decimal','banco');
 			$precovenda = $this->dataFormat->formatar($precovenda,'decimal','banco');

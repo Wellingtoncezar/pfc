@@ -69,7 +69,7 @@ class agenda extends Controller{
 			$agendas = $agendaDao->listar($ano);
 
 			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat');
+			$this->load->library('dataFormat', null, true);
 			foreach ($agendas as $agenda) 
 			{
 				$aux = array(
@@ -105,7 +105,7 @@ class agenda extends Controller{
 		$notificacoes = array();
 
 
-		$this->load->library('dataFormat');
+		$this->load->library('dataFormat', null, true);
 
 		if(!empty($agendamentos))
 		{
@@ -145,7 +145,7 @@ class agenda extends Controller{
 
 
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator', null, true);
 		
 		$this->dataValidator->set('Fornecedor', $fornecedor, 'fornecedores')->is_required();
 		$this->dataValidator->set('Data', $data, 'data')->is_required();
@@ -160,7 +160,7 @@ class agenda extends Controller{
 			$fornecedoresModel->setId($fornecedor);
 			
 			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat');
+			$this->load->library('dataFormat', null, true);
 			$data = $this->dataFormat->formatar($data,'data','banco');
 
 			//AGENDA

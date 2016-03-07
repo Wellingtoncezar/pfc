@@ -5,6 +5,7 @@
 if(!defined('URL')) die('Acesso não permitido');
 class saveRouter extends Common
 {
+	private $db;
 	private $route = ROUTE;
 	private $controller = CONTROLLER;
 	private $action = ACTION;
@@ -13,7 +14,8 @@ class saveRouter extends Common
 
 	public function __construct(){
 		parent::__construct();
-		//$this->db = new db;
+		$this->load->library('db');
+		$this->db = new db();
 	}
 
 	/**

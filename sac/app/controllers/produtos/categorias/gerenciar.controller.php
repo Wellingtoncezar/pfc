@@ -98,7 +98,7 @@ class gerenciar extends Controller{
 	
 
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator', null, true);
 		
 		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
 
@@ -142,7 +142,7 @@ class gerenciar extends Controller{
 
 
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator' ,null, true);
 		
 		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
 		

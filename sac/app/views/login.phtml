@@ -34,7 +34,6 @@
     <script type="text/javascript" src="<?=URL?>skin/js/bootstrap.min.js"></script>
     <script src="<?=URL?>skin/js/kendoui/js/kendo.all.min.js"></script>
 
-    <script src="<?=URL?>skin/js/nanobar.js"></script>
     <script type="text/javascript" src="<?=URL?>skin/js/main.js"></script>
 
 </head>
@@ -89,12 +88,31 @@
                 dataType: 'json',
                 data: $('#form_login').serialize(),
                 success: function (data) {
-                    console.log(data);
                    if (data != true)
                    {
+
+                        $('.resposta').html('');
+                        if(data.login != null)
+                        {
+                            $('[name=login]').css('box-shadow','0 0 6px 1px red');
+                            $('.resposta').append('<p>'+data.login+'</p>').show();
+                        }
+                        if(data.senha != null)
+                        {
+                            $('[name=senha]').css('box-shadow','0 0 6px 1px red');
+                            $('.resposta').append('<p>'+data.senha+'</p>').show();
+                        }
+                        if(data.errorcaptcha != null)
+                        {
+                            $('[name=captcha]').css('box-shadow','0 0 6px 1px red');
+                            $('.resposta').append('<p>'+data.errorcaptcha+'</p>').show();
+                        }
+
+                        $('label.captcha').hide();
                         if(data.captcha == true)
                         {
-                            $.post('<?=URL?>skin/login/captcha',{},function(data){
+                            console.log(data)
+                            $.post('<?=URL?>login/captcha',{},function(data){
                                 if(data != false)
                                 {
                                     $('label.captcha .img img').attr('src','<?=URL?>login/captcha');
@@ -102,8 +120,8 @@
                                 }
                             });
                         }
-                        $('[name='+data.campo+']').css('box-shadow','0 0 6px 1px red');
-                        $('.resposta').html(data.error).show();
+
+
                         setTimeout(function() {
                             $('.resposta').html('').fadeOut();
                         }, 3000);

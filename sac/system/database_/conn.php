@@ -11,7 +11,7 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class conn
 {
 	public static $pdoConn = null;
-	private $dsn;
+	private static $dsn = null;
     
     protected function __construct(){
     }
@@ -42,19 +42,18 @@ class conn
     }
 
     //Conexão com o banco de dados
-	public function connect()
+	public static function connect()
 	{
 		try 
 		{	
 			if(self::$pdoConn == null)
 			{
-				$this->dsn  = "mysql:host=".HOSTNAME.";dbname=".DBNAME."; port=".MYSQLPORT;
-				self::$pdoConn  = new PDO($this->dsn, USERNAME, PASSWORD);
+				self::$dsn  = "mysql:host=".HOSTNAME.";dbname=".DBNAME."; port=".MYSQLPORT;
+				self::$pdoConn  = new PDO(self::$dsn, USERNAME, PASSWORD);
 				self::$pdoConn->exec("set names utf8");
 				//self::$pdoConn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 				self::$pdoConn->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 				//self::$pdoConn->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-
 				//parent::__construct(self::$pdoConn);
 			}
 			return self::$pdoConn;
@@ -79,12 +78,12 @@ class conn
 			}else
 			if($e->getCode() == '1044')
 			{
-				die('Erro mysql[1044]: Acesso negado para o usuário "@localhost" para banco de dados '.strtoupper(DBNAME).' 
+				die('Erro mysql[1044]: Acesso negado para o usuário "'.USERNAME.'@localhost" para banco de dados '.strtoupper(DBNAME).' 
 					<p><strong>Possível solução: </strong>Verifique se o nome de usuário da conexão está correta.</p>');
 			}else
 			if($e->getCode() == '1045')
 			{
-				die('Erro mysql[1044]: Acesso negado para o usuário "@localhost" com senha para banco de dados '.strtoupper(DBNAME).'.
+				die('Erro mysql[1044]: Acesso negado para o usuário "'.USERNAME.'@localhost" com senha para banco de dados '.strtoupper(DBNAME).'.
 					<p><strong>Possível solução: </strong>Verifique se o nome de usuário e a senha da conexão estão corretas.</p>');
 			}
 			else

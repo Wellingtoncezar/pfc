@@ -36,7 +36,6 @@ class insert{
 			$this->paramArray[":".$key.""]= filter_var(trim(htmlentities($val)));
 			$i++;
 		}
-
 		$this->sql  = "INSERT INTO ".$elements['tabela']." (".$campos.") VALUES (".$param.")";
 	}
 

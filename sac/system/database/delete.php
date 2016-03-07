@@ -1,14 +1,12 @@
 <?php
 /**
-* Classe para delete do banco. Pode ser utilizada diretamete ou através da classe db
-* @access 
+* Classe para delete do banco.
 * @author Wellington cézar
-* @since 18/06/2014
-* @version 1.0
+* @version 2.2
 *
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class delete extends error_db
+class delete
 {
 	private $paramArray;
 	private $sql;
@@ -17,7 +15,25 @@ class delete extends error_db
 	{
 		$this->sql  = "DELETE  FROM ".$elements['tabela']."";
 		if($elements['condicao'] != '')
+		{
+			$key = 1;
+			while ( strstr($elements['condicao'], '?') !== false) 
+			{
+				$elements['condicao'] = preg_replace('/\?/', ":param".$key."", $elements['condicao'], 1);
+				$key++;
+			}
+				
+			foreach($elements['parameters'] AS $key => $val)
+			{
+				if(is_integer($val))
+					$this->paramArray[":param".$key.""]= intval($val);	
+				else
+					$this->paramArray[":param".$key.""]= filter_var(trim(htmlentities($val)));
+			}
+
+
 			$this->sql .= " WHERE ".$elements['condicao'];
+		}
 	}
 
 	public function getQuery()

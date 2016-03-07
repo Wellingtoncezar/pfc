@@ -53,7 +53,7 @@ class Load{
         if(!empty($autoload['libraries']))
         {
             foreach ($autoload['libraries'] as $loadLibrary){
-                $this->load->library($loadLibrary);
+                $this->load->library($loadLibrary, null, true);
             }
         }
 
@@ -145,7 +145,7 @@ class Load{
      * @access public
      * @return booleam
      */
-    public function library($filename, $parameters = null, $autoExec = true)
+    public function library($filename, $parameters = null, $autoExec = false)
     {
         $filename = str_replace('\\', '/', $filename);
         $name = explode('/',rtrim($filename));

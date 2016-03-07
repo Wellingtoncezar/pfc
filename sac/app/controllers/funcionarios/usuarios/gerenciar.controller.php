@@ -98,7 +98,7 @@ class gerenciar extends Controller{
 		
 		
 		//DATAFORMAT
-		$this->load->library('dataFormat');
+		$this->load->library('dataFormat',null,true);
 		$data['dataFormat'] = $this->dataFormat;
 
 		$this->load->view('includes/header',$data);
@@ -126,7 +126,7 @@ class gerenciar extends Controller{
 
 
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator',null,true);
 		
 		$this->dataValidator->set('Grupo', $grupo, 'grupo')->is_required();
 		$this->dataValidator->set('Funcionario', $funcionario, 'funcionario')->is_required();
@@ -178,7 +178,7 @@ class gerenciar extends Controller{
 
 
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator',null, true);
 		
 		$this->dataValidator->set('Grupo', $grupo, 'grupo')->is_required();
 		$this->dataValidator->set('Email', $email, 'email')->is_required();

@@ -1,14 +1,14 @@
 <?php
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class db extends Conn{
+class db extends activeRecord{
 	private $res;
-	private $tabela;
-	private $campos = array();
-	private $valores = array();
-	private $condicao = '';
-	private $orderBy = '';
-	private $limit = '';
 	private $pdo = null;
+	private $statement;
+	private $sql;
+	private $error;
+	private $errorCode;
+	private $errorCodeName;
+
 
 	public function __construct() 
 	{
@@ -29,186 +29,201 @@ class db extends Conn{
 
 
 		$this->pdo = Conn::connect();
+		$this->error = new error_db();
 	}
 
-	public function setTabela($tabela)
+	public function __destruct()
 	{
-		$this->tabela = $tabela;
+		if($this->statement != NULL)
+			$this->statement->closeCursor();
 	}
-
-	public function setCampos($campos)
-	{
-		if(is_array($campos))
-			$this->campos = $campos;
-		else
-			die('Informe um tipo array para o metodo setCampos');
-	}
-
-	public function setValores($valores)
-	{
-		if(is_array($valores))
-			$this->valores = $valores;
-		else
-			die('Informe um tipo array para o metodo setValores');
-	}
-
-
-	public function  setCondicao($cond)
-	{
-		$this->condicao = $cond;
-	}
-
-
-	public function setOrderBy($orderBy = '')
-	{
-		$this->orderBy = $orderBy;
-	}
-
-	public function setLimit($limit1='', $limit2 = null)
-	{
-		if($limit2 != null)
-			$this->limit = $limit1.','.$limit2;	
-		else
-			$this->limit = $limit1;	
-	}
-
-	private function prepare_values($values)
-	{
-		if(count($this->campos) == count($this->valores))
-		{
-			$ar_val = array();
-			foreach ($this->campos as $key => $val){
-				$ar_val[$val] = $this->valores[$key];
-			}
-			return $ar_val;
-		}else
-		{
-			die('A quantidade de campos não é compativel com a quantidade de valores');
-		}
-	}
+	
+	
 
 	public function insert($values = NULL)
 	{
 		if(!is_string($values))
 		{
-			if(is_array($values))
-				$this->res = new insert($this->pdo,$this->tabela,$values);
-			else
+			if(!is_array($values))
 			{
-				$val = $this->prepare_values($this->campos,$this->valores);
-				$this->res = new insert($this->pdo,$this->tabela,$val);
+				$this->setValores($this->prepare_values($this->campos, $values));
+			}else
+			{
+				$this->setValores($values);
 			}
 		}else
 		{
 			die('Parâmetros do insert passados incorretamente');
 		}
-		return $this->res;
+
+
+		$this->res = new insert($this->getElementQuery());
+		$this->sql = $this->res->getQuery();
+		$this->errorCode = 'NULLINSERT';
+		$this->errorCodeName = 'inserir';
+		return $this->prepareQuery();
 	}
 
 
 	public function update($values = NULL)
 	{
-
 		if(!is_string($values))
 		{
-			if(is_array($values))
-				$this->res = new update($this->pdo, $this->tabela, $values, $this->condicao );
-			else
+			if(!is_array($values))
 			{
-				$val = $this->prepare_values( $this->campos, $this->valores );
-				$this->res = new update($this->pdo, $this->tabela, $val, $this->condicao );
+				$this->setValores($this->prepare_values($this->campos, $values));
+			}else
+			{
+				$this->setValores($values);
 			}
 		}else
 		{
-			die('Parâmetros do update passados incorretamente');
+			die('Parâmetros do insert passados incorretamente');
 		}
-		return $this->res;
+		$this->res = new update($this->getElementQuery());
+
+		$this->sql = $this->res->getQuery();
+		$this->errorCode = 'NULLUPDATE';
+		$this->errorCodeName = 'editar';
+		return $this->prepareQuery();
 	}
+
 
 	public function select($campos = NULL)
 	{
-		
 		if($campos != NULL)
 		{
 			if(is_array($campos))
 			{
-				$this->res = new select($this->pdo, $this->tabela, $campos, $this->condicao, $this->orderBy, $this->limit);
+				$this->setCampos($campos);
 			}else
 			{
 				die('Parâmetros passados incorretamente. Informe um tipo array para o método select');
 			}
-		}else
-		{
-			$this->res = new select($this->pdo, $this->tabela, $this->campos, $this->condicao, $this->orderBy, $this->limit);
 		}
-		return $this->res;
-	}
-
-	public function query($sql= null)
-	{
-		if($sql == null)
-			die('Informe o comando sql corretamente.');
-		else
-			$this->res = new query($this->pdo, $sql);
+		
+		$this->res = new select($this->getElementQuery());
+		$this->sql = $this->res->getQuery();
+		$this->errorCode = 'NULLSELECT';
+		$this->errorCodeName = 'selecionar';
+		return $this->prepareQuery();
 	}
 
 
 	public function delete()
 	{
-		if($this->condicao != '')
-			$this->res = new delete($this->pdo, $this->tabela, $this->condicao );
-		else
-			die('Informe a condição do delete');
-
-		return $this->res;
+		$this->res = new delete($this->getElementQuery());
+		$this->sql = $this->res->getQuery();
+		$this->errorCode = 'NULLDELETE';
+		$this->errorCodeName = 'excluir';
+		return $this->prepareQuery();
 	}
+
+
+	public function query($sql= null)
+	{
+		if($sql == null)
+			die('Informe o comando sql corretamente.');
+		else{
+			$this->res = new query($sql);
+			$this->sql = $this->res->getQuery();
+			$this->errorCode = 'NULLQUERY';
+			$this->errorCodeName = 'query';
+			return $this->prepareQuery();
+		}
+	}
+
+
+
+
+	private function prepareQuery()
+	{
+		$this->statement = $this->pdo->prepare($this->sql);
+		try{ 
+		    $this->statement->execute($this->res->getParamArray());
+		    $this->rows_affected = $this->statement->rowCount();
+			if($this->rows_affected > 0)
+			{
+				return true;
+			}
+			else
+			{
+				$this->rows_affected = 0;
+				return false;
+			}
+		}catch (PDOException $e)
+		{
+			$this->errorCode = $e;
+		    $this->rows_affected = 0;
+			return false;
+		}
+	}
+
+
+
 
 
 	public function resultAll($tipo = 0)
 	{
-		$result = $this->res->fetchAll($tipo);
-		return $result;
+		if($this->rows_affected > 0)
+		{
+			if($tipo == 0) //todos
+				return $this->statement->fetchAll(PDO :: FETCH_BOTH);
+			else
+			if($tipo == 1)//penas os nomes dos campos
+				return $this->statement->fetchAll(PDO :: FETCH_ASSOC);
+			else
+			if($tipo == 2)//apenas como classe
+				return $this->statement->fetchAll(PDO::FETCH_CLASS);
+		}else{
+			return false;
+		}
 	}
 
 
 	public function result($tipo = 0)
 	{
-		$result = $this->res->fetch($tipo);
-		return $result;
+		if($this->rows_affected > 0)
+		{
+			if($tipo == 0){ //todos
+
+				return $this->statement->fetch(PDO :: FETCH_BOTH);
+			}else
+			if($tipo == 1){//apenas os nomes dos campos
+				return $this->statement->fetch(PDO :: FETCH_ASSOC);
+			}
+		}else{
+			return false;
+		}
 	}
 
 
 	public function rowCount()
 	{
-		return $this->res->rows_affected();
+		return $this->statement->rowCount();
 	}
 
 	public function getError()
 	{
-		return $this->res->getError();	
+		return $this->error->getMensagemErro($this->errorCode, $this->errorCodeName);
 	}
 
 	
 	public function getUltimoId()
 	{
-		return $this->res->getUltimoId();	
+		return $this->pdo->lastInsertId();	
 	}
 
 	public function getSql()
 	{
-		return $this->res->getSql();
+		return $this->sql;
 	}
 
 
 	public function clear()
 	{
 		$this->res = null;
-		$this->tabela = '';
-		$this->campos = array();
-		$this->valores = array();
-		$this->condicao = '';
-		$this->orderBy = '';
-		$this->limit = '';
+		$this->clearElements();
 	}
 	
 

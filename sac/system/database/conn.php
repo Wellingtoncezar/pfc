@@ -3,7 +3,6 @@
 * Classe para conexao com o banco de dados.
 * @access 
 * @author Wellington cézar
-* @since 18/06/2014
 * @version 2.0
 *
 */

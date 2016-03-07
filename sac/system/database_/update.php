@@ -8,31 +8,20 @@
 *
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class update extends error_db
+class update
 {
-	private $rows_affected;
-	private $pdo;
-	private $statement;
+	private $paramArray;
 	private $sql;
-	private $error;
-	public function __construct($pdo, $table,$value, $cond = '')
-	{
-		parent::__construct();
-		$this->pdo = $pdo;
-		$this->update($table,$value,$cond);
-	}
 
-
-
-	public function update($table, $value, $cond = '')
+	public function __construct($elements)
 	{
 		$campos='';
 		$valores = '';
 		$param = '';
-		$n = count($value);
+		$n = count($elements['valores']);
 		$i = 0;
 
-		foreach($value AS $key => $val)
+		foreach($elements['valores'] AS $key => $val)
 		{
 			$key = trim($key);
 			if( $i < $n-1 )
@@ -45,45 +34,24 @@ class update extends error_db
 				$campos .= $key."";
 				$param .= "".$key." = :".htmlentities($key)."";
 			}
-			$paramArray[":".$key.""]= filter_var(trim(htmlentities($val)));
+			$this->paramArray[":".$key.""]= filter_var(trim(htmlentities($val)));
 			$i++;
 		}
 
-		$this->sql  = "UPDATE ".$table." SET ".$param."";
-		if($cond != '')
-			$this->sql .= " WHERE ".$cond;
-		$this->statement = $this->pdo->prepare($this->sql);
-
-		try
-		{
-			$this->statement->execute($paramArray);
-			$this->rows_affected = $this->statement->rowCount();
-			if($this->rows_affected > 0)
-			{
-				return true;
-			}else{
-				$this->error = $this->getMensagemErro('NULLUPDATE','editar');
-				return false;
-			}
-		}catch (PDOException $e){
-		    $this->error = $this->getMensagemErro($e,'editar');
-		    $this->rows_affected = 0;
-			return false;
-		}
+		$this->sql  = "UPDATE ".$elements['tabela']." SET ".$param."";
+		if($elements['condicao'] != '')
+			$this->sql .= " WHERE ".$elements['condicao'];
+		
 	}
 
-	public function rows_affected()
-	{
-		return $this->rows_affected;
-	}
 
-	public function getSql()
+	public function getQuery()
 	{
 		return $this->sql;
 	}
 
-	public function getError()
+	public function getParamArray()
 	{
-		return $this->error;
+		return $this->paramArray;
 	}
 }

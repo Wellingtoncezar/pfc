@@ -32,21 +32,69 @@ class login extends Controller{
 
 
 
-	/**
-	* loagin no sistema
-	*/
-	public function logar(){
-		if(!isset($_POST['login']) || !isset($_POST['senha']))
-			return false;
+	
 
+
+
+	/**
+	* login
+	*@return boolean | json
+	* Validação dos campos formulário
+	*/
+	public function logar()
+	{
 		$login = isset($_POST['login']) ? filter_var($_POST['login']) : '';
 		$senha = isset($_POST['senha']) ? filter_var($_POST['senha']) : '';
 		$captcha = isset($_POST['captcha']) ? filter_var($_POST['captcha']) : '';
-		
-		$this->load->model('loginModel');
-		$logon = new loginModel();
-		echo $logon->logar($login,$senha,$captcha);
+
+		//validação dos dados
+		$this->load->library('dataValidator', null, true);
+		$this->dataValidator->set('Login', $login, 'login')->is_required();
+		$this->dataValidator->set('Senha', $senha, 'senha')->is_required();
+		if ($this->dataValidator->validate())
+		{
+			if($_SESSION['ntentativaLogin'] >=5)
+			{
+			    if (empty($_SESSION['captcha']) || trim(strtolower($captcha)) != $_SESSION['captcha']) 
+			    {
+			    	$error = array(
+						'errorcaptcha'=>'Código incorreto',
+						'captcha' => TRUE
+					);
+					echo json_encode($error);
+			    }else
+			    {
+			    	echo $this->validLogin($login, $senha);
+			    }
+			}else
+				echo $this->validLogin($login,$senha);
+		}
+		else{
+			echo json_encode($this->dataValidator->get_errors());
+		}
 	}
+
+	private function validLogin($login, $senha)
+	{
+		$this->load->model('funcionarios/usuariosModel');
+		$usuariosModel = new usuariosModel();
+		$usuariosModel->setLogin($login);
+		$usuariosModel->setSenha($senha);
+
+		$this->load->dao('loginDao');
+		$loginDao = new loginDao();
+		$loginDao->validLogin($usuariosModel);
+
+		$_SESSION['ntentativaLogin']++;
+		return false;
+	}
+
+
+
+
+
+
+
 
 	/**
 	* Cria o captcha caso o número de tentativas de login falhos seja maior ou igual a 5

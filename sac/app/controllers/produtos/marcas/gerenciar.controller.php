@@ -74,7 +74,7 @@ class gerenciar extends Controller{
 		$data['marca'] = $marcasDao->consultar($marcasModel);
 		
 		//DATAFORMAT
-		$this->load->library('dataFormat');
+		$this->load->library('dataFormat', null, true);
 		$data['dataFormat'] = $this->dataFormat;
 
 		$this->load->view('includes/header',$data);
@@ -99,7 +99,7 @@ class gerenciar extends Controller{
 	
 
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator', null, true);
 		
 		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
 
@@ -143,7 +143,7 @@ class gerenciar extends Controller{
 
 
 		//validação dos dados
-		$this->load->library('dataValidator');
+		$this->load->library('dataValidator', null, true);
 		
 		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
 		

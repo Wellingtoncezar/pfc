@@ -10,60 +10,24 @@
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class delete extends error_db
 {
-	private $rows_affected;
-	private $error;
-	private $pdo;
+	private $paramArray;
 	private $sql;
 
-	public function __construct($pdo,$table, $cond = '')
+	public function __construct($elements)
 	{
-		parent::__construct();
-		$this->pdo = $pdo;
-		$this->delete($table,$cond);
-	}
-	public function __destruct()
-	{
-		$this->statement->closeCursor();
+		$this->sql  = "DELETE  FROM ".$elements['tabela']."";
+		if($elements['condicao'] != '')
+			$this->sql .= " WHERE ".$elements['condicao'];
 	}
 
-	public function delete($table, $cond = '')
-	{
-		$this->sql  = "DELETE  FROM ".$table."";
-		if($cond != '')
-			$this->sql .= " WHERE ".$cond;
-		$this->statement = $this->pdo->prepare($this->sql);
-		try
-		{
-			$this->statement->execute();
-			$this->rows_affected = $this->statement->rowCount();
-			
-			if($this->rows_affected > 0)
-				return true;
-			else
-			{
-				$this->error = $this->getMensagemErro('NULLDELETE','excluir');
-				return false;
-			}
-		}catch (PDOException $e){
-		    $this->error = $this->getMensagemErro($e,'excluir');
-		    $this->rows_affected = 0;
-			return false;
-		}
-	}
-
-	public function rows_affected()
-	{
-		return $this->rows_affected;
-	}
-
-
-	public function getError()
-	{
-		return $this->error;
-	}
-
-	public function getSql()
+	public function getQuery()
 	{
 		return $this->sql;
 	}
+
+	public function getParamArray()
+	{
+		return $this->paramArray;
+	}
+	
 }

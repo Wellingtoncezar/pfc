@@ -1,10 +1,4 @@
 <?php
-/**
-* Classe de inicialização dos parametros e valores.
-* @author Wellington cézar
-* @version 2.1
-*
-*/
 if(!defined('BASEPATH')) die('Acesso não permitido');
 abstract class activeRecord{
 	private $elementQuery = array();
@@ -17,8 +11,6 @@ abstract class activeRecord{
 		$this->elementQuery['condicao'] = '';
 		$this->elementQuery['orderBy'] = '';
 		$this->elementQuery['limit'] = '';
-		$this->elementQuery['parameters'] = array();
-
 	}
 
 	public function setTabela($tabela)
@@ -62,14 +54,6 @@ abstract class activeRecord{
 			$this->elementQuery['limit'] = $limit1;	
 	}
 
-
-	public function setParameter($pos, $value)
-	{
-		$this->elementQuery['parameters'][$pos] = filter_var(htmlentities($value));
-	}
-
-
-
 	private function prepare_values($valores)
 	{
 		if(count($this->elementQuery['campos']) == count($valores))
@@ -98,7 +82,6 @@ abstract class activeRecord{
 		$this->elementQuery['condicao'] = '';
 		$this->elementQuery['orderBy'] = '';
 		$this->elementQuery['limit'] = '';
-		$this->elementQuery['parameters'] = Array();
 	}
 
 

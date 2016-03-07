@@ -1,10 +1,8 @@
 <?php
 /**
-* Classe para select do banco. Pode ser utilizada diretamete ou através da classe db
-* @access 
+* Classe para select do banco.
 * @author Wellington cézar
-* @since 18/06/2014
-* @version 2.0
+* @version 2.2
 *
 */
 
@@ -24,7 +22,24 @@ class select
 
 		$this->sql  = "SELECT ".$campos." FROM ".$elements['tabela']." ";
 		if($elements['condicao'] != '')
-			$this->sql .= " WHERE ".trim($elements['condicao']);
+		{
+			$key = 1;
+			while ( strstr($elements['condicao'], '?') !== false) 
+			{
+				$elements['condicao'] = preg_replace('/\?/', ":param".$key."", $elements['condicao'], 1);
+				$key++;
+			}
+			foreach($elements['parameters'] AS $key => $val)
+			{
+				if(is_integer($val))
+					$this->paramArray[":param".$key.""]= intval($val);	
+				else
+					$this->paramArray[":param".$key.""]= filter_var(trim(htmlentities($val)));
+			}
+
+
+			$this->sql .= " WHERE ".$elements['condicao'];
+		}
 
 		if($elements['orderBy'] != '')
 			$this->sql .= " ORDER BY ".trim($elements['orderBy']);
