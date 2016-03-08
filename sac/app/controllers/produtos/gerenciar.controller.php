@@ -41,6 +41,17 @@ class gerenciar extends Controller{
 		$data = array(
 			'titlePage' => 'Cadastrar Produtos'
 		);
+		$this->load->dao('produtos/marcasDao');
+		$marcas = new marcasDao;
+		$data['marcas']=$marcas->listar();
+
+		$this->load->dao('produtos/categoriasDao');
+		$categorias = new categoriasDao;
+		$data['categorias']=$categorias->listar();
+
+		$this->load->dao('fornecedores/fornecedoresDao');
+		$fornecedores = new fornecedoresDao;
+		$data['fornecedores']=$fornecedores->listar();
 		
 		$this->load->view('includes/header',$data);
 		$this->load->view('produtos/cadastro',$data);

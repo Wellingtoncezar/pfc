@@ -26,19 +26,25 @@
 
         <div class="input-group">
              <span class="input-group-addon" id="basic-addon1">Marca</span>
-             <select class="form-control" name="marca" >                                                                           
-                <option value="" selected="selected" disabled="disabled">..Selecione..</option>
-                <option value="PF">Física</option>
-                <option value="PJ">Jurídica</option>
-            </select>
+                    <select name="marca" id="marca" class="form-control">
+                        <option selected="selected" disabled="disabled" value="">..Selecione..</option>
+                        <?php if(!empty($marcas)):?>
+                        <?php foreach ($marcas as $marcas):?>
+                        <option value="<?= $marcas->getId()?>"><?= $marcas->getNome()?></option>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
         </div>
         <div class="input-group">
              <span class="input-group-addon" id="basic-addon1">Categoria</span>
-             <select class="form-control" name="categoria" >                                                                           
-                <option value="" selected="selected" disabled="disabled">..Selecione..</option>
-                <option value="PF">Física</option>
-                <option value="PJ">Jurídica</option>
-            </select>
+                    <select name="ategorias" id="categoria" class="form-control">
+                        <option selected="selected" disabled="disabled" value="">..Selecione..</option>
+                        <?php if(!empty($categorias)):?>
+                        <?php foreach ($categorias as $categorias):?>
+                        <option value="<?= $categorias->getId()?>"><?= $categorias->getNome()?></option>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
         </div>
 
         <div >
@@ -50,11 +56,14 @@
 
          <div class="input-group">
              <span class="input-group-addon" id="basic-addon1">Fornecedor</span>
-             <select class="form-control" name="fornecedor" >                                                                           
-                <option value="" selected="selected" disabled="disabled">..Selecione..</option>
-                <option value="PF">Física</option>
-                <option value="PJ">Jurídica</option>
-            </select>
+              <select name="fornecedores" id="fornecedores" class="form-control">
+                        <option selected="selected" disabled="disabled" value="">..Selecione..</option>
+                        <?php if(!empty($fornecedores)):?>
+                        <?php foreach ($fornecedores as $fornecedores):?>
+                        <option value="<?= $fornecedores->getId()?>"><?= $fornecedores->getNomeFantasia()?></option>
+                        <?php endforeach;?>
+                        <?php endif;?>
+              </select>
         </div>
         </div> 
 

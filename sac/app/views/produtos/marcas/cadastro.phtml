@@ -1,8 +1,7 @@
 <div class="container">
     <?php
-       // $btnVoltar = $template->getButton("voltar",array('href'=>URL.'produtos/marcas'));
-       // $template->getButton("actions_buttons",array('buttons'=>$btnVoltar));
-    ?>
+       $btnVoltar = $template->getButton("voltar",array('href'=>URL.'produtos/marcas'));
+        echo $template->getButton("actions_buttons",array('buttons'=>$btnVoltar));    ?>
     <div class="page-header">
       <h1>Marca<small> Cadastro</small></h1>
     </div>

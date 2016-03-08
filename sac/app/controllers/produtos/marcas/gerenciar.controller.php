@@ -42,7 +42,9 @@ class gerenciar extends Controller{
 	public function cadastrar()
 	{
 		$data = array(
-			'titlePage' => 'Cadastrar marcas'
+			'titlePage' => 'Cadastrar marcas',
+			'template' => new templateFactory()
+
 		);
 		
 		$this->load->view('includes/header',$data);
@@ -61,7 +63,7 @@ class gerenciar extends Controller{
 			'template' => new templateFactory()
 		);
 		//ID
-		$idMarcas = intval($this->url->getSegment(3));
+		$idMarcas = intval($this->url->getSegment(4));
 		
 		//marca MODEL
 		$this->load->model('produtos/marcasModel');
@@ -138,7 +140,7 @@ class gerenciar extends Controller{
 	 */
 	public function atualizar()
 	{
-		$idMarcas = isset($_POST['idMarcas']) ? filter_var($_POST['idMarcas']) : '';
+		$idMarcas = isset($_POST['idMarca']) ? filter_var($_POST['idMarca']) : '';
 		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
 
 

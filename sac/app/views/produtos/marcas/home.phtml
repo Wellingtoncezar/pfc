@@ -62,7 +62,7 @@
             var status = $(this).data('value');
             var modalDelete = $('#modalDelete').modal('show')
             $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'produtos/marca/excluir',{id:id,status:status},function(data){
+                $.post(url+'produtos/marcas/gerenciar/excluir',{id:id,status:status},function(data){
                     console.log(data)
                     if(data == true){
                         $('#modalDelete').modal('hide');
