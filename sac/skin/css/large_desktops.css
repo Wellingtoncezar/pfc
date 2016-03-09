@@ -219,23 +219,23 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: url('../img/imagens/fundo_menu.jpg') 100%;
+		background: url('../img/imagens/estoque2.jpg');
+    	background-size: 100% auto;
 	}
 	#container_login .box_login{
-	    position: absolute;
-	    top: 21%;
-	    left: 50%;
-	    right: 0;
-	    bottom: 0;
-	    display: table;
-	    width: 325px;
-	    margin-left: -161px;
-	    background: rgba(255, 255, 255, 0.2) url('../img/imagens/efeito.png');
-	    background-size: 100%;
-	    padding: 20px;
-	    border-radius: 23px;
-	    overflow: hidden;
-	    box-shadow: 0px 3px 15px -1px #FFFFFF inset;
+    position: absolute;
+    top: 21%;
+    left: 50%;
+    right: 0;
+    bottom: 0;
+    display: table;
+    width: 325px;
+    margin-left: -161px;
+    background: rgba(0, 0, 0, 0.55) url('../img/imagens/efeito.png');
+    background-size: 100%;
+    padding: 20px;
+    border-radius: 23px;
+    overflow: hidden;
 	}
 	#container_login .box_login header{
 		padding: 0;

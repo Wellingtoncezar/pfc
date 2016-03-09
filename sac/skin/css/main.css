@@ -8,15 +8,12 @@
 */
 html,
 body{
-	margin: 0;
-	padding: 0;
-  height: 100%;
-  width: 100%;
-  /*background: url('../img/imagens/fundo_2.jpg');
-  background-size: 100%;
-  background-attachment: fixed;
-  */
-      background: url('../img/imagens/background.jpg') 100%; 
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    /*background: url('../img/imagens/estoque2.jpg');
+    background-size: 100% auto;*/
 }
 .overflowHidden{
   overflow: hidden;
