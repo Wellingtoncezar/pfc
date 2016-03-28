@@ -36,6 +36,10 @@ class error_db{
 				case '42S21':
 					$this->msg_error = 'Nome da coluna duplicado';
 					break;
+				// case '42000':
+				// 	$this->msg_error = 'Você não tem permissão para executar esta ação';
+				// 	break;
+				
 				default:
 					$this->msg_error = 'Outro erro: '.$code->getMessage();
 					break;

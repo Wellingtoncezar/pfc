@@ -1,6 +1,9 @@
 <?php
+/**
+* @author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
+*/
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class Router extends Common{
+class Router{
 	private $url;
 	private $currentUrl;
 	private $_controller;
@@ -39,8 +42,6 @@ class Router extends Common{
 		$this->url = $newArr;
 		unset($url);
 		unset($newArr);
-
-		parent::__construct();
 	}
 
 	public function getRoute(){

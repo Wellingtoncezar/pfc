@@ -18,6 +18,7 @@ class db extends activeRecord{
 
 	public function __construct() 
 	{
+
 		require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'database.php');
 		if(	!defined('HOSTNAME') 
 			|| !defined('USERNAME') 
@@ -25,7 +26,7 @@ class db extends activeRecord{
 			|| !defined('DBNAME') 
 			|| !defined('MYSQLPORT')
 		){
-			foreach ($_db['default'] as $key => $value)
+			foreach ($_db['userlogin'] as $key => $value)
 			{
 				$key = strtoupper($key);
 				define($key,$value);

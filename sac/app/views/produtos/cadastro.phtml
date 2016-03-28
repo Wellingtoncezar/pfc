@@ -2,12 +2,12 @@
     <div class="page-header">
       <h1>Produtos<small> Cadastro</small></h1>
     </div>
-    <form action="<?=URL?>produtos/home/inserir" method="post" id="form_produtos">
+    <form action="<?=URL?>produtos/gerenciar/inserir" method="post" id="form_produto">
         <div class="panel panel-default">
-          <div class="panel-heading">Dados Gerais</div>
-          <div class="panel-body">
+            <div class="panel-heading">Dados Gerais</div>
+            <div class="panel-body">
 
-            <div class="row">
+                <div class="row">
                     <div class="col-xs-6 col-md-3">
                         <label for="foto" class="thumbnail inputFoto preview-lg">
                             <div class="thumbnail img-preview preview-lg">
@@ -17,15 +17,13 @@
                         </label>
                     </div>
                 </div>
-             <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Nome</span>
-                <input type="text" class="form-control" placeholder="Nome" aria-describedby="basic-addon1" name="nome">
-            </div>
-        </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Nome</span>
+                    <input type="text" class="form-control" placeholder="Nome" aria-describedby="basic-addon1" name="nome">
+                </div>
 
-        <div class="input-group">
-             <span class="input-group-addon" id="basic-addon1">Marca</span>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Marca</span>
                     <select name="marca" id="marca" class="form-control">
                         <option selected="selected" disabled="disabled" value="">..Selecione..</option>
                         <?php if(!empty($marcas)):?>
@@ -34,10 +32,10 @@
                         <?php endforeach;?>
                         <?php endif;?>
                     </select>
-        </div>
-        <div class="input-group">
-             <span class="input-group-addon" id="basic-addon1">Categoria</span>
-                    <select name="ategorias" id="categoria" class="form-control">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Categoria</span>
+                    <select name="categoria" id="categoria" class="form-control">
                         <option selected="selected" disabled="disabled" value="">..Selecione..</option>
                         <?php if(!empty($categorias)):?>
                         <?php foreach ($categorias as $categorias):?>
@@ -45,101 +43,68 @@
                         <?php endforeach;?>
                         <?php endif;?>
                     </select>
-        </div>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Descrição</span>
+                    <textarea class="form-control" placeholder="Descrição" name="descricao"></textarea>
+                </div>
 
-        <div >
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Descrição</span>
-                <input type="text" class="form-control" placeholder="Descrição" aria-describedby="basic-addon1" name="descricao">
-            </div>
-        </div>
-
-         <div class="input-group">
-             <span class="input-group-addon" id="basic-addon1">Fornecedor</span>
-              <select name="fornecedores" id="fornecedores" class="form-control">
-                        <option selected="selected" disabled="disabled" value="">..Selecione..</option>
+                 <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Fornecedor</span>
+                    <select name="listafornecedores" class="form-control">
                         <?php if(!empty($fornecedores)):?>
                         <?php foreach ($fornecedores as $fornecedores):?>
                         <option value="<?= $fornecedores->getId()?>"><?= $fornecedores->getNomeFantasia()?></option>
                         <?php endforeach;?>
                         <?php endif;?>
-              </select>
-        </div>
-        </div> 
+                    </select>
+                    <span class="input-group-addon" id="basic-addon1"><a href="javascript:void(0)" class="addFornecedor"><span class="glyphicons glyphicons-plus"></span></a></span>
+                </div>
+
+                <div class="listFornecedores">
+                </div>
+            </div> 
 
 
         </div> <!-- fim panel dados gerais -->
         
         
        
-       <div class="panel panel-default">
-  <div class="panel-heading">Valores</div>
-  <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">Valores</div>
+            <div class="panel-body">
    
-      <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Preço de Compra</span>
-                <input type="text" class="form-control" placeholder="Preço de Compra" aria-describedby="basic-addon1"name="preco_compra">
-            </div>
-        </div>
-
-        <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Porcentagem de Lucro</span>
-                <input type="text" class="form-control" placeholder="Porcentagem de Lucro" aria-describedby="basic-addon1" name="porcentagem_lucro">
-            </div>
-        </div>
-
-        <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Preço de Venda</span>
-                <input type="text" class="form-control" placeholder="Preço de Venda" aria-describedby="basic-addon1" name="preco_venda" disabled="disabled" name="preco_venda">
-            </div>
-        </div>
-
-        <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Peso </span>
-                <input type="text" class="form-control" placeholder="Peso " aria-describedby="basic-addon1" name="peso">
-            </div>
-        </div>
-
-        <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Quantidade </span>
-                <input type="text" class="form-control" placeholder="Quantidade em Estoque" aria-describedby="basic-addon1" name="quantidade">
-            </div>
-        </div>
-          <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Unidade de Medida</span>
-                <select class="form-control" name="uni_medida">
-                    <option value="" selected="selected" disabled="disabled">..Selecione..</option>
-                    <option value="g"> Gramas (g)</option>
-                    <option value="kg">Kilograma (Kg)</option>
-                    <option value="cx">Caixa (Cx)</option>
-
-                </select>
-            </div>
-        </div>
-         <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Estoque Máximo</span>
-                <input type="text" class="form-control" placeholder="Estoque Máximo" aria-describedby="basic-addon1" name="estoque_max">
-            </div>
-        </div>
-         <div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Estoque Mínimo</span>
-                <input type="text" class="form-control" placeholder="Estoque Mínimo" aria-describedby="basic-addon1" name="estoque_min">
-            </div>
-        </div>
-                <div class="btn-group pull-right" role="group">
-                    <button type="submit" class="btn btn-success">Enviar</button>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Preço de Custo R$</span>
+                    <input type="text" class="form-control" placeholder="Preço de Custo" aria-describedby="basic-addon1" name="preco_custo">
                 </div>
-  </div>
-</div><!-- fim panel Valores --> 
-                 
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Preço de Venda R$</span>
+                    <input type="text" class="form-control" placeholder="Preço de Venda" aria-describedby="basic-addon1" name="preco_venda" name="preco_venda">
+                    <span class="input-group-addon" id="basic-addon1"><input type="checkbox" name="precoVendaAutomatico">Automático</span>
+                </div>
+
+                <div class="input-group boxmarkup" style="display:none">
+                    <span class="input-group-addon" id="basic-addon1">Markup %</span>
+                    <input type="text" class="form-control" placeholder="Markup %" aria-describedby="basic-addon1" name="markup" maxlength="6" value="0,00">
+                </div>
+                
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Unidade de Medida</span>
+                    <select class="form-control" name="uni_medida">
+                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                        <?php if(!empty($unidademedida)):?>
+                        <?php foreach ($unidademedida as $unidade):?>
+                        <option value="<?= $unidade->getId()?>"><?= $unidade->getNome()?>(<?= $unidade->getAbreviacao()?>)</option>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
+                </div>
+            </div>
+            <div class="btn-group pull-right" role="group">
+                <button type="submit" class="btn btn-success">Enviar</button>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -152,21 +117,4 @@
 <script type="text/javascript" src="<?=URL?>skin/js/jquery.maskedinput.min.js"></script>
 <script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
 <script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
-<script type="text/javascript">
-
- $(function(){
-            $("input[name=preco_compra],input[name=preco_venda]").maskMoney({symbol:"R$",decimal:",",thousands:"."});
-            
-
-
- })
- </script>
-
-
-
-
-
-
-
-
- 
+<script type="text/javascript" src="<?=URL?>skin/js/produtos/cadastrar.js"></script>

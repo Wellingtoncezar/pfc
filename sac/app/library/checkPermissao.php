@@ -5,205 +5,101 @@
 if(!defined('URL')) die('Acesso negado');
 class checkPermissao extends Library{
 	private  $permissoes = null;
-	private $actionButton; 
 	private $url;
+	private $lastArray = Array();
+	private $latType;
 	public function __construct(){
 		parent::__construct();
-		$this->permissoes = json_decode(stripslashes($_SESSION['login_adm']['listaPermissao']) ,true );
-		$this->url = new url();
+		
+	}
+
+	private function checkpermissao($value)
+	{
+		// echo '<pre>';
+		// echo '<h2>'.$value.'</h2>';
+		// print_r($this->lastArray);
+		// echo '</pre>';
+		//VERIFICA EXISTE O ÍNDICE de "$VALUE" NO ULTIMO ARRAY PERCORRIDO
+		if(array_key_exists($value, $this->lastArray))
+		{
+			$this->latType = "modulo";
+			$this->lastArray = $this->lastArray[$value];
+			return true;
+		}elseif(isset($this->lastArray['submodulos']) && array_key_exists($value, $this->lastArray['submodulos']))//SE FOR PARA SUBMODULOS
+		{	
+			$this->latType = "submodulo";
+			$this->lastArray = $this->lastArray['submodulos'][$value];
+			return true;
+		}elseif(isset($this->lastArray['paginas']) && array_key_exists($value, $this->lastArray['paginas']))//SE FOR PARA PÁGINAS (CONTROLLERS)
+		{
+			$this->latType = "pagina";
+			$this->lastArray = $this->lastArray['paginas'][$value];
+			return true;
+		}else
+		{
+			$this->lastArray = Array();
+			return false;
+			
+		}
 	}
 
 	/**
 	* Checa a permissão da página
 	*/
-	public function checkPermissaoPagina($redirect = true)
+	public function check($redirect = true, $url = '')
 	{	
-		$retorno = false;
-		if($_SESSION['login_adm']['listaPermissao'] != '')
-		{
-			$lastArray = null;
-			if($this->url->getSegment(0) != false && array_key_exists($this->url->getSegment(0), $this->permissoes))
-			{
-				$lastArray = $this->permissoes[$this->url->getSegment(0)];
-				if($this->url->getSegment(1) != false)//será procurado o submodulo
-				{
-					if(array_key_exists($this->url->getSegment(1), $lastArray['submodulos']))
-					{
-
-						if($this->url->getSegment(2) != false)
-						{
-							$lastArray = $lastArray['submodulos'][$this->url->getSegment(1)];
-							if(array_key_exists($this->url->getSegment(2), $lastArray))
-							{
-								if($this->url->getSegment(3) != false)
-								{
-									$retorno = $this->acao($this->url->getSegment(3));
-								}else{
-									$retorno = true;
-								}
-							}else
-								$retorno = false;
-						}else
-						{
-
-							// if(array_key_exists('home', $lastArray))
-							// {
-							// 	$retorno = true;
-								
-							// }else
-								$retorno = true;
-						}
-					}else
-					if(array_key_exists($this->url->getSegment(1), $lastArray['paginas']))//paginas
-					{
-						if($this->url->getSegment(2) != false)
-							$retorno = $this->acao($this->url->getSegment(2));
-						else
-							$retorno = true;
-					}else
-					{
-						$retorno = false;
-					}
-				
-				}else//senão deverá procurar dentro do módulo
-				{
-					if($this->actionButton != NULL)
-					{
-						//paginas do modulo
-						if(array_key_exists($this->actionButton, $lastArray['paginas']['home']))
-						{
-							$retorno = true;
-						}else
-						{
-							$retorno = false;
-						}
-					}else//senao é a home do módulo
-						$retorno = true;
-				}
-				
-			}else
-				$retorno = false;
-		}else
-			$retorno = true;
-
-
-		
-		if($retorno == false)
-		{
-			if($redirect == true){
-				header('Location:'.URL.'acesso_negado');
-				exit;
-			}else{
-				return false;
-			}
-			//var_dump($retorno);
+		//verifica se está logado, se existe usuário na sessão
+		if(!isset($_SESSION['user'])){
+			session_destroy();
+			header('Location: '.URL.'login');
+			return false;
 		}
-		
-	}
 
-	/**
-	* Verifica se a ação existe na lista de permissões
-	*/
-	public function acao($acao, $url = '')
-	{
-		$this->actionButton = $acao;
-		if($_SESSION['login_adm']['listaPermissao'] != '')
-		{
-			if($url != '')
-				$this->url->explodeUrl($url);
-
-			return $this->getButtonPermission();
-		}else
+		if(unserialize($_SESSION['user'])->getNivelAcesso()->getPermissoes() != '*'){
+			$this->permissoes = unserialize($_SESSION['user'])->getNivelAcesso()->getPermissoes();
+			$this->permissoes = json_decode(html_entity_decode($this->permissoes),true);
+			$this->lastArray = $this->permissoes;	
+		}
+		else
 			return true;
-	}
 
-
-
-	/**
-	* Verifica a permissão do botão
-	*/
-	private function getButtonPermission()
-	{
+		$this->url = new url($url);
 		$retorno = false;
-		$url = new url();
-		$lastArray = null;
+		//se for diferente de administrador
 
-		if($this->url->getSegment(0) != false && array_key_exists($this->url->getSegment(0), $this->permissoes))
-		{
-			$lastArray = $this->permissoes[$this->url->getSegment(0)];
-			if($this->url->getSegment(1) != false)//será procurado o submodulo
-			{
-
-				if(array_key_exists($this->url->getSegment(1), $lastArray['submodulos']))
+			//se for diferente da tela inicial 
+			if(!empty($this->url->getUrl())){
+				//percorre todos os segmentos da url par verificação da permissão
+				foreach ($this->url->getUrl() as $key => $value) 
 				{
-					if($this->url->getSegment(2) != false)
-					{
-						$lastArray = $lastArray['submodulos'][$this->url->getSegment(1)];
-						if(array_key_exists($this->url->getSegment(2), $lastArray))
-						{
-							$lastArray = $lastArray[$this->url->getSegment(2)];
-							if(array_key_exists($this->actionButton, $lastArray))
-							{
-								$retorno = true;
-							}else
-								$retorno = false;
-						}else
-							$retorno = false;
-					}else
-					{
-						
-						if(array_key_exists('home', $lastArray))
-						{
-							$lastArray = $lastArray['home'];
-							if(array_key_exists($this->actionButton, $lastArray))
-							{
-								$retorno = true;
-							}else
-								$retorno = false;
-						}else
-							$retorno = false;
-					}
-				}else
-				if(array_key_exists($this->url->getSegment(1), $lastArray['paginas']))//paginas
-				{
-					$lastArray = $lastArray['paginas'][$this->url->getSegment(1)];
-					if(array_key_exists($this->actionButton, $lastArray))
-					{
+					if(!is_array($this->lastArray) || empty($this->lastArray))
+						break;
+					//verifica a permissão e define o retorno
+					if($this->checkpermissao($value))
 						$retorno = true;
-					}else
-					{
+					else{
 						$retorno = false;
+						break;
 					}
-				}else
-				{
-					$retorno = false;
 				}
-
-			}else//senão deverá procurar dentro do módulo
-			{
-
-				$this->actionButton;
-				if($this->actionButton != NULL)
-				{
-					if(isset($lastArray['paginas']['home']))
-					{
-						//paginas do modulo
-						if(array_key_exists($this->actionButton, $lastArray['paginas']['home']))
-						{
-							$retorno = true;
-						}else
-						{
-							$retorno = false;
-						}
-					}else
-						$retorno = false;
-				}else
-				 	$retorno = true;
+			}else{
+				$retorno = true;
 			}
-		}else
-			$retorno = false;
 
+			//se o retorno for false
+			if($retorno == false)
+			{	
+				// e o redirecionamento for true, faz o redirecionamento e para tudo o que for executado depois do redirecionamento
+				if($redirect == true){
+					header('Location:'.URL.'acesso_negado');
+					exit;
+				}else{
+					return false;
+				}
+			}else
+				return true;
 
-		return $retorno;
+			
 	}
+
 }

@@ -10,5 +10,6 @@ class Common extends Load
     {
         $this->load = Load::getInstance();
         $this->_autoloadComplement();
+        
     }
 }

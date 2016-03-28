@@ -1,7 +1,7 @@
 <div class="container">
     <?php
 
-        $btnCadastrar = $template->getButton("cadastrar",array('href'=>URL.'funcionarios/gerenciar/cadastrar'));
+        $btnCadastrar = $template->getButton("cadastrar",array('href'=>URL.'funcionarios/gerenciar/cadastrar'), URL.'funcionarios/gerenciar/cadastrar');
         echo $template->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
     <div class="page-header">
@@ -39,7 +39,7 @@
                             <td>'.$func->getCodigo().'</td>
                             <td><img src="'.$foto.'" style=" width: 60px; height: 60px;"></td>
                             <td>'.$func->getNome().' '.$func->getSobrenome().'</td>
-                            <td>'.$func->getCargo().'</td>
+                            <td>'.$func->getCargo()->getNome().'(<small>'.$func->getCargo()->getSetor().'</small>)</td>
                             <td>'.$func->getCpf().'</td>
                             <td>
                                 <select name="status" id="'.$func->getId().'" class="statusSelect">
@@ -48,8 +48,8 @@
                                 </select>
                             </td>
                             <td>'
-                                .$template->getButton('editar',array('href'=> URL.'funcionarios/gerenciar/editar/'.$func->getId()))
-                                .$template->getButton('excluir', array('id'=> $func->getId())).
+                                .$template->getButton('editar',array('href'=> URL.'funcionarios/gerenciar/editar/'.$func->getId()), URL.'funcionarios/gerenciar/editar/')
+                                .$template->getButton('excluir', array('id'=> $func->getId()), URL.'funcionarios/gerenciar/excluir/').
                             '</td>
                         </tr>';
                 endforeach;
@@ -95,6 +95,9 @@
                     if(data == true){
                         $('#modalDelete').modal('hide');
                         $('tr#'+id).hide();
+                    }else{
+                        $('#modalDelete').modal('hide');
+                        messageDialog(data,'warning',false,null);
                     }
                 });
             });

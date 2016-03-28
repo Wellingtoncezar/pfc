@@ -23,6 +23,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Funcionários',
 			'template' => new templateFactory()
@@ -47,9 +48,15 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->checkPermissao->check();
+		$this->load->dao('funcionarios/cargosDao');
+		$cargos = new cargosDao;
+
+
 		$data = array(
 			'titlePage' => 'Cadastrar funcionário',
-			'template' => new templateFactory()
+			'template' => new templateFactory(),
+			'cargos' => $cargos->listar()
 		);
 		
 		$this->load->view('includes/header',$data);
@@ -66,9 +73,15 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->checkPermissao->check();
+
+		$this->load->dao('funcionarios/cargosDao');
+		$cargos = new cargosDao;
+
 		$data = array(
 			'titlePage' => 'Editar funcionário',
-			'template' => new templateFactory()
+			'template' => new templateFactory(),
+			'cargos' => $cargos->listar()
 		);
 		//ID
 		$idFuncionario = intval($this->url->getSegment(3));
@@ -104,6 +117,12 @@ class gerenciar extends Controller{
 	 */
 	public function inserir()
 	{
+		if(!$this->checkPermissao->check(false,URL.'funcionarios/gerenciar/cadastrar'))
+		{
+			echo "Ação não permitida";
+			return false;
+		}
+
 		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
 		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
 		$sobrenome = isset($_POST['sobrenome']) ? filter_var($_POST['sobrenome']) : '';
@@ -129,9 +148,9 @@ class gerenciar extends Controller{
 		
 		//DADOS ADMISSIONAIS
 		$codigoAdmissao = isset($_POST['codigoAdmissao']) ? filter_var(trim($_POST['codigoAdmissao'])) : '';
-		$cargo = isset($_POST['cargo']) ? filter_var(trim($_POST['cargo'])) : '';
+		$cargo = isset($_POST['cargo']) ? intval($_POST['cargo']) : '';
 		$dataAdmissao = isset($_POST['dataAdmissao']) ? filter_var(trim($_POST['dataAdmissao'])) : '';
-		$salario = isset($_POST['salario']) ? filter_var(trim($_POST['salario'])) : '';
+		$dataDemissao = isset($_POST['dataDemissao']) ? filter_var(trim($_POST['dataDemissao'])) : '';
 
 
 
@@ -198,13 +217,18 @@ class gerenciar extends Controller{
 			$this->load->library('dataFormat',null, true);
 			$dataNascimento = $this->dataFormat->formatar($dataNascimento,'data','banco');
 			$dataAdmissao = $this->dataFormat->formatar($dataAdmissao,'data','banco');
-			$salario = $this->dataFormat->formatar($salario,'decimal','banco');
+			$dataDemissao = $this->dataFormat->formatar($dataDemissao,'data','banco');
 
 			
 
 			//FUNCIONARIO
 			$this->load->model('funcionarios/funcionariosModel');
 			$funcionariosModel = new funcionariosModel();
+			$this->load->model('funcionarios/cargosModel');
+
+			$cargosModel = new cargosModel();
+			$cargosModel->setId($cargo);
+
 			$funcionariosModel->setFoto($foto);
 			$funcionariosModel->setNome($nome);
 			$funcionariosModel->setSobrenome($sobrenome);
@@ -217,10 +241,10 @@ class gerenciar extends Controller{
 			$funcionariosModel->setEndereco($enderecoModel);
 			$funcionariosModel->setTelefones($telefonesList);
 			$funcionariosModel->setEmail($emailList);
-			$funcionariosModel->setCodigo($codigoAdmissao);
-			$funcionariosModel->setCargo($cargo);
+			
+			$funcionariosModel->setCargo($cargosModel);
 			$funcionariosModel->setDataAdmissao($dataAdmissao);
-			$funcionariosModel->setSalario($salario);
+			$funcionariosModel->setDataDemissao($dataDemissao);
 			$funcionariosModel->setStatus(status::ATIVO);
 			$funcionariosModel->setDataCadastro(date('Y-m-d h:i:s'));
 
@@ -240,13 +264,16 @@ class gerenciar extends Controller{
 
 
 	/**
-	 * Ação do editar
-	 */
-	/**
 	 * Ação do cadastrar
 	 */
 	public function atualizar()
 	{
+		if(!$this->checkPermissao->check(false,URL.'funcionarios/gerenciar/editar'))
+		{
+			echo "Ação não permitida";
+			return false;
+		}
+
 		$idFuncionario = isset($_POST['id_funcionario']) ? filter_var($_POST['id_funcionario']) : '';
 		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
 		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
@@ -275,9 +302,9 @@ class gerenciar extends Controller{
 		
 		//DADOS ADMISSIONAIS
 		$codigoAdmissao = isset($_POST['codigoAdmissao']) ? filter_var(trim($_POST['codigoAdmissao'])) : '';
-		$cargo = isset($_POST['cargo']) ? filter_var(trim($_POST['cargo'])) : '';
+		$cargo = isset($_POST['cargo']) ? intval($_POST['cargo']) : '';
 		$dataAdmissao = isset($_POST['dataAdmissao']) ? filter_var(trim($_POST['dataAdmissao'])) : '';
-		$salario = isset($_POST['salario']) ? filter_var(trim($_POST['salario'])) : '';
+		$dataDemissao = isset($_POST['dataDemissao']) ? filter_var(trim($_POST['dataDemissao'])) : '';
 
 
 
@@ -350,7 +377,7 @@ class gerenciar extends Controller{
 			$this->load->library('dataFormat', null,true);
 			$dataNascimento = $this->dataFormat->formatar($dataNascimento,'data','banco');
 			$dataAdmissao = $this->dataFormat->formatar($dataAdmissao,'data','banco');
-			$salario = $this->dataFormat->formatar($salario,'decimal','banco');
+			$dataDemissao = $this->dataFormat->formatar($dataDemissao,'data','banco');
 
 			
 
@@ -371,11 +398,14 @@ class gerenciar extends Controller{
 			$funcionariosModel->setTelefones($telefonesList);
 			$funcionariosModel->setEmail($emailList);
 			$funcionariosModel->setCodigo($codigoAdmissao);
-			$funcionariosModel->setCargo($cargo);
+
+			$this->load->model('funcionarios/cargosModel');
+			$cargosModel = new cargosModel();
+			$cargosModel->setId($cargo);
+			$funcionariosModel->setCargo($cargosModel);
+			
 			$funcionariosModel->setDataAdmissao($dataAdmissao);
-			$funcionariosModel->setSalario($salario);
-			$funcionariosModel->setStatus(status::ATIVO);
-			$funcionariosModel->setDataCadastro(date('Y-m-d h:i:s'));
+			$funcionariosModel->setDataDemissao($dataDemissao);
 
 
 			//FUNCIONARIO DAO
@@ -416,6 +446,11 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		if(!$this->checkPermissao->check(false,URL.'funcionarios/gerenciar/excluir'))
+		{
+			echo "Ação não permitida";
+			return false;
+		}
 		$this->atualizarStatus();
 	}
 

@@ -11,7 +11,7 @@
     <div class="middle-content">
             <?php
             $thead = '  <tr>
-                            <th width="100">Grupo</th>
+                            <th width="100">Nível</th>
                             <th width="160">Funcionário</th>
                             <th width="160">Email</th>
                             <th width="160">Login</th>
@@ -19,7 +19,7 @@
                             <th width="180">Ações</th>
                         </tr>';
             $tfoot = '  <tr>
-                            <th>Grupo</th>
+                            <th>Nível</th>
                             <th>Funcionario</th>
                             <th>Email</th>
                             <th>Login</th>
@@ -34,7 +34,7 @@
                     $inativo = ($usu->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
 
             $tbody .='  <tr id="'.$usu->getId().'">
-                            <td>'.$usu->getGrupoFuncionario()->getNome().'</td>
+                            <td>'.$usu->getNivelAcesso()->getNome().'</td>
                             <td>'.$usu->getFuncionario()->getNome().' '.$usu->getFuncionario()->getSobrenome().'</td>
                             <td>'.$usu->getEmail().'</td>
                             <td>'.$usu->getLogin().'</td>

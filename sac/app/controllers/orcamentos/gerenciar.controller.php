@@ -6,6 +6,7 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class gerenciar extends Controller{
 	public function __construct(){
 		parent::__construct();
+
 	}
 
 

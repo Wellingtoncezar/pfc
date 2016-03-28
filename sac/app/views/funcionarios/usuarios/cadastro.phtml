@@ -12,18 +12,18 @@
             <div class="panel-heading">Dados Gerais</div>
             <div class="panel-body">
                  <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Grupo</span>
-                    <select name="grupo" id="grupo" class="form-control">
+                    <span class="input-group-addon" id="basic-addon1">Nível de acesso</span>
+                    <select name="nivel" id="nivel" class="form-control">
                         <option selected="selected" disabled="disabled" value="">..Selecione..</option>
-                        <?php if(!empty($grupo_funcionarios)):?>
-                        <?php foreach ($grupo_funcionarios as $grupo_funcionarios):?>
-                        <option value="<?= $grupo_funcionarios->getId()?>"><?= $grupo_funcionarios->getNome()?></option>
+                        <?php if(!empty($niveisAcesso)):?>
+                        <?php foreach ($niveisAcesso as $nivelAcesso):?>
+                        <option value="<?= $nivelAcesso->getId()?>"><?=$nivelAcesso->getNome()?></option>
                         <?php endforeach;?>
                         <?php endif;?>
                     </select>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Funcionario</span>
+                    <span class="input-group-addon" id="basic-addon1">Funcionário</span>
                     <select name="funcionario" id="funcionarios" class="form-control">
                         <option selected="selected" disabled="disabled" value="">..Selecione..</option>
                         <?php if(!empty($funcionarios)):?>

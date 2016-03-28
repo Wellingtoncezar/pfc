@@ -4,14 +4,15 @@
 */
 define('BASEPATH',dirname(__FILE__).'/');
 
-require_once(BASEPATH.'system'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+require_once(BASEPATH.DIRECTORY_SEPARATOR.'system'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+
 
 if(!function_exists('autoload'))
 {
     /*** nullify any existing autoloads ***/
     spl_autoload_register(null, false);
     /*** specify extensions that may be loaded ***/
-    spl_autoload_extensions('.php, .class.php, .library.php, .model.php, .controller.php');
+    spl_autoload_extensions('.php, .controller.php');
     /*** register the loader functions ***/ 
             
     function includeFile($file)
@@ -47,22 +48,3 @@ if(!function_exists('autoload'))
 
     spl_autoload_register('_autoload');
 }
-
-
-// function checkConfig()
-// {
-// 	if(	!defined('HOSTNAME') 
-// 		|| !defined('USERNAME') 
-// 		|| !defined('PASSWORD') 
-// 		|| !defined('DBNAME') 
-// 		|| !defined('MYSQLPORT')
-// 		|| !defined('BASEPATH')
-// 		|| !defined('MODELS')
-// 		|| !defined('VIEWS')
-// 		|| !defined('CONTROLLERS')
-// 	){
-// 		die('Arquivo de configuração não está configurado corretamente. Configure o caminho do servidor mysql, com porta login e senha.');
-// 	}
-// }
-
-// checkConfig();

@@ -169,30 +169,31 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
 			          	}
 			        }
 			    }
-			}).on('keydown', function (e) {
-			    switch (e.which) {
-			        case 37:
-			    	    e.preventDefault();
-			        	$image.cropper('move', -1, 0);
-			        break;
+			 })
+			//.on('keydown', function (e) {
+			//     switch (e.which) {
+			//         case 37:
+			//     	    e.preventDefault();
+			//         	$image.cropper('move', -1, 0);
+			//         break;
 
-			        case 38:
-			          	e.preventDefault();
-			          	$image.cropper('move', 0, -1);
-			        break;
+			//         case 38:
+			//           	e.preventDefault();
+			//           	$image.cropper('move', 0, -1);
+			//         break;
 
-			        case 39:
-			          	e.preventDefault();
-			          	$image.cropper('move', 1, 0);
-			        break;
+			//         case 39:
+			//           	e.preventDefault();
+			//           	$image.cropper('move', 1, 0);
+			//         break;
 
-			        case 40:
-			          	e.preventDefault();
-			          	$image.cropper('move', 0, 1);
-			        break;
-			    }
+			//         case 40:
+			//           	e.preventDefault();
+			//           	$image.cropper('move', 0, 1);
+			//         break;
+			//     }
 
-		    });
+		 //    });
 
 
 		    // Import image

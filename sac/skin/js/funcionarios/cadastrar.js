@@ -1,6 +1,7 @@
 $(function(){
     /*MASCARAS DE CAMPOS*/
-    $('input[name=dataNascimento],input[name=dataAdmissao]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true,yearRange: "-100:+0" });
+    $('input[name=dataNascimento]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true,yearRange: "-90:-15" });
+    $('input[name=dataAdmissao],input[name=dataDemissao]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true,yearRange: "-100:+0" });
     $('input[name=cep]').wvmask('cep')
     $('input[name=numero]').wvmask('numero')
     $('input[name=cpf]').mask('999.999.999-99');

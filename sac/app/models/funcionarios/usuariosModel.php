@@ -9,9 +9,10 @@ class usuariosModel{
 	private $login;
 	private $senha;
 	private $email;
-	private $grupoFuncionario;
+	private $nivelAcesso;
 	private $status;
 	private $dataCadastro;
+	private $hash;
 	
 
 		
@@ -33,9 +34,9 @@ class usuariosModel{
 	{
 		$this->senha = $senha;
 	}
-	public function setGrupoFuncionario ($grupoFuncionario)
+	public function setNivelAcesso ($nivelAcesso)
 	{
-		$this->grupoFuncionario = $grupoFuncionario;
+		$this->nivelAcesso = $nivelAcesso;
 	}
 	public function setEmail ($email)
 	{
@@ -49,6 +50,10 @@ class usuariosModel{
 	public function setDataCadastro($dataCadastro)
 	{	
 		$this->dataCadastro = $dataCadastro;
+	}
+	public function setHash($hash)
+	{	
+		$this->hash = $hash;
 	}
 
 	//GETERS
@@ -68,9 +73,9 @@ class usuariosModel{
 	{
 		return $this->senha;
 	}
-	public function getGrupoFuncionario()
+	public function getNivelAcesso()
 	{
-		return $this->grupoFuncionario;
+		return $this->nivelAcesso;
 	}
 	public function getEmail()
 	{
@@ -84,6 +89,10 @@ class usuariosModel{
 	public function getDataCadastro()
 	{	
 		return $this->dataCadastro;
+	}
+	public function getHash($hash)
+	{	
+		return $this->hash;
 	}
 
 

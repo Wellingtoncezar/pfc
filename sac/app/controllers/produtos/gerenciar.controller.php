@@ -41,14 +41,23 @@ class gerenciar extends Controller{
 		$data = array(
 			'titlePage' => 'Cadastrar Produtos'
 		);
+
+		//marcas
 		$this->load->dao('produtos/marcasDao');
 		$marcas = new marcasDao;
 		$data['marcas']=$marcas->listar();
 
+		//categorias
 		$this->load->dao('produtos/categoriasDao');
 		$categorias = new categoriasDao;
 		$data['categorias']=$categorias->listar();
 
+		//unidades de medida
+		$this->load->dao('produtos/unidademedidaDao');
+		$unidademedida = new unidademedidaDao;
+		$data['unidademedida']=$unidademedida->listar();
+
+		//fornecedores
 		$this->load->dao('fornecedores/fornecedoresDao');
 		$fornecedores = new fornecedoresDao;
 		$data['fornecedores']=$fornecedores->listar();
@@ -75,103 +84,99 @@ class gerenciar extends Controller{
 
 	public function inserir()
 	{
+
 		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
 		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
 		$marca = isset($_POST['marca']) ? intval($_POST['marca']) : '';
 		$categoria = isset($_POST['categoria']) ? intval($_POST['categoria']) : '';
         $descricao = isset($_POST['descricao']) ? filter_var(trim($_POST['descricao'])) : '';
-		$fornecedor = isset($_POST['fornecedor']) ? intval($_POST['fornecedor']) : '';
-		
+		$fornecedores = isset($_POST['fornecedores']) ? filter_var_array($_POST['fornecedores']) : Array();
 
-		//valores
-		$precocompra = isset($_POST['preco_compra']) ? filter_var($_POST['preco_compra']) : '';
-		$porcentagemlucro = isset($_POST['porcentagem_lucro']) ? filter_var($_POST['porcentagem_lucro']) : '';
-		$precovenda = isset($_POST['preco_venda']) ? filter_var($_POST['preco_venda']) : '';
-		$peso = isset($_POST['peso']) ? filter_var(trim($_POST['peso'])) : '';
-		$quantidade = isset($_POST['quantidade']) ? filter_var($_POST['quantidade']) : '';
+		$preco_custo = isset($_POST['preco_custo']) ? filter_var($_POST['preco_custo']) : '';
+		$preco_venda = isset($_POST['preco_venda']) ? filter_var($_POST['preco_venda']) : '';
+		$markup = isset($_POST['markup']) ? filter_var($_POST['markup']) : '';
 		$uni_medida = isset($_POST['uni_medida']) ? filter_var(trim($_POST['uni_medida'])) : '';
-		$estoque_max = isset($_POST['estoque_max']) ? filter_var($_POST['estoque_max']) : '';
-        $estoque_min = isset($_POST['estoque_min']) ? filter_var($_POST['estoque_min']) : '';
-		
 
-		//categoria
-		$nome_categoria = isset($_POST['nome_categoria']) ? filter_var($_POST['nome_categoria']) : '';
-		$status_categoria = isset($_POST['status_categoria']) ? filter_var($_POST['status_categoria']) : '';
-		$data_categoria = isset($_POST['data_categoria']) ? filter_var(trim($_POST['data_categoria'])) : '';
-
-		//Marca
-		$nome_marca = isset($_POST['nome_marca']) ? filter_var($_POST['nome_marca']) : '';
-		$status_marca = isset($_POST['status_marca']) ? filter_var($_POST['status_marca']) : '';
-		$data_marca = isset($_POST['data_marca']) ? filter_var(trim($_POST['data_marca'])) : '';
-
-		
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
-		
 		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(3);
-		$this->dataValidator->set('Fornecedor', $fornecedor, 'fornecedor')->is_required();
-		$this->dataValidator->set('Preço compra', $precocompra, 'preco_compra')->is_required();
-		$this->dataValidator->set('Porcentagem lucro', $porcentagemlucro, 'porcentagem_lucro')->is_required();
-		$this->dataValidator->set('Quantidade', $quantidade, 'quantidade')->is_required()->is_num();
+		$this->dataValidator->set('Marca', $marca, 'marca')->is_required();
+		$this->dataValidator->set('Categoria', $categoria, 'categoria')->is_required();
+		$this->dataValidator->set('Fornecedores', $fornecedores, 'listafornecedores')->is_required();
+		$this->dataValidator->set('Preço de custo', $preco_custo, 'preco_custo')->is_required();
+		$this->dataValidator->set('Preço de venda', $preco_venda, 'preco_venda')->is_required();
+		$this->dataValidator->set('Markup', $markup, 'markup')->is_required();
 		$this->dataValidator->set('Unidade de Medida', $uni_medida, 'uni_medida')->is_required();
-		$this->dataValidator->set('Estoque maximo', $estoque_max, 'estoque_max')->is_required();
-		$this->dataValidator->set('Estoque minimo', $estoque_min, 'estoque_min')->is_required();
-
 
 		if ($this->dataValidator->validate())
 		{
-
-
-			//CATEGORIA
-			$this->load->model('categoriasModel');
-			$categoriasModel = new categoriasModel();
-			$categoriasModel->setId($id_categoria);
-			$categoriasModel->setNome($nome_categoria);
-
-
-			//MARCA
-			$this->load->model('marcasModel');
-			$marcasModel = new marcasModel();
-			$marcasModel->setId($id_marca);
-			$marcasModel->setNome($nome_marca);
-
-			//FORNECEDOR
-			$this->load->model('fornecedoresModel');
-			$fornecedoresModel = new fornecedoresModel();
-			$fornecedoresModel->setId($id_fornecedor);
-			$fornecedoresModel->setRazaoSocial($$razao_social);
-
-			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat', null, true);
-			$precocompra = $this->dataFormat->formatar($precocompra,'decimal','banco');
-			$porcentagemlucro = $this->dataFormat->formatar($porcentagemlucro,'decimal','banco');
-			$precovenda = $this->dataFormat->formatar($precovenda,'decimal','banco');
-
-
 			//PRODUTOS
 			$this->load->model('produtos/produtosModel');
 			$produtosModel = new produtosModel();
+
+			//MARCA
+			$this->load->model('produtos/marcasModel');
+			$marcasModel = new marcasModel();
+			$marcasModel->setId($marca);
+
+			//CATEGORIA
+			$this->load->model('produtos/categoriasModel');
+			$categoriasModel = new categoriasModel();
+			$categoriasModel->setId($categoria);
+
+			//UNIDADE DE MEDIDA
+			$this->load->model('produtos/unidademedidaModel');
+			$unidademedidaModel = new unidademedidaModel();
+			$unidademedidaModel->setId($uni_medida);
+
+
+			
+
+			//FORNECEDORES
+			$this->load->model('fornecedores/fornecedoresModel');
+			$this->load->model('produtos/produtofornecedorModel');
+			foreach ($fornecedores as $fornec)
+			{
+				if($fornec['principal'] == 'true')
+					$principal = true;
+				else
+					$principal = false;
+
+				$fornecedoresModel = new fornecedoresModel();
+				$fornecedoresModel->setId($fornec['id']);
+
+				$produtofornecedorModel = new produtofornecedorModel();
+				$produtofornecedorModel->setFornecedor($fornecedoresModel);
+				$produtofornecedorModel->setPrincipal($principal);
+
+				$produtosModel->setFornecedores($produtofornecedorModel);
+			}
+
+			//FORMATAÇÃO DOS DADOS
+			$this->load->library('dataFormat', null, true);
+			$preco_custo = $this->dataFormat->formatar($preco_custo,'decimal','banco');
+			$preco_venda = $this->dataFormat->formatar($preco_venda,'decimal','banco');
+			$markup = $this->dataFormat->formatar($markup,'decimal','banco');
+
+
+			
 			$produtosModel->setFoto($foto);
 			$produtosModel->setNome($nome);
-			$produtosModel->setMarcas($marcasModel);
-			$produtosModel->setCategorias($categoriasModel);
+			$produtosModel->setMarca($marcasModel);
+			$produtosModel->setCategoria($categoriasModel);
 			$produtosModel->setDescricao($descricao);
-			$produtosModel->setFornecedor($fornecedor);
-			$produtosModel->setPrecoCompra($precocompra);
-			$produtosModel->setPorcentagemLucro($porcentagemlucro);
-			$produtosModel->setPrecoVenda($precovenda);
-			$produtosModel->setPeso($peso);
-			$produtosModel->setQuantidade($quantidade);
-			$produtosModel->setuni_medida($uni_medida);
-			$produtosModel->setEstoqueMax($estoque_max);
-			$produtosModel->setEstoqueMin($estoque_min);
+			$produtosModel->setUnidadeMedida($unidademedidaModel);
+
+			$produtosModel->setPrecocusto($preco_custo);
+			$produtosModel->setPrecovenda($preco_venda);
+			$produtosModel->setMarkup($markup);
 			$produtosModel->setStatus(status::ATIVO);
 			$produtosModel->setDataCadastro(date('Y-m-d h:i:s'));
-		
-		//FUNCIONARIO DAO
+
+			//PRODUTOS DAO
 			$this->load->dao('produtos/produtosDao');
-			$produtosDa = new produtosDao();
-			echo $produtosDa->inserir($produtosModel);
+			$produtosDao = new produtosDao();
+			echo $produtosDao->inserir($produtosModel);
 		}else
 	    {
 			$todos_erros = $this->dataValidator->get_errors();

@@ -12,15 +12,25 @@ class url
 {
 	private $url;
 	private $currentUrl;
-	public function __construct()
+	public function __construct($url = '')
 	{
-		$server = 'http://'.$_SERVER['SERVER_NAME'].'/'; 
-		$endereco = $_SERVER ['REQUEST_URI'];
-		$endereco = rtrim($endereco,'/'); //remove as barras do final da string
-		$endereco = ltrim($endereco,'/'); //remove as barras do começo da string
-		$url = $server.$endereco.'/';//endereço completo
-		$this->currentUrl = $url;
-		$url = str_replace(URL, '', $url);//remove o endereço original e fica apenas o caminho
+		if($url != '')
+		{
+			$this->currentUrl = $url;
+		}else
+		{
+			$server = 'http://'.$_SERVER['SERVER_NAME'].'/'; 
+			$endereco = $_SERVER ['REQUEST_URI'];
+			$endereco = rtrim($endereco,'/'); //remove as barras do final da string
+			$endereco = ltrim($endereco,'/'); //remove as barras do começo da string
+			$this->currentUrl = $server.$endereco.'/';//endereço completo
+		}
+		$this->explodeUrl();
+	}
+
+	private function explodeUrl(){
+
+		$url = str_replace(URL, '', $this->currentUrl);//remove o endereço original e fica apenas o caminho
 		$url = explode('/',$url);
 		$url =array_filter($url);//remove todos os índices vazios
 		$newArr =array();
@@ -31,7 +41,6 @@ class url
 		unset($url);
 		unset($newArr);
 	}
-
 	public function getUrl()
 	{
 		return $this->url;//retorna o array da url

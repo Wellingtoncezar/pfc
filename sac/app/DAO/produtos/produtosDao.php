@@ -164,27 +164,27 @@ class produtosDao extends Dao{
 	 * Insere novos funcionários
 	 * @return boolean, json
 	 */
- 	public function inserir(funcionariosModel $funcionario)
- 	{
+ // 	public function inserir(funcionariosModel $funcionario)
+ // 	{
  		
 
-		if($funcionario->getFoto() != '')
-		{
-	 		//nome da imagem
-			$char = new caracteres($funcionario->getNome());
-			$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
+	// 	if($funcionario->getFoto() != '')
+	// 	{
+	//  		//nome da imagem
+	// 		$char = new caracteres($funcionario->getNome());
+	// 		$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
 			
-			$upload = $this->uploadFoto($this->nomeArquivoFoto, $funcionario->getFoto()); //upload da foto
-			if($upload)
-				return $this->insertData($funcionario);
-			else
-				return $upload;
-		}else
-		{
-			return $this->insertData($funcionario);
-		}
+	// 		$upload = $this->uploadFoto($this->nomeArquivoFoto, $funcionario->getFoto()); //upload da foto
+	// 		if($upload)
+	// 			return $this->insertData($funcionario);
+	// 		else
+	// 			return $upload;
+	// 	}else
+	// 	{
+	// 		return $this->insertData($funcionario);
+	// 	}
 
-	}
+	// }
 
 	/**
 	 * Atualiza funcionários
@@ -221,44 +221,35 @@ class produtosDao extends Dao{
 	}
 
 
-	private function insertData(funcionariosModel $funcionario)
+	public function inserir(produtosModel $produto)
 	{
-
  		$data = array(
- 			'foto_funcionario' => $this->nomeArquivoFoto,
- 			'nome_funcionario' => $funcionario->getNome(),
- 			'sobrenome_funcionario' => $funcionario->getSobrenome(),
- 			'data_nascimento_funcionario' => $funcionario->getDataNascimento(),
- 			'sexo_funcionario' => $funcionario->getSexo(),
- 			'rg_funcionario' => $funcionario->getRg(),
- 			'cpf_funcionario' => $funcionario->getCpf(),
- 			'estado_civil_funcionario' => $funcionario->getEstadoCivil(),
- 			'escolaridade_funcionario' => $funcionario->getEscolaridade(),
- 			'codigo_funcionario' => $funcionario->getCodigo(),
- 			'cargo_funcionario' => $funcionario->getCargo(),
- 			'data_admissao_funcionario' => $funcionario->getDataAdmissao(),
- 			'salario_funcionario' => $funcionario->getSalario(),
- 			'status_funcionario' => $funcionario->getStatus(),
- 			'data_cadastro_funcionario' => $funcionario->getDataCadastro()
+ 			'nome_produto' => $produto->getNome(),
+ 			'id_marca' => $produto->getMarca()->getId(),
+ 			'id_categoria' => $produto->getCategoria()->getId(),
+ 			'descricao_produto' => $produto->getDescricao(),
+ 			'preco_custo' => $produto->getPrecocusto(),
+ 			'preco_venda' => $produto->getPrecovenda(),
+ 			'markup_produto' => $produto->getMarkup(),
+ 			'id_unidade_medida' => $produto->getUnidadeMedida()->getId(),
+ 			'status_produto' => $produto->getStatus(),
+ 			'data_cadastro_produto' => $produto->getDataCadastro()
  		);
 
+
  		$this->db->clear();
-		$this->db->setTabela('funcionarios');
+		$this->db->setTabela('produtos');
 		$this->db->insert($data);
 		if($this->db->rowCount() > 0)
 		{
-			$funcionario->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
+			$produto->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
 
-			$this->atualizaEndereco($funcionario);
-			//TELEFONES
-			if(!empty($funcionario->getTelefones()))
-				$this->atualizaTelefones($funcionario);
+			//FORNECEDORES
+			if(!empty($produto->getFornecedores()))
+			 	$this->atualizaFornecedores($produto);
 
-			//EMAILS
-			if(!empty($funcionario->getEmail()))
-				$this->atualizaEmails($funcionario);
-
-			return true;
+			return 'cadastrado';
+			//return true;
  		}else
  		{
  			return json_encode(array('erro'=>'Erro ao inserir registro'));
@@ -310,85 +301,48 @@ class produtosDao extends Dao{
  	}
 
 
- 	/**
- 	 * Atualiza ou insere o endereço
- 	 * @return void
- 	 * */
- 	public function atualizaEndereco(funcionariosModel $funcionario)
- 	{
-
-	 	$this->db->clear();
-		$this->db->setTabela('enderecos');
-		$data = array(
-			'id_funcionario' => $funcionario->getId(),
-			'cep_endereco' => $funcionario->getEndereco()->getCep(),
-			'rua_endereco' => $funcionario->getEndereco()->getLogradouro(),
-			'numero_endereco' => $funcionario->getEndereco()->getNumero(),
-			'complemento_endereco' => $funcionario->getEndereco()->getComplemento(),
-			'bairro_endereco' => $funcionario->getEndereco()->getBairro(),
-			'cidade_endereco' => $funcionario->getEndereco()->getCidade(),
-			'estado_endereco' => $funcionario->getEndereco()->getEstado(),
-			'data_cadastro_endereco' => date('Y-m-d h:i:s')
-		);
-		
-
-		if($funcionario->getEndereco()->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
-		{
-			$this->db->setCondicao('id_endereco = "'.$funcionario->getEndereco()->getId().'"');
-			$this->db->update($data);
-		}else
-			$this->db->insert($data);
-
-		if($this->db->rowCount() > 0)
-			$this->nUpdates++;
-		else
-			return false;
- 	}
-
-
 
  	/**
  	 * 
  	 * Atualiza ou insere os telefones
  	 * @return void
  	 */
- 	private function atualizaTelefones(funcionariosModel $funcionario)
+ 	private function atualizaFornecedores(produtosModel $produto)
 	{
 
 		//excluir
-		$telefonesExcluir = array();
-		foreach ($funcionario->getTelefones() as $telefones)
+		$fornecedorExcluir = array();
+		foreach ($produto->getfornecedores() as $fornecedor)
 		{
-			if($telefones->getId() != '')
-				array_push($telefonesExcluir,$telefones->getId());
+			if($fornecedor->getId() != '')
+				array_push($fornecedorExcluir,$fornecedor->getFornecedor()->getId());
 		}
 		$cond = '';
-		if(!empty($telefonesExcluir))
+		if(!empty($fornecedorExcluir))
 		{
-			$telefonesExcluir = implode(',', $telefonesExcluir);
+			$fornecedorExcluir = implode(',', $fornecedorExcluir);
 			$this->db->clear();
-			$cond = " AND id_telefone not in (".$telefonesExcluir.")";
+			$cond = " AND id_fornecedor not in (".$fornecedorExcluir.")";
 		}
-		$sql = "DELETE FROM telefones WHERE id_funcionario = '".$funcionario->getId()."' $cond";
+		$sql = "DELETE FROM produto_fornecedores WHERE id_produto = '".$produto->getId()."' $cond";
 		$this->db->query($sql);
 		if($this->db->rowCount() > 0)
 
 		$this->db->clear();
-		$this->db->setTabela('telefones');
-		foreach ($funcionario->getTelefones() as $telefones)
+		$this->db->setTabela('produto_fornecedores');
+		foreach ($produto->getFornecedores() as $fornecedores)
 		{
-			if(!empty($telefones))
+			if(!empty($fornecedores))
 			{
 				$data = array(
-					'id_funcionario' => $funcionario->getId(),
-					'categoria_telefone' => $telefones->getCategoria(),
-					'numero_telefone' => $telefones->getNumero(),
-					'tipo_telefone' => $telefones->getTipo(),
-					'operadora_telefone' => $telefones->getOperadora()
+					'id_produto' => $produto->getId(),
+					'id_fornecedor' => $fornecedores->getFornecedor()->getId(),
+					'fornecedor_principal' =>$fornecedores->getPrincipal()
 				);
-				if($telefones->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
+
+				if($fornecedores->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
 				{
-					$this->db->setCondicao('id_telefone = "'.$telefones->getId().'"');
+					$this->db->setCondicao('id_produto_fornecedor = "'.$fornecedores->getId().'"');
 					$this->db->update($data);
 				}else{
 					$this->db->insert($data);

@@ -66,8 +66,9 @@ class login extends Controller{
 			    {
 			    	echo $this->validLogin($login, $senha);
 			    }
-			}else
+			}else{
 				echo $this->validLogin($login,$senha);
+			}
 		}
 		else{
 			echo json_encode($this->dataValidator->get_errors());
@@ -76,6 +77,7 @@ class login extends Controller{
 
 	private function validLogin($login, $senha)
 	{
+		
 		$this->load->model('funcionarios/usuariosModel');
 		$usuariosModel = new usuariosModel();
 		$usuariosModel->setLogin($login);
@@ -83,10 +85,20 @@ class login extends Controller{
 
 		$this->load->dao('loginDao');
 		$loginDao = new loginDao();
-		$loginDao->validLogin($usuariosModel);
+		$result = $loginDao->validLogin($usuariosModel);
 
-		$_SESSION['ntentativaLogin']++;
-		return false;
+		if($result == false){
+			$_SESSION['ntentativaLogin']++;
+			$error = array(
+				'error'=>'Login incorreto',
+				'captcha' => FALSE
+			);
+			return json_encode($error);
+		}else
+		{
+			$_SESSION['user'] = serialize($result);
+			return true;
+		}
 	}
 
 

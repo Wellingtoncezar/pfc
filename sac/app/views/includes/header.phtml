@@ -32,13 +32,15 @@ $menus[$pag] = 'active';
                 <div class="user dropdown">
                       <a href="" class="btn btn-default dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
                           <figure>
-                              <img src="<?=URL?>skin/img/imagens/perfil-icone.png">
+                          <?php
+                          $fotoFunc = (unserialize($_SESSION['user'])->getFuncionario()->getFoto() != '') ? URL.'skin/uploads/funcionarios/p/'.unserialize($_SESSION['user'])->getFuncionario()->getFoto() : URL.'skin/img/imagens/perfil-icone.png';
+                          ?>
+                              <img src="<?=$fotoFunc?>">
                           </figure>
-                          <p class="username">Nome do usuário</p>
+                          <p class="username"><?=unserialize($_SESSION['user'])->getFuncionario()->getNome()?></p>
                       </a>
                       <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-                          <li><a href="#">Sair</a></li>
-                          <li><a href="#">Logoff</a></li>
+                          <li><a href="<?=URL?>login/sair">Sair</a></li>
                       </ul>
                   </div>
                 </div>
@@ -58,46 +60,7 @@ $menus[$pag] = 'active';
                         <!-- Collect the nav links, forms, and other content for toggling -->
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <?php
-                            $menu = new menu();
-                            echo $menu->geraMenu();
-                            ?>
-                            <?php
-                            /*
-        
-                            <ul class="nav navbar-nav">
-                                <li class="dropdown "><a href="<?=URL?>funcionarios" class="dropdown-toggle <?=$menus['funcionarios']?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicons glyphicons-group"></span><p>Funcionários</p></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="<?=URL?>funcionarios/gerenciar">Gerenciar Funcionários</a></li>
-                                    </ul>
-                                </li>
-                               
-                               <li class="dropdown "><a href="<?=URL?>fornecedores" class="dropdown-toggle <?=$menus['fornecedores']?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicons glyphicons-handshake"></span><p>fornecedores</p></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="<?=URL?>fornecedores/gerenciar">Gerenciar Fornecedores</a></li>
-                                         <li><a href="<?=URL?>fornecedores/agenda">Agenda</a></li>
-                                    </ul>
-                                </li>
-                                
-                                <li class="dropdown "><a href="<?=URL?>produtos" class="dropdown-toggle <?=$menus['produtos']?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicons glyphicons-package"></span><p>produtos</p></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="<?=URL?>produtos/categoria">Gerenciar Categoria</a></li>
-                                        <li><a href="<?=URL?>produtos/marca">Gerenciar Marca</a></li>
-                                        <li><a href="<?=URL?>produtos/gerenciar">Gerenciar Produtos</a></li> 
-                                    </ul>
-                                </li>
-                                <li ><a href="<?=URL?>vendas" class="<?=$menus['vendas']?>"><span class="glyphicons glyphicons-notes"></span><p>Vendas</p></a></li>
-                                <li ><a href="<?=URL?>caixa" class="<?=$menus['caixa']?>"><span class="glyphicons glyphicons-calculator"></span><p>Caixa</p></a></li>
-                                <li ><a href="<?=URL?>orcamentos" class="<?=$menus['orcamentos']?>"><span class="glyphicons glyphicons-coins"></span><p>Orçamentos</p></a></li>
-                                <li ><a href="<?=URL?>estoque" class="<?=$menus['estoque']?>"><span class="glyphicons glyphicons-cargo"></span><p>Estoque</p></a></li>
-                                <li ><a href="<?=URL?>relatorios" class="<?=$menus['relatorios']?>"><span class="glyphicons glyphicons-stats"></span><p>Relatórios</p></a></li>
-                                <li class="dropdown "><a href="<?=URL?>configuracoes" class="<?=$menus['configuracoes']?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicons glyphicons-cogwheels"></span><p>Configurações</p></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="<?=URL?>configuracoes">Gerenciar</a></li>
-                                        <li><a href="<?=URL?>configuracoes/modulos">Módulos</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            */
+                            echo $this->menu->geraMenu();
                             ?>
                         </div><!-- /.navbar-collapse -->
                     </div><!-- /.container-fluid -->

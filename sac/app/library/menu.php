@@ -22,9 +22,9 @@ class menu extends Library{
 		*/
 
 		
-		//$permissao = $_SESSION['login_adm']['permissao'];
-		$permissao = 'Administrador';
-		if($permissao != 'Administrador')
+		$permissao = unserialize($_SESSION['user'])->getNivelAcesso()->getPermissoes();
+		//$permissao = 'Administrador';
+		if($permissao != '*')
 		{
 			$this->geraArrayMenuPermissao(0);
 		}else
@@ -79,12 +79,14 @@ class menu extends Library{
 	* Gera o array do menu para os diferentes níveis de permissões
 	*/
 	public function geraArrayMenuPermissao($id){
-		$permissoes = json_decode(html_entity_decode($_SESSION['login_adm']['listaPermissao']), true);
+
+		$permissoes = json_decode(html_entity_decode(unserialize($_SESSION['user'])->getNivelAcesso()->getPermissoes()), true);
+
 		$modulos = $this->getModule($id);
 		if(!empty($modulos)):
 		foreach ($modulos as $keyMod => $mod)
 		{
-			if(array_key_exists($mod['url_modulo'], $permissoes))
+			if(isset($permissoes[$mod['url_modulo']]))
 			{
 				$modulosModel = new modulosModel();
 				$modulosModel->setId($mod['id_modulo']);
@@ -94,8 +96,10 @@ class menu extends Library{
 				$modulosModel->setStatusSelecao($mod['status_selecao_modulo']);
 				$modulosModel->setFotoModulo($mod['icone_modulo']);
 
-				$this->_modulos[$mod['url_modulo']] = $modulosModel;
 
+				$this->_modulos[$mod['url_modulo']] = $modulosModel;
+				
+				unset($modulosModel);
 
 				//se existir submodulos
 				$submodulos = $this->getModule($mod['id_modulo']);
@@ -103,7 +107,7 @@ class menu extends Library{
 				{
 					foreach ($submodulos as $keySubMod => $subMod)
 					{
-						if(array_key_exists($subMod['url_modulo'], $permissoes[$mod['url_modulo']]['submodulos']))
+						if(isset($permissoes[$mod['url_modulo']]['submodulos'][$subMod['url_modulo']] ))
 						{
 							$subModulosModel = new modulosModel();
 							$subModulosModel->setId($subMod['id_modulo']);
@@ -113,13 +117,14 @@ class menu extends Library{
 							$subModulosModel->setStatusSelecao($subMod['status_selecao_modulo']);
 
 							$this->_modulos[$mod['url_modulo']]->setSubModulos($subModulosModel,'getUrl');
-							
+
 							$paginas = $this->getPaginas($subMod['id_modulo']);
+							
 							if($paginas != false)
 							{
 								foreach ($paginas as $keyPag => $pag)
 								{
-									if(array_key_exists($pag['url_pagina'], $permissoes[$mod['url_modulo']]['submodulos'][$subMod['url_modulo']]))
+									if(isset($permissoes[$mod['url_modulo']]['submodulos'][$subMod['url_modulo']][$pag['url_pagina']] ))
 									{
 										$paginasModel = new paginasModel();
 										$paginasModel->setId($pag['id_pagina']);
@@ -132,19 +137,20 @@ class menu extends Library{
 								}
 							}
 						}
+
 					}
 				}
 
 
 
 				$paginas = $this->getPaginas($mod['id_modulo']);
+
 				if($paginas != false)
 				{
 
 					foreach ($paginas as $keyPag => $pag)
 					{
-
-						if(array_key_exists($pag['url_pagina'], $permissoes[$mod['url_modulo']]['paginas']))
+						if(isset($permissoes[$mod['url_modulo']]['paginas'][$pag['url_pagina']] ))
 						{
 							$paginasModel = new paginasModel();
 							$paginasModel->setId($pag['id_pagina']);
@@ -153,7 +159,6 @@ class menu extends Library{
 							$paginasModel->setStatus($pag['status_pagina']);
 							$paginasModel->setStatusSelecao($pag['status_selecao_pagina']);
 							$this->_modulos[$mod['url_modulo']]->setPaginas($paginasModel, 'getUrl');
-
 						}
 					}
 				}
@@ -197,9 +202,6 @@ class menu extends Library{
 			{
 				foreach ($submodulos as $keySubMod => $subMod)
 				{
-
-
-
 					$subModulosModel = new modulosModel();
 					$subModulosModel->setId($subMod['id_modulo']);
 					$subModulosModel->setNome($subMod['nome_modulo']);
@@ -259,7 +261,6 @@ class menu extends Library{
 	*/
 	public function geraMenu()
 	{	
-		//print_r($this->_modulos);
 		$url = new url();
 		$activeHome = ( $url->getSegment(0) == false || strtolower($url->getSegment(0)) == 'home') ? 'active' : '';
 		$menu = '<ul class="nav navbar-nav">';
@@ -304,7 +305,7 @@ class menu extends Library{
 
 			        $menu .= '</li>';
 				else:
-					$menu .= '<li class="'.$$aux.'"><a href="'.URL.$modulo->getUrl().'" title="'.$modulo->getNome().'"><span class="'.$modulo->getFotoModulo().'"></span><small>'.$modulo->getNome().$numLixo.'</small></a></li>';
+					$menu .= '<li class="'.$$aux.'"><a href="'.URL.$modulo->getUrl().'" title="'.$modulo->getNome().'"><span class="'.$modulo->getFotoModulo().'"></span><p>'.$modulo->getNome().'</p></a></li>';
 				endif;
 			endforeach; 
         $menu .= '</ul>';

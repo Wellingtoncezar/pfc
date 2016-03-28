@@ -19,12 +19,14 @@ class funcionariosDao extends Dao{
 	public function listar()
 	{
 		$this->load->model('funcionarios/funcionariosModel');
+		$this->load->model('funcionarios/cargosModel');
+		
 		$funcionarios = Array();
 
 		$this->db->clear();
-		$this->db->setTabela('funcionarios');
-		$this->db->setCondicao(" status_funcionario in('".status::ATIVO."','".status::INATIVO."') ");
-		$campos = array('id_funcionario','codigo_funcionario','foto_funcionario','nome_funcionario','sobrenome_funcionario','cargo_funcionario','cpf_funcionario','status_funcionario');
+		$this->db->setTabela('funcionarios AS A, cargos AS B');
+		$this->db->setCondicao(" A.status_funcionario in('".status::ATIVO."','".status::INATIVO."') ");
+		$campos = array('A.id_funcionario','A.codigo_funcionario','A.foto_funcionario','A.nome_funcionario','A.sobrenome_funcionario','B.nome_cargo','B.setor_cargo','A.cpf_funcionario','A.status_funcionario', 'A.timestamp');
 		$this->db->select($campos);
 		if($this->db->rowCount() > 0):
 			$result = $this->db->resultAll();
@@ -37,8 +39,15 @@ class funcionariosDao extends Dao{
 				$funcionariosModel->setSobrenome($value['sobrenome_funcionario']);
 				$funcionariosModel->setCpf($value['cpf_funcionario']);
 				$funcionariosModel->setCodigo($value['codigo_funcionario']);
-				$funcionariosModel->setCargo($value['cargo_funcionario']);
 				$funcionariosModel->setStatus(status::getAttribute($value['status_funcionario']));
+				$funcionariosModel->setDataAtualizacao($value['timestamp']);
+
+				//cargo
+				$cargo = new cargosModel();
+				$cargo->setNome($value['nome_cargo']);
+				$cargo->setSetor($value['setor_cargo']);
+				$funcionariosModel->setCargo($cargo);
+
 				array_push($funcionarios, $funcionariosModel);
 				unset($funcionariosModel);
 			}
@@ -146,10 +155,14 @@ class funcionariosDao extends Dao{
 			$funcionario->setEndereco($endereco);
 			$funcionario->setTelefones($telefonesList);
 			$funcionario->setEmail($emailsList);
-			$funcionario->setCodigo($result['codigo_funcionario']);
-			$funcionario->setCargo($result['cargo_funcionario']);
+
+			$this->load->model('funcionarios/cargosModel');
+			$cargosModel = new cargosModel();
+			$cargosModel->setId($result['id_cargo']);
+			$funcionario->setCargo($cargosModel);
+
 			$funcionario->setDataAdmissao($result['data_admissao_funcionario']);
-			$funcionario->setSalario($result['salario_funcionario']);
+			$funcionario->setDataDemissao($result['data_demissao_funcionario']);
 			$funcionario->setStatus(status::getAttribute($result['status_funcionario']));
 			return $funcionario;
 		else:
@@ -221,6 +234,10 @@ class funcionariosDao extends Dao{
 
 	private function insertData(funcionariosModel $funcionario)
 	{
+		$this->load->library('geracodigo');
+		$geracodigo = new geracodigo();	
+		$codigoFuncionario = date('dmy').'.'.$geracodigo->setTamanho(4)->gerar();
+
 
  		$data = array(
  			'foto_funcionario' => $this->nomeArquivoFoto,
@@ -232,10 +249,10 @@ class funcionariosDao extends Dao{
  			'cpf_funcionario' => $funcionario->getCpf(),
  			'estado_civil_funcionario' => $funcionario->getEstadoCivil(),
  			'escolaridade_funcionario' => $funcionario->getEscolaridade(),
- 			'codigo_funcionario' => $funcionario->getCodigo(),
- 			'cargo_funcionario' => $funcionario->getCargo(),
+ 			'codigo_funcionario' => $codigoFuncionario,
+ 			'id_cargo' => $funcionario->getCargo()->getId(),
  			'data_admissao_funcionario' => $funcionario->getDataAdmissao(),
- 			'salario_funcionario' => $funcionario->getSalario(),
+ 			'data_demissao_funcionario' => $funcionario->getDataDemissao(),
  			'status_funcionario' => $funcionario->getStatus(),
  			'data_cadastro_funcionario' => $funcionario->getDataCadastro()
  		);
@@ -259,7 +276,7 @@ class funcionariosDao extends Dao{
 			return true;
  		}else
  		{
- 			return json_encode(array('erro'=>'Erro ao inserir registro'));
+ 			return $this->db->getError();
  		}
  		
  	}
@@ -277,12 +294,9 @@ class funcionariosDao extends Dao{
  			'cpf_funcionario' => $funcionario->getCpf(),
  			'estado_civil_funcionario' => $funcionario->getEstadoCivil(),
  			'escolaridade_funcionario' => $funcionario->getEscolaridade(),
- 			'codigo_funcionario' => $funcionario->getCodigo(),
- 			'cargo_funcionario' => $funcionario->getCargo(),
+ 			'id_cargo' => $funcionario->getCargo()->getId(),
  			'data_admissao_funcionario' => $funcionario->getDataAdmissao(),
- 			'salario_funcionario' => $funcionario->getSalario(),
- 			'status_funcionario' => $funcionario->getStatus(),
- 			'data_cadastro_funcionario' => $funcionario->getDataCadastro()
+ 			'data_demissao_funcionario' => $funcionario->getDataDemissao()
  		);
 
  		$this->db->clear();

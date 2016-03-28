@@ -20,10 +20,10 @@ class funcionariosModel{
 	private $codigo;
 	private $cargo;
 	private $dataAdmissao;
-	private $salario;
+	private $dataDemissao;
 	private $status;
 	private $dataCadastro;
-	
+	private $dataAtualizacao;
 
  	//SETERS
  	public function setId($id)
@@ -66,7 +66,7 @@ class funcionariosModel{
 	{
 		$this->escolaridade = $escolaridade;
 	}
-	public function setEndereco($endereco)
+	public function setEndereco(enderecoModel $endereco)
 	{
 		$this->endereco = $endereco;
 	}
@@ -90,9 +90,9 @@ class funcionariosModel{
 	{
 		$this->dataAdmissao = $dataAdmissao;
 	}
-	public function setSalario($salario)
+	public function setDataDemissao($dataDemissao)
 	{
-		$this->salario = $salario;
+		$this->dataDemissao = $dataDemissao;
 	}
 	public function setStatus($status)
 	{
@@ -101,6 +101,10 @@ class funcionariosModel{
 	public function setDataCadastro($dataCadastro)
 	{	
 		$this->dataCadastro = $dataCadastro;
+	}
+	public function setDataAtualizacao($dataAtualizacao)
+	{	
+		$this->dataAtualizacao = $dataAtualizacao;
 	}
 
 
@@ -169,9 +173,9 @@ class funcionariosModel{
 	{
 		return $this->dataAdmissao;
 	}
-	public function getSalario()
+	public function getDataDemissao()
 	{
-		return $this->salario;
+		return $this->dataDemissao;
 	}
 	public function getStatus()
 	{
@@ -180,6 +184,10 @@ class funcionariosModel{
 	public function getDataCadastro()
 	{	
 		return $this->dataCadastro;
+	}
+	public function getDataAtualizacao()
+	{	
+		return $this->dataAtualizacao;
 	}
 
 

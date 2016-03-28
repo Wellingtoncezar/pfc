@@ -8,7 +8,7 @@ class gerenciar extends Controller{
 		parent::__construct();
 		//$this->load->dao('loginDao');
 		//$this->loginDao->statusLogin();
-		
+
 	}
 
 
@@ -19,11 +19,15 @@ class gerenciar extends Controller{
 	/**
 	*Página index
 	*/
+
 	public function index()
 	{
+		// print_r($_SESSION['user']);
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+
+		$this->checkPermissao->check();
 
 		$data = array(
 			'titlePage' => ''

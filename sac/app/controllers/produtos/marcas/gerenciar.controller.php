@@ -20,6 +20,9 @@ class gerenciar extends Controller{
 	 */
 	public function index()
 	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
 		$data = array(
 			'titlePage' => 'Gerenciar Marca',
 			'template' => new templateFactory()
@@ -41,6 +44,9 @@ class gerenciar extends Controller{
 	 */
 	public function cadastrar()
 	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
 		$data = array(
 			'titlePage' => 'Cadastrar marcas',
 			'template' => new templateFactory()
@@ -58,6 +64,9 @@ class gerenciar extends Controller{
 	 */
 	public function editar()
 	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
 		$data = array(
 			'titlePage' => 'Editar marca',
 			'template' => new templateFactory()

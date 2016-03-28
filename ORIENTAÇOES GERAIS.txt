@@ -1,4 +1,4 @@
-﻿GRUPO: nº16
+GRUPO: nº16
 ---------------------------------------------------------
 INTEGRANTES:
 	Diego Hernandes        RGM: 11131101472
@@ -65,12 +65,19 @@ Funcionário
 
 
 
-	criar um arquivo xml com as conexoes do banco
+criar um arquivo xml com as conexoes do banco
 CRIAR UM USUARIO
 CREATE USER 'userlogin'@'localhost' IDENTIFIED BY 'vvCD74vE5sQWvrd6';
-GRANT SELECT ON *.* TO 'userlogin'@'localhost' IDENTIFIED BY 'vvCD74vE5sQWvrd6' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
 GRANT SELECT ON `sac`.`sys_usuarios` TO 'userlogin'@'localhost';
 GRANT SELECT ON `sac`.`funcionarios` TO 'userlogin'@'localhost';
+GRANT SELECT ON `sac`.`nivel_acesso` TO 'userlogin'@'localhost';
+
+
+CREATE USER 'gerente'@'localhost' IDENTIFIED BY 'vvCD74vE5sQWvrd6';
+GRANT SELECT ON `sac`.`sys_usuarios` TO 'gerente'@'localhost';
+GRANT SELECT ON `sac`.`funcionarios` TO 'gerente'@'localhost';
+GRANT SELECT ON `sac`.`nivel_acesso` TO 'gerente'@'localhost';
+
 
 
 DEFINIR ACESSO

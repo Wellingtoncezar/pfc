@@ -23,6 +23,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->checkPermissao->check();
 
 		$data = array(
 			'titlePage' => 'Fornecedores',
@@ -45,6 +46,10 @@ class gerenciar extends Controller{
 	 */
 	public function cadastrar()
 	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Cadastrar fornecedores',
 			'template' => new templateFactory()
@@ -61,6 +66,11 @@ class gerenciar extends Controller{
 	 */
 	public function editar()
 	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->checkPermissao->check();
+		
 		$data = array(
 			'titlePage' => 'Editar fornecedores',
 			'template' => new templateFactory()

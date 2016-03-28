@@ -2,15 +2,18 @@
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class templateFactory extends Library implements iTemplateFactory {
 
-	public function getButton($button, $atr, $checkPermission = TRUE) 
+	public function getButton($button, $atr, $checkPermission = '') 
 	{
-		// if($this->checkPermissao->acao($button))//verifica a permissão de acesso
-		// {
-			$this->load->library('buttons/'.$button);
-			$template = new $button();
-			return $template->getContent($atr);
-		// }else
-		//  	return null;
+		// echo '<pre>';
+		// echo $checkPermission.'<br>';
+		// var_dump($this->checkPermissao->checkPermissaoPagina(false, $checkPermission));
+		// echo '</pre>';
+		if($checkPermission != '' && $this->checkPermissao->check(false, $checkPermission) == false )//verifica a permissão de acesso
+			return null;
+
+		$this->load->library('buttons/'.$button);
+		$template = new $button();
+		return $template->getContent($atr);
 	}
 
 	public function getTable($table, $atr)

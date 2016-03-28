@@ -78,12 +78,16 @@ class conn
 			if($e->getCode() == '1044')
 			{
 				die('Erro mysql[1044]: Acesso negado para o usuário "'.USERNAME.'@localhost" para banco de dados '.strtoupper(DBNAME).' 
-					<p><strong>Possível solução: </strong>Verifique se o nome de usuário da conexão está correta.</p>');
+					<p><strong>Possível solução: </strong>Verifique se o nome de usuário da conexão está correta.</p>
+					<p>'.$e->getMessage().'
+					');
 			}else
 			if($e->getCode() == '1045')
 			{
 				die('Erro mysql[1044]: Acesso negado para o usuário "'.USERNAME.'@localhost" com senha para banco de dados '.strtoupper(DBNAME).'.
-					<p><strong>Possível solução: </strong>Verifique se o nome de usuário e a senha da conexão estão corretas.</p>');
+					<p><strong>Possível solução: </strong>Verifique se o nome de usuário e a senha da conexão estão corretas.</p>
+					<p>'.$e->getMessage().'
+					');
 			}
 			else
 			{

@@ -1,25 +1,64 @@
 <?php
 if(!defined('BASEPATH')) die('Acesso não permitido');
-header('Content-Type: text/html; charset=utf-8');
 /**
 * Arquivo de configuração geral
 * @author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
 * @since 05/03/2015
-* @version 2.0
+* @version 3.0
 *
 */
-require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
 
-define('SYSTEMPATH','system');
-define('LIBRARYPATH','library');
+class config{
+	/*
+	ARQUIVO DE CONFIGURAÇÕES DO SISTEMA
+	*/
+	private static $_config = array();
+    protected function __construct(){
+    	
+    }
 
-foreach ($_config as $key => $value)
-{
-	$key = strtoupper($key);
-	define($key,$value);
+    public static function getInstance()
+    {
+        static $instance = null;
+        if (null === $instance) {
+            $instance = new static();
+        }
+        return $instance;
+    }
+    /**
+     * Método clone do tipo privado previne a clonagem dessa instância
+     * da classe
+     *
+     * @return void
+     */
+    private function __clone()
+    {
+    }
+
+
+    /**
+     * Método unserialize do tipo privado para prevenir a desserialização
+     * da instância dessa classe.
+     *
+     * @return void
+     */
+    private function __wakeup()
+    {
+    }
+
+    public function getConfig()
+    {
+    	require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+
+		foreach ($_config as $key => $value)
+		{
+			$key = strtoupper($key);
+			define($key,$value);
+		}
+
+		if( ERRORREPORTING == 'E_ALL')
+			error_reporting(E_ALL);
+		else
+			error_reporting(0);
+    }
 }
-
-if( ERRORREPORTING == 'E_ALL')
-	error_reporting(E_ALL);
-else
-	error_reporting(0);

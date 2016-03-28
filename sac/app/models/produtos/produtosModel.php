@@ -5,25 +5,19 @@
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class produtosModel{
 	private $id;
+	private $codigo_barras;
 	private $foto;
 	private $nome;
 	private $marca;
 	private $categoria;
 	private $descricao;
-	private $fornecedor;
-	private $precocompra;
-	private $porcentagemlucro;
+	private $produtoFornecedor = Array();
+	private $precocusto;
 	private $precovenda;
-	private $peso;
-	private $quantidade;
-	private $uni_medida;
-	private $estoque_max;
-	private $estoque_min;
-	private $dataAdmissao;
-	private $salario;
+	private $markup;
+	private $unidade_medida;
 	private $status;
 	private $dataCadastro;
-	private $usuario;
 	
 
  	//SETERS
@@ -31,6 +25,10 @@ class produtosModel{
  	{
  		$this->id = $id;
  	}
+ 	public function setCodigoBarras($codigo_barras)
+	{
+		$this->codigo_barras = $codigo_barras;
+	}
  	public function setFoto($foto)
 	{
 		$this->foto = $foto;
@@ -39,11 +37,11 @@ class produtosModel{
 	{
 		$this->nome = $nome;
 	}
-	public function setMarca($marca)
+	public function setMarca(marcasModel $marca)
 	{
 		$this->marca = $marca;
 	}
-	public function setCategoria($categoria)
+	public function setCategoria(categoriasModel $categoria)
 	{
 		$this->categoria = $categoria;
 	}
@@ -51,42 +49,29 @@ class produtosModel{
 	{
 		$this->descricao = $descricao;
 	}
-	public function setFornecedor($fornecedor)
+	public function setFornecedores(produtofornecedorModel $produtoFornecedor)
 	{
-		$this->fornecedor = $fornecedor;
+		array_push($this->produtoFornecedor, $produtoFornecedor);
 	}
-	public function setPrecocompra($precocompra)
+
+	public function setPrecocusto($precocusto)
 	{
-		$this->precocompra = $precocompra;
-	}
-	public function setPorcentagemlucro($porcentagemlucro)
-	{
-		$this->porcentagemlucro = $porcentagemlucro;
+		$this->precocusto = $precocusto;
 	}
 	public function setPrecovenda($precovenda)
 	{
 		$this->precovenda = $precovenda;
 	}
-	public function setPeso($peso)
+	public function setMarkup($markup)
 	{
-		$this->peso = $peso;
+		$this->markup = $markup;
 	}
-	public function setQuantidade($quantidade)
+	
+	public function setUnidadeMedida(unidademedidaModel $unidade_medida)
 	{
-		$this->quantidade = $quantidade;
+		$this->unidade_medida = $unidade_medida;
 	}
-	public function setUni_medida($uni_medida)
-	{
-		$this->uni_medida = $uni_medida;
-	}
-	public function setEstoque_max($estoque_max)
-	{
-		$this->estoque_max = $estoque_max;
-	}
-	public function setEstoque_min($estoque_min)
-	{
-		$this->estoque_min = $estoque_min;
-	}
+	
 	public function setStatus($status)
 	{
 		$this->status = $status;
@@ -99,11 +84,15 @@ class produtosModel{
 
 
 	//GETERS
-	public function getId()
+ 	public function getId()
+ 	{
+ 		return $this->id;
+ 	}
+ 	public function getCodigoBarras()
 	{
-		return $this->id;
+		return $this->codigo_barras;
 	}
-	public function getFoto()
+ 	public function getFoto()
 	{
 		return $this->foto;
 	}
@@ -123,42 +112,29 @@ class produtosModel{
 	{
 		return $this->descricao;
 	}
-	public function getFornecedor()
+	public function getFornecedores()
 	{
-		return $this->fornecedor;
+		return $this->produtoFornecedor;
 	}
-	public function getPrecocompra()
+
+	public function getPrecocusto()
 	{
-		return $this->precocompra;
-	}
-	public function getPorcentagemlucro()
-	{
-		return $this->porcentagemlucro;
+		return $this->precocusto;
 	}
 	public function getPrecovenda()
 	{
 		return $this->precovenda;
 	}
-	public function getPeso()
+	public function getMarkup()
 	{
-		return $this->peso;
+		return $this->markup;
 	}
-	public function getQuantidade()
+	
+	public function getUnidadeMedida()
 	{
-		return $this->quantidade;
+		return $this->unidade_medida;
 	}
-	public function getUni_medida()
-	{
-		return $this->uni_medida;
-	}
-	public function getEstoque_max()
-	{
-		return $this->estoque_max;
-	}
-	public function getEstoque_min()
-	{
-		return $this->estoque_min;
-	}
+	
 	public function getStatus()
 	{
 		return $this->status;
@@ -167,3 +143,4 @@ class produtosModel{
 	{	
 		return $this->dataCadastro;
 	}
+}

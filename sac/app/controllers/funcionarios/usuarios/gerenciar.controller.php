@@ -23,6 +23,9 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+
+		$this->checkPermissao->check();
+
 		$data = array(
 			'titlePage' => 'Usuários',
 			'template' => new templateFactory()
@@ -48,6 +51,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Cadastrar Usuários',
 			'template' => new templateFactory()
@@ -56,9 +60,9 @@ class gerenciar extends Controller{
 		$funcionarios = new funcionariosDao;
 		$data['funcionarios']=$funcionarios->listar();
 
-		$this->load->dao('funcionarios/gruposFuncionariosDao');
-		$gruposfuncionarios = new gruposFuncionariosDao;
-		$data['grupo_funcionarios']=$gruposfuncionarios->listar();
+		$this->load->dao('configuracoes/niveisAcessoDao');
+		$niveisAcesso = new niveisAcessoDao;
+		$data['niveisAcesso']=$niveisAcesso->listar();
 	
 		$this->load->view('includes/header',$data);
 		$this->load->view('funcionarios/usuarios/cadastro',$data);
@@ -74,6 +78,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Editar Usuários',
 			'template' => new templateFactory()
@@ -118,7 +123,7 @@ class gerenciar extends Controller{
 	 */
 	public function inserir()
 	{
-	    $grupo = isset($_POST['grupo']) ? intval($_POST['grupo']) : '';
+	    $nivel = isset($_POST['nivel']) ? intval($_POST['nivel']) : '';
 		$funcionario = isset($_POST['funcionario']) ? intval($_POST['funcionario']) : '';
 		$email = isset($_POST['email']) ? filter_var(trim($_POST['email'])) : '';
 		$login = isset($_POST['login']) ? filter_var($_POST['login']) : '';
@@ -128,8 +133,8 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator',null,true);
 		
-		$this->dataValidator->set('Grupo', $grupo, 'grupo')->is_required();
-		$this->dataValidator->set('Funcionario', $funcionario, 'funcionario')->is_required();
+		$this->dataValidator->set('Nível de acesso', $nivel, 'nivel')->is_required();
+		$this->dataValidator->set('Funcionário', $funcionario, 'funcionario')->is_required();
 		$this->dataValidator->set('Email', $email, 'email')->is_required()->is_email();
 		$this->dataValidator->set('Login', $login, 'login')->is_required();
 		$this->dataValidator->set('Senha', $senha, 'senha')->is_required();
@@ -140,7 +145,7 @@ class gerenciar extends Controller{
             //USUARIO
 			$this->load->model('funcionarios/usuariosModel');
 			$usuariosModel = new usuariosModel();
-			$usuariosModel->setGrupoFuncionario($grupo);
+			$usuariosModel->setNivelAcesso($nivel);
 			$usuariosModel->setFuncionario($funcionario);
 			$usuariosModel->setEmail($email);
 			$usuariosModel->setLogin($login);

@@ -295,21 +295,25 @@
         <div class="panel panel-default ">
             <div class="panel-heading">Dados Admissionais</div>
             <div class="panel-body">
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Código de Admissão</span>
-                    <input type="text" class="form-control" placeholder="Código de Admissão" name="codigoAdmissao" value="<?=$funcionario->getCodigo()?>">
-                </div>
+
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Cargo</span>
-                    <input type="text" class="form-control" placeholder="Cargo" name="cargo" value="<?=$funcionario->getCargo()?>">
+                    <select name="cargo" id="cargo" class="form-control">
+                        <option selected="selected" disabled="disabled" value="">..Selecione..</option>
+                        <?php if(!empty($cargos)):?>
+                        <?php foreach ($cargos as $cargo):?>
+                        <option value="<?= $cargo->getId()?>" <?=($cargo->getId() == $funcionario->getCargo()->getId()) ? 'selected="selected"' : ''?>><?=$cargo->getNome()?> - SETOR: <?=$cargo->getSetor()?></option>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Data De Admissão</span>
                     <input type="text" class="form-control" placeholder="Data De Admissão" name="dataAdmissao" value="<?=$dataFormat->formatar($funcionario->getDataAdmissao(),'data');?>">
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Salário</span>
-                    <input type="text" class="form-control" placeholder="Salário" name="salario" value="<?=$dataFormat->formatar($funcionario->getSalario(),'decimal');?>">
+                    <span class="input-group-addon" id="basic-addon1">Data De Demissão</span>
+                    <input type="text" class="form-control" placeholder="Data De Demissão" name="dataDemissao" value="<?=$dataFormat->formatar($funcionario->getDataDemissao(),'data');?>">
                 </div>
                 <input type="hidden" name="id_funcionario" value="<?=$funcionario->getId()?>">
                 <div class="btn-group pull-right" role="group">

@@ -17,12 +17,12 @@ class usuariosDao extends Dao{
 	public function listar()
 	{
 		$this->load->model('funcionarios/usuariosModel');
-		$this->load->model('funcionarios/gruposFuncionariosModel');
+		$this->load->model('configuracoes/niveis_acesso/niveisAcessoModel');
 		$this->load->model('funcionarios/funcionariosModel');
 		$usuarios = Array();
 
 		$this->db->clear();
-		$sql="select * from sys_usuarios as a inner join sys_usuarios_grupo as b on a.id_usuarios_grupo = b.id_usuarios_grupo inner join funcionarios as c on a.id_funcionario = c.id_funcionario where a.status_usuario <> '".status::EXCLUIDO."'"; 
+		$sql="select * from sys_usuarios as a inner join nivel_acesso as b on a.id_nivel_acesso = b.id_nivel_acesso inner join funcionarios as c on a.id_funcionario = c.id_funcionario where a.status_usuario <> '".status::EXCLUIDO."'"; 
 		$this->db->query($sql);
 
 		if($this->db->rowCount() > 0):
@@ -32,15 +32,15 @@ class usuariosDao extends Dao{
 			foreach ($result as $value)
 			{
 				$usuariosModel = new usuariosModel();
-				$gruposFuncionariosModel = new gruposFuncionariosModel();
+				$nivelAcessoModel = new niveisAcessoModel();
 				$funcionariosModel = new funcionariosModel();
 				$usuariosModel->setId($value['id_usuario']);
-				$gruposFuncionariosModel->setId($value['id_usuarios_grupo']);
-				$gruposFuncionariosModel->setNome($value['nome_usuarios_grupo']);
+				$nivelAcessoModel->setId($value['id_nivel_acesso']);
+				$nivelAcessoModel->setNome($value['nome_nivel_acesso']);
 				$funcionariosModel->setId($value['id_funcionario']);
 				$funcionariosModel->setNome($value['nome_funcionario']);
 				$funcionariosModel->setSobrenome($value['sobrenome_funcionario']);
-                $usuariosModel->setGrupoFuncionario($gruposFuncionariosModel);
+                $usuariosModel->setNivelAcesso($nivelAcessoModel);
 				$usuariosModel->setFuncionario($funcionariosModel);
 				$usuariosModel->setLogin($value['login_usuario']);
 				$usuariosModel->setEmail($value['email_usuario']);
@@ -101,10 +101,10 @@ class usuariosDao extends Dao{
 	 */
  	public function inserir(usuariosModel $usuarios)
  	{
- 		$senha=bcrypt::hash( $usuarios->getSenha());
+ 		$senha = bcrypt::hash( $usuarios->getSenha());
 		$data = array(
  			'id_funcionario' => $usuarios->getFuncionario(),
- 			'id_usuarios_grupo' => $usuarios->getGrupoFuncionario(),
+ 			'id_nivel_acesso' => $usuarios->getNivelAcesso(),
  			'email_usuario' => $usuarios->getEmail(),
  			'login_usuario' => $usuarios->getLogin(),
  			'senha_usuario' => $senha,

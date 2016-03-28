@@ -22,6 +22,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->checkPermissao->check();
 
 		$data = array(
 			'titlePage' => 'Caixa'
