@@ -8,7 +8,7 @@ class templateFactory extends Library implements iTemplateFactory {
 		// echo $checkPermission.'<br>';
 		// var_dump($this->checkPermissao->checkPermissaoPagina(false, $checkPermission));
 		// echo '</pre>';
-		if($checkPermission != '' && $this->checkPermissao->check(false, $checkPermission) == false )//verifica a permissão de acesso
+		if($checkPermission != '' && $this->load->checkPermissao->check(false, $checkPermission) == false )//verifica a permissão de acesso
 			return null;
 
 		$this->load->library('buttons/'.$button);

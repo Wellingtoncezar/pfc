@@ -23,8 +23,13 @@ class gerenciar extends Controller{
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
 
+		$this->load->dao('produtos/produtosDao');
+		$produtosDao = new produtosDao();
+		$produtos = $produtosDao->listar(); 
 		$data = array(
-			'titlePage' => 'Produtos'
+			'titlePage' => 'Produtos',
+			'produtos' => $produtos,
+			'template' => new templateFactory()
 		);
 		
 		$this->load->view('includes/header',$data);
@@ -69,22 +74,52 @@ class gerenciar extends Controller{
 
 	public function editar()
 	{
+		$this->load->model('produtos/produtosModel');
+		$this->load->dao('produtos/produtosDao');
+		$this->load->dao('produtos/marcasDao');
+		$this->load->dao('produtos/categoriasDao');
+		$this->load->dao('produtos/unidademedidaDao');
+
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
 
 		$data = array(
-			'titlePage' => 'Editar produtos'
+			'titlePage' => 'Editar Produto'
 		);
+
+		$idProduto = $this->url->getSegment(3);
+		
+		$produtosModel = new produtosModel();
+		$produtosModel->setId($idProduto);
+		
+		$produtos = new produtosDao();
+		$data['produto'] = $produtos->consultar($produtosModel);
+
+		//marcas
+		$marcas = new marcasDao;
+		$data['marcas']=$marcas->listar();
+
+		//categorias
+		$categorias = new categoriasDao;
+		$data['categorias']=$categorias->listar();
+
+		//unidades de medida
+		$unidademedida = new unidademedidaDao;
+		$data['unidademedida']=$unidademedida->listar();
+
+		//fornecedores
+		$this->load->dao('fornecedores/fornecedoresDao');
+		$fornecedores = new fornecedoresDao;
+		$data['fornecedores']=$fornecedores->listar();
 		
 		$this->load->view('includes/header',$data);
-		$this->load->view('produtos/cadastro',$data);
+		$this->load->view('produtos/editar',$data);
 		$this->load->view('includes/footer',$data);
 	}
 
 	public function inserir()
 	{
-
 		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
 		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
 		$marca = isset($_POST['marca']) ? intval($_POST['marca']) : '';
@@ -183,6 +218,40 @@ class gerenciar extends Controller{
 			echo json_encode($todos_erros);
 	    }
 
+	}
+
+	/**
+	 * Ãção de atualizar status
+	 */
+	public function atualizarStatus()
+	{
+		$idProduto = intval($_POST['id']);
+		$status = filter_var($_POST['status']);
+
+		//PRODUTOS MODEL
+		$this->load->model('produtos/produtosModel');
+		$produtosModel = new produtosModel();
+		$produtosModel->setId( $idProduto );
+		$produtosModel->setStatus( status::getAttribute($status));
+
+		//PRODUTOS DAO
+		$this->load->dao('produtos/produtosDao');
+		$produtosDao = new produtosDao();
+		echo $produtosDao->atualizarStatus($produtosModel);
+
+	}
+
+	public function excluir()
+	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		if(!$this->checkPermissao->check(false,URL.'produtos/gerenciar/excluir'))
+		{
+			echo "Ação não permitida";
+			return false;
+		}
+		$this->atualizarStatus();
 	}
 }
 

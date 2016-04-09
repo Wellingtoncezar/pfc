@@ -85,7 +85,7 @@ class marcasDao extends Dao{
 		$this->db->setTabela('marcas');
 		if($this->db->insert($data))
 		{
-			return true;
+			return TRUE;
  		}else
  		{
  			return $this->db->getError();

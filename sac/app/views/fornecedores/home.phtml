@@ -1,7 +1,7 @@
 <div class="container">
     <?php
-        $btnCadastrar = $template->getButton("cadastrar",array('href'=>URL.'fornecedores/gerenciar/cadastrar'));
-        echo $template->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'fornecedores/gerenciar/cadastrar'));
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
     <div class="page-header">
       <h1>Fornecedores</h1>
@@ -46,8 +46,8 @@
                         </select>
                     </td>
                     <td>'
-                        .$template->getButton('editar',array('href'=> URL.'fornecedores/gerenciar/editar/'.$fornec->getId()))
-                        .$template->getButton('excluir', array('href'=> URL.'fornecedores/gerenciar/editar/'.$fornec->getId())).
+                        .$this->templateFactory->getButton('editar',array('href'=> URL.'fornecedores/gerenciar/editar/'.$fornec->getId()))
+                        .$this->templateFactory->getButton('excluir', array('href'=> URL.'fornecedores/gerenciar/editar/'.$fornec->getId())).
 
                     '</td>
                 </tr>';

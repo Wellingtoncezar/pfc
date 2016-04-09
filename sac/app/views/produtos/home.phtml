@@ -1,68 +1,108 @@
-<div class="actions-buttons">
-    <div class="container">
-        <a class="btn btn-primary pull-right btn_adicionar" href="<?=URL?>produtos/gerenciar/cadastrar" role="button" id="btn_adicionar"><span class="glyphicon glyphicon-plus"></span>Cadastrar</a>
-    </div>
-</div>
 <div class="container">
+    <?php
+
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'produtos/gerenciar/cadastrar'), URL.'funcionarios/gerenciar/cadastrar');
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
+    ?>
+    
     <div class="page-header">
       <h1>Produtos</h1>
     </div>
     <div class="middle-content">
-        <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
-        <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
-            <thead>
-                <tr>   
-                    <th width="160">Código</th>
-                    <th width="40">Nome</th>
-                    <th width="160">Categoria</th>
-                    <th width="160">Fornecedor</th>
-                    <th width="120">Estoque Máximo</th>
-                    <th width="100">Estoque Mínimo</th>
-                    <th width="100">Ações</th>
-                </tr>
-            </thead>
+            <?php
+            $thead = '  <tr>
+                            <th width="100">Código de barras</th>
+                            <th width="40">Foto</th>
+                            <th width="160">Nome</th>
+                            <th width="160">Categoria</th>
+                            <th width="120">Marca</th>
+                            <th width="100">Status (Ativo/Inativo)</th>
+                            <th width="180">Ações</th>
+                        </tr>';
+            $tfoot = '  <tr>
+                            <th>Código de barras</th>
+                            <th>Foto</th>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Marca</th>
+                            <th>Status (Ativo/Inativo)</th>
+                            <th>Ações</th>
+                        </tr>';  
+            if(!empty($produtos)):
+                $tbody = '';
+                foreach ($produtos as $prod):
+
+                    $foto = $prod->getFoto() != '' ? URL.'skin/uploads/produtos/p/'.$prod->getFoto() : URL.'skin/img/imagens/forn.jpg';
+                    $ativo = ($prod->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
+                    $inativo = ($prod->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
+                    
+            $tbody .='  <tr id="'.$prod->getId().'">
+                            <td>'.$prod->getCodigoBarras().'</td>
+                            <td><img src="'.$foto.'" style=" width: 60px; height: 60px;"></td>
+                            <td>'.$prod->getNome().'</td>
+                            <td>'.$prod->getCategoria().'</td>
+                            <td>'.$prod->getMarca().'</td>
+                            <td>
+                                <select name="status" id="'.$prod->getId().'" class="statusSelect">
+                                    <option value="'.status::ATIVO.'" class="active" '.$ativo.'>Ativo</option>
+                                    <option value="'.status::INATIVO.'" class="inactive" '.$inativo.'>Inativo</option>
+                                </select>
+                            </td>
+                            <td>'
+                                .$this->templateFactory->getButton('editar',array('href'=> URL.'produtos/gerenciar/editar/'.$prod->getId()), URL.'produtos/gerenciar/editar/')
+                                .$this->templateFactory->getButton('excluir', array('id'=> $prod->getId()), URL.'produtos/gerenciar/excluir/').
+                            '</td>
+                        </tr>';
+                endforeach;
+                echo $template->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
+            else:
+                echo '<h2>Não há registros cadastrados</h2>';
+            endif;
+            ?>
+
+    </div>
+
+
 <script type="text/javascript">
     $(function(){
-
-        $(window).load(function() {
-            $('#loadTable').hide();
-            $('.dataTable').fadeIn();
-        });
-        if($(this).width() <= '765')
-            responsiveTable();
-        $(window).resize(function() {
-            //console.log($(this).width())
-            if($(this).width() <= '765')
-                responsiveTable();
-            else
-                responsiveTableRemove()
-        });
-
-
-        function responsiveTable(){
-            var th = Array();
-            $('.rwd-table thead th').each(function(){
-                th.push($(this).html())
-            });
-
-            //console.log(th);
-            var i = 0;
-            $('.rwd-table tbody td').each(function(a,b){
-                if(!$('div',$(this)).hasClass('dataTables-th')){
-                    $(this).prepend('<div class="dataTables-th">'+th[i]+'</div>');
-                    i++;
-                    if(i == th.length)
-                        i=0;
-                }
-            });
-        }
-        function responsiveTableRemove(){
-            $('.rwd-table tbody td .dataTables-th').remove()
-        }
-
+        //DATATABLE
         var table = $('.dataTable').DataTable({
-            order: [1,'asc']
+            order: [0,'asc']
         });
+
+        //STATUS
+        table.$('select[name=status]').on('change',function(){
+            var id = $(this).attr('id');
+            var status = $(this).val();
+            $.post(url+'produtos/gerenciar/atualizarStatus',{id:id,status:status},function(data){
+                console.log(data)
+                if(data == true)
+                    messageDialog('Status atualizado','success',false,null);
+                else
+                    messageDialog('Erro ao atualizar','warning',false,null);
+            });
+
+        });
+
+        //EXCLUIR
+        table.$('.btn_excluir').on('click',function(){
+            var id = $(this).attr('id');
+            var status = $(this).data('value');
+            var modalDelete = $('#modalDelete').modal('show')
+            $('.btn_ok','#modalDelete').on('click', function(event) {
+                $.post(url+'produtos/gerenciar/excluir',{id:id,status:status},function(data){
+                    console.log(data)
+                    if(data == true){
+                        $('#modalDelete').modal('hide');
+                        $('tr#'+id).hide();
+                    }else{
+                        $('#modalDelete').modal('hide');
+                        messageDialog(data,'warning',false,null);
+                    }
+                });
+            });
+        });
+
 
     })
 </script>

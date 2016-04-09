@@ -71,7 +71,6 @@ $(function(){
 	  		var custo = $('input[name=preco_custo]').val();
 	  		custo = custo.replace(/[R$.]+/g,'');
 	  		custo = custo.replace(',','.').replace(/(\d)(?=(\d{3})+\,)/g,"$1.");
-
 	  		var markup = $('input[name=markup]').val();
 	  		markup = markup.replace(/[R$.]+/g,'');
 	  		markup = markup.replace(',','.').replace(/(\d)(?=(\d{3})+\,)/g,"$1.");

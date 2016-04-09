@@ -1,7 +1,7 @@
 <?php
 /**
  * ARQUIVO DE CONFIGURAÇÕES DO BANCO DE DADOS 
- * @author Wellington cezar - wellington-cezar@hotmail.com
+ * @author Wellington cezar , Diego Hernandes
  */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 $_db = Array();

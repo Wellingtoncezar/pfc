@@ -1,7 +1,7 @@
 <div class="container">
     <?php
-        $btnCadastrar = $template->getButton("cadastrar",array('href'=>URL.'funcionarios/cargos/gerenciar/cadastrar'));
-        echo $template->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'funcionarios/cargos/gerenciar/cadastrar'));
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
     <div class="page-header">
       <h1>Cargos</h1>
@@ -28,8 +28,8 @@
                             <td>'.$cargo->getNome().'</td>
                             <td>'.$cargo->getSetor().'</td>
                             <td>'
-                                .$template->getButton('editar',array('href'=> URL.'funcionarios/cargos/gerenciar/editar/'.$cargo->getId()))
-                                .$template->getButton('excluir', array('id'=> $cargo->getId())).
+                                .$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/cargos/gerenciar/editar/'.$cargo->getId()))
+                                .$this->templateFactory->getButton('excluir', array('id'=> $cargo->getId())).
                             '</td>
                         </tr>';
                 endforeach;

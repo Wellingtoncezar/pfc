@@ -22,29 +22,26 @@ class produtosDao extends Dao{
 		$produtos = Array();
 
 		$this->db->clear();
-		$this->db->setTabela('produtos');
-		$this->db->setCondicao(" status_produto in('".status::ATIVO."','".status::INATIVO."') ");
-		$campos = array('id_funcionario','codigo_funcionario','foto_funcionario','nome_funcionario','sobrenome_funcionario','cargo_funcionario','cpf_funcionario','status_funcionario');
+		$this->db->setTabela('produtos as A, marcas as B, categorias as C');
+		$this->db->setCondicao("A.status_produto in('".status::ATIVO."','".status::INATIVO."') AND A.id_marca = B.id_marca AND A.id_categoria = C.id_categoria");
+		$campos = array('A.id_produto','A.codigo_barras_produto','A.foto_produto','A.nome_produto','B.nome_marca','C.nome_categoria','status_produto');
 		$this->db->select($campos);
 		if($this->db->rowCount() > 0):
 			$result = $this->db->resultAll();
 			foreach ($result as $value)
 			{
-				$funcionariosModel = new funcionariosModel();
-				$funcionariosModel->setId($value['id_funcionario']);
-				$funcionariosModel->setFoto($value['foto_funcionario']);
-				$funcionariosModel->setNome($value['nome_funcionario']);
-				$funcionariosModel->setSobrenome($value['sobrenome_funcionario']);
-				$funcionariosModel->setCpf($value['cpf_funcionario']);
-				$funcionariosModel->setCodigo($value['codigo_funcionario']);
-				$funcionariosModel->setCargo($value['cargo_funcionario']);
-				$funcionariosModel->setStatus(status::getAttribute($value['status_funcionario']));
-				array_push($funcionarios, $funcionariosModel);
-				unset($funcionariosModel);
+				$produtosModel = new produtosModel();
+				$produtosModel->setId($value['id_produto']);
+				$produtosModel->setCodigoBarras($value['codigo_barras_produto']);
+				$produtosModel->setFoto($value['foto_produto']);
+				$produtosModel->setNome($value['nome_produto']);
+				$produtosModel->setStatus(status::getAttribute($value['status_produto']));
+				array_push($produtos, $produtosModel);
+				unset($produtosModel);
 			}
-			return $funcionarios;
+			return $produtos;
 		else:
-			return $funcionarios;
+			return $produtos;
 		endif;
 	}
 
@@ -53,109 +50,33 @@ class produtosDao extends Dao{
 	 * Retorna a consulta de um funcionário pelo id
 	 * @return object [funcionariosModel]
 	 */
-	public function consultar(funcionariosModel $funcionario)
+	public function consultar(produtosModel $produto)
 	{
 		$this->db->clear();
-		$this->db->setTabela('funcionarios');
-		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+		$this->db->setTabela('produtos');
+		$this->db->setCondicao("id_produto = '".$produto->getId()."'");
 		$this->db->select();
 
-		//FUNCIONARIO
+		//PRODUTO
 		if($this->db->rowCount() > 0):
 			$result = $this->db->result();
 
-			//TELEFONES
-			$this->db->clear();
-			$this->db->setTabela('telefones');
-			$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
-			$this->db->select();
 			
-			$telefonesList = Array();
-			if($this->db->rowCount() > 0):
-				$resultTel = $this->db->resultAll();
 
-				$this->load->model('telefoneModel');
-				foreach ($resultTel as $telefone)
-				{
-					$telefoneModel = new telefoneModel();
-					$telefoneModel->setId( $telefone['id_telefone'] );
-					$telefoneModel->setCategoria( $telefone['categoria_telefone'] );
-					$telefoneModel->setNumero( $telefone['numero_telefone'] );
-					$telefoneModel->setOperadora( $telefone['operadora_telefone'] );
-					$telefoneModel->setTipo( $telefone['tipo_telefone'] );
-					array_push($telefonesList, $telefoneModel);
-					unset($telefoneModel);
-				}
-			endif;
+			$produto->setFoto($result['foto_produto']);
+			$produto->setNome($result['nome_produto']);
+			//$produto->setMarca($marcasModel);
+			//$produto->setCategoria($categoriasModel);
+			$produto->setDescricao($result['descricao_produto']);
+			//$produto->setUnidadeMedida($unidademedidaModel);
 
-
-			//EMAILS
-			$this->db->clear();
-			$this->db->setTabela('emails');
-			$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
-			$this->db->select();
-			
-			$emailsList = Array();
-			if($this->db->rowCount() > 0):
-				$resultEmail = $this->db->resultAll();
-
-				$this->load->model('emailModel');
-				foreach ($resultEmail as $email)
-				{
-
-					$emailModel = new emailModel();
-					$emailModel->setId( $email['id_email'] );
-					$emailModel->setEmail( $email['endereco_email'] );
-					$emailModel->setTipo( $email['tipo_email'] );
-					array_push($emailsList, $emailModel);
-					unset($emailModel);
-				}
-			endif;
-
-
-			//ENDERECO
-			$this->db->clear();
-			$this->db->setTabela('enderecos');
-			$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
-			$this->db->select();
-			
-			$this->load->model('enderecoModel');
-			$endereco = new enderecoModel();
-			if($this->db->rowCount() > 0):
-				$resultEnd = $this->db->result();
-
-				$endereco->setId($resultEnd['id_endereco']);
-				$endereco->setCep($resultEnd['cep_endereco']);
-				$endereco->setNumero($resultEnd['numero_endereco']);
-				$endereco->setComplemento($resultEnd['complemento_endereco']);
-				$endereco->setLogradouro($resultEnd['rua_endereco']);
-				$endereco->setBairro($resultEnd['bairro_endereco']);
-				$endereco->setCidade($resultEnd['cidade_endereco']);
-				$endereco->setEstado($resultEnd['estado_endereco']);
-			endif;
-
-			$funcionario->setFoto($result['foto_funcionario']);
-			$funcionario->setNome($result['nome_funcionario']);
-			$funcionario->setSobrenome($result['sobrenome_funcionario']);
-			$funcionario->setDataNascimento($result['data_nascimento_funcionario']);
-			$funcionario->setSexo($result['sexo_funcionario']);
-			$funcionario->setRg($result['rg_funcionario']);
-			$funcionario->setCpf($result['cpf_funcionario']);
-			$funcionario->setEstadoCivil($result['estado_civil_funcionario']);
-			$funcionario->setEscolaridade($result['escolaridade_funcionario']);
-			$funcionario->setEndereco($endereco);
-			$funcionario->setTelefones($telefonesList);
-			$funcionario->setEmail($emailsList);
-			$funcionario->setCodigo($result['codigo_funcionario']);
-			$funcionario->setCargo($result['cargo_funcionario']);
-			$funcionario->setDataAdmissao($result['data_admissao_funcionario']);
-			$funcionario->setSalario($result['salario_funcionario']);
-			$funcionario->setStatus(status::getAttribute($result['status_funcionario']));
-			return $funcionario;
-		else:
-			
-			return $funcionariosModel;
+			$produto->setPrecocusto($result['preco_custo']);
+			$produto->setPrecovenda($result['preco_venda']);
+			$produto->setMarkup($result['markup_produto']);
+			$produto->setStatus(status::getAttribute($result['status_produto']));
+			$produto->setDataCadastro($result['data_cadastro_produto']);
 		endif;
+		return $produto;
 	}
 
 
@@ -164,24 +85,24 @@ class produtosDao extends Dao{
 	 * Insere novos funcionários
 	 * @return boolean, json
 	 */
- // 	public function inserir(funcionariosModel $funcionario)
+ // 	public function inserir(funcionariosModel $produto)
  // 	{
  		
 
-	// 	if($funcionario->getFoto() != '')
+	// 	if($produto->getFoto() != '')
 	// 	{
 	//  		//nome da imagem
-	// 		$char = new caracteres($funcionario->getNome());
+	// 		$char = new caracteres($produto->getNome());
 	// 		$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
 			
-	// 		$upload = $this->uploadFoto($this->nomeArquivoFoto, $funcionario->getFoto()); //upload da foto
+	// 		$upload = $this->uploadFoto($this->nomeArquivoFoto, $produto->getFoto()); //upload da foto
 	// 		if($upload)
-	// 			return $this->insertData($funcionario);
+	// 			return $this->insertData($produto);
 	// 		else
 	// 			return $upload;
 	// 	}else
 	// 	{
-	// 		return $this->insertData($funcionario);
+	// 		return $this->insertData($produto);
 	// 	}
 
 	// }
@@ -190,32 +111,32 @@ class produtosDao extends Dao{
 	 * Atualiza funcionários
 	 * @return boolean, json
 	 */
- 	public function atualizar(funcionariosModel $funcionario)
+ 	public function atualizar(funcionariosModel $produto)
  	{
 
-		if($funcionario->getFoto() != '')
+		if($produto->getFoto() != '')
 		{
 	 		$this->db->clear();
 	 		$this->db->setTabela('funcionarios');
-	 		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+	 		$this->db->setCondicao("id_funcionario = '".$produto->getId()."'");
 	 		$this->db->select(array('foto_funcionario'));
 	 		$res = $this->db->result();
 	 		$this->nomeArquivoFoto = pathinfo($res['foto_funcionario'],PATHINFO_FILENAME);
 			if($this->nomeArquivoFoto == '')
 			{
 		 		//nome da imagem
-				$char = new caracteres($funcionario->getNome());
+				$char = new caracteres($produto->getNome());
 				$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
 			}
 				
-			$upload = $this->uploadFoto($this->nomeArquivoFoto, $funcionario->getFoto()); //upload da foto
+			$upload = $this->uploadFoto($this->nomeArquivoFoto, $produto->getFoto()); //upload da foto
 			if($upload)
-				return $this->updateData($funcionario);
+				return $this->updateData($produto);
 			else
 				return $upload;
 		}else
 		{
-			return $this->updateData($funcionario);
+			return $this->updateData($produto);
 		}
 
 	}
@@ -257,40 +178,40 @@ class produtosDao extends Dao{
  		
  	}
 
- 	private function updateData(funcionariosModel $funcionario)
+ 	private function updateData(funcionariosModel $produto)
 	{
 
  		$data = array(
  			'foto_funcionario' => $this->nomeArquivoFoto,
- 			'nome_funcionario' => $funcionario->getNome(),
- 			'sobrenome_funcionario' => $funcionario->getSobrenome(),
- 			'data_nascimento_funcionario' => $funcionario->getDataNascimento(),
- 			'sexo_funcionario' => $funcionario->getSexo(),
- 			'rg_funcionario' => $funcionario->getRg(),
- 			'cpf_funcionario' => $funcionario->getCpf(),
- 			'estado_civil_funcionario' => $funcionario->getEstadoCivil(),
- 			'escolaridade_funcionario' => $funcionario->getEscolaridade(),
- 			'codigo_funcionario' => $funcionario->getCodigo(),
- 			'cargo_funcionario' => $funcionario->getCargo(),
- 			'data_admissao_funcionario' => $funcionario->getDataAdmissao(),
- 			'salario_funcionario' => $funcionario->getSalario(),
- 			'status_funcionario' => $funcionario->getStatus(),
- 			'data_cadastro_funcionario' => $funcionario->getDataCadastro()
+ 			'nome_funcionario' => $produto->getNome(),
+ 			'sobrenome_funcionario' => $produto->getSobrenome(),
+ 			'data_nascimento_funcionario' => $produto->getDataNascimento(),
+ 			'sexo_funcionario' => $produto->getSexo(),
+ 			'rg_funcionario' => $produto->getRg(),
+ 			'cpf_funcionario' => $produto->getCpf(),
+ 			'estado_civil_funcionario' => $produto->getEstadoCivil(),
+ 			'escolaridade_funcionario' => $produto->getEscolaridade(),
+ 			'codigo_funcionario' => $produto->getCodigo(),
+ 			'cargo_funcionario' => $produto->getCargo(),
+ 			'data_admissao_funcionario' => $produto->getDataAdmissao(),
+ 			'salario_funcionario' => $produto->getSalario(),
+ 			'status_funcionario' => $produto->getStatus(),
+ 			'data_cadastro_funcionario' => $produto->getDataCadastro()
  		);
 
  		$this->db->clear();
 		$this->db->setTabela('funcionarios');
-		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+		$this->db->setCondicao("id_funcionario = '".$produto->getId()."'");
 		$this->db->update($data);
 		if($this->db->rowCount() > 0)
 			$this->nUpdates++;
 		
 		//ENDEREÇO
-		$this->atualizaEndereco($funcionario);
+		$this->atualizaEndereco($produto);
 		//TELEFONES
-		$this->atualizaTelefones($funcionario);
+		$this->atualizaTelefones($produto);
 		//EMAILS
-		$this->atualizaEmails($funcionario);
+		$this->atualizaEmails($produto);
 
  		if($this->nUpdates > 0)
 			return true;
@@ -362,11 +283,11 @@ class produtosDao extends Dao{
  	 * Atualiza ou insere os emails
  	 * @return void
  	 */
-	private function atualizaEmails(funcionariosModel $funcionario)
+	private function atualizaEmails(funcionariosModel $produto)
 	{
 		//excluir
 		$emailExcluir = array();
-		foreach ($funcionario->getEmail() as $email)
+		foreach ($produto->getEmail() as $email)
 		{
 			if($email->getId() != '')
 				array_push($emailExcluir,$email->getId());
@@ -378,18 +299,18 @@ class produtosDao extends Dao{
 			$this->db->clear();
 			$cond = " AND id_email not in (".$emailExcluir.")";
 		}
-		$sql = "DELETE FROM emails WHERE id_funcionario = '".$funcionario->getId()."' $cond";
+		$sql = "DELETE FROM emails WHERE id_funcionario = '".$produto->getId()."' $cond";
 		$this->db->query($sql);
 
 
 		$this->db->clear();
 		$this->db->setTabela('emails');
-		foreach ($funcionario->getEmail() as $emails)
+		foreach ($produto->getEmail() as $emails)
 		{
 			if(!empty($emails))
 			{
 				$data = array(
-					'id_funcionario' => $funcionario->getId(),
+					'id_funcionario' => $produto->getId(),
 					'tipo_email' => $emails->getTipo(),
 					'endereco_email' => $emails->getEmail()
 				);
@@ -412,12 +333,12 @@ class produtosDao extends Dao{
  	 * Atualiza o status
  	 * @return boolean
  	 */
-	public function atualizarStatus(funcionariosModel $funcionario)
+	public function atualizarStatus(produtosModel $produto)
 	{
-		$data = array('status_funcionario'=>$funcionario->getStatus());
+		$data = array('status_produto'=>$produto->getStatus());
 		$this->db->clear();
-		$this->db->setTabela('funcionarios');
-		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+		$this->db->setTabela('produtos');
+		$this->db->setCondicao("id_produto = '".$produto->getId()."'");
 		$this->db->update($data);
 		if($this->db->rowCount()>0)
 			return true;
@@ -432,9 +353,8 @@ class produtosDao extends Dao{
  	 */
 	public function uploadFoto($nomeArquivo, $arquivo)
 	{
-
 		//verifica se o diretório existe
-		if(is_dir(BASEPATH.'skin/uploads/funcionarios/'))
+		if(is_dir(BASEPATH.'skin/uploads/produtos/'))
 		{
 			$destino = BASEPATH.'skin/uploads/funcionarios/';
 			$destino_p = BASEPATH.'skin/uploads/funcionarios/p/';

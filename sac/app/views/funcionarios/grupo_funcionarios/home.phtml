@@ -1,8 +1,8 @@
 <div class="container">
     <?php
-        $btnCadastrarFunc = $template->getButton("cadastrar",array('href'=>URL.'funcionarios/grupo_funcionarios/gerenciar/cadastrar/funcionarios','title'=>'Grupo de Funcionários'));
-        $btnCadastrarGere = $template->getButton("cadastrar",array('href'=>URL.'funcionarios/grupo_funcionarios/gerenciar/cadastrar/gerente','title'=>'Grupo de Gerente'));
-        echo $template->getButton("actions_buttons",array('buttons'=>$btnCadastrarFunc.$btnCadastrarGere));
+        $btnCadastrarFunc = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'funcionarios/grupo_funcionarios/gerenciar/cadastrar/funcionarios','title'=>'Grupo de Funcionários'));
+        $btnCadastrarGere = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'funcionarios/grupo_funcionarios/gerenciar/cadastrar/gerente','title'=>'Grupo de Gerente'));
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrarFunc.$btnCadastrarGere));
 
     ?>
     <div class="page-header">
@@ -29,8 +29,8 @@
                             <td>'.$grupo->getNome().'</td>
                             <td>
                                 '
-                                .$template->getButton('editar',array('href'=> URL.'funcionarios/grupo_funcionarios/gerenciar/editar/'.$grupo->getNivel()->getIndice().'/'.$grupo->getId()))
-                                .$template->getButton('excluir', array('id'=> $grupo->getId())).
+                                .$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/grupo_funcionarios/gerenciar/editar/'.$grupo->getNivel()->getIndice().'/'.$grupo->getId()))
+                                .$this->templateFactory->getButton('excluir', array('id'=> $grupo->getId())).
 
                             '</td>
                         </tr>';

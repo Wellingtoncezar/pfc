@@ -1,7 +1,7 @@
 <div class="container">
     <?php
-        $btnVoltar = $template->getButton("voltar",array('href'=>URL.'funcionarios/cargos'));
-        echo $template->getButton("actions_buttons",array('buttons'=>$btnVoltar));
+        $btnVoltar = $this->templateFactory->getButton("voltar",array('href'=>URL.'funcionarios/cargos'));
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnVoltar));
     ?>
     <div class="page-header">
       <h1>Cargos<small> Editar</small></h1>

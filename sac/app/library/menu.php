@@ -21,8 +21,10 @@ class menu extends Library{
 		$modulos['configuracoes']['submodulo']['nome']
 		*/
 
-		
-		$permissao = unserialize($_SESSION['user'])->getNivelAcesso()->getPermissoes();
+		if(isset($_SESSION['user']))
+			$permissao = unserialize($_SESSION['user'])->getNivelAcesso()->getPermissoes();
+		else
+			$permissao = "*";
 		//$permissao = 'Administrador';
 		if($permissao != '*')
 		{

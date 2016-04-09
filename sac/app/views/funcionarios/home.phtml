@@ -1,8 +1,8 @@
 <div class="container">
     <?php
 
-        $btnCadastrar = $template->getButton("cadastrar",array('href'=>URL.'funcionarios/gerenciar/cadastrar'), URL.'funcionarios/gerenciar/cadastrar');
-        echo $template->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'funcionarios/gerenciar/cadastrar'), URL.'funcionarios/gerenciar/cadastrar');
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
     <div class="page-header">
       <h1>Funcionários</h1>
@@ -48,8 +48,8 @@
                                 </select>
                             </td>
                             <td>'
-                                .$template->getButton('editar',array('href'=> URL.'funcionarios/gerenciar/editar/'.$func->getId()), URL.'funcionarios/gerenciar/editar/')
-                                .$template->getButton('excluir', array('id'=> $func->getId()), URL.'funcionarios/gerenciar/excluir/').
+                                .$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/gerenciar/editar/'.$func->getId()), URL.'funcionarios/gerenciar/editar/')
+                                .$this->templateFactory->getButton('excluir', array('id'=> $func->getId()), URL.'funcionarios/gerenciar/excluir/').
                             '</td>
                         </tr>';
                 endforeach;

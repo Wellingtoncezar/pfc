@@ -3,7 +3,7 @@
 *@author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
 */
 if(!defined('URL')) die('Acesso não permitido');
-class saveRouter extends Common
+class saveRouter
 {
 	private $db;
 	private $route = ROUTE;
@@ -11,9 +11,12 @@ class saveRouter extends Common
 	private $action = ACTION;
 	private $_idModulo;
 	private $_idPagina = 0;
+	private $load = null;
 
 	public function __construct(){
-		parent::__construct();
+		$this->load = Load::getInstance();
+        $this->load->_autoloadComplement();
+        
 		$this->load->library('db');
 		$this->db = new db();
 	}

@@ -48,19 +48,19 @@ class Load{
      * @access protected
      * @return void
      */
-    protected function _autoloadComplement(){
+    public function _autoloadComplement(){
         require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'autoload.php');
         if(!empty($autoload['libraries']))
         {
             foreach ($autoload['libraries'] as $loadLibrary){
-                $this->load->library($loadLibrary, null, true);
+                $this->library($loadLibrary, null, true);
             }
         }
 
         if(!empty($autoload['model']))
         {
             foreach ($autoload['model'] as $loadModel){
-                $this->load->library($loadModel,true);
+                $this->library($loadModel,true);
             }
         }
     }

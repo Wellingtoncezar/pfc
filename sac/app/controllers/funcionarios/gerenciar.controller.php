@@ -23,7 +23,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Funcionários',
 			'template' => new templateFactory()

@@ -219,9 +219,13 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: url('../img/imagens/estoque2.jpg');
+		background: url('../img/imagens/bg1.jpg');
     	background-size: 100% auto;
+
 	}
+
+
+
 	#container_login .box_login{
     position: absolute;
     top: 21%;

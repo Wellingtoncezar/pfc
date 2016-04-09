@@ -21,7 +21,7 @@
                 $tbody .='  <tr id="'.$grupo->getId().'">
                                 <td>'.$grupo->getNome().'</td>
                                 <td>
-                                    '.$template->getButton('editar',array('href'=> URL.'configuracoes/niveis_acesso/gerenciar/editar/'.$grupo->getId())).
+                                    '.$this->templateFactory->getButton('editar',array('href'=> URL.'configuracoes/niveis_acesso/gerenciar/editar/'.$grupo->getId())).
                                 '</td>
                             </tr>';
             endforeach;

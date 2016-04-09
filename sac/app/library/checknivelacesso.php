@@ -29,7 +29,7 @@ class checknivelacesso{
 		foreach ($_db[$index_access_db_name] as $key => $value)
 		{
 			$key = strtoupper($key);
-			define($key,$value);
+			define($key,$value);//constante
 		}
 	}
 
