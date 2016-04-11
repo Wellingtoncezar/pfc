@@ -23,7 +23,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 
 		$data = array(
 			'titlePage' => 'Fornecedores',
@@ -49,7 +49,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Cadastrar fornecedores',
 			'template' => new templateFactory()
@@ -69,14 +69,14 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 		
 		$data = array(
 			'titlePage' => 'Editar fornecedores',
 			'template' => new templateFactory()
 		);
 		//ID
-		$idFornecedor = intval($this->url->getSegment(3));
+		$idFornecedor = intval($this->load->url->getSegment(3));
 		
 		//FORNECEDORES MODEL
 		$this->load->model('fornecedores/fornecedoresModel');
@@ -90,7 +90,7 @@ class gerenciar extends Controller{
 		
 		//DATAFORMAT
 		$this->load->library('dataFormat', null, true);
-		$data['dataFormat'] = $this->dataFormat;
+		$data['dataFormat'] = $this->load->dataFormat;
 
 		$this->load->view('includes/header',$data);
 		$this->load->view('fornecedores/editar',$data);
@@ -139,21 +139,21 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
 		
-		$this->dataValidator->set('Razao Social', $razaoSocial, 'razao_social')->is_required()->min_length(2);
-		$this->dataValidator->set('Nome Fantasia', $nomeFantasia, 'nome_fantasia')->is_required()->min_length(2);
-		$this->dataValidator->set('CNPJ', $cnpj, 'cnpj')->is_required();
-		$this->dataValidator->set('CPF', $cpf, 'cpf')->is_required();
-		$this->dataValidator->set('Pessoa', $pessoa, 'pessoa')->is_required();
-		$this->dataValidator->set('CEP', $cep, 'cep')->is_required();
-		$this->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
-		$this->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
-		$this->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
-		$this->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
-		$this->dataValidator->set('Estado', $estado, 'estado')->is_required();
+		$this->load->dataValidator->set('Razao Social', $razaoSocial, 'razao_social')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Nome Fantasia', $nomeFantasia, 'nome_fantasia')->is_required()->min_length(2);
+		$this->load->dataValidator->set('CNPJ', $cnpj, 'cnpj')->is_required();
+		$this->load->dataValidator->set('CPF', $cpf, 'cpf')->is_required();
+		$this->load->dataValidator->set('Pessoa', $pessoa, 'pessoa')->is_required();
+		$this->load->dataValidator->set('CEP', $cep, 'cep')->is_required();
+		$this->load->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
+		$this->load->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
+		$this->load->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
+		$this->load->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
+		$this->load->dataValidator->set('Estado', $estado, 'estado')->is_required();
 
 		
 
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
 			//TELEFONES
 			$telefonesList = Array();
@@ -197,7 +197,7 @@ class gerenciar extends Controller{
 
 			//FORMATAÇÃO DOS DADOS
 			$this->load->library('dataFormat', null, true);
-			$data_visita = $this->dataFormat->formatar($data_visita,'data','banco');
+			$data_visita = $this->load->dataFormat->formatar($data_visita,'data','banco');
 
 
 			//FORNECEDOR
@@ -227,7 +227,7 @@ class gerenciar extends Controller{
 			echo $fornecedoresDao->inserir($fornecedoresModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 
@@ -275,21 +275,21 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
 		
-		$this->dataValidator->set('Razao Social', $razaoSocial, 'razao_social')->is_required()->min_length(2);
-		$this->dataValidator->set('Nome Fantasia', $nomeFantasia, 'nome_fantasia')->is_required()->min_length(2);
-		$this->dataValidator->set('CNPJ', $cnpj, 'cnpj')->is_required()->is_required();
-		$this->dataValidator->set('CPF', $cpf, 'cpf')->is_required();
-		$this->dataValidator->set('Pessoa', $pessoa, 'pessoa')->is_required();
-		$this->dataValidator->set('CEP', $cep, 'cep')->is_required();
-		$this->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
-		$this->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
-		$this->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
-		$this->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
-		$this->dataValidator->set('Estado', $estado, 'estado')->is_required();
+		$this->load->dataValidator->set('Razao Social', $razaoSocial, 'razao_social')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Nome Fantasia', $nomeFantasia, 'nome_fantasia')->is_required()->min_length(2);
+		$this->load->dataValidator->set('CNPJ', $cnpj, 'cnpj')->is_required()->is_required();
+		$this->load->dataValidator->set('CPF', $cpf, 'cpf')->is_required();
+		$this->load->dataValidator->set('Pessoa', $pessoa, 'pessoa')->is_required();
+		$this->load->dataValidator->set('CEP', $cep, 'cep')->is_required();
+		$this->load->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
+		$this->load->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
+		$this->load->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
+		$this->load->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
+		$this->load->dataValidator->set('Estado', $estado, 'estado')->is_required();
 
 		
 
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
 			//TELEFONES
 			$telefonesList = Array();
@@ -339,7 +339,7 @@ class gerenciar extends Controller{
 
 			//FORMATAÇÃO DOS DADOS
 			$this->load->library('dataFormat', null, true);
-			$data_visita = $this->dataFormat->formatar($data_visita,'data','banco');
+			$data_visita = $this->load->dataFormat->formatar($data_visita,'data','banco');
 
 
 			//FORNECEDOR
@@ -389,7 +389,7 @@ class gerenciar extends Controller{
 			echo $fornecedoresDao->atualizar($fornecedoresModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 
@@ -418,6 +418,10 @@ class gerenciar extends Controller{
 
 	public function excluir()
 	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 		$this->atualizarStatus();
 	}
 

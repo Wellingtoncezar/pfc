@@ -63,14 +63,14 @@ class checkPermissao extends Library{
 		else
 			return true;
 
-		$this->url = new url($url);
+		$this->load->url = new url($url);
 		$retorno = false;
 		//se for diferente de administrador
 
 			//se for diferente da tela inicial 
-			if(!empty($this->url->getUrl())){
+			if(!empty($this->load->url->getUrl())){
 				//percorre todos os segmentos da url par verificação da permissão
-				foreach ($this->url->getUrl() as $key => $value) 
+				foreach ($this->load->url->getUrl() as $key => $value) 
 				{
 					if(!is_array($this->lastArray) || empty($this->lastArray))
 						break;

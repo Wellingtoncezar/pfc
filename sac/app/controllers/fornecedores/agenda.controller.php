@@ -22,6 +22,7 @@ class agenda extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Agenda de fornecedores',
 			'template' => new templateFactory()
@@ -41,6 +42,10 @@ class agenda extends Controller{
 	 */
 	public function cadastrar()
 	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Cadastrar agenda'
 		);
@@ -111,7 +116,7 @@ class agenda extends Controller{
 		{
 			foreach ($agendamentos as $agenda)
 			{
-				$aux['data'] = $this->dataFormat->formatar($agenda->getData(),'data');
+				$aux['data'] = $this->load->dataFormat->formatar($agenda->getData(),'data');
 				$aux['titulo'] = $agenda->getTitulo();
 				$aux['nome_fornecedor'] = $agenda->getFornecedor()->getNomeFantasia();
 				array_push($notificacoes, $aux);
@@ -147,12 +152,12 @@ class agenda extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
 		
-		$this->dataValidator->set('Fornecedor', $fornecedor, 'fornecedores')->is_required();
-		$this->dataValidator->set('Data', $data, 'data')->is_required();
-		$this->dataValidator->set('Título', $titulo, 'titulo')->is_required();
+		$this->load->dataValidator->set('Fornecedor', $fornecedor, 'fornecedores')->is_required();
+		$this->load->dataValidator->set('Data', $data, 'data')->is_required();
+		$this->load->dataValidator->set('Título', $titulo, 'titulo')->is_required();
 
 
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
 			//FORNECEDOR
 			$this->load->model('fornecedores/fornecedoresModel');
@@ -161,7 +166,7 @@ class agenda extends Controller{
 			
 			//FORMATAÇÃO DOS DADOS
 			$this->load->library('dataFormat', null, true);
-			$data = $this->dataFormat->formatar($data,'data','banco');
+			$data = $this->load->dataFormat->formatar($data,'data','banco');
 
 			//AGENDA
 			$this->load->model('fornecedores/agendaModel');
@@ -179,7 +184,7 @@ class agenda extends Controller{
 			echo $agendaDao->inserir($agendaModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 

@@ -23,8 +23,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 
 		$data = array(
 			'titlePage' => 'Usuários',
@@ -51,7 +50,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Cadastrar Usuários',
 			'template' => new templateFactory()
@@ -78,13 +77,13 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Editar Usuários',
 			'template' => new templateFactory()
 		);
 		//ID
-		$idUsuario = intval($this->url->getSegment(4));
+		$idUsuario = intval($this->load->url->getSegment(4));
 		
 		//USUARIO MODEL
 		$this->load->model('funcionarios/usuariosModel');
@@ -104,7 +103,7 @@ class gerenciar extends Controller{
 		
 		//DATAFORMAT
 		$this->load->library('dataFormat',null,true);
-		$data['dataFormat'] = $this->dataFormat;
+		$data['dataFormat'] = $this->load->dataFormat;
 
 		$this->load->view('includes/header',$data);
 		$this->load->view('funcionarios/usuarios/editar',$data);
@@ -133,14 +132,14 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator',null,true);
 		
-		$this->dataValidator->set('Nível de acesso', $nivel, 'nivel')->is_required();
-		$this->dataValidator->set('Funcionário', $funcionario, 'funcionario')->is_required();
-		$this->dataValidator->set('Email', $email, 'email')->is_required()->is_email();
-		$this->dataValidator->set('Login', $login, 'login')->is_required();
-		$this->dataValidator->set('Senha', $senha, 'senha')->is_required();
+		$this->load->dataValidator->set('Nível de acesso', $nivel, 'nivel')->is_required();
+		$this->load->dataValidator->set('Funcionário', $funcionario, 'funcionario')->is_required();
+		$this->load->dataValidator->set('Email', $email, 'email')->is_required()->is_email();
+		$this->load->dataValidator->set('Login', $login, 'login')->is_required();
+		$this->load->dataValidator->set('Senha', $senha, 'senha')->is_required();
 		
 
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
             //USUARIO
 			$this->load->model('funcionarios/usuariosModel');
@@ -160,7 +159,7 @@ class gerenciar extends Controller{
 			echo $usuariosDao->inserir($usuariosModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 
@@ -185,13 +184,13 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator',null, true);
 		
-		$this->dataValidator->set('Grupo', $grupo, 'grupo')->is_required();
-		$this->dataValidator->set('Email', $email, 'email')->is_required();
-		$this->dataValidator->set('Login', $login, 'login')->is_required();
+		$this->load->dataValidator->set('Grupo', $grupo, 'grupo')->is_required();
+		$this->load->dataValidator->set('Email', $email, 'email')->is_required();
+		$this->load->dataValidator->set('Login', $login, 'login')->is_required();
 		
 		
 
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
             //USUARIO
 			$this->load->model('funcionarios/usuariosModel');
@@ -209,7 +208,7 @@ class gerenciar extends Controller{
 			echo $usuariosDao->atualizar($usuariosModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 
@@ -241,6 +240,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 		$this->atualizarStatus();
 	}
 

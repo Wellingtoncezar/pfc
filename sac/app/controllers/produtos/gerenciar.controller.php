@@ -22,6 +22,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 
 		$this->load->dao('produtos/produtosDao');
 		$produtosDao = new produtosDao();
@@ -42,6 +43,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 
 		$data = array(
 			'titlePage' => 'Cadastrar Produtos'
@@ -74,6 +76,11 @@ class gerenciar extends Controller{
 
 	public function editar()
 	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
+
 		$this->load->model('produtos/produtosModel');
 		$this->load->dao('produtos/produtosDao');
 		$this->load->dao('produtos/marcasDao');
@@ -88,7 +95,7 @@ class gerenciar extends Controller{
 			'titlePage' => 'Editar Produto'
 		);
 
-		$idProduto = $this->url->getSegment(3);
+		$idProduto = $this->load->url->getSegment(3);
 		
 		$produtosModel = new produtosModel();
 		$produtosModel->setId($idProduto);
@@ -134,16 +141,16 @@ class gerenciar extends Controller{
 
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
-		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(3);
-		$this->dataValidator->set('Marca', $marca, 'marca')->is_required();
-		$this->dataValidator->set('Categoria', $categoria, 'categoria')->is_required();
-		$this->dataValidator->set('Fornecedores', $fornecedores, 'listafornecedores')->is_required();
-		$this->dataValidator->set('Preço de custo', $preco_custo, 'preco_custo')->is_required();
-		$this->dataValidator->set('Preço de venda', $preco_venda, 'preco_venda')->is_required();
-		$this->dataValidator->set('Markup', $markup, 'markup')->is_required();
-		$this->dataValidator->set('Unidade de Medida', $uni_medida, 'uni_medida')->is_required();
+		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(3);
+		$this->load->dataValidator->set('Marca', $marca, 'marca')->is_required();
+		$this->load->dataValidator->set('Categoria', $categoria, 'categoria')->is_required();
+		$this->load->dataValidator->set('Fornecedores', $fornecedores, 'listafornecedores')->is_required();
+		$this->load->dataValidator->set('Preço de custo', $preco_custo, 'preco_custo')->is_required();
+		$this->load->dataValidator->set('Preço de venda', $preco_venda, 'preco_venda')->is_required();
+		$this->load->dataValidator->set('Markup', $markup, 'markup')->is_required();
+		$this->load->dataValidator->set('Unidade de Medida', $uni_medida, 'uni_medida')->is_required();
 
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
 			//PRODUTOS
 			$this->load->model('produtos/produtosModel');
@@ -189,9 +196,9 @@ class gerenciar extends Controller{
 
 			//FORMATAÇÃO DOS DADOS
 			$this->load->library('dataFormat', null, true);
-			$preco_custo = $this->dataFormat->formatar($preco_custo,'decimal','banco');
-			$preco_venda = $this->dataFormat->formatar($preco_venda,'decimal','banco');
-			$markup = $this->dataFormat->formatar($markup,'decimal','banco');
+			$preco_custo = $this->load->dataFormat->formatar($preco_custo,'decimal','banco');
+			$preco_venda = $this->load->dataFormat->formatar($preco_venda,'decimal','banco');
+			$markup = $this->load->dataFormat->formatar($markup,'decimal','banco');
 
 
 			
@@ -214,7 +221,7 @@ class gerenciar extends Controller{
 			echo $produtosDao->inserir($produtosModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 
@@ -246,7 +253,8 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		if(!$this->checkPermissao->check(false,URL.'produtos/gerenciar/excluir'))
+
+		if(!$this->load->checkPermissao->check(false,URL.'produtos/gerenciar/excluir'))
 		{
 			echo "Ação não permitida";
 			return false;

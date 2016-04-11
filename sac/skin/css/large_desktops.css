@@ -118,9 +118,13 @@
     min-width: 126px;
     transition:0.5s;
 	}
+
 	.navbar-default .navbar-nav>li>a:focus, 
 	.navbar-default .navbar-nav>li>a:hover,
-	.navbar-default .navbar-nav>li>a.active{
+	.navbar-default .navbar-nav>li>a.active,
+	.navbar-default .navbar-nav>.active>a, 
+	.navbar-default .navbar-nav>.active>a:focus, 
+	.navbar-default .navbar-nav>.active>a:hover {
 	    color: #FFF;
 	    background-color: #121212;
 	}

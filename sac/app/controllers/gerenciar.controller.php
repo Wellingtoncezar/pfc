@@ -22,12 +22,10 @@ class gerenciar extends Controller{
 
 	public function index()
 	{
-		// print_r($_SESSION['user']);
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 
 		$data = array(
 			'titlePage' => ''

@@ -1,6 +1,7 @@
 <?php
 /**
-*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+* @author Wellington Cezar
+* @author Diego Hernandes
 */
 if(!defined('URL')) die('Acesso negado');
 class gerenciar extends Controller{
@@ -9,13 +10,6 @@ class gerenciar extends Controller{
 	
 	public function __construct(){
 		parent::__construct();
-		// $checkPermissao = new checkPermissao();
-		// $checkPermissao->checkPermissaoPagina();
-		
-		// //checagem do login
-		// $this->load->dao('loginDao');
-		// $login = new loginDao();
-		// $login->statusLogin();
 	}
 
 	/********************************************/
@@ -29,7 +23,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 
 		$data = array(
 			'titulo' => 'Níveis de acesso ao sistema',
@@ -51,8 +45,10 @@ class gerenciar extends Controller{
 	*/
 	public function editar()
 	{
-		// $checkPermissao = new checkPermissao();
-		// $checkPermissao->checkPermissaoPagina();
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 		$data = array(
 			'titulo' => 'Editar Grupo de Permissões para Usuários',
 		);

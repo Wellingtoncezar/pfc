@@ -23,6 +23,8 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
+
 		$data = array(
 			'titlePage' => 'Gerenciar Marca',
 			'template' => new templateFactory()
@@ -47,6 +49,8 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
+
 		$data = array(
 			'titlePage' => 'Cadastrar marcas',
 			'template' => new templateFactory()
@@ -67,12 +71,14 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
+
 		$data = array(
 			'titlePage' => 'Editar marca',
 			'template' => new templateFactory()
 		);
 		//ID
-		$idMarcas = intval($this->url->getSegment(4));
+		$idMarcas = intval($this->load->url->getSegment(4));
 		
 		//marca MODEL
 		$this->load->model('produtos/marcasModel');
@@ -86,7 +92,7 @@ class gerenciar extends Controller{
 		
 		//DATAFORMAT
 		$this->load->library('dataFormat', null, true);
-		$data['dataFormat'] = $this->dataFormat;
+		$data['dataFormat'] = $this->load->dataFormat;
 
 		$this->load->view('includes/header',$data);
 		$this->load->view('produtos/marcas/editar',$data);
@@ -112,10 +118,10 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
 		
-		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
 
 		
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
 		
 			//MARCAS
@@ -133,7 +139,7 @@ class gerenciar extends Controller{
 			echo $marcasDao->inserir($marcasModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 
@@ -156,11 +162,11 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
 		
-		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
 		
 
 		
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
 		
 			//CATEGORIA
@@ -178,7 +184,7 @@ class gerenciar extends Controller{
 			echo $marcasDao->atualizar($marcasModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 
@@ -207,6 +213,10 @@ class gerenciar extends Controller{
 
 	public function excluir()
 	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 		$this->atualizarStatus();
 	}
 

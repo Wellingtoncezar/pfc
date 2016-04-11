@@ -23,6 +23,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 
 		$data = array(
 			'titlePage' => 'Gerenciar Cargos',
@@ -48,6 +49,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 
 		$data = array(
 			'titlePage' => 'Cadastrar categoria',
@@ -68,13 +70,14 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 
 		$data = array(
 			'titlePage' => 'Editar cargo',
 			'template' => new templateFactory()
 		);
 		//ID
-		$idcargo = intval($this->url->getSegment(4));
+		$idcargo = intval($this->load->url->getSegment(4));
 		
 		//FUNCIONARIO MODEL
 		$this->load->model('funcionarios/cargosModel');
@@ -107,10 +110,10 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
 		
-		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
-		$this->dataValidator->set('Setor', $setor, 'setor')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Setor', $setor, 'setor')->is_required()->min_length(2);
 		
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
 			//CARGOS MODEL
 			$this->load->model('funcionarios/cargosModel');
@@ -126,7 +129,7 @@ class gerenciar extends Controller{
 			echo $cargosDao->inserir($cargosModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 
@@ -149,11 +152,11 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator' ,null, true);
 		
-		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
-		$this->dataValidator->set('Setor', $setor, 'setor')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Setor', $setor, 'setor')->is_required()->min_length(2);
 
 		
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
 		
 			//CARGO
@@ -170,7 +173,7 @@ class gerenciar extends Controller{
 			echo $cargosDao->atualizar($cargosModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 
@@ -179,6 +182,11 @@ class gerenciar extends Controller{
 
 	public function excluir()
 	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
+		
 		$idCargo = intval($_POST['id']);
 
 		//CARGOS MODEL

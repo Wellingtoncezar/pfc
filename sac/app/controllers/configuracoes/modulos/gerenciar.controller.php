@@ -9,13 +9,6 @@ class gerenciar extends Controller{
 	
 	public function __construct(){
 		parent::__construct();
-		// $checkPermissao = new checkPermissao();
-		// $checkPermissao->checkPermissaoPagina();
-		
-		// //checagem do login
-		// $this->load->dao('loginDao');
-		// $login = new loginDao();
-		// $login->statusLogin();
 	}
 
 	/********************************************/
@@ -29,7 +22,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 
 		$data = array(
 			'titulo' => 'Módulos do sistema',

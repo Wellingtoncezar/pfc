@@ -49,9 +49,9 @@ class login extends Controller{
 
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
-		$this->dataValidator->set('Login', $login, 'login')->is_required();
-		$this->dataValidator->set('Senha', $senha, 'senha')->is_required();
-		if ($this->dataValidator->validate())
+		$this->load->dataValidator->set('Login', $login, 'login')->is_required();
+		$this->load->dataValidator->set('Senha', $senha, 'senha')->is_required();
+		if ($this->load->dataValidator->validate())
 		{
 			if($_SESSION['ntentativaLogin'] >=5)
 			{
@@ -71,7 +71,7 @@ class login extends Controller{
 			}
 		}
 		else{
-			echo json_encode($this->dataValidator->get_errors());
+			echo json_encode($this->load->dataValidator->get_errors());
 		}
 	}
 

@@ -8,16 +8,13 @@ class gerenciar extends Controller{
 	private $countError = 0;
 	public function __construct(){
 		parent::__construct();
-		//checagem do login
-		// $this->load->dao('loginDao');
-		// $login = new loginDao();
-		// $login->statusLogin();
 	}
 	
 	public function index(){
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 		
 		$data = array(
 			'titulo' => 'Configurações'

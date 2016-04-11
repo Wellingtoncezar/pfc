@@ -48,7 +48,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 		$this->load->dao('funcionarios/cargosDao');
 		$cargos = new cargosDao;
 
@@ -73,7 +73,7 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		$this->checkPermissao->check();
+		$this->load->checkPermissao->check();
 
 		$this->load->dao('funcionarios/cargosDao');
 		$cargos = new cargosDao;
@@ -84,7 +84,7 @@ class gerenciar extends Controller{
 			'cargos' => $cargos->listar()
 		);
 		//ID
-		$idFuncionario = intval($this->url->getSegment(3));
+		$idFuncionario = intval($this->load->url->getSegment(3));
 		
 		//FUNCIONARIO MODEL
 		$this->load->model('funcionarios/funcionariosModel');
@@ -98,7 +98,7 @@ class gerenciar extends Controller{
 		
 		//DATAFORMAT
 		$this->load->library('dataFormat',null,true);
-		$data['dataFormat'] = $this->dataFormat;
+		$data['dataFormat'] = $this->load->dataFormat;
 
 		$this->load->view('includes/header',$data);
 		$this->load->view('funcionarios/editar',$data);
@@ -117,7 +117,7 @@ class gerenciar extends Controller{
 	 */
 	public function inserir()
 	{
-		if(!$this->checkPermissao->check(false,URL.'funcionarios/gerenciar/cadastrar'))
+		if(!$this->load->checkPermissao->check(false,URL.'funcionarios/gerenciar/cadastrar'))
 		{
 			echo "Ação não permitida";
 			return false;
@@ -157,20 +157,20 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
 		
-		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
-		$this->dataValidator->set('Sobrenome', $sobrenome, 'sobrenome')->is_required()->min_length(2);
-		$this->dataValidator->set('Data de nascimento', $dataNascimento, 'dataNascimento')->is_required()->is_date('d/m/Y');
-		$this->dataValidator->set('Sexo', $sexo, 'sexo')->is_required();
-		$this->dataValidator->set('CEP', $cep, 'cep')->is_required();
-		$this->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
-		$this->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
-		$this->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
-		$this->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
-		$this->dataValidator->set('Estado', $estado, 'estado')->is_required();
+		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Sobrenome', $sobrenome, 'sobrenome')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Data de nascimento', $dataNascimento, 'dataNascimento')->is_required()->is_date('d/m/Y');
+		$this->load->dataValidator->set('Sexo', $sexo, 'sexo')->is_required();
+		$this->load->dataValidator->set('CEP', $cep, 'cep')->is_required();
+		$this->load->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
+		$this->load->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
+		$this->load->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
+		$this->load->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
+		$this->load->dataValidator->set('Estado', $estado, 'estado')->is_required();
 
 		
 
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
 			//TELEFONES
 			$telefonesList = Array();
@@ -215,9 +215,9 @@ class gerenciar extends Controller{
 
 			//FORMATAÇÃO DOS DADOS
 			$this->load->library('dataFormat',null, true);
-			$dataNascimento = $this->dataFormat->formatar($dataNascimento,'data','banco');
-			$dataAdmissao = $this->dataFormat->formatar($dataAdmissao,'data','banco');
-			$dataDemissao = $this->dataFormat->formatar($dataDemissao,'data','banco');
+			$dataNascimento = $this->load->dataFormat->formatar($dataNascimento,'data','banco');
+			$dataAdmissao = $this->load->dataFormat->formatar($dataAdmissao,'data','banco');
+			$dataDemissao = $this->load->dataFormat->formatar($dataDemissao,'data','banco');
 
 			
 
@@ -255,7 +255,7 @@ class gerenciar extends Controller{
 			echo $funcionariosDao->inserir($funcionariosModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 
@@ -268,7 +268,7 @@ class gerenciar extends Controller{
 	 */
 	public function atualizar()
 	{
-		if(!$this->checkPermissao->check(false,URL.'funcionarios/gerenciar/editar'))
+		if(!$this->load->checkPermissao->check(false,URL.'funcionarios/gerenciar/editar'))
 		{
 			echo "Ação não permitida";
 			return false;
@@ -311,20 +311,20 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
 		
-		$this->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
-		$this->dataValidator->set('Sobrenome', $sobrenome, 'sobrenome')->is_required()->min_length(2);
-		$this->dataValidator->set('Data de nascimento', $dataNascimento, 'dataNascimento')->is_required()->is_date('d/m/Y');
-		$this->dataValidator->set('Sexo', $sexo, 'sexo')->is_required();
-		$this->dataValidator->set('CEP', $cep, 'cep')->is_required();
-		$this->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
-		$this->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
-		$this->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
-		$this->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
-		$this->dataValidator->set('Estado', $estado, 'estado')->is_required();
+		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Sobrenome', $sobrenome, 'sobrenome')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Data de nascimento', $dataNascimento, 'dataNascimento')->is_required()->is_date('d/m/Y');
+		$this->load->dataValidator->set('Sexo', $sexo, 'sexo')->is_required();
+		$this->load->dataValidator->set('CEP', $cep, 'cep')->is_required();
+		$this->load->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
+		$this->load->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
+		$this->load->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
+		$this->load->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
+		$this->load->dataValidator->set('Estado', $estado, 'estado')->is_required();
 
 		
 
-		if ($this->dataValidator->validate())
+		if ($this->load->dataValidator->validate())
 		{
 			//TELEFONES
 			$telefonesList = Array();
@@ -375,9 +375,9 @@ class gerenciar extends Controller{
 
 			//FORMATAÇÃO DOS DADOS
 			$this->load->library('dataFormat', null,true);
-			$dataNascimento = $this->dataFormat->formatar($dataNascimento,'data','banco');
-			$dataAdmissao = $this->dataFormat->formatar($dataAdmissao,'data','banco');
-			$dataDemissao = $this->dataFormat->formatar($dataDemissao,'data','banco');
+			$dataNascimento = $this->load->dataFormat->formatar($dataNascimento,'data','banco');
+			$dataAdmissao = $this->load->dataFormat->formatar($dataAdmissao,'data','banco');
+			$dataDemissao = $this->load->dataFormat->formatar($dataDemissao,'data','banco');
 
 			
 
@@ -414,7 +414,7 @@ class gerenciar extends Controller{
 			echo $funcionariosDao->atualizar($funcionariosModel);
 		}else
 	    {
-			$todos_erros = $this->dataValidator->get_errors();
+			$todos_erros = $this->load->dataValidator->get_errors();
 			echo json_encode($todos_erros);
 	    }
 
@@ -446,7 +446,8 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
-		if(!$this->checkPermissao->check(false,URL.'funcionarios/gerenciar/excluir'))
+
+		if(!$this->load->checkPermissao->check(false,URL.'funcionarios/gerenciar/excluir'))
 		{
 			echo "Ação não permitida";
 			return false;

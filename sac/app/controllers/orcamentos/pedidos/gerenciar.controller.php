@@ -26,16 +26,16 @@ class gerenciar extends Controller{
 		$this->load->checkPermissao->check();
 
 		$data = array(
-			'titlePage' => 'Gerenciar Categoria',
+			'titlePage' => 'Gerenciar Pedidos',
 			'template' => new templateFactory()
 		);
 
-		$this->load->dao('produtos/categoriasDao');
-		$categorias = new categoriasDao();
-		$data['categorias'] = $categorias->listar();
+		$this->load->dao('produtos/marcasDao');
+		$marcas = new marcasDao();
+		$data['marcas'] = $marcas->listar();
 
 		$this->load->view('includes/header',$data);
-		$this->load->view('produtos/categorias/home',$data);
+		$this->load->view('orcamentos/pedidos/home',$data);
 		$this->load->view('includes/footer',$data);
 
 	}
@@ -50,14 +50,20 @@ class gerenciar extends Controller{
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
 		$this->load->checkPermissao->check();
-
 		$data = array(
-			'titlePage' => 'Cadastrar categoria',
+			'titlePage' => 'Cadastrar pedido',
 			'template' => new templateFactory()
 		);
+
+
+		$this->load->dao('produtos/produtosDao');
+		$produtosDao = new produtosDao();
+		$produtos = $produtosDao->listar();
+		$data['produtos'] = $produtos;
+
 		
 		$this->load->view('includes/header',$data);
-		$this->load->view('produtos/categorias/cadastro',$data);
+		$this->load->view('orcamentos/pedidos/cadastro',$data);
 		$this->load->view('includes/footer',$data);
 	}
 
@@ -71,28 +77,30 @@ class gerenciar extends Controller{
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
 		$this->load->checkPermissao->check();
-		
+
 		$data = array(
-			'titlePage' => 'Editar categoria',
+			'titlePage' => 'Editar marca',
 			'template' => new templateFactory()
 		);
 		//ID
-		$idCategoria = intval($this->load->url->getSegment(4));
+		$idMarcas = intval($this->load->url->getSegment(4));
 		
-		//FUNCIONARIO MODEL
-		$this->load->model('produtos/categoriasModel');
-		$categoriasModel = new categoriasModel();
-		$categoriasModel->setId($idCategoria);
+		//marca MODEL
+		$this->load->model('produtos/marcasModel');
+		$marcasModel = new marcasModel();
+		$marcasModel->setId($idMarcas);
 
-		//FUNCIONARIO DAO
-		$this->load->dao('produtos/categoriasDao');
-		$categoriasDao = new categoriasDao();
-		$data['categoria'] = $categoriasDao->consultar($categoriasModel);
+		//marca DAO
+		$this->load->dao('produtos/marcasDao');
+		$marcasDao = new marcasDao();
+		$data['marca'] = $marcasDao->consultar($marcasModel);
 		
-
+		//DATAFORMAT
+		$this->load->library('dataFormat', null, true);
+		$data['dataFormat'] = $this->load->dataFormat;
 
 		$this->load->view('includes/header',$data);
-		$this->load->view('produtos/categorias/editar',$data);
+		$this->load->view('produtos/marcas/editar',$data);
 		$this->load->view('includes/footer',$data);
 	}
 
@@ -120,20 +128,20 @@ class gerenciar extends Controller{
 		
 		if ($this->load->dataValidator->validate())
 		{
-
-			//CATEGORIA
-			$this->load->model('produtos/categoriasModel');
-			$categoriasModel = new categoriasModel();
+		
+			//MARCAS
+			$this->load->model('produtos/marcasModel');
+			$marcasModel = new marcasModel();
 			
-			$categoriasModel->setNome($nome);
-			$categoriasModel->setStatus(status::ATIVO);
-			$categoriasModel->setDataCadastro(date('Y-m-d h:i:s'));
+			$marcasModel->setNome($nome);
+			$marcasModel->setStatus(status::ATIVO);
+			$marcasModel->setDataCadastro(date('Y-m-d h:i:s'));
 
 
-			//CATEGORIAS DAO
-			$this->load->dao('produtos/categoriasDao');
-			$categoriasDao = new categoriasDao();
-			echo $categoriasDao->inserir($categoriasModel);
+			//marcas DAO
+			$this->load->dao('produtos/marcasDao');
+			$marcasDao = new marcasDao();
+			echo $marcasDao->inserir($marcasModel);
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();
@@ -152,12 +160,12 @@ class gerenciar extends Controller{
 	 */
 	public function atualizar()
 	{
-		$idCategoria = isset($_POST['idCategoria']) ? filter_var($_POST['idCategoria']) : '';
+		$idMarcas = isset($_POST['idMarca']) ? filter_var($_POST['idMarca']) : '';
 		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
 
 
 		//validação dos dados
-		$this->load->library('dataValidator' ,null, true);
+		$this->load->library('dataValidator', null, true);
 		
 		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
 		
@@ -167,18 +175,18 @@ class gerenciar extends Controller{
 		{
 		
 			//CATEGORIA
-			$this->load->model('produtos/categoriasModel');
-			$categoriasModel = new categoriasModel();
-			$categoriasModel->setId($idCategoria);
-			$categoriasModel->setNome($nome);
-			$categoriasModel->setStatus(status::ATIVO);
-			$categoriasModel->setDataCadastro(date('Y-m-d h:i:s'));
+			$this->load->model('produtos/marcasModel');
+			$marcasModel = new marcasModel();
+			$marcasModel->setId($idMarcas);
+			$marcasModel->setNome($nome);
+			$marcasModel->setStatus(status::ATIVO);
+			$marcasModel->setDataCadastro(date('Y-m-d h:i:s'));
 
 
 			//CATEGORIA DAO
-			$this->load->dao('produtos/categoriasDao');
-			$categoriasDao = new categoriasDao();
-			echo $categoriasDao->atualizar($categoriasModel);
+			$this->load->dao('produtos/marcasDao');
+			$marcasDao = new marcasDao();
+			echo $marcasDao->atualizar($marcasModel);
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();
@@ -192,19 +200,19 @@ class gerenciar extends Controller{
 	 */
 	public function atualizarStatus()
 	{
-		$idCategoria = intval($_POST['id']);
+		$idMarcas = intval($_POST['id']);
 		$status = filter_var($_POST['status']);
 
-		//CATEGORIA MODEL
-		$this->load->model('produtos/categoriasDao');
-		$categoriasDao = new categoriasDao();
-		$categoriasDao->setId( $idCategoria );
-		$categoriasDao->setStatus( $status );
+		//MARCA MODEL
+		$this->load->model('produtos/marcasModel');
+		$marcasModel = new marcasModel();
+		$marcasModel->setId( $idMarcas );
+		$marcasModel->setStatus( $status );
 
-		//CATEGORIA DAO
-		$this->load->dao('produtos/categoriasDao');
-		$categoriasDao = new categoriasDao();
-		echo $categoriasDao->atualizarStatus($categoriasModel);
+		//MARCA DAO
+		$this->load->dao('produtos/marcasDao');
+		$marcasDao = new marcasDao();
+		echo $marcasDao->atualizarStatus($marcasModel);
 
 	}
 

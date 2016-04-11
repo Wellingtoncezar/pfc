@@ -25,9 +25,8 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 
-		// $checkPermissao = new checkPermissao();
-		// $checkPermissao->checkPermissaoPagina();
 		$data = array(
 			'titlePage' => 'Grupos de Permissões de Funcionários',
 			'template' => new templateFactory()
@@ -50,8 +49,10 @@ class gerenciar extends Controller{
 	public function cadastrar()
 	{
 
-		// $checkPermissao = new checkPermissao();
-		// $checkPermissao->checkPermissaoPagina();
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Cadastrar Grupos de Permissões de Usuários',
 			'template' => new templateFactory()
@@ -67,7 +68,7 @@ class gerenciar extends Controller{
 		//$modulos->setStatus('"Ativo"');
 		//$modulos->setStatusSelecao('"Ativo"');
 		
-		$tipo = $this->url->getSegment(4);
+		$tipo = $this->load->url->getSegment(4);
 		
 		$tipo = filter_var($tipo);
 		$this->load->dao('configuracoes/niveisAcessoDao');
@@ -104,8 +105,10 @@ class gerenciar extends Controller{
 	*/
 	public function editar()
 	{
-		// $checkPermissao = new checkPermissao();
-		// $checkPermissao->checkPermissaoPagina();
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 		$data = array(
 			'titlePage' => 'Editar Grupo de Permissões para Usuários',
 			'template' => new templateFactory()
@@ -118,7 +121,7 @@ class gerenciar extends Controller{
 		$modulosDao = new modulosDao();
 		$data['modulos'] = $modulosDao->listar(0);
 
-		$tipo = $this->url->getSegment(4);
+		$tipo = $this->load->url->getSegment(4);
 		
 		$tipo = filter_var($tipo);
 		$this->load->dao('configuracoes/niveisAcessoDao');
@@ -219,9 +222,10 @@ class gerenciar extends Controller{
 	*/
 	public function excluir()
 	{
-		// $this->saveAction();
-		// $checkPermissao = new checkPermissao();
-		// $checkPermissao->checkPermissaoPagina();
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
 		if(!isset($_POST['id']))
 			return false;
 
