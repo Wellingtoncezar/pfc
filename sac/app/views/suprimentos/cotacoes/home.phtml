@@ -1,0 +1,77 @@
+<div class="container">
+    <?php
+
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'suprimentos/cotacoes/gerenciar/cadastrar'), URL.'suprimentos/cotacoes/gerenciar/cadastrar');
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
+    ?>
+    <div class="page-header">
+      <h1>Painel de Cotações</h1>
+    </div>
+    <div class="middle-content">
+        <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
+        <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
+            <thead>
+                <tr>   
+                    <th width="100">Código</th>
+                    <th width="160">Nome</th>
+                    <th width="180">Ações</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Ações</th>
+                </tr>
+            </tfoot>
+            <tbody>
+            <?php
+            if(!empty($marcas)):
+                foreach ($marcas as $marc):
+            ?>
+                <tr id="<?=$marc->getId()?>">
+                    <td><?=$marc->getId()?></td>
+                    <td><?=$marc->getNome()?></td>
+                    <td>
+                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/marcas/gerenciar/editar/<?=$marc->getId()?>" role="button" id-record="<?=$marc->getId()?>" ><span class="glyphicon glyphicon-ok"></span> Aprovar</a>
+                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$marc->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span> Reprovar</a>
+                    </td>
+                </tr>
+            <?php
+                endforeach;
+            endif;
+            ?>
+                
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        //DATATABLE
+        var table = $('.dataTable').DataTable({
+            order: [0,'asc']
+        });
+
+        //EXCLUIR
+        table.$('.btn_excluir').on('click',function(){
+            var id = $(this).attr('id');
+            var status = $(this).data('value');
+            var modalDelete = $('#modalDelete').modal('show')
+            $('.btn_ok','#modalDelete').on('click', function(event) {
+                $.post(url+'produtos/marcas/gerenciar/excluir',{id:id,status:status},function(data){
+                    console.log(data)
+                    if(data == true){
+                        $('#modalDelete').modal('hide');
+                        $('tr#'+id).hide();
+                    }
+                });
+            });
+        });
+
+
+    })
+</script>
+

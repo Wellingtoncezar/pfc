@@ -35,7 +35,7 @@ class gerenciar extends Controller{
 		$data['marcas'] = $marcas->listar();
 
 		$this->load->view('includes/header',$data);
-		$this->load->view('orcamentos/pedidos/home',$data);
+		$this->load->view('suprimentos/pedidos/home',$data);
 		$this->load->view('includes/footer',$data);
 
 	}
@@ -63,7 +63,7 @@ class gerenciar extends Controller{
 
 		
 		$this->load->view('includes/header',$data);
-		$this->load->view('orcamentos/pedidos/cadastro',$data);
+		$this->load->view('suprimentos/pedidos/cadastro',$data);
 		$this->load->view('includes/footer',$data);
 	}
 

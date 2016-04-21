@@ -1,11 +1,11 @@
 <div class="container">
     <?php
 
-        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'orcamentos/pedidos/gerenciar/cadastrar'), URL.'funcionarios/gerenciar/cadastrar');
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'suprimentos/requisicoes/gerenciar/cadastrar'), URL.'suprimentos/requisicoes/gerenciar/cadastrar');
         echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
     <div class="page-header">
-      <h1>Pedidos</h1>
+      <h1>Requisições Automáticas e Manuais</h1>
     </div>
     <div class="middle-content">
         <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
@@ -33,8 +33,8 @@
                     <td><?=$marc->getId()?></td>
                     <td><?=$marc->getNome()?></td>
                     <td>
-                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/marcas/gerenciar/editar/<?=$marc->getId()?>" role="button" id-record="<?=$marc->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
-                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$marc->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span>Excluir</a>
+                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/marcas/gerenciar/editar/<?=$marc->getId()?>" role="button" id-record="<?=$marc->getId()?>" ><span class="glyphicons glyphicons-invoice"></span> Cotar</a>
+                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$marc->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span> Ignorar</a>
                     </td>
                 </tr>
             <?php

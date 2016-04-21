@@ -25,11 +25,11 @@ class gerenciar extends Controller{
 		$this->load->checkPermissao->check();
 
 		$data = array(
-			'titlePage' => 'Vendas'
+			'titlePage' => 'Relatórios'
 		);
 		
 		$this->load->view('includes/header',$data);
-		$this->load->view('vendas/home',$data);
+		$this->load->view('relatorios/home',$data);
 		$this->load->view('includes/footer',$data);
 	}
 

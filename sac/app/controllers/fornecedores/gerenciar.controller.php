@@ -421,6 +421,11 @@ class gerenciar extends Controller{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
+		if(!$this->load->checkPermissao->check(false,URL.'fornecedores/gerenciar/excluir'))
+		{
+			echo "Ação não permitida";
+			return false;
+		}
 		$this->load->checkPermissao->check();
 		$this->atualizarStatus();
 	}

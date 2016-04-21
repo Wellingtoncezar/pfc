@@ -18,7 +18,15 @@ $('.addProduto').click(function(){
                         +'<input type="text" readonly="readonly" name="produto" value="'+nomeproduto+'" class="form-control" idProduto="'+idProduto+'">'
                         +'<span class="input-group-addon" id="basic-addon2">Quantidade: </span>'
                           +'<input type="number" name="quantidade" value="0" class="form-control" >'
+                        +'<span class="input-group-addon" id="basic-addon2">Unidade De Medida: </span>'
+                          +'<input type="text" name="UnidadeDeMedida" value="0" class="form-control" >'  
                         
+                        +'<span class="input-group-addon" id="basic-addon2">Valor Por Unidade: </span>'
+                          +'<input type="text" name="ValorUnidade" value="0" class="form-control" >' 
+						 
+                        +'<span class="input-group-addon" id="basic-addon2">Subtotal: </span>'
+                          +'<input type="text" name="Subtotal" value="0" class="form-control" >'    
+                                              
                         +'<span class="input-group-addon" id="basic-addon2"><a href="javascript:void(0)" class="removeproduto" id="'+idProduto+'"><span class="glyphicons glyphicons-remove"></span></a></span>'
                     +'</div>';
 

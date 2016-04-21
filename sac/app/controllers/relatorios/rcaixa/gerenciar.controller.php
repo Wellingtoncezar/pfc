@@ -6,7 +6,6 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class gerenciar extends Controller{
 	public function __construct(){
 		parent::__construct();
-
 	}
 
 
@@ -26,11 +25,11 @@ class gerenciar extends Controller{
 		$this->load->checkPermissao->check();
 
 		$data = array(
-			'titlePage' => 'Orçamentos'
+			'titlePage' => 'Relatórios'
 		);
 		
 		$this->load->view('includes/header',$data);
-		$this->load->view('orcamentos/home',$data);
+		$this->load->view('relatorios/home',$data);
 		$this->load->view('includes/footer',$data);
 	}
 

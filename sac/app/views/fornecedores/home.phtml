@@ -46,8 +46,8 @@
                         </select>
                     </td>
                     <td>'
-                        .$this->templateFactory->getButton('editar',array('href'=> URL.'fornecedores/gerenciar/editar/'.$fornec->getId()))
-                        .$this->templateFactory->getButton('excluir', array('href'=> URL.'fornecedores/gerenciar/editar/'.$fornec->getId())).
+                        .$this->templateFactory->getButton('editar',array('href'=> URL.'fornecedores/gerenciar/editar/'.$fornec->getId()), URL.'fornecedores/gerenciar/editar/')
+                         .$this->templateFactory->getButton('excluir', array('id'=> $fornec->getId()), URL.'fornecedores/gerenciar/excluir/').
 
                     '</td>
                 </tr>';
