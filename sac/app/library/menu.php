@@ -1,6 +1,6 @@
 <?php
 /**
-*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+*@author Wellington cezar - wellington-cezar@hotmail.com
 */
 if(!defined('URL')) die('Acesso não permitido');
 class menu extends Library{
@@ -288,7 +288,7 @@ class menu extends Library{
 					endif;
 					if(!empty($modulo->getSubModulos())):
 				        foreach ($modulo->getSubmodulos() as $subMod):
-						    if(!empty($subMod->getPaginas())):
+						    /*if(!empty($subMod->getPaginas())):
 								$menu .= '<li class="dropdown">';
 									$menu .= '<a href="'.URL.$modulo->getUrl().'/'.$subMod->getUrl().'" title="'.$subMod->getNome().'" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">'.$subMod->getNome().'</a>';
 									    	$menu .= '<ul class="dropdown-menu">';
@@ -297,9 +297,9 @@ class menu extends Library{
 								            endforeach;
 					        				$menu .= '</ul>';
 						        $menu .= '</li>';
-							else:
+							else:*/
 								$menu .='<li><a href="'.URL.$modulo->getUrl().'/'.$subMod->getUrl().'" title="'.$subMod->getNome().'">'.$subMod->getNome().'</a></li>';
-							endif;
+							//endif;
 				        endforeach;
 
 					endif;

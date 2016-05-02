@@ -79,7 +79,7 @@ class funcionariosDao extends Dao{
 			$this->db->setCondicao("B.id_funcionario = '".$funcionario->getId()."' AND A.id_telefone = B.id_telefone");
 			$this->db->select();
 			
-			$telefonesList = Array();
+
 			if($this->db->rowCount() > 0):
 				$resultTel = $this->db->resultAll();
 
@@ -91,9 +91,8 @@ class funcionariosDao extends Dao{
 					$telefoneModel->setCategoria( $telefone['categoria_telefone'] );
 					$telefoneModel->setNumero( $telefone['numero_telefone'] );
 					$telefoneModel->setOperadora( $telefone['operadora_telefone'] );
-					$telefoneModel->setTipo( $telefone['tipo_telefone'] );
-					array_push($telefonesList, $telefoneModel);
-					unset($telefoneModel);
+					$telefoneModel->setTipo($telefone['tipo_telefone'] );
+					$funcionario->setTelefones($telefoneModel);
 				}
 			endif;
 
@@ -101,10 +100,10 @@ class funcionariosDao extends Dao{
 			//EMAILS
 			$this->db->clear();
 			$this->db->setTabela('emails as A, emails_funcionarios AS B');
-			$this->db->setCondicao("B.id_funcionario = '".$funcionario->getId()."' AND B.id_email = A.id_email");
+			$this->db->setCondicao("B.id_funcionario = ? AND B.id_email = A.id_email");
+			$this->db->setParameter(1, $funcionario->getId());
 			$this->db->select();
 			
-			$emailsList = Array();
 			if($this->db->rowCount() > 0):
 				$resultEmail = $this->db->resultAll();
 
@@ -116,8 +115,7 @@ class funcionariosDao extends Dao{
 					$emailModel->setId( $email['id_email'] );
 					$emailModel->setEmail( $email['endereco_email'] );
 					$emailModel->setTipo( $email['tipo_email'] );
-					array_push($emailsList, $emailModel);
-					unset($emailModel);
+					$funcionario->setEmail($emailModel);
 				}
 			endif;
 
@@ -153,8 +151,8 @@ class funcionariosDao extends Dao{
 			$funcionario->setEstadoCivil($result['estado_civil_funcionario']);
 			$funcionario->setEscolaridade($result['escolaridade_funcionario']);
 			$funcionario->setEndereco($endereco);
-			$funcionario->setTelefones($telefonesList);
-			$funcionario->setEmail($emailsList);
+			
+			
 
 			$this->load->model('funcionarios/cargosModel');
 			$cargosModel = new cargosModel();
@@ -204,30 +202,41 @@ class funcionariosDao extends Dao{
  	public function atualizar(funcionariosModel $funcionario)
  	{
 
-		if($funcionario->getFoto() != '')
-		{
-	 		$this->db->clear();
-	 		$this->db->setTabela('funcionarios');
-	 		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
-	 		$this->db->select(array('foto_funcionario'));
-	 		$res = $this->db->result();
-	 		$this->nomeArquivoFoto = pathinfo($res['foto_funcionario'],PATHINFO_FILENAME);
-			if($this->nomeArquivoFoto == '')
-			{
-		 		//nome da imagem
-				$char = new caracteres($funcionario->getNome());
-				$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
-			}
-				
-			$upload = $this->uploadFoto($this->nomeArquivoFoto, $funcionario->getFoto()); //upload da foto
-			if($upload)
-				return $this->updateData($funcionario);
-			else
-				return $upload;
-		}else
-		{
-			return $this->updateData($funcionario);
-		}
+		$data = array(
+ 			'foto_funcionario' => $funcionario->getFoto(),
+ 			'nome_funcionario' => $funcionario->getNome(),
+ 			'sobrenome_funcionario' => $funcionario->getSobrenome(),
+ 			'data_nascimento_funcionario' => $funcionario->getDataNascimento(),
+ 			'sexo_funcionario' => $funcionario->getSexo(),
+ 			'rg_funcionario' => $funcionario->getRg(),
+ 			'cpf_funcionario' => $funcionario->getCpf(),
+ 			'estado_civil_funcionario' => $funcionario->getEstadoCivil(),
+ 			'escolaridade_funcionario' => $funcionario->getEscolaridade(),
+ 			'id_cargo' => $funcionario->getCargo()->getId(),
+ 			'data_admissao_funcionario' => $funcionario->getDataAdmissao(),
+ 			'data_demissao_funcionario' => $funcionario->getDataDemissao()
+ 		);
+
+ 		$this->db->clear();
+		$this->db->setTabela('funcionarios');
+		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
+		$this->db->update($data);
+		if($this->db->rowCount() > 0)
+			$this->nUpdates++;
+		
+		//ENDEREÇO
+		$this->atualizaEndereco($funcionario);
+		//TELEFONES
+		$this->atualizaTelefones($funcionario);
+		//EMAILS
+		$this->atualizaEmails($funcionario);
+
+ 		if($this->nUpdates > 0)
+			return true;
+ 		else
+ 		{
+ 			return json_encode(array('erro'=>'Erro ao editar registro'));
+ 		}
 
 	}
 
@@ -281,45 +290,7 @@ class funcionariosDao extends Dao{
  		
  	}
 
- 	private function updateData(funcionariosModel $funcionario)
-	{
 
- 		$data = array(
- 			'foto_funcionario' => $this->nomeArquivoFoto,
- 			'nome_funcionario' => $funcionario->getNome(),
- 			'sobrenome_funcionario' => $funcionario->getSobrenome(),
- 			'data_nascimento_funcionario' => $funcionario->getDataNascimento(),
- 			'sexo_funcionario' => $funcionario->getSexo(),
- 			'rg_funcionario' => $funcionario->getRg(),
- 			'cpf_funcionario' => $funcionario->getCpf(),
- 			'estado_civil_funcionario' => $funcionario->getEstadoCivil(),
- 			'escolaridade_funcionario' => $funcionario->getEscolaridade(),
- 			'id_cargo' => $funcionario->getCargo()->getId(),
- 			'data_admissao_funcionario' => $funcionario->getDataAdmissao(),
- 			'data_demissao_funcionario' => $funcionario->getDataDemissao()
- 		);
-
- 		$this->db->clear();
-		$this->db->setTabela('funcionarios');
-		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
-		$this->db->update($data);
-		if($this->db->rowCount() > 0)
-			$this->nUpdates++;
-		
-		//ENDEREÇO
-		$this->atualizaEndereco($funcionario);
-		//TELEFONES
-		$this->atualizaTelefones($funcionario);
-		//EMAILS
-		$this->atualizaEmails($funcionario);
-
- 		if($this->nUpdates > 0)
-			return true;
- 		else
- 		{
- 			return json_encode(array('erro'=>'Erro ao editar registro'));
- 		}
- 	}
 
 
  	/**

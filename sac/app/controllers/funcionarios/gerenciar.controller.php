@@ -268,43 +268,44 @@ class gerenciar extends Controller{
 	 */
 	public function atualizar()
 	{
-		if(!$this->load->checkPermissao->check(false,URL.'funcionarios/gerenciar/editar'))
+		if(!$this->load->checkPermissao->check(false, URL.'funcionarios/gerenciar/editar'))
 		{
 			echo "Ação não permitida";
 			return false;
 		}
 
-		$idFuncionario = isset($_POST['id_funcionario']) ? filter_var($_POST['id_funcionario']) : '';
-		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
-		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-		$sobrenome = isset($_POST['sobrenome']) ? filter_var($_POST['sobrenome']) : '';
-		$dataNascimento = isset($_POST['dataNascimento']) ? filter_var(trim($_POST['dataNascimento'])) : '';
-		$sexo = isset($_POST['sexo']) ? filter_var($_POST['sexo']) : '';
-		$rg = isset($_POST['rg']) ? filter_var($_POST['rg']) : '';
-		$cpf = isset($_POST['cpf']) ? filter_var($_POST['cpf']) : '';
-		$estadoCivil = isset($_POST['estadoCivil']) ? filter_var($_POST['estadoCivil']) : '';
-		$escolaridade = isset($_POST['escolaridade']) ? filter_var($_POST['escolaridade']) : '';
+		$idFuncionario 		= isset($_POST['id_funcionario']) ? filter_var($_POST['id_funcionario']) : '';
+		$foto 				= isset($_FILES['foto']) ? $_FILES['foto'] : '';
+		$nome_foto 			= isset($_POST['nome_foto']) ? $_POST['nome_foto'] : '';
+		$nome 				= isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
+		$sobrenome 			= isset($_POST['sobrenome']) ? filter_var($_POST['sobrenome']) : '';
+		$dataNascimento 	= isset($_POST['dataNascimento']) ? filter_var(trim($_POST['dataNascimento'])) : '';
+		$sexo 				= isset($_POST['sexo']) ? filter_var($_POST['sexo']) : '';
+		$rg 				= isset($_POST['rg']) ? filter_var($_POST['rg']) : '';
+		$cpf 				= isset($_POST['cpf']) ? filter_var($_POST['cpf']) : '';
+		$estadoCivil 		= isset($_POST['estadoCivil']) ? filter_var($_POST['estadoCivil']) : '';
+		$escolaridade 		= isset($_POST['escolaridade']) ? filter_var($_POST['escolaridade']) : '';
 
 		//endereço
 		
-		$id_endereco = isset($_POST['id_endereco']) ? filter_var(trim($_POST['id_endereco'])) : '';
-		$cep = isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
-		$logradouro = isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
-		$numero = isset($_POST['numero']) ? filter_var(trim($_POST['numero'])) : '';
-		$complemento = isset($_POST['complemento']) ? filter_var(trim($_POST['complemento'])) : '';
-		$bairro = isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
-		$cidade = isset($_POST['cidade']) ? filter_var(trim($_POST['cidade'])) : '';
-		$estado = isset($_POST['estado']) ? filter_var(trim($_POST['estado'])) : '';
+		$id_endereco 		= isset($_POST['id_endereco']) ? filter_var(trim($_POST['id_endereco'])) : '';
+		$cep 				= isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
+		$logradouro 		= isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
+		$numero 			= isset($_POST['numero']) ? filter_var(trim($_POST['numero'])) : '';
+		$complemento 		= isset($_POST['complemento']) ? filter_var(trim($_POST['complemento'])) : '';
+		$bairro 			= isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
+		$cidade 			= isset($_POST['cidade']) ? filter_var(trim($_POST['cidade'])) : '';
+		$estado 			= isset($_POST['estado']) ? filter_var(trim($_POST['estado'])) : '';
 
 		//contato
-		$telefones = isset($_POST['telefones']) ? filter_var_array($_POST['telefones']) : Array();
-		$emails = isset($_POST['emails']) ? filter_var_array($_POST['emails']) : Array();
+		$telefones 			= isset($_POST['telefones']) ? filter_var_array($_POST['telefones']) : Array();
+		$emails 			= isset($_POST['emails']) ? filter_var_array($_POST['emails']) : Array();
 		
 		//DADOS ADMISSIONAIS
-		$codigoAdmissao = isset($_POST['codigoAdmissao']) ? filter_var(trim($_POST['codigoAdmissao'])) : '';
-		$cargo = isset($_POST['cargo']) ? intval($_POST['cargo']) : '';
-		$dataAdmissao = isset($_POST['dataAdmissao']) ? filter_var(trim($_POST['dataAdmissao'])) : '';
-		$dataDemissao = isset($_POST['dataDemissao']) ? filter_var(trim($_POST['dataDemissao'])) : '';
+		$codigoAdmissao 	= isset($_POST['codigoAdmissao']) ? filter_var(trim($_POST['codigoAdmissao'])) : '';
+		$cargo 				= isset($_POST['cargo']) ? intval($_POST['cargo']) : '';
+		$dataAdmissao 		= isset($_POST['dataAdmissao']) ? filter_var(trim($_POST['dataAdmissao'])) : '';
+		$dataDemissao 		= isset($_POST['dataDemissao']) ? filter_var(trim($_POST['dataDemissao'])) : '';
 
 
 
@@ -326,9 +327,16 @@ class gerenciar extends Controller{
 
 		if ($this->load->dataValidator->validate())
 		{
-			//TELEFONES
-			$telefonesList = Array();
+			$this->load->model('funcionarios/funcionariosModel');
+			$this->load->model('emailModel');
 			$this->load->model('telefoneModel');
+			$this->load->model('funcionarios/cargosModel');
+
+
+			//FUNCIONARIO
+			$funcionariosModel = new funcionariosModel();
+
+			//TELEFONES
 			foreach ($telefones as $key => $telefone)
 			{
 				$telefone['idtelefone'] = isset($telefone['idtelefone']) ? $telefone['idtelefone'] : '';
@@ -338,14 +346,11 @@ class gerenciar extends Controller{
 				$telefoneModel->setNumero( $telefone['telefone'] );
 				$telefoneModel->setOperadora( $telefone['operadora'] );
 				$telefoneModel->setTipo( $telefone['tipo_telefone'] );
-				array_push($telefonesList, $telefoneModel);
-				unset($telefoneModel);
+				$funcionariosModel->setTelefones($telefoneModel);
 			}
 
 
 			//EMAILS
-			$emailList = Array();
-			$this->load->model('emailModel');
 			foreach ($emails as $email)
 			{
 				$email['idemail'] = isset($email['idemail']) ? $email['idemail'] : '';
@@ -353,8 +358,7 @@ class gerenciar extends Controller{
 				$emailModel->setId( $email['idemail'] );
 				$emailModel->setEmail( $email['email'] );
 				$emailModel->setTipo( $email['tipo_email'] );
-				array_push($emailList, $emailModel);
-				unset($emailModel);
+				$funcionariosModel->setEmail($emailModel);
 			}
 
 
@@ -379,13 +383,35 @@ class gerenciar extends Controller{
 			$dataAdmissao = $this->load->dataFormat->formatar($dataAdmissao,'data','banco');
 			$dataDemissao = $this->load->dataFormat->formatar($dataDemissao,'data','banco');
 
+
+			$cropValues = Array(
+				'w' => $_POST['w'],
+				'h' => $_POST['h'],
+				'x1' => $_POST['x1'],
+				'y1' => $_POST['y1']
+			);
+			$tamanho = Array(
+				'p' =>array(
+						'w' => 404,
+						'h' =>  158
+					)
+			);
+
+			if($nome_foto == '')
+				$nome_foto = md5(date('dmYHis'));
+
+			try {
+				$this->load->library('uploadFoto');
+				$upload = new uploadFoto('funcionarios', $foto, $nome_foto, $tamanho, $cropValues);
+				$nome_foto = $upload->getNomeArquivo();
+			} catch (Exception $e) {
+				echo $e->getMessage();
+				return false;
+			}
 			
 
-			//FUNCIONARIO
-			$this->load->model('funcionarios/funcionariosModel');
-			$funcionariosModel = new funcionariosModel();
 			$funcionariosModel->setId($idFuncionario);
-			$funcionariosModel->setFoto($foto);
+			$funcionariosModel->setFoto($nome_foto);
 			$funcionariosModel->setNome($nome);
 			$funcionariosModel->setSobrenome($sobrenome);
 			$funcionariosModel->setDataNascimento($dataNascimento);
@@ -395,15 +421,11 @@ class gerenciar extends Controller{
 			$funcionariosModel->setEstadoCivil($estadoCivil);
 			$funcionariosModel->setEscolaridade($escolaridade);
 			$funcionariosModel->setEndereco($enderecoModel);
-			$funcionariosModel->setTelefones($telefonesList);
-			$funcionariosModel->setEmail($emailList);
 			$funcionariosModel->setCodigo($codigoAdmissao);
 
-			$this->load->model('funcionarios/cargosModel');
 			$cargosModel = new cargosModel();
 			$cargosModel->setId($cargo);
 			$funcionariosModel->setCargo($cargosModel);
-			
 			$funcionariosModel->setDataAdmissao($dataAdmissao);
 			$funcionariosModel->setDataDemissao($dataDemissao);
 
@@ -411,7 +433,12 @@ class gerenciar extends Controller{
 			//FUNCIONARIO DAO
 			$this->load->dao('funcionarios/funcionariosDao');
 			$funcionariosDao = new funcionariosDao();
-			echo $funcionariosDao->atualizar($funcionariosModel);
+			try {
+				echo $funcionariosDao->atualizar($funcionariosModel);
+			} catch (Exception $e) {
+				echo $e->getMessage();
+				exit;
+			}
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();
@@ -419,6 +446,7 @@ class gerenciar extends Controller{
 	    }
 
 	}
+
 
 	/**
 	 * Ãção de atualizar status

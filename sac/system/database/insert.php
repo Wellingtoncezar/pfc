@@ -1,10 +1,9 @@
 <?php
 /**
-* Classe para insert do banco. Pode ser utilizada diretamete ou através da classe db
-* @access 
+* Classe para insert do banco.
 * @author Wellington cézar
 * @since 18/06/2014
-* @version 1.0
+* @version 2.0
 *
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
