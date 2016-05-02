@@ -1,6 +1,6 @@
 <?php
 /**
-*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+*@author Wellington cezar - wellington-cezar@hotmail.com
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 abstract class Library
