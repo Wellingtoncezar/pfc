@@ -1,6 +1,6 @@
 <?php
 /**
-*@author Wellington cezar (programador jr) - wellington.infodahora@gmail.com
+*@author Wellington cezar - wellington-cezar@hotmail.com
 */
 if(!defined('URL')) die('Acesso negado');
 class checkPermissao extends Library{
@@ -49,9 +49,14 @@ class checkPermissao extends Library{
 	public function check($redirect = true, $url = '')
 	{	
 		//verifica se está logado, se existe usuário na sessão
-		if(!isset($_SESSION['user'])){
+		if($redirect== true && !isset($_SESSION['user']) ){
 			session_destroy();
 			header('Location: '.URL.'login');
+			return false;
+		}
+
+		if($redirect == false && !isset($_SESSION['user']))
+		{
 			return false;
 		}
 

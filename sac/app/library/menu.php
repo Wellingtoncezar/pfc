@@ -288,18 +288,18 @@ class menu extends Library{
 					endif;
 					if(!empty($modulo->getSubModulos())):
 				        foreach ($modulo->getSubmodulos() as $subMod):
-						    if(!empty($subMod->getPaginas())):
-								$menu .= '<li class="dropdown">';
-									$menu .= '<a href="'.URL.$modulo->getUrl().'/'.$subMod->getUrl().'" title="'.$subMod->getNome().'" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">'.$subMod->getNome().'</a>';
-									    	$menu .= '<ul class="dropdown-menu">';
-								       		foreach ($subMod->getPaginas() as $pag):
-								        		$menu .= '<li><a href="'.URL.$modulo->getUrl().'/'.$subMod->getUrl().'/'.$pag->getUrl().'">'.$pag->getNome().'</a></li>';
-								            endforeach;
-					        				$menu .= '</ul>';
-						        $menu .= '</li>';
-							else:
+						 //    if(!empty($subMod->getPaginas())):
+							// 	$menu .= '<li class="dropdown">';
+							// 		$menu .= '<a href="'.URL.$modulo->getUrl().'/'.$subMod->getUrl().'" title="'.$subMod->getNome().'" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">'.$subMod->getNome().'</a>';
+							// 		    	$menu .= '<ul class="dropdown-menu">';
+							// 	       		foreach ($subMod->getPaginas() as $pag):
+							// 	        		$menu .= '<li><a href="'.URL.$modulo->getUrl().'/'.$subMod->getUrl().'/'.$pag->getUrl().'">'.$pag->getNome().'</a></li>';
+							// 	            endforeach;
+					  //       				$menu .= '</ul>';
+						 //        $menu .= '</li>';
+							// else:
 								$menu .='<li><a href="'.URL.$modulo->getUrl().'/'.$subMod->getUrl().'" title="'.$subMod->getNome().'">'.$subMod->getNome().'</a></li>';
-							endif;
+							//endif;
 				        endforeach;
 
 					endif;

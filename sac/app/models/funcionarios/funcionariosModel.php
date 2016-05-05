@@ -70,13 +70,13 @@ class funcionariosModel{
 	{
 		$this->endereco = $endereco;
 	}
-	public function setTelefones($telefones)
+	public function setTelefones(telefoneModel $telefones)
 	{
-		$this->telefones = $telefones;
+		array_push($this->telefones, $telefones);
 	}
-	public function setEmail($email)
+	public function setEmail(emailModel $email)
 	{
-		$this->email = $email;
+		array_push($this->email, $email);
 	}
 	public function setCodigo($codigo)
 	{

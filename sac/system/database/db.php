@@ -14,11 +14,11 @@ class db extends activeRecord{
 	private $error;
 	private $errorCode;
 	private $errorCodeName;
+	private $i = 1;
 
 
 	public function __construct() 
 	{
-
 		require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'database.php');
 		if(	!defined('HOSTNAME') 
 			|| !defined('USERNAME') 
@@ -129,6 +129,7 @@ class db extends activeRecord{
 
 	public function query($sql= null)
 	{
+
 		if($sql == null)
 			die('Informe o comando sql corretamente.');
 		else{
@@ -145,8 +146,8 @@ class db extends activeRecord{
 
 	private function prepareQuery()
 	{
-		$this->statement = $this->pdo->prepare($this->sql);
-		try{ 
+		try{
+			$this->statement = $this->pdo->prepare($this->sql);
 		    $this->statement->execute($this->res->getParamArray());
 		    $this->rows_affected = $this->statement->rowCount();
 			if($this->rows_affected > 0)
@@ -162,7 +163,8 @@ class db extends activeRecord{
 		{
 			$this->errorCode = $e;
 		    $this->rows_affected = 0;
-			return false;
+			$error = $this->error->getMensagemErro($e, $this->errorCodeName);
+			die($error);
 		}
 	}
 

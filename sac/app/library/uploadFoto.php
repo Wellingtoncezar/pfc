@@ -1,26 +1,33 @@
 <?php 
-
-
-class uploadFoto
+if(!defined('BASEPATH')) die('Acesso não permitido');
+class uploadFoto extends Library
 {
-	private $nomeArquivoFoto;
+	private $nomeArquivoFoto = '';
 	public function uploadFoto($directory, $arquivo, $nomeArquivo, $tamanhos = array(), $cropValues = array())
 	{
+		if(empty($arquivo))
+		{
+			$this->nomeArquivoFoto = $nomeArquivo;
+			return false;
+		}
 		$directory = ltrim(rtrim($directory));
 
-		if(!is_dir(BASEPATH.'gerenciador/'.UPLOADPATH.'/'.$directory))
-			mkdir(BASEPATH.'gerenciador/'.UPLOADPATH.'/'.$directory);
+		if(!is_dir(BASEPATH.UPLOADPATH.'/'.$directory))
+			mkdir(BASEPATH.UPLOADPATH.'/'.$directory);
 
-		if(is_dir(BASEPATH.'gerenciador/'.UPLOADPATH.'/'.$directory))
+		if(is_dir(BASEPATH.UPLOADPATH.'/'.$directory))
 		{
-			$destinoOriginal = BASEPATH.'gerenciador/'.UPLOADPATH.'/'.$directory.'/';
+			$destinoOriginal = BASEPATH.UPLOADPATH.'/'.$directory.'/';
 			if(!is_dir($destinoOriginal))
 				mkdir($destinoOriginal);
 
+			$path_parts = pathinfo($nomeArquivo);
+			$nomeArquivo = $path_parts['filename'];
 
-			$this->load->library('upload');
-			$upload = new upload();
-			$img = $upload->setUpload($arquivo,$destinoOriginal, $nomeArquivo);
+			
+			$upload = new upload($arquivo,$destinoOriginal, $nomeArquivo);
+
+
 			
 			if($upload->getError() == false)
 			{
@@ -29,7 +36,7 @@ class uploadFoto
 				{
 					$_destCrop = 'destino_'.$tamanho;
 
-					$$_destCrop = BASEPATH.'gerenciador/'.UPLOADPATH.'/'.$directory.'/'.$tamanho.'/';
+					$$_destCrop = BASEPATH.UPLOADPATH.'/'.$directory.'/'.$tamanho.'/';
 
 					if(!is_dir($$_destCrop))
 						mkdir($$_destCrop);
@@ -40,7 +47,6 @@ class uploadFoto
 					$h =  $cropValues['h'];
 					$x1 = $cropValues['x1'];
 					$y1 = $cropValues['y1'];
-					
 					$crop = new crop_image();
 					$crop->setImage($origem,$$_destCrop,$w, $h,$x1, $y1,$valores['w'], $valores['h']);
 					$crop->cropResize();
@@ -48,13 +54,15 @@ class uploadFoto
 				}
 				$this->nomeArquivoFoto = $upload->getArquivo();
 				return true;
-			}else
-				return $upload->getError();
-		}else
-			return 'Erro ao efetuar o upload. O diretório não existe';
+			}else{
+				throw new Exception($upload->getError(), 1);
+			}
+		}else{
+			throw new Exception('Erro ao efetuar o upload. O diretório não existe', 1);
+		}
 	}
 	public function getNomeArquivo()
 	{
-		return $this->nomeArquivoFoto
+		return $this->nomeArquivoFoto;
 	}
 }

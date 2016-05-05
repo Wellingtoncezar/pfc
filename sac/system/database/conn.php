@@ -61,7 +61,7 @@ class conn
 		}
 		catch (PDOException $e) 
 		{
-			if($e->getCode( ) == '1049')
+			if($e->getCode() == '1049')
 			{
 				die('Erro mysql[1049]: O banco '.strtoupper(DBNAME).' não existe');
 			}else
