@@ -6,7 +6,6 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 abstract class statusRequisicoes{
 	const NOVO = 'NOVO';
 	const PENDENTE = 'PENDENTE';
-	const PROCESSANDO = 'PROCESSANDO';
 	const APROVADO = 'APROVADO';
 	const REPROVADO = 'REPROVADO';
 	const CANCELADO = 'CANCELADO';

@@ -96,8 +96,8 @@ $(function(){
   	})
   	$('input[name=markup]').keyup(function(){
   		calcprecovenda()
-  	})
-
+  	});
+    $('#form_produto').uploadImage();
     $('#form_produto').submit(function(){
 
     	//email

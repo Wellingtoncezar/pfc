@@ -6,7 +6,7 @@
     <div class="page-header">
       <h1>Requisições<small> Cadastro</small></h1>
     </div>
-    <form action="<?=URL?>suprimentos/requisicoes/gerenciar/inserir" method="post" id="form_pedido">
+    <form action="<?=URL?>suprimentos/requisicoes/gerenciar/inserir" method="post" id="form_requisicao">
         <div class="panel panel-default">
             <div class="panel-heading">Dados Gerais</div>
             <div class="panel-body">
@@ -17,23 +17,30 @@
                     <input type="text" class="form-control" placeholder="Código" name="codigo" >
                 </div>
                 <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Título</span>
+                    <input type="text" class="form-control" placeholder="Título" name="titulo" >
+                </div>
+                 <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Descrição</span>
+                    <textarea  class="form-control" placeholder="Descrição" name="descricao" ></textarea>
+                </div>
+                <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Produtos</span>
                     <select name="listaproduto" class="form-control">
                         <?php if(!empty($produtos)):?>
                         <?php foreach ($produtos as $produto):?>
-                        <option value="<?= $produto->getId()?>"><?=$produto->getNome()?></option>
+                        <option value="<?= $produto->getId()?>" img="<?=URL.'skin/uploads/produtos/p/'?><?=$produto->getFoto()?>"><?=$produto->getNome()?></option>
                         <?php endforeach;?>
                         <?php endif;?>
                     </select>
                     <span class="input-group-addon" id="basic-addon1"><a href="javascript:void(0)" class="addProduto"><span class="glyphicons glyphicons-plus"></span></a></span>
                 </div>
-                <div class="listProdutos">
-                </div>
+                <div class="listProdutos row">
+                    
+                     
 
-
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Nome</span>
-                    <input type="text" class="form-control" placeholder="Nome" name="nome" >
+                      
+                    
                 </div>
                 <div class="btn-group pull-right" role="group">
                     <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
@@ -44,4 +51,4 @@
 </div>
 
 <script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
-<script type="text/javascript" src="<?=URL?>skin/js/orcamentos/pedidos/cadastrar.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/suprimentos/requisicoes/cadastrar.js"></script>

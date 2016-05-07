@@ -6,7 +6,7 @@
     <div class="page-header">
       <h1>Produtos<small> Editar</small></h1>
     </div>
-    <form action="<?=URL?>produtos/gerenciar/inserir" method="post" id="form_produto">
+    <form action="<?=URL?>produtos/gerenciar/atualizar" method="post" id="form_produto">
         <div class="panel panel-default">
             <div class="panel-heading">Dados Gerais</div>
             <div class="panel-body">
@@ -31,8 +31,8 @@
                     <select name="marca" id="marca" class="form-control">
                         <option selected="selected" disabled="disabled" value="">..Selecione..</option>
                         <?php if(!empty($marcas)):?>
-                        <?php foreach ($marcas as $marcas):?>
-                        <option value="<?= $marcas->getId()?>"><?= $marcas->getNome()?></option>
+                        <?php foreach ($marcas as $marca):?>
+                        <option value="<?= $marca->getId()?>" <?=($produto->getMarca()->getId() == $marca->getId()) ? 'selected="selected"' : ''?>><?= $marca->getNome()?></option>
                         <?php endforeach;?>
                         <?php endif;?>
                     </select>
@@ -42,12 +42,13 @@
                     <select name="categoria" id="categoria" class="form-control">
                         <option selected="selected" disabled="disabled" value="">..Selecione..</option>
                         <?php if(!empty($categorias)):?>
-                        <?php foreach ($categorias as $categorias):?>
-                        <option value="<?= $categorias->getId()?>"><?= $categorias->getNome()?></option>
+                        <?php foreach ($categorias as $categoria):?>
+                        <option value="<?= $categoria->getId()?>" <?=($produto->getCategoria()->getId() == $categoria->getId()) ? 'selected="selected"' : ''?>><?= $categoria->getNome()?></option>
                         <?php endforeach;?>
                         <?php endif;?>
                     </select>
                 </div>
+
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Descrição</span>
                     <textarea class="form-control" placeholder="Descrição" name="descricao"><?=$produto->getDescricao()?></textarea>
@@ -117,6 +118,7 @@
             <div class="btn-group pull-right" role="group">
                 <button type="submit" class="btn btn-success">Enviar</button>
             </div>
+            <input type="hidden" name="id_produto" value = "<?=$produto->getId()?>">
         </div>
     </form>
 </div>

@@ -13,35 +13,48 @@
             <thead>
                 <tr>   
                     <th width="100">Código</th>
-                    <th width="160">Nome</th>
+                    <th width="160">Usuário</th>
+                    <th width="160">Titulo</th>
+                    <th width="160">Data</th>
+                    <th width="160">Status</th>
                     <th width="180">Ações</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
-                    <th>Código</th>
-                    <th>Nome</th>
-                    <th>Ações</th>
+                   <td width="100">Código</td>
+                    <td width="160">Usuário</td>
+                    <td width="160">Titulo</td>
+                    <td width="160">Data</td>
+                    <td width="160">Status</td>
+                    <td width="180">Ações</td>
                 </tr>
             </tfoot>
             <tbody>
             <?php
-            if(!empty($marcas)):
-                foreach ($marcas as $marc):
+            if(!empty($requisicoes)):
+                foreach ($requisicoes as $requisicao):
             ?>
-                <tr id="<?=$marc->getId()?>">
-                    <td><?=$marc->getId()?></td>
-                    <td><?=$marc->getNome()?></td>
+                <tr id="<?=$requsicao->getId()?>">
+                    <td><?=$requsicao->getCodigo()?></td>
+                    <td><?=$requsicao->getUsuario()->getNome()?></td>
+                    <td><?=$requsicao->getTitulo()?></td>
+                    <td><?=$requsicao->getData()?></td>
+                    <td><?=$requsicao->getStatus()?></td>
+                    <td><?=$requsicao->getAcoes()?></td>
+
                     <td>
-                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/marcas/gerenciar/editar/<?=$marc->getId()?>" role="button" id-record="<?=$marc->getId()?>" ><span class="glyphicons glyphicons-invoice"></span> Cotar</a>
-                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$marc->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span> Ignorar</a>
+                        <?= $this->templateFactory->getButton('visualizar', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/visualizar/')?>
+                        <?= $this->templateFactory->getButton('cotar', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/cotar/')?>
+                       <?= $this->templateFactory->getButton('cancelar', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/visualizar/')?>
+                        
                     </td>
                 </tr>
             <?php
                 endforeach;
             endif;
             ?>
-                
+        
             </tbody>
         </table>
     </div>
@@ -56,12 +69,12 @@
         });
 
         //EXCLUIR
-        table.$('.btn_excluir').on('click',function(){
+        table.$('.btn_cancelar').on('click',function(){
             var id = $(this).attr('id');
             var status = $(this).data('value');
             var modalDelete = $('#modalDelete').modal('show')
             $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'produtos/marcas/gerenciar/excluir',{id:id,status:status},function(data){
+                $.post(url+'suprimentos/requisicoes/gerenciar/cancelar',{id:id,status:status},function(data){
                     console.log(data)
                     if(data == true){
                         $('#modalDelete').modal('hide');
