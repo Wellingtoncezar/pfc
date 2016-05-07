@@ -271,7 +271,6 @@ class produtosDao extends Dao{
 
  	/**
  	 * 
- 	 * Atualiza ou insere os telefones
  	 * @return void
  	 */
  	private function atualizaFornecedores(produtosModel $produto)
