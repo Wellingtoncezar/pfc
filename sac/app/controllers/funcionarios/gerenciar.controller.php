@@ -117,6 +117,7 @@ class gerenciar extends Controller{
 	 */
 	public function inserir()
 	{
+
 		if(!$this->load->checkPermissao->check(false,URL.'funcionarios/gerenciar/cadastrar'))
 		{
 			echo "Ação não permitida";
@@ -167,36 +168,37 @@ class gerenciar extends Controller{
 		$this->load->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
 		$this->load->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
 		$this->load->dataValidator->set('Estado', $estado, 'estado')->is_required();
-
+		$this->load->dataValidator->set('Cargo', $cargo, 'cargo')->is_required();
 		
 
 		if ($this->load->dataValidator->validate())
 		{
+			//FUNCIONARIO
+			$this->load->model('funcionarios/funcionariosModel');
+			$funcionariosModel = new funcionariosModel();
+
 			//TELEFONES
-			$telefonesList = Array();
+			
 			$this->load->model('telefoneModel');
-			foreach ($telefones as $telefone)
+			//TELEFONES
+			foreach ($telefones as $key => $telefone)
 			{
 				$telefoneModel = new telefoneModel();
 				$telefoneModel->setCategoria( $telefone['categoria'] );
 				$telefoneModel->setNumero( $telefone['telefone'] );
 				$telefoneModel->setOperadora( $telefone['operadora'] );
 				$telefoneModel->setTipo( $telefone['tipo_telefone'] );
-				array_push($telefonesList, $telefoneModel);
-				unset($telefoneModel);
+				$funcionariosModel->setTelefones($telefoneModel);
 			}
 
 
 			//EMAILS
-			$emailList = Array();
-			$this->load->model('emailModel');
 			foreach ($emails as $email)
 			{
 				$emailModel = new emailModel();
 				$emailModel->setEmail( $email['email'] );
 				$emailModel->setTipo( $email['tipo_email'] );
-				array_push($emailList, $emailModel);
-				unset($emailModel);
+				$funcionariosModel->setEmail($emailModel);
 			}
 
 
@@ -219,17 +221,38 @@ class gerenciar extends Controller{
 			$dataAdmissao = $this->load->dataFormat->formatar($dataAdmissao,'data','banco');
 			$dataDemissao = $this->load->dataFormat->formatar($dataDemissao,'data','banco');
 
-			
+			$cropValues = Array(
+				'w' => $_POST['w'],
+				'h' => $_POST['h'],
+				'x1' => $_POST['x1'],
+				'y1' => $_POST['y1']
+			);
+			$tamanho = Array(
+				'p' =>array(
+						'w' => 404,
+						'h' =>  158
+					)
+			);
+			if(!empty($foto))
+				$nome_foto = md5(date('dmYHis'));
+			$nome_foto = '';
+			try {
+				$this->load->library('uploadFoto');
+				$upload = new uploadFoto('funcionarios', $foto, $nome_foto, $tamanho, $cropValues);
+				$nome_foto = $upload->getNomeArquivo();
+			} catch (Exception $e) {
+				
+				echo $e->getMessage();
+				return false;
+			}
 
-			//FUNCIONARIO
-			$this->load->model('funcionarios/funcionariosModel');
-			$funcionariosModel = new funcionariosModel();
+			
 			$this->load->model('funcionarios/cargosModel');
 
 			$cargosModel = new cargosModel();
 			$cargosModel->setId($cargo);
 
-			$funcionariosModel->setFoto($foto);
+			$funcionariosModel->setFoto($nome_foto);
 			$funcionariosModel->setNome($nome);
 			$funcionariosModel->setSobrenome($sobrenome);
 			$funcionariosModel->setDataNascimento($dataNascimento);
@@ -239,8 +262,7 @@ class gerenciar extends Controller{
 			$funcionariosModel->setEstadoCivil($estadoCivil);
 			$funcionariosModel->setEscolaridade($escolaridade);
 			$funcionariosModel->setEndereco($enderecoModel);
-			$funcionariosModel->setTelefones($telefonesList);
-			$funcionariosModel->setEmail($emailList);
+			
 			
 			$funcionariosModel->setCargo($cargosModel);
 			$funcionariosModel->setDataAdmissao($dataAdmissao);
@@ -252,7 +274,18 @@ class gerenciar extends Controller{
 			//FUNCIONARIO DAO
 			$this->load->dao('funcionarios/funcionariosDao');
 			$funcionariosDao = new funcionariosDao();
-			echo $funcionariosDao->inserir($funcionariosModel);
+
+			try {
+				$res = $funcionariosDao->inserir($funcionariosModel);
+				if($res)
+					echo true;
+				else
+					echo $res;
+			} catch (Exception $e) {
+				echo $e->getMessage();
+				$upload->resetUpload();
+				exit;
+			}
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();
@@ -322,7 +355,7 @@ class gerenciar extends Controller{
 		$this->load->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
 		$this->load->dataValidator->set('Cidade', $cidade, 'cidade')->is_required();
 		$this->load->dataValidator->set('Estado', $estado, 'estado')->is_required();
-
+		$this->load->dataValidator->set('Cargo', $cargo, 'cargo')->is_required();
 		
 
 		if ($this->load->dataValidator->validate())

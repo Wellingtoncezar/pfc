@@ -2,9 +2,13 @@
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class uploadFoto extends Library
 {
+	private $caminho = '';
 	private $nomeArquivoFoto = '';
+	private $tamanhos = Array();
 	public function uploadFoto($directory, $arquivo, $nomeArquivo, $tamanhos = array(), $cropValues = array())
 	{
+		$this->caminho = BASEPATH.UPLOADPATH.'/'.$directory;
+		$this->tamanhos = $tamanhos;
 		if(empty($arquivo))
 		{
 			$this->nomeArquivoFoto = $nomeArquivo;
@@ -12,12 +16,13 @@ class uploadFoto extends Library
 		}
 		$directory = ltrim(rtrim($directory));
 
-		if(!is_dir(BASEPATH.UPLOADPATH.'/'.$directory))
-			mkdir(BASEPATH.UPLOADPATH.'/'.$directory);
+		if(!is_dir($this->caminho))
+			mkdir($this->caminho);
 
-		if(is_dir(BASEPATH.UPLOADPATH.'/'.$directory))
+
+		if(is_dir($this->caminho))
 		{
-			$destinoOriginal = BASEPATH.UPLOADPATH.'/'.$directory.'/';
+			$destinoOriginal = $this->caminho.'/';
 			if(!is_dir($destinoOriginal))
 				mkdir($destinoOriginal);
 
@@ -32,11 +37,11 @@ class uploadFoto extends Library
 			if($upload->getError() == false)
 			{
 				$origem = $destinoOriginal.$upload->getArquivo();
-				foreach ($tamanhos as $tamanho => $valores)
+				foreach ($this->tamanhos as $tamanho => $valores)
 				{
 					$_destCrop = 'destino_'.$tamanho;
 
-					$$_destCrop = BASEPATH.UPLOADPATH.'/'.$directory.'/'.$tamanho.'/';
+					$$_destCrop = $this->caminho.'/'.$tamanho.'/';
 
 					if(!is_dir($$_destCrop))
 						mkdir($$_destCrop);
@@ -64,5 +69,16 @@ class uploadFoto extends Library
 	public function getNomeArquivo()
 	{
 		return $this->nomeArquivoFoto;
+	}
+
+	public function resetUpload()
+	{
+		@unlink($this->caminho.'/'.$this->nomeArquivoFoto);
+		foreach ($this->tamanhos as $tamanho => $valores)
+		{
+			@unlink($this->caminho.'/'.$tamanho.'/'.$this->nomeArquivoFoto);
+		}
+
+
 	}
 }

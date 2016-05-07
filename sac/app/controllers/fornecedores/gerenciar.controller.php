@@ -109,6 +109,11 @@ class gerenciar extends Controller{
 	 */
 	public function inserir()
 	{
+		if(!$this->load->checkPermissao->check(false,URL.'fornecedores/gerenciar/cadastrar'))
+		{
+			echo "Ação não permitida";
+			return false;
+		}
 		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
 		$razaoSocial = isset($_POST['razao_social']) ? filter_var($_POST['razao_social']) : '';
 		$nomeFantasia = isset($_POST['nome_fantasia']) ? filter_var($_POST['nome_fantasia']) : '';
@@ -155,8 +160,55 @@ class gerenciar extends Controller{
 
 		if ($this->load->dataValidator->validate())
 		{
+			//FORNECEDOR
+			$this->load->model('fornecedores/fornecedoresModel');
+			$fornecedoresModel = new fornecedoresModel();
+
+
+			//FORMATAÇÃO DOS DADOS
+			$this->load->library('dataFormat', null, true);
+			$data_visita = $this->load->dataFormat->formatar($data_visita,'data','banco');
+
+			$cropValues = Array(
+				'w' => $_POST['w'],
+				'h' => $_POST['h'],
+				'x1' => $_POST['x1'],
+				'y1' => $_POST['y1']
+			);
+			$tamanho = Array(
+				'p' =>array(
+						'w' => 404,
+						'h' =>  158
+					)
+			);
+			if(!empty($foto))
+				$nome_foto = md5(date('dmYHis'));
+			$nome_foto = '';
+			try {
+				$this->load->library('uploadFoto');
+				$upload = new uploadFoto('fornecedores', $foto, $nome_foto, $tamanho, $cropValues);
+				$nome_foto = $upload->getNomeArquivo();
+			} catch (Exception $e) {
+				echo $e->getMessage();
+				return false;
+			}
+			
+			$fornecedoresModel->setFoto($nome_foto);
+			$fornecedoresModel->setRazaoSocial($razaoSocial);
+			$fornecedoresModel->setNomeFantasia($nomeFantasia);
+			$fornecedoresModel->setCnpj($cnpj);
+			$fornecedoresModel->setCpf($cpf);
+			$fornecedoresModel->setPessoa($pessoa);
+			$fornecedoresModel->setSite($site);
+			$fornecedoresModel->setObservacoes($observacoes);
+			$fornecedoresModel->setNomeContato($nomeContato);
+			
+			$fornecedoresModel->setDataVisita($data_visita);
+			$fornecedoresModel->setRetorno($retorno);
+			$fornecedoresModel->setStatus(status::ATIVO);
+			$fornecedoresModel->setDataCadastro(date('Y-m-d h:i:s'));
+
 			//TELEFONES
-			$telefonesList = Array();
 			$this->load->model('telefoneModel');
 			foreach ($telefones as $telefone)
 			{
@@ -165,23 +217,19 @@ class gerenciar extends Controller{
 				$telefoneModel->setNumero( $telefone['telefone'] );
 				$telefoneModel->setOperadora( $telefone['operadora'] );
 				$telefoneModel->setTipo( $telefone['tipo_telefone'] );
-				array_push($telefonesList, $telefoneModel);
-				unset($telefoneModel);
+				$fornecedoresModel->setTelefones($telefoneModel);
+				
 			}
 
 
 			//EMAILS
-			$emailList = Array();
 			$this->load->model('emailModel');
 			foreach ($emails as $email)
 			{
 				$emailModel = new emailModel();
 				$emailModel->setEmail( $email['email'] );
-				array_push($emailList, $emailModel);
-				unset($emailModel);
+				$fornecedoresModel->setEmail($emailModel);
 			}
-
-
 
 			//ENDEREÇO
 			$this->load->model('enderecoModel');
@@ -193,34 +241,7 @@ class gerenciar extends Controller{
 			$enderecoModel->setCidade($cidade);
 			$enderecoModel->setBairro($bairro);
 			$enderecoModel->setEstado($estado);
-			
-
-			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat', null, true);
-			$data_visita = $this->load->dataFormat->formatar($data_visita,'data','banco');
-
-
-			//FORNECEDOR
-			$this->load->model('fornecedores/fornecedoresModel');
-			$fornecedoresModel = new fornecedoresModel();
-			$fornecedoresModel->setFoto($foto);
-			$fornecedoresModel->setRazaoSocial($razaoSocial);
-			$fornecedoresModel->setNomeFantasia($nomeFantasia);
-			$fornecedoresModel->setCnpj($cnpj);
-			$fornecedoresModel->setCpf($cpf);
-			$fornecedoresModel->setPessoa($pessoa);
-			$fornecedoresModel->setSite($site);
-			$fornecedoresModel->setObservacoes($observacoes);
-			$fornecedoresModel->setNomeContato($nomeContato);
 			$fornecedoresModel->setEndereco($enderecoModel);
-			$fornecedoresModel->setTelefones($telefonesList);
-			$fornecedoresModel->setEmail($emailList);
-			$fornecedoresModel->setDataVisita($data_visita);
-			$fornecedoresModel->setRetorno($retorno);
-			$fornecedoresModel->setStatus(status::ATIVO);
-			$fornecedoresModel->setDataCadastro(date('Y-m-d h:i:s'));
-			// //print_r($fornecedoresModel);
-			// exit;
 			//FORNECEDOR DAO
 			$this->load->dao('fornecedores/fornecedoresDao');
 			$fornecedoresDao = new fornecedoresDao();

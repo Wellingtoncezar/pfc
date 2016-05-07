@@ -177,21 +177,52 @@ class funcionariosDao extends Dao{
 	 */
  	public function inserir(funcionariosModel $funcionario)
  	{
-		if($funcionario->getFoto() != '')
+
+		$this->load->library('geracodigo');
+		$geracodigo = new geracodigo();	
+		$codigoFuncionario = date('dmy').'.'.$geracodigo->setTamanho(4)->gerar();
+
+
+ 		$data = array(
+ 			'foto_funcionario' => $funcionario->getFoto(),
+ 			'nome_funcionario' => $funcionario->getNome(),
+ 			'sobrenome_funcionario' => $funcionario->getSobrenome(),
+ 			'data_nascimento_funcionario' => $funcionario->getDataNascimento(),
+ 			'sexo_funcionario' => $funcionario->getSexo(),
+ 			'rg_funcionario' => $funcionario->getRg(),
+ 			'cpf_funcionario' => $funcionario->getCpf(),
+ 			'estado_civil_funcionario' => $funcionario->getEstadoCivil(),
+ 			'escolaridade_funcionario' => $funcionario->getEscolaridade(),
+ 			'codigo_funcionario' => $codigoFuncionario,
+ 			'id_cargo' => $funcionario->getCargo()->getId(),
+ 			'data_admissao_funcionario' => $funcionario->getDataAdmissao(),
+ 			'data_demissao_funcionario' => $funcionario->getDataDemissao(),
+ 			'status_funcionario' => $funcionario->getStatus(),
+ 			'data_cadastro_funcionario' => $funcionario->getDataCadastro()
+ 		);
+
+ 		$this->db->clear();
+		$this->db->setTabela('funcionarios');
+		$this->db->insert($data);
+		
+		if($this->db->rowCount() > 0)
 		{
-	 		//nome da imagem
-			$char = new caracteres($funcionario->getNome());
-			$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
-			
-			$upload = $this->uploadFoto($this->nomeArquivoFoto, $funcionario->getFoto()); //upload da foto
-			if($upload)
-				return $this->insertData($funcionario);
-			else
-				return $upload;
-		}else
-		{
-			return $this->insertData($funcionario);
-		}
+			$funcionario->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
+
+			$this->atualizaEndereco($funcionario);
+			//TELEFONES
+			if(!empty($funcionario->getTelefones()))
+				$this->atualizaTelefones($funcionario);
+
+			//EMAILS
+			if(!empty($funcionario->getEmail()))
+				$this->atualizaEmails($funcionario);
+
+			return true;
+ 		}else
+ 		{
+ 			return $this->db->getError();
+ 		}
 
 	}
 
@@ -240,55 +271,6 @@ class funcionariosDao extends Dao{
 
 	}
 
-
-	private function insertData(funcionariosModel $funcionario)
-	{
-		$this->load->library('geracodigo');
-		$geracodigo = new geracodigo();	
-		$codigoFuncionario = date('dmy').'.'.$geracodigo->setTamanho(4)->gerar();
-
-
- 		$data = array(
- 			'foto_funcionario' => $this->nomeArquivoFoto,
- 			'nome_funcionario' => $funcionario->getNome(),
- 			'sobrenome_funcionario' => $funcionario->getSobrenome(),
- 			'data_nascimento_funcionario' => $funcionario->getDataNascimento(),
- 			'sexo_funcionario' => $funcionario->getSexo(),
- 			'rg_funcionario' => $funcionario->getRg(),
- 			'cpf_funcionario' => $funcionario->getCpf(),
- 			'estado_civil_funcionario' => $funcionario->getEstadoCivil(),
- 			'escolaridade_funcionario' => $funcionario->getEscolaridade(),
- 			'codigo_funcionario' => $codigoFuncionario,
- 			'id_cargo' => $funcionario->getCargo()->getId(),
- 			'data_admissao_funcionario' => $funcionario->getDataAdmissao(),
- 			'data_demissao_funcionario' => $funcionario->getDataDemissao(),
- 			'status_funcionario' => $funcionario->getStatus(),
- 			'data_cadastro_funcionario' => $funcionario->getDataCadastro()
- 		);
-
- 		$this->db->clear();
-		$this->db->setTabela('funcionarios');
-		$this->db->insert($data);
-		if($this->db->rowCount() > 0)
-		{
-			$funcionario->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
-
-			$this->atualizaEndereco($funcionario);
-			//TELEFONES
-			if(!empty($funcionario->getTelefones()))
-				$this->atualizaTelefones($funcionario);
-
-			//EMAILS
-			if(!empty($funcionario->getEmail()))
-				$this->atualizaEmails($funcionario);
-
-			return true;
- 		}else
- 		{
- 			return $this->db->getError();
- 		}
- 		
- 	}
 
 
 

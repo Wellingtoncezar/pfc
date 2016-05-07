@@ -27,10 +27,9 @@
 	}
 
 	.header .logo{
-	    width: 115px;
-	   margin: 13px;
-	   float: left; 
-
+	    width: 100px;
+		float: left; 
+	   	margin: 0 13px;
 	}
 
 	.header .logo img{
@@ -41,9 +40,9 @@
 	}
 
 	.header .user figure{
-	    width: 47px;
-	    margin: 0px auto;
-	    border-radius: 100%;
+	    width: 30px;
+    	margin: 0px auto;
+    	border-radius: 15%;
 	    overflow: hidden;
 	    background-color: #FFF;
 	    text-align: center;

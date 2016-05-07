@@ -68,7 +68,11 @@ class db extends activeRecord{
 		$this->sql = $this->res->getQuery();
 		$this->errorCode = 'NULLINSERT';
 		$this->errorCodeName = 'inserir';
-		return $this->prepareQuery($this->sql);
+		if($this->prepareQuery($this->sql)){
+			return true;
+		}else
+			throw new Exception($this->error->getMensagemErro($this->errorCode, $this->errorCodeName), 1);
+			
 	}
 
 
@@ -164,7 +168,7 @@ class db extends activeRecord{
 			$this->errorCode = $e;
 		    $this->rows_affected = 0;
 			$error = $this->error->getMensagemErro($e, $this->errorCodeName);
-			die($error);
+			return $error;
 		}
 	}
 

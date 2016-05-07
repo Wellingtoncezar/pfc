@@ -161,65 +161,10 @@ class fornecedoresDao extends Dao{
 	 * Insere novos fornecedores
 	 * @return boolean, json
 	 */
- 	public function inserir(fornecedoresModel $fonecedores)
+ 	public function inserir(fornecedoresModel $fornecedores)
  	{
-		if($fonecedores->getFoto() != '')
-		{
-	 		//nome da imagem
-			$char = new caracteres($fonecedores->getNomeFantasia());
-			$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
-			
-			$upload = $this->uploadFoto($this->nomeArquivoFoto, $fonecedores->getFoto()); //upload da foto
-			if($upload)
-				return $this->insertData($fonecedores);
-			else
-				return $upload;
-		}else
-		{
-			return $this->insertData($fonecedores);
-		}
-
-	}
-
-	/**
-	 * Atualiza fornecedores
-	 * @return boolean, json
-	 */
- 	public function atualizar(fornecedoresModel $fornecedor)
- 	{
-
-		if($fornecedor->getFoto() != '')
-		{
-	 		$this->db->clear();
-	 		$this->db->setTabela('fornecedores');
-	 		$this->db->setCondicao("id_fornecedor = '".$fornecedor->getId()."'");
-	 		$this->db->select(array('foto_fornecedor'));
-	 		$res = $this->db->result();
-	 		$this->nomeArquivoFoto = pathinfo($res['foto_fornecedor'],PATHINFO_FILENAME);
-			if($this->nomeArquivoFoto == '')
-			{
-		 		//nome da imagem
-				$char = new caracteres($fornecedor->getNomeFantasia());
-				$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
-			}
-				
-			$upload = $this->uploadFoto($this->nomeArquivoFoto, $fornecedor->getFoto()); //upload da foto
-			if($upload)
-				return $this->updateData($fornecedor);
-			else
-				return $upload;
-		}else
-		{
-			return $this->updateData($fornecedor);
-		}
-
-	}
-
-
-	private function insertData(fornecedoresModel $fornecedores)
-	{
- 		$data = array(
- 			'foto_fornecedor' => $this->nomeArquivoFoto,
+		$data = array(
+ 			'foto_fornecedor' => $fornecedores->getFoto(),
  			'razao_social_fornecedor' => $fornecedores->getRazaoSocial(),
  			'nome_fantasia_fornecedor' => $fornecedores->getNomeFantasia(),
  			'cnpj_fornecedor' => $fornecedores->getCnpj(),
@@ -256,14 +201,17 @@ class fornecedoresDao extends Dao{
  		{
  			return json_encode(array('erro'=>'Erro ao inserir registro'));
  		}
- 		
- 	}
 
- 	private function updateData(fornecedoresModel $fornecedor)
-	{
+	}
 
- 		$data = array(
- 			'foto_fornecedor' => $this->nomeArquivoFoto,
+	/**
+	 * Atualiza fornecedores
+	 * @return boolean, json
+	 */
+ 	public function atualizar(fornecedoresModel $fornecedor)
+ 	{
+		$data = array(
+ 			'foto_fornecedor' => $fornecedor->getFoto(),
  			'razao_social_fornecedor' => $fornecedor->getRazaoSocial(),
  			'nome_fantasia_fornecedor' => $fornecedor->getNomeFantasia(),
  			'cnpj_fornecedor' => $fornecedor->getCnpj(),
@@ -296,7 +244,12 @@ class fornecedoresDao extends Dao{
  		{
  			return json_encode(array('erro'=>'Erro ao editar registro'));
  		}
- 	}
+
+	}
+
+
+
+
 
 
  	/**

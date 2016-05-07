@@ -22,20 +22,22 @@ class teste extends Controller{
 
 	public function index()
 	{
-		try 
-		{
-			$db = new db();
-			$db->clear();
-			$sql = "SELECT * FROM produtos WHERE id_produto = '1'";
-			//$sql = "DELETE FROM produtos WHERE id_produto = '1'";
-			$db->query($sql);
-			//$res = $db->resultAll();
-			echo '<pre>';
-			//print_r($res);
-			echo '</pre>';
-		} catch (Exception $e) {
-			echo $e->getMessage();
-		}
+		echo 'teste';
+		echo Bcrypt::hash("admin");
+		// try 
+		// {
+		// 	$db = new db();
+		// 	$db->clear();
+		// 	$sql = "SELECT * FROM produtos WHERE id_produto = '1'";
+		// 	//$sql = "DELETE FROM produtos WHERE id_produto = '1'";
+		// 	$db->query($sql);
+		// 	//$res = $db->resultAll();
+		// 	echo '<pre>';
+		// 	//print_r($res);
+		// 	echo '</pre>';
+		// } catch (Exception $e) {
+		// 	echo $e->getMessage();
+		// }
 	}
 
 }
