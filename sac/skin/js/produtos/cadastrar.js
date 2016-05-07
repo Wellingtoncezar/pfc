@@ -17,11 +17,19 @@ $(function(){
   			idFornecedores.push(idFornecedor)
   			
 	  		var nomeFornecedor = $('select[name=listafornecedores] option:selected').html();
-	  		var elemFornec = '<div class="input-group group_fornecedor" id="fornec_'+idFornecedor+'">'
-		                        +'<input type="text" readonly="readonly" name="fornecedor" value="'+nomeFornecedor+'" class="form-control" idFornecedor="'+idFornecedor+'">'
-		                        +'<span class="input-group-addon" id="basic-addon1">Principal <input type="radio" value="'+idFornecedor+'" name="principal"></span>'
-		                        +'<span class="input-group-addon" id="basic-addon2"><a href="javascript:void(0)" class="removeFornecedor" id="'+idFornecedor+'"><span class="glyphicons glyphicons-remove"></span></a></span>'
-		                    +'</div>';
+	  		var elemFornec = '<div class="col-sm-6 col-md-2 group_fornecedor" id=fornec_'+idFornecedor+'>'
+                            +'<div class="thumbnail">'
+                              +'<img src="..." alt="...">'
+                              + '<div class="caption">'
+                                  +'<div class="form-group">'
+                                    +'<label>Fornecedor</label>'
+                                    +'<input type="text" readonly="readonly" name="fornecedor" value="'+nomeFornecedor+'" class="form-control" idFornecedor="'+idFornecedor+'">'
+                                  +'</div>'
+                                  +'<span class="input-group-addon" id="basic-addon1">Principal <input type="radio" value="'+idFornecedor+'" name="principal"></span>'
+                                  +'<p><a href="javascript:void()" class="btn btn-danger removeFornecedor" id="'+idFornecedor+'" role="button">Remover</a></p>'
+                                +'</div>'
+                              +'</div>'
+                        +'</div>';
 
 	  		$('.listFornecedores').append(elemFornec);	
 	  		checkfirstfornec();
