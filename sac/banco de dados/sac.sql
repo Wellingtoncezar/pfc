@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.14
+-- version 4.2.11
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 08-Maio-2016 às 18:05
--- Versão do servidor: 5.6.26
--- PHP Version: 5.6.12
+-- Generation Time: 09-Maio-2016 às 01:40
+-- Versão do servidor: 5.6.21
+-- PHP Version: 5.6.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `sac`
@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `cargos` (
-  `id_cargo` int(11) NOT NULL,
+`id_cargo` int(11) NOT NULL,
   `nome_cargo` varchar(255) DEFAULT NULL,
   `setor_cargo` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
@@ -46,7 +46,7 @@ INSERT INTO `cargos` (`id_cargo`, `nome_cargo`, `setor_cargo`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `categorias` (
-  `id_categoria` int(11) NOT NULL,
+`id_categoria` int(11) NOT NULL,
   `nome_categoria` varchar(255) DEFAULT NULL,
   `status_categoria` enum('ATIVO','INATIVO','EXCLUIDO') DEFAULT NULL,
   `data_cadastro_categoria` datetime DEFAULT NULL,
@@ -68,7 +68,7 @@ INSERT INTO `categorias` (`id_categoria`, `nome_categoria`, `status_categoria`, 
 --
 
 CREATE TABLE IF NOT EXISTS `emails` (
-  `id_email` int(11) NOT NULL,
+`id_email` int(11) NOT NULL,
   `endereco_email` varchar(255) DEFAULT NULL,
   `tipo_email` varchar(255) DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `emails_funcionarios` (
 --
 
 CREATE TABLE IF NOT EXISTS `enderecos` (
-  `id_endereco` int(11) NOT NULL,
+`id_endereco` int(11) NOT NULL,
   `cep_endereco` varchar(255) DEFAULT NULL,
   `rua_endereco` varchar(255) DEFAULT NULL,
   `numero_endereco` int(11) DEFAULT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `enderecos` (
   `estado_endereco` varchar(255) DEFAULT NULL,
   `data_cadastro_endereco` datetime DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `enderecos`
@@ -135,13 +135,17 @@ INSERT INTO `enderecos` (`id_endereco`, `cep_endereco`, `rua_endereco`, `numero_
 (10, '08580-300', 'Rua Maresias', 234, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-01-20 09:43:51', '2016-01-20 23:43:03'),
 (11, '08580-300', 'Rua Maresias', 33, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-01-20 09:57:01', '2016-01-20 23:47:10'),
 (12, '08580-300', 'Rua Maresias', 2345, '34', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-02-09 02:36:16', '2016-02-09 16:36:16'),
-(13, '08580-300', 'logradouro', 123, '', 'bairro', 'cidade', 'SP', '2016-03-13 05:54:25', '2016-03-13 15:49:17'),
+(13, '08580-300', 'logradouro', 123, '', 'bairro', 'cidade', 'SP', '2016-05-09 01:16:45', '2016-03-13 15:49:17'),
 (14, '08580-300', 'rua maresias', 196, '', 'maragogipe', 'itaquaquecetuba', 'SP', '2016-03-21 03:53:35', '2016-03-13 16:48:42'),
 (15, '08572-290', 'Rua Resende', 35, '', 'Vila S&atilde;o Roberto', 'Itaquaquecetuba', 'SP', '2016-03-14 11:50:51', '2016-03-14 22:50:51'),
-(16, '08580-300', 'Rua Maresias', 123, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-05 07:04:28', '2016-05-05 05:04:28'),
+(16, '08580-300', 'Rua Maresias', 123, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-08 11:17:45', '2016-05-05 05:04:28'),
 (17, '08572-290', 'Rua Resende', 123, '', 'Vila S&atilde;o Roberto', 'Itaquaquecetuba', 'SP', '2016-05-05 07:05:26', '2016-05-05 05:05:26'),
 (18, '08580-300', 'Rua Maresias', 213, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-05 07:08:37', '2016-05-05 05:08:37'),
-(19, '08580-300', 'Rua Maresias', 123, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-06 01:31:03', '2016-05-05 23:31:03');
+(19, '08580-300', 'Rua Maresias', 123, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-06 01:31:03', '2016-05-05 23:31:03'),
+(20, '08580-300', 'Rua Maresias', 234, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-08 11:15:24', '2016-05-09 02:15:24'),
+(21, '08580-300', 'Rua Maresias', 234, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-08 11:16:45', '2016-05-09 02:16:45'),
+(22, '08580-300', 'Rua Maresias', 234, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-08 11:17:06', '2016-05-09 02:17:06'),
+(23, '08572-290', 'Rua Resende', 323232, '', 'Vila S&atilde;o Roberto', 'Itaquaquecetuba', 'SP', '2016-05-08 11:32:42', '2016-05-09 02:32:42');
 
 -- --------------------------------------------------------
 
@@ -183,7 +187,11 @@ INSERT INTO `enderecos_funcionarios` (`id_funcionario`, `id_endereco`) VALUES
 (59, 13),
 (79, 16),
 (80, 17),
-(81, 18);
+(81, 18),
+(82, 20),
+(83, 21),
+(84, 22),
+(85, 23);
 
 -- --------------------------------------------------------
 
@@ -192,7 +200,7 @@ INSERT INTO `enderecos_funcionarios` (`id_funcionario`, `id_endereco`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `estoque` (
-  `id_estoque` int(11) NOT NULL,
+`id_estoque` int(11) NOT NULL,
   `id_produto` int(11) DEFAULT NULL,
   `quantidade_estoque` decimal(10,2) DEFAULT NULL,
   `quantidade_armazem` decimal(10,2) DEFAULT NULL,
@@ -208,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `estoque` (
 --
 
 CREATE TABLE IF NOT EXISTS `fornecedores` (
-  `id_fornecedor` int(11) NOT NULL,
+`id_fornecedor` int(11) NOT NULL,
   `foto_fornecedor` varchar(255) DEFAULT NULL,
   `razao_social_fornecedor` varchar(255) DEFAULT NULL,
   `nome_fantasia_fornecedor` varchar(255) DEFAULT NULL,
@@ -246,7 +254,7 @@ INSERT INTO `fornecedores` (`id_fornecedor`, `foto_fornecedor`, `razao_social_fo
 --
 
 CREATE TABLE IF NOT EXISTS `fornecedores_agenda` (
-  `id_fornecedor_agenda` int(11) NOT NULL,
+`id_fornecedor_agenda` int(11) NOT NULL,
   `id_fornecedor` int(11) DEFAULT NULL,
   `titulo_agenda` varchar(255) DEFAULT NULL,
   `observacoes_agenda` text,
@@ -272,7 +280,7 @@ INSERT INTO `fornecedores_agenda` (`id_fornecedor_agenda`, `id_fornecedor`, `tit
 --
 
 CREATE TABLE IF NOT EXISTS `fornecedores_agenda_notificado` (
-  `id_agenda_notificado` int(11) NOT NULL,
+`id_agenda_notificado` int(11) NOT NULL,
   `id_fornecedor_agenda` int(11) DEFAULT NULL,
   `data_notificacao` date DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
@@ -298,7 +306,7 @@ INSERT INTO `fornecedores_agenda_notificado` (`id_agenda_notificado`, `id_fornec
 --
 
 CREATE TABLE IF NOT EXISTS `funcionarios` (
-  `id_funcionario` int(11) NOT NULL,
+`id_funcionario` int(11) NOT NULL,
   `foto_funcionario` varchar(255) DEFAULT NULL,
   `nome_funcionario` varchar(255) NOT NULL,
   `sobrenome_funcionario` varchar(255) NOT NULL,
@@ -315,17 +323,21 @@ CREATE TABLE IF NOT EXISTS `funcionarios` (
   `status_funcionario` enum('ATIVO','INATIVO','EXCLUIDO') NOT NULL DEFAULT 'ATIVO',
   `data_cadastro_funcionario` datetime DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `funcionarios`
 --
 
 INSERT INTO `funcionarios` (`id_funcionario`, `foto_funcionario`, `nome_funcionario`, `sobrenome_funcionario`, `data_nascimento_funcionario`, `sexo_funcionario`, `rg_funcionario`, `cpf_funcionario`, `estado_civil_funcionario`, `escolaridade_funcionario`, `codigo_funcionario`, `id_cargo`, `data_admissao_funcionario`, `data_demissao_funcionario`, `status_funcionario`, `data_cadastro_funcionario`, `timestamp`) VALUES
-(59, '', 'wellington cezar targino', 'de s&aacute;', '2001-03-13', 'M', '21.331.313-2', '123.123.123-13', 'Solteiro', 'Ensino Superior Incompleto', '', 2, '2016-03-13', '2016-03-14', 'ATIVO', '2016-03-13 04:49:17', '2016-03-21 04:15:54'),
-(79, '651cf18f6a4cdfff6a3efe6eccb1f480.png', 'wellington', 'cezar', '1991-02-04', 'M', '', '', '', '', '050516.5613', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-05 07:04:28', '2016-05-05 05:04:28'),
+(59, 'c1d693986ded7c8d7aa41e6939ae036e.jpg', 'wellington cezar', 'de s&aacute;', '2001-03-13', 'M', '21.331.313-2', '123.123.123-13', 'Solteiro', 'Ensino Superior Incompleto', '', 2, '2016-03-13', '2016-03-14', 'ATIVO', '2016-03-13 04:49:17', '2016-05-09 04:16:45'),
+(79, '651cf18f6a4cdfff6a3efe6eccb1f480.png', 'wellington cezar', 'cezar', '1991-02-04', 'M', '', '', '', '', '050516.5613', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-05 07:04:28', '2016-05-09 02:17:45'),
 (80, '105d91ce4b34f32d3b9facc55751d476', 'sdlkafj', 'aksjdf', '2016-05-16', 'F', '', '', '', '', '050516.6314', 2, '0000-00-00', '0000-00-00', 'EXCLUIDO', '2016-05-05 07:05:26', '2016-05-05 22:48:36'),
-(81, '', 'kjf''', 'jfasldjf', '2016-05-24', 'M', '', '', '', '', '050516.1918', 2, '0000-00-00', '0000-00-00', 'EXCLUIDO', '2016-05-05 07:08:37', '2016-05-05 22:48:42');
+(81, '', 'kjf''', 'jfasldjf', '2016-05-24', 'M', '', '', '', '', '050516.1918', 2, '0000-00-00', '0000-00-00', 'EXCLUIDO', '2016-05-05 07:08:37', '2016-05-05 22:48:42'),
+(82, 'ac28f76281ab9fb0b4a3c466e30b9dd0.jpg', 'alguem', 'sobrenome', '2016-05-17', 'M', '42.334.234-3', '234.234.234-23', 'Casado', 'Ensino Fundamental Completo', '080516.2222', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-08 11:15:24', '2016-05-09 02:15:24'),
+(83, '', 'wqrqwe', 'qwer', '2016-05-03', 'M', '', '', 'Solteiro', 'Ensino M&eacute;dio Incompleto', '080516.6578', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-08 11:16:45', '2016-05-09 02:16:45'),
+(84, '', 'wqrqwe', 'qwer', '2016-05-03', 'M', '', '', 'Solteiro', 'Ensino M&eacute;dio Incompleto', '080516.6436', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-08 11:17:06', '2016-05-09 02:17:06'),
+(85, '89e7bf07eec1366a87836c256b029fd1.png', 'funcionario', 'teste', '2016-05-02', 'M', '', '', '', '', '080516.8071', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-08 11:32:42', '2016-05-09 02:32:42');
 
 -- --------------------------------------------------------
 
@@ -334,7 +346,7 @@ INSERT INTO `funcionarios` (`id_funcionario`, `foto_funcionario`, `nome_funciona
 --
 
 CREATE TABLE IF NOT EXISTS `marcas` (
-  `id_marca` int(11) NOT NULL,
+`id_marca` int(11) NOT NULL,
   `nome_marca` varchar(255) DEFAULT NULL,
   `status_marca` enum('ATIVO','INATIVO','EXCLUIDO') NOT NULL DEFAULT 'ATIVO',
   `data_cadastro_marca` datetime DEFAULT NULL,
@@ -355,7 +367,7 @@ INSERT INTO `marcas` (`id_marca`, `nome_marca`, `status_marca`, `data_cadastro_m
 --
 
 CREATE TABLE IF NOT EXISTS `nivel_acesso` (
-  `id_nivel_acesso` int(11) NOT NULL,
+`id_nivel_acesso` int(11) NOT NULL,
   `nome_nivel_acesso` varchar(255) DEFAULT NULL,
   `permissoes` text NOT NULL,
   `index_access_db_name` varchar(255) NOT NULL,
@@ -379,29 +391,33 @@ INSERT INTO `nivel_acesso` (`id_nivel_acesso`, `nome_nivel_acesso`, `permissoes`
 --
 
 CREATE TABLE IF NOT EXISTS `produtos` (
-  `id_produto` int(11) NOT NULL,
-  `codigo_barras_produto` varchar(255) DEFAULT NULL,
+`id_produto` int(11) NOT NULL,
   `foto_produto` varchar(255) DEFAULT NULL,
   `nome_produto` varchar(255) DEFAULT NULL,
   `id_marca` int(11) DEFAULT NULL,
   `id_categoria` int(11) DEFAULT NULL,
   `descricao_produto` text,
-  `preco_custo` decimal(10,2) DEFAULT NULL,
-  `preco_venda` decimal(10,2) DEFAULT NULL,
-  `markup_produto` decimal(10,2) DEFAULT NULL,
-  `id_unidade_medida` int(11) DEFAULT NULL,
   `status_produto` enum('ATIVO','INATIVO','EXCLUIDO') NOT NULL,
   `data_cadastro_produto` datetime NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `produtos`
 --
 
-INSERT INTO `produtos` (`id_produto`, `codigo_barras_produto`, `foto_produto`, `nome_produto`, `id_marca`, `id_categoria`, `descricao_produto`, `preco_custo`, `preco_venda`, `markup_produto`, `id_unidade_medida`, `status_produto`, `data_cadastro_produto`, `timestamp`) VALUES
-(17, NULL, NULL, 'nome do produto', 3, 1, 'descri&ccedil;ao de teste', '342.34', '346.55', '1.23', 2, 'ATIVO', '2016-03-28 03:49:30', '2016-04-28 22:43:17'),
-(18, NULL, NULL, 'nome do produto', 3, 1, 'descri&ccedil;ao de teste', '342.34', '346.55', '1.23', 2, 'INATIVO', '2016-03-28 03:57:15', '2016-04-09 00:26:16');
+INSERT INTO `produtos` (`id_produto`, `foto_produto`, `nome_produto`, `id_marca`, `id_categoria`, `descricao_produto`, `status_produto`, `data_cadastro_produto`, `timestamp`) VALUES
+(17, NULL, 'nome do produto', 3, 1, 'descri&ccedil;ao de teste', 'ATIVO', '2016-03-28 03:49:30', '2016-04-28 22:43:17'),
+(18, NULL, 'nome do produto', 3, 1, 'descri&ccedil;ao de teste', 'INATIVO', '2016-03-28 03:57:15', '2016-04-09 00:26:16'),
+(19, NULL, 'teste', 1, 1, 'teste', 'INATIVO', '2016-05-08 01:31:01', '2016-05-09 03:41:15'),
+(20, NULL, 'sfgasdfasd', 1, 1, 'asdf', 'INATIVO', '2016-05-08 01:45:32', '2016-05-09 03:41:16'),
+(21, '', 'nome do produtos', 1, 1, 'teste', 'INATIVO', '2016-05-08 11:36:12', '2016-05-09 03:41:17'),
+(22, '', 'nome do produtos', 1, 1, 'teste', 'INATIVO', '2016-05-08 11:36:53', '2016-05-09 03:39:39'),
+(23, '', 'produto de teste', 1, 1, '', 'INATIVO', '2016-05-08 11:39:16', '2016-05-09 03:41:18'),
+(24, '', 'product', 1, 2, '', 'ATIVO', '2016-05-08 11:40:50', '2016-05-09 02:40:50'),
+(25, '04628e9659719586539914ee1f911c95.png', 'aaaaa', 1, 1, 'teste', 'ATIVO', '2016-05-08 11:43:34', '2016-05-09 02:43:34'),
+(26, 'e82538c07bbd634d26f37ee5f6a7754f.png', 'algo', 1, 2, 'teste', 'ATIVO', '2016-05-08 11:44:40', '2016-05-09 02:44:40'),
+(27, '', 'nome', 1, 1, '', 'ATIVO', '2016-05-09 12:53:47', '2016-05-09 03:53:47');
 
 -- --------------------------------------------------------
 
@@ -410,11 +426,11 @@ INSERT INTO `produtos` (`id_produto`, `codigo_barras_produto`, `foto_produto`, `
 --
 
 CREATE TABLE IF NOT EXISTS `produto_fornecedores` (
-  `id_produto_fornecedor` int(11) NOT NULL,
+`id_produto_fornecedor` int(11) NOT NULL,
   `id_produto` int(11) DEFAULT NULL,
   `id_fornecedor` int(11) DEFAULT NULL,
   `fornecedor_principal` tinyint(1) DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `produto_fornecedores`
@@ -425,7 +441,9 @@ INSERT INTO `produto_fornecedores` (`id_produto_fornecedor`, `id_produto`, `id_f
 (20, 17, 15, 0),
 (21, 18, 13, 1),
 (22, 18, 15, 0),
-(23, 18, 16, 0);
+(23, 18, 16, 0),
+(24, 19, 11, 1),
+(25, 20, 11, 1);
 
 -- --------------------------------------------------------
 
@@ -434,7 +452,7 @@ INSERT INTO `produto_fornecedores` (`id_produto_fornecedor`, `id_produto`, `id_f
 --
 
 CREATE TABLE IF NOT EXISTS `requisicao_produto` (
-  `id_requisicao_produto` int(11) NOT NULL,
+`id_requisicao_produto` int(11) NOT NULL,
   `id_requisicao` int(11) DEFAULT NULL,
   `id_produto` int(11) DEFAULT NULL,
   `quantidade_produto` decimal(10,2) DEFAULT NULL,
@@ -448,7 +466,7 @@ CREATE TABLE IF NOT EXISTS `requisicao_produto` (
 --
 
 CREATE TABLE IF NOT EXISTS `requisicao_usuario` (
-  `id_requisicao_usuario` int(11) NOT NULL,
+`id_requisicao_usuario` int(11) NOT NULL,
   `id_requisicao` int(11) DEFAULT NULL,
   `id_usuario` int(11) DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -461,7 +479,7 @@ CREATE TABLE IF NOT EXISTS `requisicao_usuario` (
 --
 
 CREATE TABLE IF NOT EXISTS `requisicoes` (
-  `id_requisicao` int(11) NOT NULL,
+`id_requisicao` int(11) NOT NULL,
   `codigo_requisicao` varchar(255) NOT NULL,
   `titulo_requisicao` varchar(255) DEFAULT NULL,
   `descricao_requisicao` text NOT NULL,
@@ -477,7 +495,7 @@ CREATE TABLE IF NOT EXISTS `requisicoes` (
 --
 
 CREATE TABLE IF NOT EXISTS `sys_actions` (
-  `id_action` int(11) NOT NULL,
+`id_action` int(11) NOT NULL,
   `url_action` varchar(255) DEFAULT NULL,
   `nome_action` varchar(255) DEFAULT NULL,
   `status_action` varchar(255) DEFAULT NULL,
@@ -533,7 +551,7 @@ INSERT INTO `sys_actions` (`id_action`, `url_action`, `nome_action`, `status_act
 --
 
 CREATE TABLE IF NOT EXISTS `sys_modulos` (
-  `id_modulo` int(11) NOT NULL,
+`id_modulo` int(11) NOT NULL,
   `url_modulo` varchar(255) NOT NULL,
   `nome_modulo` varchar(255) DEFAULT NULL,
   `posicao_modulo` varchar(255) DEFAULT NULL,
@@ -575,7 +593,7 @@ INSERT INTO `sys_modulos` (`id_modulo`, `url_modulo`, `nome_modulo`, `posicao_mo
 --
 
 CREATE TABLE IF NOT EXISTS `sys_paginas` (
-  `id_pagina` int(11) NOT NULL,
+`id_pagina` int(11) NOT NULL,
   `url_pagina` varchar(255) DEFAULT NULL,
   `nome_pagina` varchar(255) DEFAULT NULL,
   `posicao_pagina` int(11) DEFAULT NULL,
@@ -617,7 +635,7 @@ INSERT INTO `sys_paginas` (`id_pagina`, `url_pagina`, `nome_pagina`, `posicao_pa
 --
 
 CREATE TABLE IF NOT EXISTS `sys_usuarios` (
-  `id_usuario` int(11) NOT NULL,
+`id_usuario` int(11) NOT NULL,
   `id_funcionario` int(11) DEFAULT NULL,
   `id_nivel_acesso` int(11) DEFAULT NULL,
   `email_usuario` varchar(255) NOT NULL,
@@ -634,7 +652,7 @@ CREATE TABLE IF NOT EXISTS `sys_usuarios` (
 --
 
 INSERT INTO `sys_usuarios` (`id_usuario`, `id_funcionario`, `id_nivel_acesso`, `email_usuario`, `login_usuario`, `senha_usuario`, `hash_acesso`, `status_usuario`, `data_criacao_usuario`, `timestamp`) VALUES
-(1, 59, 1, 'wellington-cezar@hotmail.com', 'admin', '$2a$08$MTY2MjMyMDcyMTU3MmJjNe4RI1/LIguX39aJwjjJ374Tx2TdxfSXe', '$2a$08$MTc2NjM4NTYxNDU3MmRkMuFb5DCxwJVmrx6ss1haFNIVTAmjHQztK', 'ATIVO', NULL, '2016-05-05 22:17:49');
+(1, 59, 1, 'wellington-cezar@hotmail.com', 'admin', '$2a$08$MTY2MjMyMDcyMTU3MmJjNe4RI1/LIguX39aJwjjJ374Tx2TdxfSXe', '$2a$08$MTI5MTEyMzQwNzU3MmY2NudBeS6z2TsA8hKRLT3jPwnWbA1dOKK7m', 'ATIVO', NULL, '2016-05-05 22:17:49');
 
 -- --------------------------------------------------------
 
@@ -643,12 +661,12 @@ INSERT INTO `sys_usuarios` (`id_usuario`, `id_funcionario`, `id_nivel_acesso`, `
 --
 
 CREATE TABLE IF NOT EXISTS `sys_usuarios_acessos` (
-  `id_usuarios_acesso` int(11) NOT NULL,
+`id_usuarios_acesso` int(11) NOT NULL,
   `id_usuario` int(11) DEFAULT NULL,
   `data_acesso` date DEFAULT NULL,
   `hora_acesso` time DEFAULT NULL,
   `ip_acesso` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=175 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `sys_usuarios_acessos`
@@ -828,7 +846,8 @@ INSERT INTO `sys_usuarios_acessos` (`id_usuarios_acesso`, `id_usuario`, `data_ac
 (171, 1, '2016-05-04', '00:43:27', '::1'),
 (172, 1, '2016-05-05', '06:03:25', '::1'),
 (173, 1, '2016-05-06', '00:17:56', '::1'),
-(174, 1, '2016-05-07', '13:39:36', '::1');
+(174, 1, '2016-05-07', '13:39:36', '::1'),
+(175, 1, '2016-05-08', '13:19:53', '::1');
 
 -- --------------------------------------------------------
 
@@ -837,7 +856,7 @@ INSERT INTO `sys_usuarios_acessos` (`id_usuarios_acesso`, `id_usuario`, `data_ac
 --
 
 CREATE TABLE IF NOT EXISTS `sys_usuarios_grupo` (
-  `id_usuarios_grupo` int(11) NOT NULL,
+`id_usuarios_grupo` int(11) NOT NULL,
   `id_nivel_acesso` int(11) NOT NULL,
   `nome_usuarios_grupo` varchar(255) DEFAULT NULL,
   `permissao` text NOT NULL,
@@ -852,7 +871,7 @@ CREATE TABLE IF NOT EXISTS `sys_usuarios_grupo` (
 --
 
 CREATE TABLE IF NOT EXISTS `telefones` (
-  `id_telefone` int(11) NOT NULL,
+`id_telefone` int(11) NOT NULL,
   `categoria_telefone` varchar(255) DEFAULT NULL,
   `numero_telefone` varchar(255) DEFAULT NULL,
   `tipo_telefone` varchar(255) DEFAULT NULL,
@@ -908,21 +927,26 @@ CREATE TABLE IF NOT EXISTS `telefones_funcionarios` (
 --
 
 CREATE TABLE IF NOT EXISTS `unidade_medida` (
-  `id_unidade_medida` int(11) NOT NULL,
+`id_unidade_medida` int(11) NOT NULL,
+  `id_produto` int(11) NOT NULL,
   `nome_unidade_medida` varchar(255) DEFAULT NULL,
-  `abreviacao_unidade_medida` varchar(255) DEFAULT NULL,
+  `codigo_unidade_medida` varchar(255) DEFAULT NULL,
+  `fator_unidade_medida` decimal(10,2) NOT NULL,
+  `ordem` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `unidade_medida`
 --
 
-INSERT INTO `unidade_medida` (`id_unidade_medida`, `nome_unidade_medida`, `abreviacao_unidade_medida`, `timestamp`) VALUES
-(1, 'Gramas', 'g', '2016-03-26 20:48:53'),
-(2, 'kilograma', 'kg', '2016-03-26 20:48:53'),
-(3, 'unidade', 'uni', '2016-03-26 20:49:22'),
-(4, 'caixa', 'cx', '2016-03-26 20:49:22');
+INSERT INTO `unidade_medida` (`id_unidade_medida`, `id_produto`, `nome_unidade_medida`, `codigo_unidade_medida`, `fator_unidade_medida`, `ordem`, `timestamp`) VALUES
+(7, 23, 'unidade', 'uni', '0.00', 0, '2016-05-09 02:39:16'),
+(8, 24, 'unidade', 'uni', '0.00', 0, '2016-05-09 02:40:50'),
+(9, 24, 'caixa', 'cx', '0.00', 1, '2016-05-09 02:40:50'),
+(10, 25, '1', '1', '0.00', 0, '2016-05-09 02:43:34'),
+(11, 26, '2', '3', '0.00', 0, '2016-05-09 02:44:40'),
+(12, 27, 'aa', 'ss', '10.00', 0, '2016-05-09 03:53:47');
 
 --
 -- Indexes for dumped tables
@@ -932,207 +956,181 @@ INSERT INTO `unidade_medida` (`id_unidade_medida`, `nome_unidade_medida`, `abrev
 -- Indexes for table `cargos`
 --
 ALTER TABLE `cargos`
-  ADD PRIMARY KEY (`id_cargo`);
+ ADD PRIMARY KEY (`id_cargo`);
 
 --
 -- Indexes for table `categorias`
 --
 ALTER TABLE `categorias`
-  ADD PRIMARY KEY (`id_categoria`),
-  ADD UNIQUE KEY `nome_categoria` (`nome_categoria`);
+ ADD PRIMARY KEY (`id_categoria`), ADD UNIQUE KEY `nome_categoria` (`nome_categoria`);
 
 --
 -- Indexes for table `emails`
 --
 ALTER TABLE `emails`
-  ADD PRIMARY KEY (`id_email`);
+ ADD PRIMARY KEY (`id_email`);
 
 --
 -- Indexes for table `emails_fornecedores`
 --
 ALTER TABLE `emails_fornecedores`
-  ADD KEY `id_email` (`id_email`),
-  ADD KEY `id_fornecedor` (`id_fornecedor`);
+ ADD KEY `id_email` (`id_email`), ADD KEY `id_fornecedor` (`id_fornecedor`);
 
 --
 -- Indexes for table `emails_funcionarios`
 --
 ALTER TABLE `emails_funcionarios`
-  ADD KEY `id_email` (`id_email`),
-  ADD KEY `id_funcionario` (`id_funcionario`);
+ ADD KEY `id_email` (`id_email`), ADD KEY `id_funcionario` (`id_funcionario`);
 
 --
 -- Indexes for table `enderecos`
 --
 ALTER TABLE `enderecos`
-  ADD PRIMARY KEY (`id_endereco`);
+ ADD PRIMARY KEY (`id_endereco`);
 
 --
 -- Indexes for table `enderecos_fornecedores`
 --
 ALTER TABLE `enderecos_fornecedores`
-  ADD KEY `id_fornecedor` (`id_fornecedor`),
-  ADD KEY `id_endereco` (`id_endereco`);
+ ADD KEY `id_fornecedor` (`id_fornecedor`), ADD KEY `id_endereco` (`id_endereco`);
 
 --
 -- Indexes for table `enderecos_funcionarios`
 --
 ALTER TABLE `enderecos_funcionarios`
-  ADD KEY `id_funcionario` (`id_funcionario`),
-  ADD KEY `id_endereco` (`id_endereco`);
+ ADD KEY `id_funcionario` (`id_funcionario`), ADD KEY `id_endereco` (`id_endereco`);
 
 --
 -- Indexes for table `estoque`
 --
 ALTER TABLE `estoque`
-  ADD PRIMARY KEY (`id_estoque`),
-  ADD KEY `id_produto` (`id_produto`);
+ ADD PRIMARY KEY (`id_estoque`), ADD KEY `id_produto` (`id_produto`);
 
 --
 -- Indexes for table `fornecedores`
 --
 ALTER TABLE `fornecedores`
-  ADD PRIMARY KEY (`id_fornecedor`);
+ ADD PRIMARY KEY (`id_fornecedor`);
 
 --
 -- Indexes for table `fornecedores_agenda`
 --
 ALTER TABLE `fornecedores_agenda`
-  ADD PRIMARY KEY (`id_fornecedor_agenda`),
-  ADD KEY `id_fornecedor` (`id_fornecedor`);
+ ADD PRIMARY KEY (`id_fornecedor_agenda`), ADD KEY `id_fornecedor` (`id_fornecedor`);
 
 --
 -- Indexes for table `fornecedores_agenda_notificado`
 --
 ALTER TABLE `fornecedores_agenda_notificado`
-  ADD PRIMARY KEY (`id_agenda_notificado`),
-  ADD KEY `id_fornecedor_agenda` (`id_fornecedor_agenda`);
+ ADD PRIMARY KEY (`id_agenda_notificado`), ADD KEY `id_fornecedor_agenda` (`id_fornecedor_agenda`);
 
 --
 -- Indexes for table `funcionarios`
 --
 ALTER TABLE `funcionarios`
-  ADD PRIMARY KEY (`id_funcionario`),
-  ADD UNIQUE KEY `codigo_funcionario` (`codigo_funcionario`),
-  ADD KEY `id_estado_civil` (`estado_civil_funcionario`),
-  ADD KEY `id_escolaridade` (`escolaridade_funcionario`),
-  ADD KEY `id_cargo` (`id_cargo`),
-  ADD KEY `id_cargo_2` (`id_cargo`);
+ ADD PRIMARY KEY (`id_funcionario`), ADD UNIQUE KEY `codigo_funcionario` (`codigo_funcionario`), ADD KEY `id_estado_civil` (`estado_civil_funcionario`), ADD KEY `id_escolaridade` (`escolaridade_funcionario`), ADD KEY `id_cargo` (`id_cargo`), ADD KEY `id_cargo_2` (`id_cargo`);
 
 --
 -- Indexes for table `marcas`
 --
 ALTER TABLE `marcas`
-  ADD PRIMARY KEY (`id_marca`);
+ ADD PRIMARY KEY (`id_marca`);
 
 --
 -- Indexes for table `nivel_acesso`
 --
 ALTER TABLE `nivel_acesso`
-  ADD PRIMARY KEY (`id_nivel_acesso`);
+ ADD PRIMARY KEY (`id_nivel_acesso`);
 
 --
 -- Indexes for table `produtos`
 --
 ALTER TABLE `produtos`
-  ADD PRIMARY KEY (`id_produto`);
+ ADD PRIMARY KEY (`id_produto`);
 
 --
 -- Indexes for table `produto_fornecedores`
 --
 ALTER TABLE `produto_fornecedores`
-  ADD PRIMARY KEY (`id_produto_fornecedor`),
-  ADD KEY `id_produto` (`id_produto`),
-  ADD KEY `id_fornecedor` (`id_fornecedor`);
+ ADD PRIMARY KEY (`id_produto_fornecedor`), ADD KEY `id_produto` (`id_produto`), ADD KEY `id_fornecedor` (`id_fornecedor`);
 
 --
 -- Indexes for table `requisicao_produto`
 --
 ALTER TABLE `requisicao_produto`
-  ADD PRIMARY KEY (`id_requisicao_produto`);
+ ADD PRIMARY KEY (`id_requisicao_produto`);
 
 --
 -- Indexes for table `requisicao_usuario`
 --
 ALTER TABLE `requisicao_usuario`
-  ADD PRIMARY KEY (`id_requisicao_usuario`);
+ ADD PRIMARY KEY (`id_requisicao_usuario`);
 
 --
 -- Indexes for table `requisicoes`
 --
 ALTER TABLE `requisicoes`
-  ADD PRIMARY KEY (`id_requisicao`);
+ ADD PRIMARY KEY (`id_requisicao`);
 
 --
 -- Indexes for table `sys_actions`
 --
 ALTER TABLE `sys_actions`
-  ADD PRIMARY KEY (`id_action`),
-  ADD KEY `id_pagina` (`id_pagina`);
+ ADD PRIMARY KEY (`id_action`), ADD KEY `id_pagina` (`id_pagina`);
 
 --
 -- Indexes for table `sys_modulos`
 --
 ALTER TABLE `sys_modulos`
-  ADD PRIMARY KEY (`id_modulo`),
-  ADD KEY `id_modulo_pai` (`id_modulo_pai`);
+ ADD PRIMARY KEY (`id_modulo`), ADD KEY `id_modulo_pai` (`id_modulo_pai`);
 
 --
 -- Indexes for table `sys_paginas`
 --
 ALTER TABLE `sys_paginas`
-  ADD PRIMARY KEY (`id_pagina`),
-  ADD KEY `id_modulo` (`id_modulo`);
+ ADD PRIMARY KEY (`id_pagina`), ADD KEY `id_modulo` (`id_modulo`);
 
 --
 -- Indexes for table `sys_usuarios`
 --
 ALTER TABLE `sys_usuarios`
-  ADD PRIMARY KEY (`id_usuario`),
-  ADD UNIQUE KEY `email_usuario` (`email_usuario`),
-  ADD UNIQUE KEY `login_usuario` (`login_usuario`),
-  ADD KEY `id_funcionario` (`id_funcionario`),
-  ADD KEY `id_usuarios_grupo` (`id_nivel_acesso`),
-  ADD KEY `id_nivel_acesso` (`id_nivel_acesso`);
+ ADD PRIMARY KEY (`id_usuario`), ADD UNIQUE KEY `email_usuario` (`email_usuario`), ADD UNIQUE KEY `login_usuario` (`login_usuario`), ADD KEY `id_funcionario` (`id_funcionario`), ADD KEY `id_usuarios_grupo` (`id_nivel_acesso`), ADD KEY `id_nivel_acesso` (`id_nivel_acesso`);
 
 --
 -- Indexes for table `sys_usuarios_acessos`
 --
 ALTER TABLE `sys_usuarios_acessos`
-  ADD PRIMARY KEY (`id_usuarios_acesso`);
+ ADD PRIMARY KEY (`id_usuarios_acesso`);
 
 --
 -- Indexes for table `sys_usuarios_grupo`
 --
 ALTER TABLE `sys_usuarios_grupo`
-  ADD PRIMARY KEY (`id_usuarios_grupo`),
-  ADD KEY `id_nivel_acesso` (`id_nivel_acesso`);
+ ADD PRIMARY KEY (`id_usuarios_grupo`), ADD KEY `id_nivel_acesso` (`id_nivel_acesso`);
 
 --
 -- Indexes for table `telefones`
 --
 ALTER TABLE `telefones`
-  ADD PRIMARY KEY (`id_telefone`);
+ ADD PRIMARY KEY (`id_telefone`);
 
 --
 -- Indexes for table `telefones_fornecedores`
 --
 ALTER TABLE `telefones_fornecedores`
-  ADD KEY `id_telefone` (`id_telefone`),
-  ADD KEY `id_fornecedor` (`id_fornecedor`);
+ ADD KEY `id_telefone` (`id_telefone`), ADD KEY `id_fornecedor` (`id_fornecedor`);
 
 --
 -- Indexes for table `telefones_funcionarios`
 --
 ALTER TABLE `telefones_funcionarios`
-  ADD KEY `id_telefone` (`id_telefone`),
-  ADD KEY `id_funcionario` (`id_funcionario`);
+ ADD KEY `id_telefone` (`id_telefone`), ADD KEY `id_funcionario` (`id_funcionario`);
 
 --
 -- Indexes for table `unidade_medida`
 --
 ALTER TABLE `unidade_medida`
-  ADD PRIMARY KEY (`id_unidade_medida`);
+ ADD PRIMARY KEY (`id_unidade_medida`), ADD KEY `id_produto` (`id_produto`), ADD KEY `id_produto_2` (`id_produto`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -1142,122 +1140,122 @@ ALTER TABLE `unidade_medida`
 -- AUTO_INCREMENT for table `cargos`
 --
 ALTER TABLE `cargos`
-  MODIFY `id_cargo` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `id_cargo` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `emails`
 --
 ALTER TABLE `emails`
-  MODIFY `id_email` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `id_email` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `enderecos`
 --
 ALTER TABLE `enderecos`
-  MODIFY `id_endereco` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
+MODIFY `id_endereco` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT for table `estoque`
 --
 ALTER TABLE `estoque`
-  MODIFY `id_estoque` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id_estoque` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `fornecedores`
 --
 ALTER TABLE `fornecedores`
-  MODIFY `id_fornecedor` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
+MODIFY `id_fornecedor` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `fornecedores_agenda`
 --
 ALTER TABLE `fornecedores_agenda`
-  MODIFY `id_fornecedor_agenda` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+MODIFY `id_fornecedor_agenda` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `fornecedores_agenda_notificado`
 --
 ALTER TABLE `fornecedores_agenda_notificado`
-  MODIFY `id_agenda_notificado` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+MODIFY `id_agenda_notificado` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `funcionarios`
 --
 ALTER TABLE `funcionarios`
-  MODIFY `id_funcionario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=82;
+MODIFY `id_funcionario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=86;
 --
 -- AUTO_INCREMENT for table `marcas`
 --
 ALTER TABLE `marcas`
-  MODIFY `id_marca` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id_marca` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `nivel_acesso`
 --
 ALTER TABLE `nivel_acesso`
-  MODIFY `id_nivel_acesso` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `id_nivel_acesso` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
+MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT for table `produto_fornecedores`
 --
 ALTER TABLE `produto_fornecedores`
-  MODIFY `id_produto_fornecedor` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
+MODIFY `id_produto_fornecedor` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `requisicao_produto`
 --
 ALTER TABLE `requisicao_produto`
-  MODIFY `id_requisicao_produto` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id_requisicao_produto` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `requisicao_usuario`
 --
 ALTER TABLE `requisicao_usuario`
-  MODIFY `id_requisicao_usuario` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id_requisicao_usuario` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `requisicoes`
 --
 ALTER TABLE `requisicoes`
-  MODIFY `id_requisicao` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id_requisicao` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `sys_actions`
 --
 ALTER TABLE `sys_actions`
-  MODIFY `id_action` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=38;
+MODIFY `id_action` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `sys_modulos`
 --
 ALTER TABLE `sys_modulos`
-  MODIFY `id_modulo` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
+MODIFY `id_modulo` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT for table `sys_paginas`
 --
 ALTER TABLE `sys_paginas`
-  MODIFY `id_pagina` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
+MODIFY `id_pagina` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT for table `sys_usuarios`
 --
 ALTER TABLE `sys_usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `sys_usuarios_acessos`
 --
 ALTER TABLE `sys_usuarios_acessos`
-  MODIFY `id_usuarios_acesso` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=175;
+MODIFY `id_usuarios_acesso` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=176;
 --
 -- AUTO_INCREMENT for table `sys_usuarios_grupo`
 --
 ALTER TABLE `sys_usuarios_grupo`
-  MODIFY `id_usuarios_grupo` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id_usuarios_grupo` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `telefones`
 --
 ALTER TABLE `telefones`
-  MODIFY `id_telefone` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+MODIFY `id_telefone` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `unidade_medida`
 --
 ALTER TABLE `unidade_medida`
-  MODIFY `id_unidade_medida` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `id_unidade_medida` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- Constraints for dumped tables
 --
@@ -1266,105 +1264,111 @@ ALTER TABLE `unidade_medida`
 -- Limitadores para a tabela `emails_fornecedores`
 --
 ALTER TABLE `emails_fornecedores`
-  ADD CONSTRAINT `emails_fornecedores_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `emails_fornecedores_ibfk_2` FOREIGN KEY (`id_email`) REFERENCES `emails` (`id_email`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `emails_fornecedores_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `emails_fornecedores_ibfk_2` FOREIGN KEY (`id_email`) REFERENCES `emails` (`id_email`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `emails_funcionarios`
 --
 ALTER TABLE `emails_funcionarios`
-  ADD CONSTRAINT `emails_funcionarios_ibfk_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `emails_funcionarios_ibfk_2` FOREIGN KEY (`id_email`) REFERENCES `emails` (`id_email`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `emails_funcionarios_ibfk_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `emails_funcionarios_ibfk_2` FOREIGN KEY (`id_email`) REFERENCES `emails` (`id_email`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `enderecos_fornecedores`
 --
 ALTER TABLE `enderecos_fornecedores`
-  ADD CONSTRAINT `enderecos_fornecedores_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `enderecos_fornecedores_ibfk_2` FOREIGN KEY (`id_endereco`) REFERENCES `enderecos` (`id_endereco`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `enderecos_fornecedores_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `enderecos_fornecedores_ibfk_2` FOREIGN KEY (`id_endereco`) REFERENCES `enderecos` (`id_endereco`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `enderecos_funcionarios`
 --
 ALTER TABLE `enderecos_funcionarios`
-  ADD CONSTRAINT `enderecos_funcionarios_ibfk_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `enderecos_funcionarios_ibfk_2` FOREIGN KEY (`id_endereco`) REFERENCES `enderecos` (`id_endereco`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `enderecos_funcionarios_ibfk_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `enderecos_funcionarios_ibfk_2` FOREIGN KEY (`id_endereco`) REFERENCES `enderecos` (`id_endereco`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `estoque`
 --
 ALTER TABLE `estoque`
-  ADD CONSTRAINT `estoque_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id_produto`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `estoque_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id_produto`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `fornecedores_agenda`
 --
 ALTER TABLE `fornecedores_agenda`
-  ADD CONSTRAINT `fornecedores_agenda_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `fornecedores_agenda_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `fornecedores_agenda_notificado`
 --
 ALTER TABLE `fornecedores_agenda_notificado`
-  ADD CONSTRAINT `fornecedores_agenda_notificado_ibfk_1` FOREIGN KEY (`id_fornecedor_agenda`) REFERENCES `fornecedores_agenda` (`id_fornecedor_agenda`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `fornecedores_agenda_notificado_ibfk_1` FOREIGN KEY (`id_fornecedor_agenda`) REFERENCES `fornecedores_agenda` (`id_fornecedor_agenda`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `funcionarios`
 --
 ALTER TABLE `funcionarios`
-  ADD CONSTRAINT `funcionarios_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `cargos` (`id_cargo`) ON DELETE SET NULL;
+ADD CONSTRAINT `funcionarios_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `cargos` (`id_cargo`) ON DELETE SET NULL;
 
 --
 -- Limitadores para a tabela `produto_fornecedores`
 --
 ALTER TABLE `produto_fornecedores`
-  ADD CONSTRAINT `produto_fornecedores_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id_produto`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `produto_fornecedores_ibfk_2` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `produto_fornecedores_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id_produto`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `produto_fornecedores_ibfk_2` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `sys_actions`
 --
 ALTER TABLE `sys_actions`
-  ADD CONSTRAINT `sys_actions_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `sys_paginas` (`id_pagina`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `sys_actions_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `sys_paginas` (`id_pagina`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `sys_modulos`
 --
 ALTER TABLE `sys_modulos`
-  ADD CONSTRAINT `sys_modulos_ibfk_1` FOREIGN KEY (`id_modulo_pai`) REFERENCES `sys_modulos` (`id_modulo`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `sys_modulos_ibfk_1` FOREIGN KEY (`id_modulo_pai`) REFERENCES `sys_modulos` (`id_modulo`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `sys_paginas`
 --
 ALTER TABLE `sys_paginas`
-  ADD CONSTRAINT `sys_paginas_ibfk_1` FOREIGN KEY (`id_modulo`) REFERENCES `sys_modulos` (`id_modulo`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `sys_paginas_ibfk_1` FOREIGN KEY (`id_modulo`) REFERENCES `sys_modulos` (`id_modulo`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `sys_usuarios`
 --
 ALTER TABLE `sys_usuarios`
-  ADD CONSTRAINT `sys_usuarios_ibfk_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `sys_usuarios_ibfk_2` FOREIGN KEY (`id_nivel_acesso`) REFERENCES `nivel_acesso` (`id_nivel_acesso`) ON DELETE SET NULL ON UPDATE CASCADE;
+ADD CONSTRAINT `sys_usuarios_ibfk_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `sys_usuarios_ibfk_2` FOREIGN KEY (`id_nivel_acesso`) REFERENCES `nivel_acesso` (`id_nivel_acesso`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `sys_usuarios_grupo`
 --
 ALTER TABLE `sys_usuarios_grupo`
-  ADD CONSTRAINT `sys_usuarios_grupo_ibfk_1` FOREIGN KEY (`id_nivel_acesso`) REFERENCES `nivel_acesso` (`id_nivel_acesso`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `sys_usuarios_grupo_ibfk_1` FOREIGN KEY (`id_nivel_acesso`) REFERENCES `nivel_acesso` (`id_nivel_acesso`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `telefones_fornecedores`
 --
 ALTER TABLE `telefones_fornecedores`
-  ADD CONSTRAINT `telefones_fornecedores_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `telefones_fornecedores_ibfk_2` FOREIGN KEY (`id_telefone`) REFERENCES `telefones` (`id_telefone`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `telefones_fornecedores_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `telefones_fornecedores_ibfk_2` FOREIGN KEY (`id_telefone`) REFERENCES `telefones` (`id_telefone`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `telefones_funcionarios`
 --
 ALTER TABLE `telefones_funcionarios`
-  ADD CONSTRAINT `telefones_funcionarios_ibfk_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `telefones_funcionarios_ibfk_2` FOREIGN KEY (`id_telefone`) REFERENCES `telefones` (`id_telefone`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `telefones_funcionarios_ibfk_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `telefones_funcionarios_ibfk_2` FOREIGN KEY (`id_telefone`) REFERENCES `telefones` (`id_telefone`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `unidade_medida`
+--
+ALTER TABLE `unidade_medida`
+ADD CONSTRAINT `unidade_medida_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id_produto`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
