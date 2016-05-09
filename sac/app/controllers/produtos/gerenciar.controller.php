@@ -60,14 +60,14 @@ class gerenciar extends Controller{
 		$data['categorias']=$categorias->listar();
 
 		//unidades de medida
-		$this->load->dao('produtos/unidademedidaDao');
-		$unidademedida = new unidademedidaDao;
-		$data['unidademedida']=$unidademedida->listar();
+		// $this->load->dao('produtos/unidademedidaDao');
+		// $unidademedida = new unidademedidaDao;
+		// $data['unidademedida']=$unidademedida->listar();
 
 		//fornecedores
-		$this->load->dao('fornecedores/fornecedoresDao');
-		$fornecedores = new fornecedoresDao;
-		$data['fornecedores']=$fornecedores->listar();
+		// $this->load->dao('fornecedores/fornecedoresDao');
+		// $fornecedores = new fornecedoresDao;
+		// $data['fornecedores']=$fornecedores->listar();
 		
 		$this->load->view('includes/header',$data);
 		$this->load->view('produtos/cadastro',$data);
@@ -138,23 +138,22 @@ class gerenciar extends Controller{
 		$marca = isset($_POST['marca']) ? intval($_POST['marca']) : '';
 		$categoria = isset($_POST['categoria']) ? intval($_POST['categoria']) : '';
         $descricao = isset($_POST['descricao']) ? filter_var(trim($_POST['descricao'])) : '';
-		$fornecedores = isset($_POST['fornecedores']) ? filter_var_array($_POST['fornecedores']) : Array();
-
-		$preco_custo = isset($_POST['preco_custo']) ? filter_var($_POST['preco_custo']) : '';
-		$preco_venda = isset($_POST['preco_venda']) ? filter_var($_POST['preco_venda']) : '';
-		$markup = isset($_POST['markup']) ? filter_var($_POST['markup']) : '';
-		$uni_medida = isset($_POST['uni_medida']) ? filter_var(trim($_POST['uni_medida'])) : '';
+		$unidadeMedida = isset($_POST['unidadeMedida']) ? filter_var_array($_POST['unidadeMedida']) : array();
+		//$fornecedores = isset($_POST['fornecedores']) ? filter_var_array($_POST['fornecedores']) : Array();
+		//$preco_custo = isset($_POST['preco_custo']) ? filter_var($_POST['preco_custo']) : '';
+		//$preco_venda = isset($_POST['preco_venda']) ? filter_var($_POST['preco_venda']) : '';
+		//$markup = isset($_POST['markup']) ? filter_var($_POST['markup']) : '';
 
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
 		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(3);
 		$this->load->dataValidator->set('Marca', $marca, 'marca')->is_required();
 		$this->load->dataValidator->set('Categoria', $categoria, 'categoria')->is_required();
-		$this->load->dataValidator->set('Fornecedores', $fornecedores, 'listafornecedores')->is_required();
-		$this->load->dataValidator->set('Preço de custo', $preco_custo, 'preco_custo')->is_required();
-		$this->load->dataValidator->set('Preço de venda', $preco_venda, 'preco_venda')->is_required();
-		$this->load->dataValidator->set('Markup', $markup, 'markup')->is_required();
-		$this->load->dataValidator->set('Unidade de Medida', $uni_medida, 'uni_medida')->is_required();
+		$this->load->dataValidator->set('Unidade de medida', $unidadeMedida, 'unidadeMedida')->is_required();
+		// $this->load->dataValidator->set('Preço de custo', $preco_custo, 'preco_custo')->is_required();
+		// $this->load->dataValidator->set('Preço de venda', $preco_venda, 'preco_venda')->is_required();
+		// $this->load->dataValidator->set('Markup', $markup, 'markup')->is_required();
+		// $this->load->dataValidator->set('Unidade de Medida', $uni_medida, 'uni_medida')->is_required();
 
 		if ($this->load->dataValidator->validate())
 		{
@@ -172,59 +171,79 @@ class gerenciar extends Controller{
 			$categoriasModel = new categoriasModel();
 			$categoriasModel->setId($categoria);
 
-			//UNIDADE DE MEDIDA
-			$this->load->model('produtos/unidademedidaModel');
-			$unidademedidaModel = new unidademedidaModel();
-			$unidademedidaModel->setId($uni_medida);
+			// //UNIDADE DE MEDIDA
+			// $this->load->model('produtos/unidademedidaModel');
+			// $unidademedidaModel = new unidademedidaModel();
+			// $unidademedidaModel->setId($uni_medida);
 
 
 			
 
-			//FORNECEDORES
-			$this->load->model('fornecedores/fornecedoresModel');
-			$this->load->model('produtos/produtofornecedorModel');
-			foreach ($fornecedores as $fornec)
+			//UNIDADES DE MEDIDA
+			$this->load->model('produtos/unidademedidaModel');
+			//$this->load->model('produtos/produtofornecedorModel');
+			foreach ($unidadeMedida as $unidade)
 			{
-				if($fornec['principal'] == 'true')
-					$principal = true;
-				else
-					$principal = false;
-
-				$fornecedoresModel = new fornecedoresModel();
-				$fornecedoresModel->setId($fornec['id']);
-
-				$produtofornecedorModel = new produtofornecedorModel();
-				$produtofornecedorModel->setFornecedor($fornecedoresModel);
-				$produtofornecedorModel->setPrincipal($principal);
-
-				$produtosModel->setFornecedores($produtofornecedorModel);
+				$unidademedidaModel = new unidademedidaModel();
+				$unidademedidaModel->setId($unidade['idUnidadeMedida']);
+				$unidademedidaModel->setNome($unidade['nome_unidade']);
+				$unidademedidaModel->setCodigo($unidade['codigo_unidade']);
+				$unidademedidaModel->setFator($unidade['fator_unidade']);
+				$unidademedidaModel->setOrdem($unidade['ordem']);
+				$produtosModel->setUnidadeMedida($unidademedidaModel);
 			}
 
-			//FORMATAÇÃO DOS DADOS
-			$this->load->library('dataFormat', null, true);
-			$preco_custo = $this->load->dataFormat->formatar($preco_custo,'decimal','banco');
-			$preco_venda = $this->load->dataFormat->formatar($preco_venda,'decimal','banco');
-			$markup = $this->load->dataFormat->formatar($markup,'decimal','banco');
+
+			$cropValues = Array(
+				'w' => $_POST['w'],
+				'h' => $_POST['h'],
+				'x1' => $_POST['x1'],
+				'y1' => $_POST['y1']
+			);
+			$tamanho = Array(
+				'p' =>array(
+						'w' => 404,
+						'h' =>  158
+					)
+			);
+			$nome_foto = '';
+			if(!empty($foto))
+				$nome_foto = md5(date('dmYHis'));
+			try {
+				$this->load->library('uploadFoto');
+				$upload = new uploadFoto('produtos', $foto, $nome_foto, $tamanho, $cropValues);
+				$nome_foto = $upload->getNomeArquivo();
+			} catch (Exception $e) {
+				
+				echo $e->getMessage();
+				return false;
+			}
+
+			// //FORMATAÇÃO DOS DADOS
+			// $this->load->library('dataFormat', null, true);
+			// $preco_custo = $this->load->dataFormat->formatar($preco_custo,'decimal','banco');
+			// $preco_venda = $this->load->dataFormat->formatar($preco_venda,'decimal','banco');
+			// $markup = $this->load->dataFormat->formatar($markup,'decimal','banco');
 
 
 			
-			$produtosModel->setFoto($foto);
+			$produtosModel->setFoto($nome_foto);
 			$produtosModel->setNome($nome);
 			$produtosModel->setMarca($marcasModel);
 			$produtosModel->setCategoria($categoriasModel);
 			$produtosModel->setDescricao($descricao);
-			$produtosModel->setUnidadeMedida($unidademedidaModel);
-
-			$produtosModel->setPrecocusto($preco_custo);
-			$produtosModel->setPrecovenda($preco_venda);
-			$produtosModel->setMarkup($markup);
 			$produtosModel->setStatus(status::ATIVO);
 			$produtosModel->setDataCadastro(date('Y-m-d h:i:s'));
 
 			//PRODUTOS DAO
 			$this->load->dao('produtos/produtosDao');
 			$produtosDao = new produtosDao();
-			echo $produtosDao->inserir($produtosModel);
+			try {
+				echo $produtosDao->inserir($produtosModel);
+			} catch (Exception $e) {
+				echo $e->getMessage();
+				return false;
+			}
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();

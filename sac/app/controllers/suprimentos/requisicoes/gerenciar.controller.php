@@ -58,7 +58,7 @@ class gerenciar extends Controller{
 
 		$this->load->dao('produtos/produtosDao');
 		$produtosDao = new produtosDao();
-		$produtos = $produtosDao->listar();
+		$produtos = $produtosDao->listarAtivos();
 		$data['produtos'] = $produtos;
 
 		

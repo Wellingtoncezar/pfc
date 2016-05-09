@@ -25,8 +25,7 @@ class gerenciar extends Controller{
 		$saveRouter->saveAction();
 		$this->load->checkPermissao->check();
 		$data = array(
-			'titlePage' => 'Funcionários',
-			'template' => new templateFactory()
+			'titlePage' => 'Funcionários'
 		);
 
 		$this->load->dao('funcionarios/funcionariosDao');
@@ -55,7 +54,6 @@ class gerenciar extends Controller{
 
 		$data = array(
 			'titlePage' => 'Cadastrar funcionário',
-			'template' => new templateFactory(),
 			'cargos' => $cargos->listar()
 		);
 		
@@ -80,7 +78,6 @@ class gerenciar extends Controller{
 
 		$data = array(
 			'titlePage' => 'Editar funcionário',
-			'template' => new templateFactory(),
 			'cargos' => $cargos->listar()
 		);
 		//ID
@@ -233,19 +230,22 @@ class gerenciar extends Controller{
 						'h' =>  158
 					)
 			);
-			if(!empty($foto))
-				$nome_foto = md5(date('dmYHis'));
-			$nome_foto = '';
-			try {
-				$this->load->library('uploadFoto');
-				$upload = new uploadFoto('funcionarios', $foto, $nome_foto, $tamanho, $cropValues);
-				$nome_foto = $upload->getNomeArquivo();
-			} catch (Exception $e) {
-				
-				echo $e->getMessage();
-				return false;
-			}
 
+			
+			if(!empty($foto)){
+				$nome_foto = md5(date('dmYHis'));
+				try {
+					$this->load->library('uploadFoto');
+					$upload = new uploadFoto('funcionarios', $foto, $nome_foto, $tamanho, $cropValues);
+					$nome_foto = $upload->getNomeArquivo();
+				} catch (Exception $e) {
+					
+					echo $e->getMessage();
+					return false;
+				}
+			}
+			else
+				$nome_foto = '';
 			
 			$this->load->model('funcionarios/cargosModel');
 
@@ -416,30 +416,32 @@ class gerenciar extends Controller{
 			$dataAdmissao = $this->load->dataFormat->formatar($dataAdmissao,'data','banco');
 			$dataDemissao = $this->load->dataFormat->formatar($dataDemissao,'data','banco');
 
+			if(!empty($foto))
+			{
+				$cropValues = Array(
+					'w' => $_POST['w'],
+					'h' => $_POST['h'],
+					'x1' => $_POST['x1'],
+					'y1' => $_POST['y1']
+				);
+				$tamanho = Array(
+					'p' =>array(
+							'w' => 404,
+							'h' =>  158
+						)
+				);
 
-			$cropValues = Array(
-				'w' => $_POST['w'],
-				'h' => $_POST['h'],
-				'x1' => $_POST['x1'],
-				'y1' => $_POST['y1']
-			);
-			$tamanho = Array(
-				'p' =>array(
-						'w' => 404,
-						'h' =>  158
-					)
-			);
+				if($nome_foto == '')
+					$nome_foto = md5(date('dmYHis'));
 
-			if($nome_foto == '')
-				$nome_foto = md5(date('dmYHis'));
-
-			try {
-				$this->load->library('uploadFoto');
-				$upload = new uploadFoto('funcionarios', $foto, $nome_foto, $tamanho, $cropValues);
-				$nome_foto = $upload->getNomeArquivo();
-			} catch (Exception $e) {
-				echo $e->getMessage();
-				return false;
+				try {
+					$this->load->library('uploadFoto');
+					$upload = new uploadFoto('funcionarios', $foto, $nome_foto, $tamanho, $cropValues);
+					$nome_foto = $upload->getNomeArquivo();
+				} catch (Exception $e) {
+					echo $e->getMessage();
+					return false;
+				}
 			}
 			
 

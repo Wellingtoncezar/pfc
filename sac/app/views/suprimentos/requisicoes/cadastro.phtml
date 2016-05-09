@@ -12,10 +12,10 @@
             <div class="panel-body">
                 
                 
-                <div class="input-group">
+                <!-- <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Código</span>
                     <input type="text" class="form-control" placeholder="Código" name="codigo" >
-                </div>
+                </div> -->
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Título</span>
                     <input type="text" class="form-control" placeholder="Título" name="titulo" >
@@ -29,7 +29,10 @@
                     <select name="listaproduto" class="form-control">
                         <?php if(!empty($produtos)):?>
                         <?php foreach ($produtos as $produto):?>
-                        <option value="<?= $produto->getId()?>" img="<?=URL.'skin/uploads/produtos/p/'?><?=$produto->getFoto()?>"><?=$produto->getNome()?></option>
+                        <?php
+                        $img = ($produto->getFoto() != '') ? URL.'skin/uploads/produtos/p/'.$produto->getFoto() : URL.'skin/img/imagens/produtosemimagem.jpg';
+                        ?>
+                        <option value="<?=$produto->getId()?>" img="<?=$img?>" unidade=""><?=$produto->getNome()?></option>
                         <?php endforeach;?>
                         <?php endif;?>
                     </select>

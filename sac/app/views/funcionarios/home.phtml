@@ -53,7 +53,7 @@
                             '</td>
                         </tr>';
                 endforeach;
-                echo $template->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
+                echo $this->templateFactory->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
             else:
                 echo '<h2>Não há registros cadastrados</h2>';
             endif;

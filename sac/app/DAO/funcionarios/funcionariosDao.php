@@ -69,6 +69,7 @@ class funcionariosDao extends Dao{
 		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
 		$this->db->select();
 
+
 		//FUNCIONARIO
 		if($this->db->rowCount() > 0):
 			$result = $this->db->result();
@@ -164,8 +165,7 @@ class funcionariosDao extends Dao{
 			$funcionario->setStatus(status::getAttribute($result['status_funcionario']));
 			return $funcionario;
 		else:
-			
-			return $funcionariosModel;
+			return $funcionario;
 		endif;
 	}
 

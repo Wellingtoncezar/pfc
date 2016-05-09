@@ -11,7 +11,6 @@
     <div class="middle-content">
             <?php
             $thead = '  <tr>
-                            <th width="100">Código de barras</th>
                             <th width="40">Foto</th>
                             <th width="160">Nome</th>
                             <th width="160">Categoria</th>
@@ -20,7 +19,6 @@
                             <th width="180">Ações</th>
                         </tr>';
             $tfoot = '  <tr>
-                            <th>Código de barras</th>
                             <th>Foto</th>
                             <th>Nome</th>
                             <th>Categoria</th>
@@ -37,7 +35,6 @@
                     $inativo = ($prod->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
                     
             $tbody .='  <tr id="'.$prod->getId().'">
-                            <td>'.$prod->getCodigoBarras().'</td>
                             <td><img src="'.$foto.'" style=" width: 60px; height: 60px;"></td>
                             <td>'.$prod->getNome().'</td>
                             <td>'.$prod->getCategoria().'</td>

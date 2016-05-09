@@ -16,50 +16,102 @@ class produtosDao extends Dao{
 	 * Lista os registros dos produtos
 	 * @return Array
 	 */
-	public function listar()
+	public function listar($condStatus = array())
 	{
+		$this->db->clear();
 		$this->load->model('produtos/produtosModel');
+		$this->load->model('produtos/unidademedidaModel');
 		$produtos = Array();
 
-		$this->db->clear();
+		if(empty($condStatus))
+		{
+			$condStatus = array(
+				status::ATIVO,
+				status::INATIVO
+			);
+		}
+		
+		$cond = "";
+		$n = 1;
+		foreach ($condStatus as $value) {
+			$this->db->setParameter($n,$value);
+			if(count($condStatus) == $n)
+				$cond .= "?";
+			else
+				$cond .= "?,";
+			$n++;
+		}
+
+		$cond = " AND A.status_produto in(".$cond.") ";
+		$cond = "A.id_marca = B.id_marca AND A.id_categoria = C.id_categoria ".$cond;
+
 		$this->db->setTabela('produtos as A, marcas as B, categorias as C');
-		$this->db->setCondicao("A.status_produto in('".status::ATIVO."','".status::INATIVO."') AND A.id_marca = B.id_marca AND A.id_categoria = C.id_categoria");
-		$campos = array('A.id_produto','A.codigo_barras_produto','A.foto_produto','A.nome_produto','B.nome_marca','C.nome_categoria','status_produto');
-		$this->db->select($campos);
-		if($this->db->rowCount() > 0):
+		$this->db->setCondicao($cond);
+
+		$campos = array('A.id_produto','A.foto_produto','A.nome_produto','B.nome_marca','C.nome_categoria','status_produto');
+		if($this->db->select($campos)):
 			$result = $this->db->resultAll();
 			foreach ($result as $value)
 			{
 				$produtosModel = new produtosModel();
 				$produtosModel->setId($value['id_produto']);
-				$produtosModel->setCodigoBarras($value['codigo_barras_produto']);
 				$produtosModel->setFoto($value['foto_produto']);
 				$produtosModel->setNome($value['nome_produto']);
 				$produtosModel->setStatus(status::getAttribute($value['status_produto']));
+
+				$this->db->clear();
+				$this->db->setTabela('unidade_medida');
+				$this->db->setCondicao("id_produto = ?");
+				$this->db->setParameter(1, $value['id_produto']);
+				if($this->db->select())
+				{
+					$unidadeMedida = $this->db->resultAll();
+					foreach ($unidadeMedida as $unidade)
+					{
+						$unidademedidaModel = new unidademedidaModel();
+						$unidademedidaModel->setId($unidade['id_unidade_medida']);
+						$unidademedidaModel->setNome($unidade['nome_unidade_medida']);
+						$unidademedidaModel->setCodigo($unidade['codigo_unidade_medida']);
+						$unidademedidaModel->setFator($unidade['fator_unidade_medida']);
+						$unidademedidaModel->setOrdem($unidade['ordem']);
+						$produtosModel->setUnidadeMedida($unidademedidaModel);
+					}
+				}
+
 				array_push($produtos, $produtosModel);
 				unset($produtosModel);
 			}
 			return $produtos;
 		else:
-			
-			return $produtosModel;
+			return $produtos;
 		endif;
 	}
 
+	/**
+	 * Retorna lista de produtos ativos
+	 * @return object [produtosModel]
+	 */
+	public function listarAtivos()
+	{
+		$condStatus = array(
+			status::ATIVO
+		);
+		return $this->listar($condStatus);
+	}
 
 	/**
 	 * Retorna a consulta de um produto pelo id
-	 * @return object [funcionariosModel]
+	 * @return object [produtosModel]
 	 */
 	public function consultar(produtosModel $produto)
 	{
 		$this->db->clear();
-		$this->db->setTabela('produtos as a , categorias as b , marcas as c');
-		$this->db->setCondicao("a.id_produto = '".$produto->getId()."' and b.id_categoria = a.id_categoria and c.id_marca = a.id_marca");
-		$this->db->select();
+		$this->db->setTabela('produtos as a, categorias as b , marcas as c');
+		$this->db->setCondicao("a.id_produto = ? and b.id_categoria = a.id_categoria and c.id_marca = a.id_marca");
+		$this->db->setParameter(1, $produto->getId());
 
 		//PRODUTO
-		if($this->db->rowCount() > 0):
+		if($this->db->select()):
 			$result = $this->db->result();
 			//CATEGORIA
 			$this->load->model('produtos/categoriasModel');
@@ -77,52 +129,11 @@ class produtosDao extends Dao{
 			$marcasModel->setStatus(status::getAttribute($result['status_marca']));
 			$marcasModel->setDataCadastro($result['data_cadastro_marca']);
 			
-			//FORNECEDORES
-			$this->db->clear();
-		    $this->db->setTabela('produto_fornecedores as a , fornecedores as b ');
-		    $this->db->setCondicao("a.id_produto = '".$produto->getId()."' and a.id_fornecedor = b.id_fornecedor");
-		    $this->db->select();
-		    
-
-		    if($this->db->rowCount() > 0):
-
-		    	$resultFornec = $this->db->resultAll();
-				//FORNECEDORES
-				$this->load->model('fornecedores/fornecedoresModel');
-				$this->load->model('produtos/produtofornecedorModel');
-				foreach ($resultFornec as $fornec)
-				{
-					/*
-					if($fornec['principal'] == 'true')
-						$principal = true;
-					else
-						$principal = false;
-					*/
-					$fornecedoresModel = new fornecedoresModel();
-					$fornecedoresModel->setId($fornec['id_fornecedor']);
-					$fornecedoresModel->setRazaoSocial($fornec['razao_social_fornecedor']);
-					$fornecedoresModel->setFoto($fornec['foto_fornecedor']);
-					
-
-					$produtofornecedorModel = new produtofornecedorModel();
-					$produtofornecedorModel->setFornecedor($fornecedoresModel);
-					$produtofornecedorModel->setPrincipal($fornec['fornecedor_principal']);
-
-					$produto->setFornecedores($produtofornecedorModel);
-				}
-
-			endif;
-
 			$produto->setFoto($result['foto_produto']);
 			$produto->setNome($result['nome_produto']);
 			$produto->setMarca($marcasModel);
 			$produto->setCategoria($categoriasModel);
 			$produto->setDescricao($result['descricao_produto']);
-			//$produto->setUnidadeMedida($unidademedidaModel);
-
-			$produto->setPrecocusto($result['preco_custo']);
-			$produto->setPrecovenda($result['preco_venda']);
-			$produto->setMarkup($result['markup_produto']);
 			$produto->setStatus(status::getAttribute($result['status_produto']));
 			$produto->setDataCadastro($result['data_cadastro_produto']);
 		endif;
@@ -137,25 +148,35 @@ class produtosDao extends Dao{
 	 */
  	public function inserir(produtosModel $produto)
  	{
- 		
+ 		$data = array(
+ 			'foto_produto' => $produto->getFoto(),
+ 			'nome_produto' => $produto->getNome(),
+ 			'id_marca' => $produto->getMarca()->getId(),
+ 			'id_categoria' => $produto->getCategoria()->getId(),
+ 			'descricao_produto' => $produto->getDescricao(),
+ 			'status_produto' => $produto->getStatus(),
+ 			'data_cadastro_produto' => $produto->getDataCadastro()
+ 		);
 
-	 	if($produto->getFoto() != '')
-	 	{
-	  		//nome da imagem
-	 		$char = new caracteres($produto->getNome());
-	 		$this->nomeArquivoFoto = $char->getValor().'_'.date('HisdmY').'';
-			
-	 		$upload = $this->uploadFoto($this->nomeArquivoFoto, $produto->getFoto()); //upload da foto
-	 		if($upload)
-	 			return $this->insertData($produto);
-	 		else
-	 			return $upload;
-	 	}else
+
+ 		$this->db->clear();
+		$this->db->setTabela('produtos');
+		$this->db->insert($data);
+		if($this->db->rowCount() > 0)
 		{
-			return $this->insertData($produto);
-		}
+			$produto->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
 
-	 }
+			//FORNECEDORES
+			if(!empty($produto->getUnidadeMedida()))
+			 	$this->atualizaUnidadeMedida($produto);
+			return true;
+ 		}else
+ 		{
+ 			throw new Exception($this->db->getError(), 1);
+ 		}
+	 	
+
+	}
 
 	/**
 	 * Atualiza produtos
@@ -192,42 +213,7 @@ class produtosDao extends Dao{
 	}
 
 
-	public function insertData(produtosModel $produto)
-	{
- 		$data = array(
- 			'nome_produto' => $produto->getNome(),
- 			'id_marca' => $produto->getMarca()->getId(),
- 			'id_categoria' => $produto->getCategoria()->getId(),
- 			'descricao_produto' => $produto->getDescricao(),
- 			'preco_custo' => $produto->getPrecocusto(),
- 			'preco_venda' => $produto->getPrecovenda(),
- 			'markup_produto' => $produto->getMarkup(),
- 			'id_unidade_medida' => $produto->getUnidadeMedida()->getId(),
- 			'status_produto' => $produto->getStatus(),
- 			'data_cadastro_produto' => $produto->getDataCadastro()
- 		);
-
-
- 		$this->db->clear();
-		$this->db->setTabela('produtos');
-		$this->db->insert($data);
-		if($this->db->rowCount() > 0)
-		{
-			$produto->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
-
-			//FORNECEDORES
-			if(!empty($produto->getFornecedores()))
-			 	$this->atualizaFornecedores($produto);
-
-			return true;
- 		}else
- 		{
- 			return json_encode(array('erro'=>'Erro ao inserir registro'));
- 		}
- 		
- 	}
-
- 	private function updateData(produtosModel $produto)
+	private function updateData(produtosModel $produto)
 	{
 
  		$data = array(
@@ -257,7 +243,7 @@ class produtosDao extends Dao{
 		
 			//FORNECEDORES
 			if(!empty($produto->getFornecedores()))
-			 	$this->atualizaFornecedores($produto);
+			 	$this->atualizaUnidadeMedida($produto);
 
 			return true;
  		}else
@@ -273,42 +259,43 @@ class produtosDao extends Dao{
  	 * 
  	 * @return void
  	 */
- 	private function atualizaFornecedores(produtosModel $produto)
+ 	private function atualizaUnidadeMedida(produtosModel $produto)
 	{
-
 		//excluir
-		$fornecedorExcluir = array();
-		foreach ($produto->getfornecedores() as $fornecedor)
+		$naoExcluirUnidade = array();
+		foreach ($produto->getUnidadeMedida() as $unidade)
 		{
-			if($fornecedor->getId() != '')
-				array_push($fornecedorExcluir,$fornecedor->getFornecedor()->getId());
+			if($unidade->getId() != '')
+				array_push($naoExcluirUnidade,$unidade->getFornecedor()->getId());
 		}
 		$cond = '';
-		if(!empty($fornecedorExcluir))
+		if(!empty($naoExcluirUnidade))
 		{
-			$fornecedorExcluir = implode(',', $fornecedorExcluir);
+			$naoExcluirUnidade = implode(',', $naoExcluirUnidade);
 			$this->db->clear();
-			$cond = " AND id_fornecedor not in (".$fornecedorExcluir.")";
+			$cond = " AND id_unidade_medida not in (".$naoExcluirUnidade.")";
 		}
-		$sql = "DELETE FROM produto_fornecedores WHERE id_produto = '".$produto->getId()."' $cond";
+		$sql = "DELETE FROM unidade_medida WHERE id_produto = '".$produto->getId()."' $cond";
 		$this->db->query($sql);
 		if($this->db->rowCount() > 0)
 
 		$this->db->clear();
-		$this->db->setTabela('produto_fornecedores');
-		foreach ($produto->getFornecedores() as $fornecedores)
+		$this->db->setTabela('unidade_medida');
+		foreach ($produto->getUnidadeMedida() as $unidade)
 		{
-			if(!empty($fornecedores))
+			if(!empty($unidade))
 			{
 				$data = array(
 					'id_produto' => $produto->getId(),
-					'id_fornecedor' => $fornecedores->getFornecedor()->getId(),
-					'fornecedor_principal' =>$fornecedores->getPrincipal()
+					'nome_unidade_medida' => $unidade->getNome(),
+					'codigo_unidade_medida' => $unidade->getCodigo(),
+					'fator_unidade_medida' => $unidade->getFator(),
+					'ordem' => $unidade->getOrdem()
 				);
 
-				if($fornecedores->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
+				if($unidade->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
 				{
-					$this->db->setCondicao('id_produto_fornecedor = "'.$fornecedores->getId().'"');
+					$this->db->setCondicao('id_unidade_medida = "'.$unidade->getId().'"');
 					$this->db->update($data);
 				}else{
 					$this->db->insert($data);

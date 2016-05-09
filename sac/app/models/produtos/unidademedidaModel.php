@@ -6,7 +6,9 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class unidademedidaModel{
 	private $id;
 	private $nome;
-	private $abreviacao;
+	private $codigo;
+	private $fator;
+	private $ordem;
 	
 
 
@@ -20,9 +22,19 @@ class unidademedidaModel{
 		$this->nome = $nome;
 	}
 
-	public function setAbreviacao($abreviacao)
+	public function setCodigo($codigo)
 	{
-		$this->abreviacao = $abreviacao;
+		$this->codigo = $codigo;
+	}
+
+	public function setFator($fator)
+	{
+		$this->fator = $fator;
+	}
+
+	public function setOrdem($ordem)
+	{
+		$this->ordem = $ordem;
 	}
 	
 
@@ -35,9 +47,17 @@ class unidademedidaModel{
 	{
 		return $this->nome;
 	}
-	public function getAbreviacao()
+	public function getCodigo()
 	{
-		return $this->abreviacao;
+		return $this->codigo;
+	}
+	public function getFator()
+	{
+		return $this->fator;
+	}
+	public function getOrdem()
+	{
+		return $this->ordem;
 	}
 
 }
