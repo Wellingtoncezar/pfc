@@ -5,7 +5,7 @@
         echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
     <div class="page-header">
-      <h1>Painel de Cotações</h1>
+      <h1>Cotações</h1>
     </div>
     <div class="middle-content">
         <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
@@ -13,35 +13,50 @@
             <thead>
                 <tr>   
                     <th width="100">Código</th>
-                    <th width="160">Nome</th>
+                    <th width="160">Requisição</th>
+                    <th width="160">Titulo</th>
+                    <th width="160">Fornecedor</th>
+                    <th width="160">Data</th>
+                    <th width="160">Status</th>
                     <th width="180">Ações</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
-                    <th>Código</th>
-                    <th>Nome</th>
-                    <th>Ações</th>
+                   <td width="100">Código</td>
+                    <td width="160">Requisição</td>
+                    <td width="160">Titulo</td>
+                    <td width="160">Fornecedor</td>
+                    <th width="160">Data</th>
+                    <td width="160">Status</td>
+                    <td width="180">Ações</td>
                 </tr>
             </tfoot>
             <tbody>
             <?php
-            if(!empty($marcas)):
-                foreach ($marcas as $marc):
+            if(!empty($cotacoes)):
+                foreach ($cotacoes as $cotacao):
             ?>
-                <tr id="<?=$marc->getId()?>">
-                    <td><?=$marc->getId()?></td>
-                    <td><?=$marc->getNome()?></td>
+                <tr id="<?=$requsicao->getId()?>">
+                    <td><?=$requsicao->getCodigo()?></td>
+                    <td><?=$requsicao->getUsuario()->getNome()?></td>
+                    <td><?=$requsicao->getTitulo()?></td>
+                    <td><?=$requsicao->getData()?></td>
+                    <td><?=$requsicao->getStatus()?></td>
+                    <td><?=$requsicao->getAcoes()?></td>
+
                     <td>
-                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/marcas/gerenciar/editar/<?=$marc->getId()?>" role="button" id-record="<?=$marc->getId()?>" ><span class="glyphicon glyphicon-ok"></span> Aprovar</a>
-                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$marc->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span> Reprovar</a>
+                        <?= $this->templateFactory->getButton('visualizar', array('id'=> $cotacao->getId()), URL.'suprimentos/cotacoes/gerenciar/visualizar/')?>
+                        <?= $this->templateFactory->getButton('cotar', array('id'=> $cotacao->getId()), URL.'suprimentos/cotacoes/gerenciar/cotar/')?>
+                       <?= $this->templateFactory->getButton('ignorar', array('id'=> $cotacao->getId()), URL.'suprimentos/cotacoes/gerenciar/visualizar/')?>
+                        
                     </td>
                 </tr>
             <?php
                 endforeach;
             endif;
             ?>
-                
+        
             </tbody>
         </table>
     </div>
@@ -56,12 +71,12 @@
         });
 
         //EXCLUIR
-        table.$('.btn_excluir').on('click',function(){
+        table.$('.btn_cancelar').on('click',function(){
             var id = $(this).attr('id');
             var status = $(this).data('value');
             var modalDelete = $('#modalDelete').modal('show')
             $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'produtos/marcas/gerenciar/excluir',{id:id,status:status},function(data){
+                $.post(url+'suprimentos/cotacoes/gerenciar/cancelar',{id:id,status:status},function(data){
                     console.log(data)
                     if(data == true){
                         $('#modalDelete').modal('hide');

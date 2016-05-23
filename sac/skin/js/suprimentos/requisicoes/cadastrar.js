@@ -29,7 +29,7 @@ $(function(){
 									  		+'<div class="form-group">'
 									    		+'<label>Quantidade</label>'
 									    		+'<input type="number" name="quantidade" value="0" class="form-control">'
-									    		+'<div class="input-group-addon">.00</div>'
+									    		+'<div class="input-group-addon">.</div>'
 									  		+'</div>'
 		                            		+'<p><a href="javascript:void()" class="btn btn-danger btn_excluir" id='+idProduto+' role="button">Remover</a></p>'
 		                         		+'</div>'
