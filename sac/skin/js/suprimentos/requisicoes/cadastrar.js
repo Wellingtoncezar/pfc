@@ -16,7 +16,7 @@ $(function(){
 			
 			var nomeproduto = $('select[name=listaproduto] option:selected').html();
 			var imgProduto = $('select[name=listaproduto] option:selected').attr('img');
-			var elemProduto = 	'<div class="col-sm-6 col-md-2" id=produto_'+idProduto+'>'
+			var elemProduto = 	'<div class="col-sm-6 col-md-2 itemProduto" id=produto_'+idProduto+'>'
 									+'<input type="hidden" name="id_produto_requisicao" value="">'
 									+'<input type="hidden" name="id_produto" value="'+idProduto+'">'
 		                       		+'<div class="thumbnail">'
@@ -49,4 +49,39 @@ $(function(){
 
 
 	
+	$('#form_requisicao').submit(function(){
+    	//email
+        var produtos = Object();
+        var quantidade = 1;
+        var cont = 0;
+        $('.listProdutos .itemProduto').each(function(){
+            var aux = Object();
+
+            var id_produto_requisicao = $('input[name=id_produto_requisicao]', this).val();
+			var id_produto = $('input[name=id_produto]', this).val();
+			var quantidade = $('input[name=quantidade]', this).val();
+
+
+            aux['id_produto_requisicao'] = id_produto_requisicao;
+            aux['id_produto'] = id_produto;
+            aux['quantidade'] = quantidade;
+            produtos[cont] = aux;
+            cont++;
+        });
+
+		console.log(produtos);
+
+
+
+    	var parameters = Object();
+        parameters['produtos'] = produtos;
+
+        //parameters['preco_venda'] = $('input[name=preco_venda]').val()
+        $('#form_requisicao').uploadForm({
+            'reload':true,
+            'parameters' : parameters
+        });
+        
+        return false;
+    });
 })

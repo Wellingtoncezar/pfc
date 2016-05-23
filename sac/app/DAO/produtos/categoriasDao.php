@@ -111,13 +111,17 @@ class categoriasDao extends Dao{
  		$this->db->clear();
 		$this->db->setTabela('categorias');
 		$this->db->setCondicao ("id_categoria = '".$categoria->getId()."'");
-		if($this->db->update($data))
-		{
-			return true;
- 		}else
- 		{
- 			return $this->db->getError();
- 		}
+		try {
+			if($this->db->update($data))
+			{
+				return true;
+	 		}else
+	 		{
+	 			return $this->db->getError();
+	 		}
+		} catch (Exception $e) {
+			throw new Exception($e, 1);
+		}
  	}
 
 	

@@ -85,15 +85,10 @@ class gerenciar extends Controller{
 		$this->load->dao('produtos/produtosDao');
 		$this->load->dao('produtos/marcasDao');
 		$this->load->dao('produtos/categoriasDao');
-		$this->load->dao('produtos/unidademedidaDao');
-
-		$saveRouter = new saveRouter;
-		$saveRouter->saveModule();
-		$saveRouter->saveAction();
+		// $this->load->dao('produtos/unidademedidaDao');
 
 		$data = array(
-			'titlePage' => 'Editar Produto',
-			'dataFormat' => new dataFormat
+			'titlePage' => 'Editar Produto'
 		);
 
 		$idProduto = $this->load->url->getSegment(3);
@@ -112,14 +107,10 @@ class gerenciar extends Controller{
 		$categorias = new categoriasDao;
 		$data['categorias']=$categorias->listar();
 
-		//unidades de medida
-		$unidademedida = new unidademedidaDao;
-		$data['unidademedida']=$unidademedida->listar();
-
-		//fornecedores
-		$this->load->dao('fornecedores/fornecedoresDao');
-		$fornecedores = new fornecedoresDao;
-		$data['fornecedores']=$fornecedores->listar();
+		// //fornecedores
+		// $this->load->dao('fornecedores/fornecedoresDao');
+		// $fornecedores = new fornecedoresDao;
+		// $data['fornecedores']=$fornecedores->listar();
 		
 		$this->load->view('includes/header',$data);
 		$this->load->view('produtos/editar',$data);
@@ -141,8 +132,8 @@ class gerenciar extends Controller{
 		$unidadeMedida = isset($_POST['unidadeMedida']) ? filter_var_array($_POST['unidadeMedida']) : array();
 		//$fornecedores = isset($_POST['fornecedores']) ? filter_var_array($_POST['fornecedores']) : Array();
 		//$preco_custo = isset($_POST['preco_custo']) ? filter_var($_POST['preco_custo']) : '';
-		//$preco_venda = isset($_POST['preco_venda']) ? filter_var($_POST['preco_venda']) : '';
-		//$markup = isset($_POST['markup']) ? filter_var($_POST['markup']) : '';
+		$preco_venda = isset($_POST['preco_venda']) ? filter_var($_POST['preco_venda']) : '';
+		$markup = isset($_POST['markup']) ? filter_var($_POST['markup']) : '';
 
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
@@ -220,11 +211,10 @@ class gerenciar extends Controller{
 			}
 
 			// //FORMATAÇÃO DOS DADOS
-			// $this->load->library('dataFormat', null, true);
+			$this->load->library('dataFormat', null, true);
 			// $preco_custo = $this->load->dataFormat->formatar($preco_custo,'decimal','banco');
-			// $preco_venda = $this->load->dataFormat->formatar($preco_venda,'decimal','banco');
-			// $markup = $this->load->dataFormat->formatar($markup,'decimal','banco');
-
+			$preco_venda = $this->load->dataFormat->formatar($preco_venda,'decimal','banco');
+			$markup = $this->load->dataFormat->formatar($markup,'decimal','banco');
 
 			
 			$produtosModel->setFoto($nome_foto);
@@ -232,6 +222,8 @@ class gerenciar extends Controller{
 			$produtosModel->setMarca($marcasModel);
 			$produtosModel->setCategoria($categoriasModel);
 			$produtosModel->setDescricao($descricao);
+			$produtosModel->setPrecoVenda($preco_venda);
+			$produtosModel->setMarkup($markup);
 			$produtosModel->setStatus(status::ATIVO);
 			$produtosModel->setDataCadastro(date('Y-m-d h:i:s'));
 

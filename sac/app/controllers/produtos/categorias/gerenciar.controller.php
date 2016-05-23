@@ -176,9 +176,13 @@ class gerenciar extends Controller{
 
 
 			//CATEGORIA DAO
-			$this->load->dao('produtos/categoriasDao');
-			$categoriasDao = new categoriasDao();
-			echo $categoriasDao->atualizar($categoriasModel);
+			try {
+				$this->load->dao('produtos/categoriasDao');
+				$categoriasDao = new categoriasDao();
+				echo $categoriasDao->atualizar($categoriasModel);
+			} catch (Exception $e) {
+				echo $e->getMessage();
+			}
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();

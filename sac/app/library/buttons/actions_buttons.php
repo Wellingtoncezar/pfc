@@ -1,8 +1,8 @@
 <?php
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class actions_buttons extends loadContent implements ITemplate {
+class actions_buttons implements ITemplate {
 	private $atrDefault;
-	public function getContent(Array $atr = null)
+	public function getContent(loadContent $load, Array $atr = null)
 	{
 		$this->atrDefault = array(
 			'buttons' => ''
@@ -16,6 +16,6 @@ class actions_buttons extends loadContent implements ITemplate {
 			}
 		}
 
-		return parent::load('template/actions_buttons/actions_buttons',$this->atrDefault);
+		return $load->load('template/actions_buttons/actions_buttons',$this->atrDefault);
 	}
 }

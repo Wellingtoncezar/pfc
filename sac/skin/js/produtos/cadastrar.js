@@ -57,20 +57,20 @@ $(function(){
  //  		}
  //  	}
 
-	// //preco de venda automático
- //  	$('input[name=precoVendaAutomatico]').change(function(){
- //  		if($(this).is(':checked')){
- //  			$('input[name=markup]').val('0,00')
- //  			$('.boxmarkup').show()
- //  			$('input[name=preco_venda]').attr('disabled','disabled');
- //  			calcprecovenda()
- //  		}else{
- //  			$('.boxmarkup').hide();
- //  			$('input[name=markup]').val('0,00')
- //  			$('input[name=preco_venda]').removeAttr('disabled');
- //  			calcprecovenda()
- //  		}
- //  	});
+	//preco de venda automático
+  	$('input[name=precoVendaAutomatico]').change(function(){
+  		if($(this).is(':checked')){
+  			$('input[name=markup]').val('0,00')
+  			$('.boxmarkup').show()
+  			$('input[name=preco_venda]').attr('disabled','disabled');
+  			//calcprecovenda()
+  		}else{
+  			$('.boxmarkup').hide();
+  			$('input[name=markup]').val('0,00')
+  			$('input[name=preco_venda]').removeAttr('disabled');
+  			//calcprecovenda()
+  		}
+  	});
 
  //  	function calcprecovenda()
  //  	{

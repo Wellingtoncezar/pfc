@@ -154,10 +154,12 @@ class produtosDao extends Dao{
  			'id_marca' => $produto->getMarca()->getId(),
  			'id_categoria' => $produto->getCategoria()->getId(),
  			'descricao_produto' => $produto->getDescricao(),
+ 			'preco_venda_produto' => $produto->getPrecoVenda(),
+ 			'markup_produto' => $produto->getMarkup(),
  			'status_produto' => $produto->getStatus(),
  			'data_cadastro_produto' => $produto->getDataCadastro()
  		);
-
+ 
 
  		$this->db->clear();
 		$this->db->setTabela('produtos');

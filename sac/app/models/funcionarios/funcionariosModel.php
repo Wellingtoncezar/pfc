@@ -21,7 +21,7 @@ class funcionariosModel{
 	private $cargo;
 	private $dataAdmissao;
 	private $dataDemissao;
-	private $status;
+	private $status = status::ATIVO;
 	private $dataCadastro;
 	private $dataAtualizacao;
 
@@ -70,11 +70,19 @@ class funcionariosModel{
 	{
 		$this->endereco = $endereco;
 	}
-	public function setTelefones(telefoneModel $telefones)
+	public function setTelefones($telefones)
+	{
+		$this->telefones = $telefones;
+	}
+	public function addTelefone(telefoneModel $telefones)
 	{
 		array_push($this->telefones, $telefones);
 	}
-	public function setEmail(emailModel $email)
+	public function setEmails(emailModel $email)
+	{
+		$this->email = $email;
+	}
+	public function addEmail(emailModel $email)
 	{
 		array_push($this->email, $email);
 	}
@@ -94,10 +102,6 @@ class funcionariosModel{
 	{
 		$this->dataDemissao = $dataDemissao;
 	}
-	public function setStatus($status)
-	{
-		$this->status = $status;
-	}
 	public function setDataCadastro($dataCadastro)
 	{	
 		$this->dataCadastro = $dataCadastro;
@@ -106,7 +110,22 @@ class funcionariosModel{
 	{	
 		$this->dataAtualizacao = $dataAtualizacao;
 	}
-
+	public function setStatus($status)
+	{
+		$this->status = $status;
+	}
+	public function ativar()
+	{
+		$this->status = status::ATIVO;
+	}
+	public function inativar()
+	{
+		$this->status = status::INATIVO;
+	}
+	public function excluir()
+	{
+		$this->status = status::EXCLUIDO;
+	}
 
 	//GETERS
 	public function getId()

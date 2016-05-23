@@ -185,7 +185,7 @@ class gerenciar extends Controller{
 				$telefoneModel->setNumero( $telefone['telefone'] );
 				$telefoneModel->setOperadora( $telefone['operadora'] );
 				$telefoneModel->setTipo( $telefone['tipo_telefone'] );
-				$funcionariosModel->setTelefones($telefoneModel);
+				$funcionariosModel->addTelefone($telefoneModel);
 			}
 
 
@@ -195,7 +195,7 @@ class gerenciar extends Controller{
 				$emailModel = new emailModel();
 				$emailModel->setEmail( $email['email'] );
 				$emailModel->setTipo( $email['tipo_email'] );
-				$funcionariosModel->setEmail($emailModel);
+				$funcionariosModel->addEmail($emailModel);
 			}
 
 
@@ -495,7 +495,13 @@ class gerenciar extends Controller{
 		$this->load->model('funcionarios/funcionariosModel');
 		$funcionariosModel = new funcionariosModel();
 		$funcionariosModel->setId( $idFuncionario );
-		$funcionariosModel->setStatus( status::getAttribute($status));
+		if(status::getAttribute($status) == status::EXCLUIDO)
+			$funcionariosModel->excluir();
+		else
+		if(status::getAttribute($status) == status::INATIVO)
+			$funcionariosModel->inativar();
+		else
+			$funcionariosModel->ativar();
 
 		//FUNCIONARIO DAO
 		$this->load->dao('funcionarios/funcionariosDao');

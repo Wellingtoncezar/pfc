@@ -37,6 +37,8 @@ class db extends activeRecord{
 
 		$this->pdo = Conn::connect();
 		$this->error = new error_db();
+		$this->errorCode = null;
+		$this->errorCodeName = null;
 	}
 
 	public function __destruct()
@@ -64,14 +66,15 @@ class db extends activeRecord{
 		}
 
 
-		$this->res = new insert($this->getElementQuery());
-		$this->sql = $this->res->getQuery();
-		$this->errorCode = 'NULLINSERT';
-		$this->errorCodeName = 'inserir';
-		if($this->prepareQuery($this->sql)){
-			return true;
-		}else
-			throw new Exception($this->error->getMensagemErro($this->errorCode, $this->errorCodeName), 1);
+		//try {
+			$this->res = new insert($this->getElementQuery());
+			$this->sql = $this->res->getQuery();
+			$this->errorCode = 'NULLINSERT';
+			$this->errorCodeName = 'inserir';
+			return $this->prepareQuery($this->sql);
+		// } catch (error_db $e) {
+		// 	throw new error_db($e);
+		// }
 			
 	}
 
@@ -91,12 +94,13 @@ class db extends activeRecord{
 		{
 			die('Parâmetros do insert passados incorretamente');
 		}
+		
 		$this->res = new update($this->getElementQuery());
-
 		$this->sql = $this->res->getQuery();
 		$this->errorCode = 'NULLUPDATE';
 		$this->errorCodeName = 'editar';
 		return $this->prepareQuery($this->sql);
+		
 	}
 
 
@@ -150,6 +154,7 @@ class db extends activeRecord{
 
 	private function prepareQuery()
 	{
+
 		try{
 			$this->statement = $this->pdo->prepare($this->sql);
 		    $this->statement->execute($this->res->getParamArray());
@@ -165,10 +170,8 @@ class db extends activeRecord{
 			}
 		}catch (PDOException $e)
 		{
-			$this->errorCode = $e;
-		    $this->rows_affected = 0;
-			$error = $this->error->getMensagemErro($e, $this->errorCodeName);
-			return $error;
+			return false;
+			//throw new Exception($this->error->getMensagemErro($e, $this->errorCodeName));
 		}
 	}
 

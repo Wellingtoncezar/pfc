@@ -73,9 +73,18 @@ class fornecedoresModel{
 	{
 		$this->telefones = $telefones;
 	}
-	public function setEmail($email)
+	public function addTelefone(telefoneModel $telefone)
+	{
+		array_push($this->telefones, $telefone);
+	}
+	public function setEmails($email)
 	{
 		$this->email = $email;
+	}
+
+	public function addEmail(emailModel $email)
+	{
+		array_push($this->email, $email);
 	}
 	public function setDataVisita($data_visita)
 	{

@@ -22,7 +22,7 @@ class checknivelacesso{
 				$index_access_db_name = 'userlogin'; // define o usuário do banco como userlogin (usuário apenas de login)
 		}else
 		{
-			$index_access_db_name = 'userlogin';// define o usuário do banco como userlogin (usuário apenas de login)
+			$index_access_db_name = 'default';// define o usuário do banco como userlogin (usuário apenas de login)
 		}
 
 		//cria as constantes de acesso ao banco de dados(hostname, username, password, dbname, mysqlport)

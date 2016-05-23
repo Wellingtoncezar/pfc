@@ -1,18 +1,18 @@
 <div class="container">
-        <?php
-        $btnVoltar = $this->templateFactory->getButton('voltar',array('href'=>URL.'produtos/gerenciar'));
-        echo $this->templateFactory->getButton('actions_buttons',array('buttons'=>$btnVoltar));
-        ?>
+    <?php
+    $btnVoltar = $this->templateFactory->getButton('voltar',array('href'=>URL.'produtos/gerenciar'));
+    echo $this->templateFactory->getButton('actions_buttons',array('buttons'=>$btnVoltar));
+    ?>
     <div class="page-header">
-      <h1>Produtos<small> Editar</small></h1>
+        <h1>Produtos<small> Cadastro</small></h1>
     </div>
-    <form action="<?=URL?>produtos/gerenciar/atualizar" method="post" id="form_produto">
+    <form action="<?=URL?>produtos/gerenciar/inserir" method="post" id="form_produto">
         <div class="panel panel-default">
             <div class="panel-heading">Dados Gerais</div>
             <div class="panel-body">
 
-                <div class="row">
-                    <div class="col-xs-6 col-md-3">
+                <div class="row col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                    <div class="col-xs-6 col-md-12">
                         <label for="foto" class="thumbnail inputFoto preview-lg">
                             <div class="thumbnail img-preview preview-lg">
                                 <img src="<?=URL?>skin/img/imagens/forn.jpg" id="img_previous">
@@ -21,58 +21,43 @@
                         </label>
                     </div>
                 </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Nome</span>
-                    <input type="text" class="form-control" placeholder="Nome" aria-describedby="basic-addon1" name="nome" value="<?=$produto->getNome()?>">
-                </div>
+                <div class="row col-xs-6 col-md-3 col-sm-9 col-lg-9">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Nome</span>
+                        <input type="text" class="form-control" placeholder="Nome" aria-describedby="basic-addon1" name="nome" value="<?=$produto->getNome()?>"/>
+                    </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Marca</span>
-                    <select name="marca" id="marca" class="form-control">
-                        <option selected="selected" disabled="disabled" value="">..Selecione..</option>
-                        <?php if(!empty($marcas)):?>
-                        <?php foreach ($marcas as $marca):?>
-                        <option value="<?= $marca->getId()?>" <?=($produto->getMarca()->getId() == $marca->getId()) ? 'selected="selected"' : ''?>><?= $marca->getNome()?></option>
-                        <?php endforeach;?>
-                        <?php endif;?>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Categoria</span>
-                    <select name="categoria" id="categoria" class="form-control">
-                        <option selected="selected" disabled="disabled" value="">..Selecione..</option>
-                        <?php if(!empty($categorias)):?>
-                        <?php foreach ($categorias as $categoria):?>
-                        <option value="<?= $categoria->getId()?>" <?=($produto->getCategoria()->getId() == $categoria->getId()) ? 'selected="selected"' : ''?>><?= $categoria->getNome()?></option>
-                        <?php endforeach;?>
-                        <?php endif;?>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Descrição</span>
-                    <textarea class="form-control" placeholder="Descrição" name="descricao"><?=$produto->getDescricao()?></textarea>
-                </div>
-
-                 <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Fornecedor</span>
-                    <select name="listafornecedores" class="form-control">
-                        <?php if(!empty($fornecedores)):?>
-                        <?php foreach ($fornecedores as $fornecedores):?>
-                        <option value="<?= $fornecedores->getId()?>"><?= $fornecedores->getNomeFantasia()?></option>
-                        <?php endforeach;?>
-                        <?php endif;?>
-                    </select>
-                    <span class="input-group-addon" id="basic-addon1"><a href="javascript:void(0)" class="addFornecedor"><span class="glyphicons glyphicons-plus"></span></a></span>
-                </div>
-
-                <div class="listFornecedores">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Marca</span>
+                        <select name="marca" id="marca" class="form-control">
+                            <option selected="selected" disabled="disabled" value="">..Selecione..</option>
+                            <?php if(!empty($marcas)):?>
+                            <?php foreach ($marcas as $marca):?>
+                            <option value="<?= $marca->getId()?>" <?=($marca->getId() == $produto->getMarca()->getId())? 'selected="selected"' : ''?>><?= $marca->getNome()?></option>
+                            <?php endforeach;?>
+                            <?php endif;?>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Categoria</span>
+                        <select name="categoria" id="categoria" class="form-control">
+                            <option selected="selected" disabled="disabled" value="">..Selecione..</option>
+                            <?php if(!empty($categorias)):?>
+                            <?php foreach ($categorias as $categoria):?>
+                            <option value="<?= $categoria->getId()?>" <?=($categoria->getId() == $produto->getCategoria()->getId())? 'selected="selected"' : ''?>><?= $categoria->getNome()?></option>
+                            <?php endforeach;?>
+                            <?php endif;?>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Descrição</span>
+                        <textarea class="form-control" placeholder="Descrição" name="descricao"><?=$produto->getDescricao()?></textarea>
+                    </div>
                 </div>
             </div> 
 
 
         </div> <!-- fim panel dados gerais -->
-        
         <?php 
         $inputPrecoVenda = '';
         $checkPrecoVenda = '';
@@ -83,42 +68,43 @@
             $showMarkup = ' style="display:table"';
         }
         ?>
-       
         <div class="panel panel-default">
             <div class="panel-heading">Valores</div>
             <div class="panel-body">
-   
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Preço de Custo R$</span>
-                    <input type="text" class="form-control" placeholder="Preço de Custo" aria-describedby="basic-addon1" name="preco_custo"  value="<?=$dataFormat->formatar($produto->getPrecoCusto(),'moeda')?>">
-                </div>
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Preço de Venda R$</span>
-                    <input type="text" class="form-control" placeholder="Preço de Venda" aria-describedby="basic-addon1" name="preco_venda" name="preco_venda"  value="<?=$dataFormat->formatar($produto->getPrecoVenda(),'moeda')?>" <?=$inputPrecoVenda?> >
+                    <input type="text" class="form-control" placeholder="Preço de Venda" aria-describedby="basic-addon1" name="preco_venda" name="preco_venda"  value="<?=$produto->getPrecoVenda()?>" <?=$inputPrecoVenda?>>
                     <span class="input-group-addon" id="basic-addon1"><input type="checkbox" name="precoVendaAutomatico" <?=$checkPrecoVenda?>>Automático</span>
                 </div>
 
-                <div class="input-group boxmarkup"  <?=$showMarkup?> >
+                <div class="input-group boxmarkup" <?=$showMarkup?> >
                     <span class="input-group-addon" id="basic-addon1">Markup %</span>
-                    <input type="text" class="form-control" placeholder="Markup %" aria-describedby="basic-addon1" name="markup" maxlength="6" value="<?=$dataFormat->formatar($produto->getMarkup(),'moeda')?>">
+                    <input type="text" class="form-control" placeholder="Markup %" aria-describedby="basic-addon1" name="markup" maxlength="6" value="<?=$produto->getMarkup()?>">
                 </div>
                 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Unidade de Medida</span>
-                    <select class="form-control" name="uni_medida">
-                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
-                        <?php if(!empty($unidademedida)):?>
-                        <?php foreach ($unidademedida as $unidade):?>
-                        <option value="<?= $unidade->getId()?>"><?= $unidade->getNome()?>(<?= $unidade->getAbreviacao()?>)</option>
-                        <?php endforeach;?>
-                        <?php endif;?>
-                    </select>
+            </div>
+        </div>
+       
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Unidades de medida
+                <div class="pull-right">
+                    <a href="javascript:void(0)" class="btn btn-primary btn-sm btn_addUnidade">Adicionar</a>
+                </div> 
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Atenção!</strong> As unidades devem ser cadastradas da menor para a maior unidade.
                 </div>
+                <div class="row groupUnidades">
+                    
+                </div>
+               
             </div>
             <div class="btn-group pull-right" role="group">
                 <button type="submit" class="btn btn-success">Enviar</button>
             </div>
-            <input type="hidden" name="id_produto" value = "<?=$produto->getId()?>">
         </div>
     </form>
 </div>
@@ -132,4 +118,4 @@
 <script type="text/javascript" src="<?=URL?>skin/js/jquery.maskedinput.min.js"></script>
 <script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
 <script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
-<script type="text/javascript" src="<?=URL?>skin/js/produtos/cadastrar.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/produtos/editar.js"></script>

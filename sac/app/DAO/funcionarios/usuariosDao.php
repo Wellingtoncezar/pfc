@@ -113,7 +113,6 @@ class usuariosDao extends Dao{
  		);
 
 
-
  		$this->db->clear();
 		$this->db->setTabela('sys_usuarios');
 		$this->db->insert($data);

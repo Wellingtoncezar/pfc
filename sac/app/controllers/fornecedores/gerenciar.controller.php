@@ -217,7 +217,7 @@ class gerenciar extends Controller{
 				$telefoneModel->setNumero( $telefone['telefone'] );
 				$telefoneModel->setOperadora( $telefone['operadora'] );
 				$telefoneModel->setTipo( $telefone['tipo_telefone'] );
-				$fornecedoresModel->setTelefones($telefoneModel);
+				$fornecedoresModel->addTelefones($telefoneModel);
 				
 			}
 
@@ -228,10 +228,10 @@ class gerenciar extends Controller{
 			{
 				$emailModel = new emailModel();
 				$emailModel->setEmail( $email['email'] );
-				$fornecedoresModel->setEmail($emailModel);
+				$fornecedoresModel->addEmail($emailModel);
 			}
 
-			//ENDEREÇO
+			//endereço
 			$this->load->model('enderecoModel');
 			$enderecoModel = new enderecoModel();
 			$enderecoModel->setCep($cep);
