@@ -9,7 +9,6 @@ abstract class statusRequisicoes{
 	const APROVADO = 'APROVADO';
 	const REPROVADO = 'REPROVADO';
 	const CANCELADO = 'CANCELADO';
-
 	public static function getAttribute($attr)
 	{
 		if(isset($attr))
@@ -17,4 +16,5 @@ abstract class statusRequisicoes{
 		else
 			return null;
 	}
+
 }

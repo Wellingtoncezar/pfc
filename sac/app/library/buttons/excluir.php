@@ -1,8 +1,8 @@
 <?php
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class excluir extends loadContent implements ITemplate {
+class excluir implements ITemplate {
 	private $atrDefault;
-	public function getContent(Array $atr = null)
+	public function getContent(loadContent $load, Array $atr = null)
 	{
 		$this->atrDefault = array(
 			'title' => 'Excluir',
@@ -21,6 +21,6 @@ class excluir extends loadContent implements ITemplate {
 			}
 		}
 
-		return parent::load('template/actions_buttons/excluir',$this->atrDefault);
+		return $load->load('template/actions_buttons/excluir',$this->atrDefault);
 	}
 }

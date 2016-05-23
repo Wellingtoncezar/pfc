@@ -5,7 +5,6 @@
 if(!defined('URL')) die('Acesso negado');
 class checkPermissao extends Library{
 	private  $permissoes = null;
-	private $url;
 	private $lastArray = Array();
 	private $latType;
 	public function __construct(){

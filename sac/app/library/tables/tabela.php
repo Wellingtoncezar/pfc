@@ -2,7 +2,7 @@
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class tabela extends loadContent implements ITemplate {
 	private $atrDefault;
-	public function getContent(Array $atr = null)
+	public function getContent(loadContent $load, Array $atr = null)
 	{
 		$this->atrDefault = array(
 			'thead' => '',
@@ -19,6 +19,6 @@ class tabela extends loadContent implements ITemplate {
 			}
 		}
 
-		return parent::load('template/tabela/tabela',$this->atrDefault);
+		return $load->load('template/tabela/tabela',$this->atrDefault);
 	}
 }

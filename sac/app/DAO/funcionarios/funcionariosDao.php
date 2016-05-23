@@ -437,78 +437,15 @@ class funcionariosDao extends Dao{
 		$this->db->clear();
 		$this->db->setTabela('funcionarios');
 		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
-		$this->db->update($data);
-		if($this->db->rowCount()>0)
-			return true;
-		else
-			return false;
-	}
-
-
-	/**
- 	 * faz o upload do arquivo
- 	 * @return boolean, String
- 	 */
-	public function uploadFoto($nomeArquivo, $arquivo)
-	{
-
-		//verifica se o diretório existe
-		if(is_dir(BASEPATH.'skin/uploads/funcionarios/'))
-		{
-			$destino = BASEPATH.'skin/uploads/funcionarios/';
-			$destino_p = BASEPATH.'skin/uploads/funcionarios/p/';
-
-			if(!is_dir($destino))
-				mkdir($destino);
-
-			if(!is_dir($destino_p))
-				mkdir($destino_p);
-
-			$img = new upload($arquivo,$destino, $nomeArquivo);
-			
-			if($img->getError() == false)
-			{
-				$dest = $destino.$img->getArquivo();
-				$dest_p = $destino_p.$img->getArquivo();
-				if(
-					(isset($_POST['w']) && $_POST['w'] != '') ||
-					(isset($_POST['h']) && $_POST['h'] != '') ||
-					(isset($_POST['x1']) && $_POST['x1'] != '') ||
-					(isset($_POST['y1']) && $_POST['y1'] != '')
-					){
-						$w = $_POST['w'] ;
-						$h =  $_POST['h'];
-						$x1 = $_POST['x1'];
-						$y1 = $_POST['y1'];
-						
-						$crop = new crop_image();
-						$crop->setImage($dest,$dest_p,$w, $h,$x1, $y1,404, 158);
-						$crop->cropResize();
-						$crop->setImage($dest,$dest,$w, $h,$x1, $y1,1349, 527);
-						$crop->cropResize();
-					}else
-					{
-						$w = $_POST['w'] ;
-						$h =  $_POST['h'];
-						$x1 = $_POST['x1'];
-						$y1 = $_POST['y1'];
-
-						$crop = new crop_image();
-						$crop->setImage($dest,$dest_p,$w, $h,$x1, $y1,404, 158);
-						$crop->setImage($dest,$dest,$w, $h,$x1, $y1,1349, 527);
-						$crop->resize();
-					}
-
-				$this->nomeArquivoFoto = $img->getArquivo();
+		try {
+			$this->db->update($data);
+			if($this->db->rowCount()>0)
 				return true;
-			
-			}else
-				return $img->getError();
-		}else
-			return 'Erro ao efetuar o upload. O diretório não existe';
-
-
+			else
+				return false;
+		} catch (Exception $e) {
+			return $e->getMessage();
+		}
 	}
-
 
 }

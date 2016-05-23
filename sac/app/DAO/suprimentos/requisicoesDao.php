@@ -17,28 +17,29 @@ class requisicoesDao extends Dao{
 	 */
 	public function listar()
 	{
-		$this->load->model('requisicoes/requsicoesModel');
+		$this->load->model('suprimentos/requisicoes/requisicoesModel');
 		$requisicoes = Array();
 
 		$this->db->clear();
 		$this->db->setTabela('requisicoes');
-		$this->db->setCondicao(" status_requisicoes in('".status::ATIVO."','".status::INATIVO."') ");
+		$this->db->setCondicao(" status_requisicao in('".statusRequisicoes::NOVO."','".statusRequisicoes::PENDENTE."','".statusRequisicoes::APROVADO."','".statusRequisicoes::REPROVADO."','".statusRequisicoes::APROVADO."', '".statusRequisicoes::CANCELADO."') ");
 		$this->db->select();
 		if($this->db->rowCount() > 0):
 			$result = $this->db->resultAll();
 			foreach ($result as $value)
 			{
-				$marcasModel = new marcasModel();
-				$marcasModel->setId($value['id_marca']);
-				$marcasModel->setNome($value['nome_marca']);
-				$marcasModel->setStatus(status::getAttribute($value['status_marca']));
-				array_push($marcas, $marcasModel);
-				unset($marcasModel);
+				$requisicoesModel = new requisicoesModel();
+				$requisicoesModel->setId($value['id_requisicao']);
+				$requisicoesModel->setCodigo($value['codigo_requisicao']);
+				$requisicoesModel->setTitulo($value['titulo_requisicao']);
+				$requisicoesModel->setObservacoes($value['observacoes_requisicao']);
+				$requisicoesModel->setData($value['data_requisicao']);
+				$requisicoesModel->setStatus(statusRequisicoes::getAttribute($value['status_requisicao']));
+				array_push($requisicoes, $requisicoesModel);
+				unset($requisicoesModel);
 			}
-			return $marcas;
-		else:
-			return $marcas;
 		endif;
+		return $requisicoes;
 	}
 
 
@@ -68,42 +69,49 @@ class requisicoesDao extends Dao{
 
 
 	/**
-	 * Insere novos marcas
-	 * @return boolean, json
+	 * Insere novas requisições
+	 * @return boolean
 	 */
- 	public function inserir(marcasModel $marca)
+ 	public function inserir(requisicoesModel $requisicao)
  	{
- 		
  		$data = array(
- 
- 			'nome_marca' => $marca->getNome(),
- 			'status_marca' => $marca->getStatus(),
- 			'data_cadastro_marca' => $marca->getDataCadastro()
+  			'codigo_requisicao' => $requisicao->getCodigo(),
+ 			'titulo_requisicao' => $requisicao->getTitulo(),
+ 			'observacoes_requisicao' => $requisicao->getObservacoes(),
+ 			'data_requisicao' => $requisicao->getData(),
+ 			'status_requisicao' =>$requisicao->getStatus()
  		);
 
+
  		$this->db->clear();
-		$this->db->setTabela('marcas');
-		if($this->db->insert($data))
-		{
-			return TRUE;
- 		}else
- 		{
- 			return $this->db->getError();
- 		}
+		$this->db->setTabela('requisicoes');
+		try {
+			if($this->db->insert($data))
+			{
+				$id = $this->db->getUltimoId();
+				$requisicao->setId($id);
+				$this->atualizaProdutosRequisitados($requisicao);
+				return TRUE;
+	 		}else
+	 		{
+	 			return $this->db->getError();
+	 		}
+		} catch (Exception $e) {
+
+			throw new Exception($e, 1);
+		}
  		
  	}
 
 
 	/**
 	 * Atualiza marcas
-	 * @return boolean, json
+	 * @return boolean
 	 */
- 	public function atualizar(marcasModel $marca)
+ 	public function atualizar(requisicoesModel $requisicao)
  	{
  		$data = array(
- 
- 			'nome_marca' => $marca->getNome(),
-
+  			'nome_marca' => $marca->getNome(),
  		);
 
  		$this->db->clear();
@@ -118,6 +126,53 @@ class requisicoesDao extends Dao{
  		}
  	}
 
+ 	private function atualizaProdutosRequisitados(requisicoesModel $requisicao )
+ 	{
+ 		//excluir
+		$produtosNaoExcluir = array();
+		foreach ($requisicao->getProdutosRequisitados() as $produtos)
+		{
+			if($produtos->getId() != '')
+				array_push($produtosNaoExcluir,$produtos->getProdutos()->getId());
+		}
+		$cond = '';
+		if(!empty($produtosNaoExcluir))
+		{
+			$produtosNaoExcluir = implode(',', $produtosNaoExcluir);
+			$this->db->clear();
+			$cond = " AND id_requisicao_produto not in (".$produtosNaoExcluir.")";
+		}
+		$sql = "DELETE FROM requisicao_produto WHERE id_produto in( SELECT B.id_produto FROM requisicao_produto AS B WHERE B.id_requisicao = '".$requisicao->getId()."' AND id_produto = B.id_produto) $cond";
+		$this->db->query($sql);
+		if($this->db->rowCount() > 0)
+
+		$this->db->clear();
+		$this->db->setTabela('requisicao_produto');
+		foreach ($requisicao->getProdutosRequisitados() as $produtosRequisitado)
+		{
+			if(!empty($produtosRequisitado))
+			{
+				$data = array(
+					'id_produto' => $produtosRequisitado->getProdutos()->getId(),
+					'id_requisicao' => $requisicao->getId(),
+					'quantidade_produto' => $produtosRequisitado->getQuantidade()
+				);
+				if($produtosRequisitado->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
+				{
+					$this->db->setCondicao('id_requisicao_produto = "'.$produtosRequisitado->getId().'"');
+					$this->db->update($data);
+				}else{
+					$this->db->insert($data);
+				}
+
+				if($this->db->rowCount() > 0)
+					$this->nUpdates++;
+			}
+		}
+ 		
+
+
+ 	}
 	
 
 

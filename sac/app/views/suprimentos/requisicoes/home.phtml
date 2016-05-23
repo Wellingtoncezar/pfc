@@ -8,51 +8,48 @@
       <h1>Requisições Automáticas e Manuais</h1>
     </div>
     <div class="middle-content">
-        <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
-        <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
-            <thead>
-                <tr>   
-                    <th width="100">Código</th>
-                    <th width="160">Usuário</th>
-                    <th width="160">Titulo</th>
-                    <th width="160">Data</th>
-                    <th width="160">Status</th>
-                    <th width="180">Ações</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                   <td width="100">Código</td>
-                    <td width="160">Usuário</td>
-                    <td width="160">Titulo</td>
-                    <td width="160">Data</td>
-                    <td width="160">Status</td>
-                    <td width="180">Ações</td>
-                </tr>
-            </tfoot>
-            <tbody>
-            <?php
-            if(!empty($requisicoes)):
-                foreach ($requisicoes as $requisicao):
-            ?>
-                <tr id="<?=$requsicao->getId()?>">
-                    <td><?=$requsicao->getCodigo()?></td>
-                    <td><?=$requsicao->getUsuario()->getNome()?></td>
-                    <td><?=$requsicao->getTitulo()?></td>
-                    <td><?=$requsicao->getData()?></td>
-                    <td><?=$requsicao->getStatus()?></td>
-                    <td><?=$requsicao->getAcoes()?></td>
+        <?php
+            $thead = '  <tr>
+                            <th width="100">Código</th>
+                            <th width="160">Usuário</th>
+                            <th width="160">Titulo</th>
+                            <th width="160">Data</th>
+                            <th width="160">Status</th>
+                            <th width="180">Ações</th>
+                        </tr>';
+            $tfoot = '  <tr>
+                            <td width="100">Código</td>
+                            <td width="160">Usuário</td>
+                            <td width="160">Titulo</td>
+                            <td width="160">Data</td>
+                            <td width="160">Status</td>
+                            <td width="180">Ações</td>
+                        </tr>';  
 
-                    <td>
-                        <?= $this->templateFactory->getButton('visualizar', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/visualizar/')?>
-                        <?= $this->templateFactory->getButton('cotar', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/cotar/')?>
-                       <?= $this->templateFactory->getButton('cancelar', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/visualizar/')?>
-                        
-                    </td>
-                </tr>
-            <?php
+                $tbody = '';
+                foreach ($requisicoes as $requisicao):
+
+                    $ativo = ($requisicao->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
+                    $inativo = ($requisicao->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
+                    
+            $tbody .='  <tr id="'.$requisicao->getId().'">
+                            <td>'.$requisicao->getCodigo().'</td>
+                            <td>'.$requisicao->getUsuarioCadastrado().'</td>
+                            <td>'.$requisicao->getTitulo().'</td>
+                            <td>'.$requisicao->getData().'</td>
+                            <td>
+                                <select name="status" id="'.$requisicao->getId().'" class="statusSelect">
+                                    <option value="'.status::ATIVO.'" class="active" '.$ativo.'>Ativo</option>
+                                    <option value="'.status::INATIVO.'" class="inactive" '.$inativo.'>Inativo</option>
+                                </select>
+                            </td>
+                            <td>'
+                                .$this->templateFactory->getButton('cancelar', array('id'=> $requisicao->getId()), URL.'funcionarios/gerenciar/excluir/').
+                                $this->templateFactory->getButton('cotar',array('id'=> $requisicao->getId()), URL.'funcionarios/gerenciar/excluir/').
+                            '</td>
+                        </tr>';
                 endforeach;
-            endif;
+                echo $this->templateFactory->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
             ?>
         
             </tbody>

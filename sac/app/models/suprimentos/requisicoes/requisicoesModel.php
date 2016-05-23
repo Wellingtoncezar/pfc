@@ -5,23 +5,62 @@
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class requisicoesModel{
 	private $id;
-	private $produto = array();
-	private $quantidade;
-	private $descricao;
+	private $codigo;
+	private $titulo;
+	private $observacoes;
+	private $data;
+	private $status = statusRequisicoes::NOVO;
+	private $produtosRequisitados = Array();
+	private $usuarioCadastrado;
+	private $usuarioAprovado;
 	//SETERS
 	public function setId($id)
 	{
 		$this->id = $id;
 	}
-	public function setTipo($tipo)
+	public function setCodigo($codigo)
 	{
-		$this->tipo = $tipo;
+		$this->codigo = $codigo;
 	}
-	public function setEmail($email)
+	public function setTitulo($titulo)
 	{
-		$this->email = $email;
+		$this->titulo = $titulo;
+	}
+	public function setObservacoes($observacoes)
+	{
+		$this->observacoes = $observacoes;
+	}
+	public function setData($data)
+	{
+		$this->data = $data;
 	}
 
+	public function addProdutoRequisitado(requisicaoProdutoModel $produtosRequisitado)
+	{
+		array_push($this->produtosRequisitados, $produtosRequisitado);
+	}
+	public function setUsuarioCadastrado($usuarioCadastrado)
+	{
+		$this->usuarioCadastrado = $usuarioCadastrado;
+	}
+
+	public function setStatus($status){
+		$this->status = $status;
+	}
+
+	public function aprovar()
+	{
+		$this->status = statusRequisicoes::APROVADO;
+	}
+	public function reprovar()
+	{
+		$this->status = statusRequisicoes::REPROVADO;
+	}
+
+	public function cancelar()
+	{
+		$this->status = statusRequisicoes::CANCELADO;
+	}
 	
 
 	//GETERS
@@ -29,15 +68,32 @@ class requisicoesModel{
 	{
 		return $this->id;
 	}
-	public function getTipo()
+	public function getCodigo()
 	{
-		return $this->tipo;
+		return $this->codigo;
 	}
-	public function getEmail()
+	public function getTitulo()
 	{
-		return $this->email;
+		return $this->titulo;
 	}
-
-
-
+	public function getObservacoes()
+	{
+		return $this->observacoes;
+	}
+	public function getData()
+	{
+		return $this->data;
+	}
+	public function getStatus()
+	{
+		return $this->status;
+	}
+	public function getProdutosRequisitados()
+	{
+		return $this->produtosRequisitados;
+	}
+	public function getUsuarioCadastrado()
+	{
+		return $this->usuarioCadastrado;
+	}
 }

@@ -1,8 +1,8 @@
 <?php
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class cadastrar extends loadContent implements ITemplate {
+class cadastrar implements ITemplate {
 	private $atrDefault;
-	public function getContent(Array $atr = null)
+	public function getContent(loadContent $load, Array $atr = null)
 	{
 		$this->atrDefault = array(
 			'title' => 'Cadastrar',
@@ -17,6 +17,6 @@ class cadastrar extends loadContent implements ITemplate {
 					$this->atrDefault[$key] = $value;
 			}
 		}
-		return parent::load('template/actions_buttons/cadastrar',$this->atrDefault);
+		return $load->load('template/actions_buttons/cadastrar',$this->atrDefault);
 	}
 }

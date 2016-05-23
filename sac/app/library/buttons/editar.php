@@ -1,8 +1,8 @@
 <?php
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class editar extends loadContent implements ITemplate {
+class editar implements ITemplate {
 	private $atrDefault;
-	public function getContent(Array $atr = null)
+	public function getContent(loadContent $load, Array $atr = null)
 	{
 		$this->atrDefault = array(
 			'title' => 'Editar',
@@ -17,6 +17,6 @@ class editar extends loadContent implements ITemplate {
 					$this->atrDefault[$key] = $value;
 			}
 		}
-		return parent::load('template/actions_buttons/editar',$this->atrDefault);
+		return $load->load('template/actions_buttons/editar',$this->atrDefault);
 	}
 }

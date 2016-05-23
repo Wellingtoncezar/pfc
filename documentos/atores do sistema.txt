@@ -1,0 +1,3 @@
+Gerente - gerente geral - Aprovações orçamentarias
+Supervisor de suprimentos - realiza as funçoes dos funcionarios de suprimentos além de aprovações de cotações
+Estoquista - Realiza a manutenção do estoque, controle de entrada e realizações de requisições

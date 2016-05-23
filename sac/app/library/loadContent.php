@@ -1,8 +1,8 @@
 <?php
 if(!defined('BASEPATH')) die('Acesso não permitido');
-abstract class loadContent{
+class loadContent{
 
-	function load($contentFile, $data)
+	public function load($contentFile, $data)
 	{
 		$contentFile = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.VIEWS.DIRECTORY_SEPARATOR.$contentFile.'.phtml';
 		$dadosSite = file_get_contents($contentFile);

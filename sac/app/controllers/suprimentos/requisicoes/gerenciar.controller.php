@@ -26,14 +26,12 @@ class gerenciar extends Controller{
 		$this->load->checkPermissao->check();
 
 		$data = array(
-			'titlePage' => 'Gerenciar Requisicoes',
-			'template' => new templateFactory()
+			'titlePage' => 'Gerenciar Requisicoes'
 		);
 
-		$this->load->dao('produtos/marcasDao');
-		$marcas = new marcasDao();
-		$data['marcas'] = $marcas->listar();
-
+		$this->load->dao('suprimentos/requisicoesDao');
+		$requisicoesDao = new requisicoesDao();
+		$data['requisicoes'] = $requisicoesDao->listar();
 		$this->load->view('includes/header',$data);
 		$this->load->view('suprimentos/requisicoes/home',$data);
 		$this->load->view('includes/footer',$data);
@@ -116,32 +114,51 @@ class gerenciar extends Controller{
 	 */
 	public function inserir()
 	{
+		$codigo = isset($_POST['codigo']) ? filter_var($_POST['codigo']) : '';
+		$titulo = isset($_POST['titulo']) ? filter_var($_POST['titulo']) : '';
+		$observacoes = isset($_POST['observacoes']) ? filter_var($_POST['observacoes']) : '';
+		$produtos = isset($_POST['produtos']) ? filter_var_array($_POST['produtos']) : array();
 		
-		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-	
+
 
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
-		
-		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Código', $codigo, 'codigo')->is_required()->min_length(3);
+		$this->load->dataValidator->set('Título', $titulo, 'titulo')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Produtos', $produtos, 'produtos')->is_required();
+
 
 		
 		if ($this->load->dataValidator->validate())
 		{
-		
-			//MARCAS
-			$this->load->model('produtos/marcasModel');
-			$marcasModel = new marcasModel();
-			
-			$marcasModel->setNome($nome);
-			$marcasModel->setStatus(status::ATIVO);
-			$marcasModel->setDataCadastro(date('Y-m-d h:i:s'));
+			$this->load->model('suprimentos/requisicoes/requisicoesModel');
+			$this->load->model('suprimentos/requisicoes/requisicaoProdutoModel');
+			$this->load->model('produtos/produtosModel');
+			$requisicoesModel = new requisicoesModel();
+			foreach($produtos as $produto)
+			{
+				$produtoModel = new produtosModel();
+				$produtoModel->setId($produto['id_produto']);
 
+				$requisicaoProdutoModel = new requisicaoProdutoModel();
+				$requisicaoProdutoModel->addProduto($produtoModel);
+				$requisicaoProdutoModel->setQuantidade($produto['quantidade']);
+				$requisicoesModel->addProdutoRequisitado($requisicaoProdutoModel);
+			}
+
+			$requisicoesModel->setTitulo($titulo);
+			$requisicoesModel->setCodigo($codigo);
+			$requisicoesModel->setObservacoes($observacoes);
+			$requisicoesModel->setData(date('Y-m-d H:i:s'));
 
 			//marcas DAO
-			$this->load->dao('produtos/marcasDao');
-			$marcasDao = new marcasDao();
-			echo $marcasDao->inserir($marcasModel);
+			$this->load->dao('suprimentos/requisicoesDao');
+			try {
+				$requisicoesDao = new requisicoesDao();
+				echo $requisicoesDao->inserir($requisicoesModel);			
+			} catch (Exception $e) {
+				echo $e->getMessage();				
+			}
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();

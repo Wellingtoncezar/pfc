@@ -11,6 +11,8 @@ class produtosModel{
 	private $categoria;
 	private $descricao;
 	private $unidadeMedida = Array();
+	private $precoVenda;
+	private $markup;
 	private $status;
 	private $dataCadastro;
 	
@@ -43,6 +45,15 @@ class produtosModel{
 	public function setUnidadeMedida(unidademedidaModel $unidadeMedida)
 	{
 		array_push($this->unidadeMedida, $unidadeMedida);
+	}
+
+	public function setPrecoVenda($precoVenda)
+	{
+		$this->precoVenda = $precoVenda;
+	}
+	public function setMarkup($markup)
+	{
+		$this->markup = $markup;
 	}
 
 	public function setStatus($status)
@@ -85,6 +96,16 @@ class produtosModel{
 	public function getUnidadeMedida()
 	{
 		return $this->unidadeMedida;
+	}
+
+	public function getPrecoVenda()
+	{
+		return $this->precoVenda;
+	}
+
+	public function getMarkup()
+	{
+		return $this->markup;
 	}
 	
 	public function getStatus()

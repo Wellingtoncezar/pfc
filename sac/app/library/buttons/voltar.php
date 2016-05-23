@@ -1,8 +1,8 @@
 <?php
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class voltar extends loadContent implements ITemplate {
+class voltar implements ITemplate {
 	private $atrDefault;
-	public function getContent(Array $atr = null)
+	public function getContent(loadContent $load, Array $atr = null)
 	{
 		$this->atrDefault = array(
 			'title' => 'Voltar',
@@ -16,6 +16,6 @@ class voltar extends loadContent implements ITemplate {
 					$this->atrDefault[$key] = $value;
 			}
 		}
-		return parent::load('template/actions_buttons/voltar',$this->atrDefault);
+		return $load->load('template/actions_buttons/voltar',$this->atrDefault);
 	}
 }
