@@ -37,8 +37,8 @@
             $tbody .='  <tr id="'.$prod->getId().'">
                             <td><img src="'.$foto.'" style=" width: 60px; height: 60px;"></td>
                             <td>'.$prod->getNome().'</td>
-                            <td>'.$prod->getCategoria().'</td>
-                            <td>'.$prod->getMarca().'</td>
+                            <td>'.$prod->getCategoria()->getNome().'</td>
+                            <td>'.$prod->getMarca()->getNome().'</td>
                             <td>
                                 <select name="status" id="'.$prod->getId().'" class="statusSelect">
                                     <option value="'.status::ATIVO.'" class="active" '.$ativo.'>Ativo</option>

@@ -20,6 +20,8 @@ class produtosDao extends Dao{
 	{
 		$this->db->clear();
 		$this->load->model('produtos/produtosModel');
+		$this->load->model('produtos/categoriasModel');
+		$this->load->model('produtos/marcasModel');
 		$this->load->model('produtos/unidademedidaModel');
 		$produtos = Array();
 
@@ -58,6 +60,14 @@ class produtosDao extends Dao{
 				$produtosModel->setFoto($value['foto_produto']);
 				$produtosModel->setNome($value['nome_produto']);
 				$produtosModel->setStatus(status::getAttribute($value['status_produto']));
+
+				$categoriasModel = new categoriasModel();
+				$categoriasModel->setNome($value['nome_categoria']);
+				$produtosModel->setCategoria($categoriasModel);
+				
+				$marcasModel = new marcasModel();
+				$marcasModel->setNome($value['nome_marca']);
+				$produtosModel->setMarca($marcasModel);
 
 				$this->db->clear();
 				$this->db->setTabela('unidade_medida');
