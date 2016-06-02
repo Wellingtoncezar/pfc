@@ -34,7 +34,7 @@
                     $inativo = ($fornec->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
 
     $tbody .= ' <tr id="'.$fornec->getId().'">
-                    <td><img src="'.$foto.'" style=" width: 60px; height: 60px;"></td>
+                    <td><img src="'.$foto.'" style=" width: 60px; height: 60px;" class="img-circle"></td>
                     <td>'.$fornec->getRazaoSocial().'</td>
                     <td>'.$fornec->getNomeFantasia().'</td>
                     <td>'.$fornec->getCpf().'</td>

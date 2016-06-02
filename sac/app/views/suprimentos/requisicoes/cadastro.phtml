@@ -29,20 +29,33 @@
                     <select name="listaproduto" class="form-control">
                         <?php if(!empty($produtos)):?>
                         <?php foreach ($produtos as $produto):?>
-                        <?php
-                        $img = ($produto->getFoto() != '') ? URL.'skin/uploads/produtos/p/'.$produto->getFoto() : URL.'skin/img/imagens/produtosemimagem.jpg';
-                        ?>
-                        <option value="<?=$produto->getId()?>" img="<?=$img?>" unidade=""><?=$produto->getNome()?></option>
+                        <option value="<?=$produto->getId()?>"><?=$produto->getNome()?></option>
                         <?php endforeach;?>
                         <?php endif;?>
                     </select>
                     <span class="input-group-addon" id="basic-addon1"><a href="javascript:void(0)" class="addProduto"><span class="glyphicons glyphicons-plus"></span></a></span>
                 </div>
-                <div class="listProdutos row">
-                    
-                     
+                    <div class="col-sm-6 col-md-2 modeloItemProduto hide" >
+                        <input type="hidden" name="id_produto_requisicao" value="">
+                        <input type="hidden" name="id_produto" value="">
+                        <div class="thumbnail">
+                            <img src="" class="imgProduct">
+                            <div class="caption">
+                                <div class="form-group">
+                                    <label class="productname">Produto</label>
+                                </div>
+                                <label>Qtd.</label>
+                                <div class="input-group">
+                                    <input type="number" name="quantidade" value="0" class="form-control">
+                                    <p class="form-control unidadeMedida"></p>
+                                    <input type="hidden" name="idUnidadeMedida" value="">
+                                </div>
+                                <p><a href="javascript:void(0)" class="btn btn-danger btn_excluir" role="button">Remover</a></p>
+                            </div>
+                        </div>
+                    </div>
 
-                      
+                <div class="listProdutos row">
                     
                 </div>
                 <div class="btn-group pull-right" role="group">

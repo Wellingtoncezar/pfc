@@ -154,6 +154,7 @@ class requisicoesDao extends Dao{
 			{
 				$data = array(
 					'id_produto' => $produtosRequisitado->getProdutos()->getId(),
+					'id_unidade_medida_produto' => $produtosRequisitado->getProdutos()->getUnidadeMedida()[0]->getId(),
 					'id_requisicao' => $requisicao->getId(),
 					'quantidade_produto' => $produtosRequisitado->getQuantidade()
 				);

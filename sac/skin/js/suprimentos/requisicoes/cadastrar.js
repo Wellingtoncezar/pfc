@@ -2,47 +2,48 @@ $(function(){
 
 	$('.addProduto').click(function(){
 		var idProdutos = Array();
-		$('input[name=produto]').each(function(){
-			idProdutos.push($(this).attr('idProduto'))
+		$('input[name=id_produto]').each(function(){
+			idProdutos.push($(this).val())
 		});
 
 
 		var idProduto = $('select[name=listaproduto]').val();
 
+
+
+
+		console.log(idProdutos)
 		//verifica se ja existe o produto adicionado
 		if($.inArray(idProduto,idProdutos) == -1)
 		{
-			idProdutos.push(idProduto)
-			
-			var nomeproduto = $('select[name=listaproduto] option:selected').html();
-			var imgProduto = $('select[name=listaproduto] option:selected').attr('img');
-			var elemProduto = 	'<div class="col-sm-6 col-md-2 itemProduto" id=produto_'+idProduto+'>'
-									+'<input type="hidden" name="id_produto_requisicao" value="">'
-									+'<input type="hidden" name="id_produto" value="'+idProduto+'">'
-		                       		+'<div class="thumbnail">'
-		                        		+'<img src="'+imgProduto+'">'
-		                         		+'<div class="caption">'
-		                           			+'<div class="form-group">'
-									    		+'<label>Produto</label>'
-									  			+'<p class="form-control">'+nomeproduto+'</p>'
-									  		+'</div>'
-									  		+'<div class="form-group">'
-									    		+'<label>Quantidade</label>'
-									    		+'<input type="number" name="quantidade" value="0" class="form-control">'
-									    		+'<div class="input-group-addon">.</div>'
-									  		+'</div>'
-		                            		+'<p><a href="javascript:void()" class="btn btn-danger btn_excluir" id='+idProduto+' role="button">Remover</a></p>'
-		                         		+'</div>'
-		                        	+'</div>'
-		                      	+'</div>';
-			
-
-			$('.listProdutos').append(elemProduto);	
+			$.post(url+'suprimentos/requisicoes/gerenciar/getItemRequisicao',{idProduto: idProduto},function(data){
+				console.log(data);
+				if(data != null)
+				{
+					data = jQuery.parseJSON(data);
+					idProdutos.push(idProduto);
+					var nomeproduto = data.productname;
+					var imgProduto = data.imgProduct;
+					var unidadeMedida = data.unidadeMedida;
+					var idUnidadeMedida = data.idUnidadeMedida;
+					var elemProduto =  $('.modeloItemProduto').clone(true);
+						elemProduto.addClass('itemProduto').removeClass('modeloItemProduto hide');
+						elemProduto.attr('id','produto_'+idProduto);
+						$('input[name=id_produto]',elemProduto).val(idProduto);
+						$('.imgProduct',elemProduto).attr('src',imgProduto);
+						$('.productname',elemProduto).html(nomeproduto);
+						$('.unidadeMedida',elemProduto).html(unidadeMedida);
+						$('input[name=idUnidadeMedida]',elemProduto).val(idUnidadeMedida);
+						$('.btn_excluir',elemProduto).attr('id',idProduto);
+						$('.listProdutos').append(elemProduto);	
+				}
+			});
 		}
 		
 		$('.btn_excluir').on('click', function(){
 	  		var id = $(this).attr('id');
 	  		$('#produto_'+id).remove();	
+	  		return false;
 	  	});
 
 	});
@@ -60,11 +61,13 @@ $(function(){
             var id_produto_requisicao = $('input[name=id_produto_requisicao]', this).val();
 			var id_produto = $('input[name=id_produto]', this).val();
 			var quantidade = $('input[name=quantidade]', this).val();
+			var idUnidadeMedida = $('input[name=idUnidadeMedida]', this).val();
 
 
             aux['id_produto_requisicao'] = id_produto_requisicao;
             aux['id_produto'] = id_produto;
             aux['quantidade'] = quantidade;
+            aux['idUnidadeMedida'] = idUnidadeMedida;
             produtos[cont] = aux;
             cont++;
         });

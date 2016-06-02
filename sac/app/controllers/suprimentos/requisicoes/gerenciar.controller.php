@@ -109,6 +109,48 @@ class gerenciar extends Controller{
 	/*----------------------------
 	- AÇÕES
 	=============================*/
+
+	public function getItemRequisicao()
+	{
+		if(isset($_POST['idProduto']))
+		{
+			$idProduto = intval($_POST['idProduto']);
+			$this->load->model('produtos/produtosModel');
+			$produtosModel = new produtosModel();
+			$produtosModel->setId($idProduto);
+
+			$this->load->dao('produtos/produtosDao');
+			$produtosDao = new produtosDao();
+			$produto = $produtosDao->consultar($produtosModel);
+			
+			$imgProduct = ($produto->getFoto() != '') ? URL.'skin/uploads/produtos/p/'.$produto->getFoto() : URL.'skin/img/imagens/produtosemimagem.jpg';
+			$nomeUnidadeMedida = '';
+			$nomeUnidadeMedida = '';
+			foreach ($produto->getUnidadeMedida() as $unidadeMedida){
+				if($unidadeMedida->getParaEstoque() == true)
+				{
+					$nomeUnidadeMedida = $unidadeMedida->getUnidadeMedida()->getNome();
+					$idUnidadeMedida = $unidadeMedida->getId();
+				}
+			}
+			// echo '<pre>';
+			// print_r($produto->getUnidadeMedida());
+			// echo '</pre>';
+			// echo 'acabou';
+			$aux = Array(
+				'id_produto' => $produto->getId(),
+				'imgProduct' => $imgProduct,
+				'productname' => $produto->getNome(),
+				'unidadeMedida' => $nomeUnidadeMedida,
+				'idUnidadeMedida' => $idUnidadeMedida
+			);
+
+			echo json_encode($aux);
+		}
+	}
+
+
+
 	/**
 	 * Ação do cadastrar
 	 */
@@ -134,11 +176,17 @@ class gerenciar extends Controller{
 			$this->load->model('suprimentos/requisicoes/requisicoesModel');
 			$this->load->model('suprimentos/requisicoes/requisicaoProdutoModel');
 			$this->load->model('produtos/produtosModel');
+			$this->load->model('produtos/unidadeMedidaProdutoModel');
+			
 			$requisicoesModel = new requisicoesModel();
 			foreach($produtos as $produto)
 			{
+				$unidadeMedidaProdutoModel = new unidadeMedidaProdutoModel();
+				$unidadeMedidaProdutoModel->setId($produto['idUnidadeMedida']);
+
 				$produtoModel = new produtosModel();
 				$produtoModel->setId($produto['id_produto']);
+				$produtoModel->addUnidadeMedida($unidadeMedidaProdutoModel);
 
 				$requisicaoProdutoModel = new requisicaoProdutoModel();
 				$requisicaoProdutoModel->addProduto($produtoModel);

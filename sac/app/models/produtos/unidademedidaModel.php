@@ -3,12 +3,10 @@
 *@author Wellington cezar, Diego Hernandes
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class unidademedidaModel{
+class unidadeMedidaModel{
 	private $id;
 	private $nome;
-	private $codigo;
-	private $fator;
-	private $ordem;
+	private $abreviacao;
 	
 
 
@@ -17,26 +15,16 @@ class unidademedidaModel{
  	{
  		$this->id = $id;
  	}
- 	public function setNome($nome)
+ 
+	public function setNome($nome)
 	{
 		$this->nome = $nome;
 	}
 
-	public function setCodigo($codigo)
+	public function setAbreviacao($abreviacao)
 	{
-		$this->codigo = $codigo;
+		$this->abreviacao = $abreviacao;
 	}
-
-	public function setFator($fator)
-	{
-		$this->fator = $fator;
-	}
-
-	public function setOrdem($ordem)
-	{
-		$this->ordem = $ordem;
-	}
-	
 
 	//GETERS
  	public function getId()
@@ -47,17 +35,8 @@ class unidademedidaModel{
 	{
 		return $this->nome;
 	}
-	public function getCodigo()
+	public function getAbreviacao()
 	{
-		return $this->codigo;
+		return $this->abreviacao;
 	}
-	public function getFator()
-	{
-		return $this->fator;
-	}
-	public function getOrdem()
-	{
-		return $this->ordem;
-	}
-
 }

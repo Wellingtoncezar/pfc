@@ -35,7 +35,7 @@
                     $inativo = ($prod->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
                     
             $tbody .='  <tr id="'.$prod->getId().'">
-                            <td><img src="'.$foto.'" style=" width: 60px; height: 60px;"></td>
+                            <td><img src="'.$foto.'" style=" width: 60px; height: 60px;" class="img-circle"></td>
                             <td>'.$prod->getNome().'</td>
                             <td>'.$prod->getCategoria().'</td>
                             <td>'.$prod->getMarca().'</td>
@@ -81,22 +81,26 @@
 
         });
 
+        var id = '';
+        var status = '';
+        var modalDelete = '';
         //EXCLUIR
         table.$('.btn_excluir').on('click',function(){
-            var id = $(this).attr('id');
-            var status = $(this).data('value');
-            var modalDelete = $('#modalDelete').modal('show')
-            $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'produtos/gerenciar/excluir',{id:id,status:status},function(data){
-                    console.log(data)
-                    if(data == true){
-                        $('#modalDelete').modal('hide');
-                        $('tr#'+id).hide();
-                    }else{
-                        $('#modalDelete').modal('hide');
-                        messageDialog(data,'warning',false,null);
-                    }
-                });
+            id = $(this).attr('id');
+            status = $(this).data('value');
+            modalDelete = $('#modalDelete').modal('show');
+        });
+
+        $('.btn_ok','#modalDelete').on('click', function(event) {
+            $.post(url+'produtos/gerenciar/excluir',{id:id,status:status},function(data){
+                console.log(data)
+                if(data == true){
+                    $('#modalDelete').modal('hide');
+                    $('tr#'+id).hide();
+                }else{
+                    $('#modalDelete').modal('hide');
+                    messageDialog(data,'warning',false,null);
+                }
             });
         });
 

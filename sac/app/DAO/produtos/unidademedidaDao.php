@@ -17,17 +17,18 @@ class unidademedidaDao extends Dao{
 	 */
 	public function listar()
 	{
-		$this->load->model('produtos/unidademedidaModel');
+		$this->load->model('produtos/unidadeMedidaModel');
 		$unidademedida = Array();
 
 		$this->db->clear();
 		$this->db->setTabela('unidade_medida');
 		$this->db->select();
+		$this->db->setOrderBy('nome_unidade_medida');
 		if($this->db->rowCount() > 0):
 			$result = $this->db->resultAll();
 			foreach ($result as $value)
 			{
-				$unidademedidaModel = new unidademedidaModel();
+				$unidademedidaModel = new unidadeMedidaModel();
 				$unidademedidaModel->setId($value['id_unidade_medida']);
 				$unidademedidaModel->setNome($value['nome_unidade_medida']);
 				$unidademedidaModel->setAbreviacao($value['abreviacao_unidade_medida']);
@@ -46,7 +47,7 @@ class unidademedidaDao extends Dao{
 	 * Retorna a consulta de um unidademedida pelo id
 	 * @return object [unidademedidaModel]
 	 */
-	public function consultar(unidademedidaModel $unidade_medida)
+	public function consultar(unidadeMedidaModel $unidade_medida)
 	{
 		$this->db->clear();
 		$this->db->setTabela('unidade_medida');

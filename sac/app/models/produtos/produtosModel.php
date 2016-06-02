@@ -13,7 +13,7 @@ class produtosModel{
 	private $unidadeMedida = Array();
 	private $precoVenda;
 	private $markup;
-	private $status;
+	private $status = status::ATIVO;
 	private $dataCadastro;
 	
 
@@ -42,7 +42,7 @@ class produtosModel{
 	{
 		$this->descricao = $descricao;
 	}
-	public function setUnidadeMedida(unidademedidaModel $unidadeMedida)
+	public function addUnidadeMedida(unidadeMedidaProdutoModel $unidadeMedida)
 	{
 		array_push($this->unidadeMedida, $unidadeMedida);
 	}
@@ -60,6 +60,19 @@ class produtosModel{
 	{
 		$this->status = $status;
 	}
+	public function ativar()
+	{
+		$this->status = status::ATIVO;
+	}
+	public function inativar()
+	{
+		$this->status = status::INATIVO;
+	}
+	public function excluir()
+	{
+		$this->status = status::EXCLUIDO;
+	}
+
 	public function setDataCadastro($dataCadastro)
 	{	
 		$this->dataCadastro = $dataCadastro;
