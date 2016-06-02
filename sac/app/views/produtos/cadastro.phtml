@@ -104,6 +104,38 @@
 </div>
 
 
+<div class="col-sm-6 col-md-3 modeloUnidadeMedida hide">
+    <input type="hidden" name="idUnidadeMedidaProduto" value="">
+    <div class="thumbnail">
+        <div class="caption">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Uni. medida</span>
+                
+                <select name="unidadeMedida" class="form-control">
+                <?php foreach ($unidademedida as $unidade):?>
+                    <option value="<?=$unidade->getId()?>"><?=$unidade->getNome()?></option>
+                <?php endforeach;?>
+                </select>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Fator conversão</span>
+                <input type="text" class="form-control" placeholder="Fator" name="fator_unidade" maxlength="20" value="">
+            </div>
+            <fieldset class="form-group">
+                <div class="col-sm-6 col-md-6">
+                    <label class="col-sm-6 col-md-10">Venda</label>
+                    <input type="checkbox" name="venda" value="" class="col-sm-6 col-md-2">
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <label class="col-sm-6 col-md-10">Estoque</label>
+                    <input type="radio" name="estoque" value="" class="col-sm-6 col-md-2">
+                </div>
+            </fieldset>
+            <p><a href="#" class="btn btn-danger" role="button">Excluir</a></p>
+        </div>
+    </div>
+</div>
+
 
 <script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
 <link href="<?=URL?>skin/js/croper/cropper.min.css" rel="stylesheet">

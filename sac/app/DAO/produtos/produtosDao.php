@@ -20,9 +20,14 @@ class produtosDao extends Dao{
 	{
 		$this->db->clear();
 		$this->load->model('produtos/produtosModel');
+<<<<<<< HEAD
 		$this->load->model('produtos/categoriasModel');
 		$this->load->model('produtos/marcasModel');
 		$this->load->model('produtos/unidademedidaModel');
+=======
+		$this->load->model('produtos/unidadeMedidaProdutoModel');
+		$this->load->model('produtos/unidadeMedidaModel');
+>>>>>>> origin/master
 		$produtos = Array();
 
 		if(empty($condStatus))
@@ -36,7 +41,7 @@ class produtosDao extends Dao{
 		$cond = "";
 		$n = 1;
 		foreach ($condStatus as $value) {
-			$this->db->setParameter($n,$value);
+			$this->db->setParameter($n,$value); //seta os parametros no sql
 			if(count($condStatus) == $n)
 				$cond .= "?";
 			else
@@ -70,21 +75,24 @@ class produtosDao extends Dao{
 				$produtosModel->setMarca($marcasModel);
 
 				$this->db->clear();
-				$this->db->setTabela('unidade_medida');
-				$this->db->setCondicao("id_produto = ?");
+				$this->db->setTabela('unidade_medida as A, unidade_medida_produto AS B');
+				$this->db->setCondicao("B.id_produto = ? AND A.id_unidade_medida = B.id_unidade_medida");
 				$this->db->setParameter(1, $value['id_produto']);
 				if($this->db->select())
 				{
 					$unidadeMedida = $this->db->resultAll();
 					foreach ($unidadeMedida as $unidade)
 					{
-						$unidademedidaModel = new unidademedidaModel();
-						$unidademedidaModel->setId($unidade['id_unidade_medida']);
-						$unidademedidaModel->setNome($unidade['nome_unidade_medida']);
-						$unidademedidaModel->setCodigo($unidade['codigo_unidade_medida']);
-						$unidademedidaModel->setFator($unidade['fator_unidade_medida']);
-						$unidademedidaModel->setOrdem($unidade['ordem']);
-						$produtosModel->setUnidadeMedida($unidademedidaModel);
+						$unidadeMedidaModel = new unidadeMedidaModel();
+						$unidadeMedidaModel->setId($unidade['id_unidade_medida']);
+						$unidadeMedidaProdutoModel = new unidadeMedidaProdutoModel();
+						$unidadeMedidaProdutoModel->setId($unidade['id_unidade_medida_produto']);
+						$unidadeMedidaProdutoModel->setUnidadeMedida($unidadeMedidaModel);
+						$unidadeMedidaProdutoModel->setParaVenda($unidade['para_venda']);
+						$unidadeMedidaProdutoModel->setParaEstoque($unidade['para_estoque']);
+						$unidadeMedidaProdutoModel->setFator($unidade['fator_unidade_medida']);
+						$unidadeMedidaProdutoModel->setOrdem($unidade['ordem']);
+						$produtosModel->addUnidadeMedida($unidadeMedidaProdutoModel);
 					}
 				}
 
@@ -146,6 +154,33 @@ class produtosDao extends Dao{
 			$produto->setDescricao($result['descricao_produto']);
 			$produto->setStatus(status::getAttribute($result['status_produto']));
 			$produto->setDataCadastro($result['data_cadastro_produto']);
+
+
+			$this->db->clear();
+			$this->db->setTabela('unidade_medida as A, unidade_medida_produto AS B');
+			$this->db->setCondicao("B.id_produto = ? AND A.id_unidade_medida = B.id_unidade_medida");
+			$this->db->setParameter(1, $result['id_produto']);
+			if($this->db->select())
+			{
+				$this->load->model('produtos/unidadeMedidaModel');	
+				$this->load->model('produtos/unidadeMedidaProdutoModel');	
+				
+				$unidadeMedida = $this->db->resultAll();
+				foreach ($unidadeMedida as $unidade)
+				{
+					$unidadeMedidaModel = new unidadeMedidaModel();
+					$unidadeMedidaModel->setId($unidade['id_unidade_medida']);
+					$unidadeMedidaModel->setNome($unidade['nome_unidade_medida']);
+					$unidadeMedidaProdutoModel = new unidadeMedidaProdutoModel();
+					$unidadeMedidaProdutoModel->setId($unidade['id_unidade_medida_produto']);
+					$unidadeMedidaProdutoModel->setUnidadeMedida($unidadeMedidaModel);
+					$unidadeMedidaProdutoModel->setParaVenda($unidade['para_venda']);
+					$unidadeMedidaProdutoModel->setParaEstoque($unidade['para_estoque']);
+					$unidadeMedidaProdutoModel->setFator($unidade['fator_unidade_medida']);
+					$unidadeMedidaProdutoModel->setOrdem($unidade['ordem']);
+					$produto->addUnidadeMedida($unidadeMedidaProdutoModel);
+				}
+			}
 		endif;
 		return $produto;
 	}
@@ -169,7 +204,6 @@ class produtosDao extends Dao{
  			'status_produto' => $produto->getStatus(),
  			'data_cadastro_produto' => $produto->getDataCadastro()
  		);
- 
 
  		$this->db->clear();
 		$this->db->setTabela('produtos');
@@ -285,29 +319,30 @@ class produtosDao extends Dao{
 		{
 			$naoExcluirUnidade = implode(',', $naoExcluirUnidade);
 			$this->db->clear();
-			$cond = " AND id_unidade_medida not in (".$naoExcluirUnidade.")";
+			$cond = " AND id_unidade_medida_produto not in (".$naoExcluirUnidade.")";
 		}
-		$sql = "DELETE FROM unidade_medida WHERE id_produto = '".$produto->getId()."' $cond";
+		$sql = "DELETE FROM unidade_medida_produto WHERE id_produto = '".$produto->getId()."' $cond";
 		$this->db->query($sql);
 		if($this->db->rowCount() > 0)
 
 		$this->db->clear();
-		$this->db->setTabela('unidade_medida');
+		$this->db->setTabela('unidade_medida_produto');
 		foreach ($produto->getUnidadeMedida() as $unidade)
 		{
 			if(!empty($unidade))
 			{
 				$data = array(
 					'id_produto' => $produto->getId(),
-					'nome_unidade_medida' => $unidade->getNome(),
-					'codigo_unidade_medida' => $unidade->getCodigo(),
+					'id_unidade_medida' => $unidade->getUnidadeMedida()->getId(),
 					'fator_unidade_medida' => $unidade->getFator(),
+					'para_venda' => $unidade->getParaVenda(),
+					'para_estoque' => $unidade->getparaEstoque(),
 					'ordem' => $unidade->getOrdem()
 				);
 
 				if($unidade->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
 				{
-					$this->db->setCondicao('id_unidade_medida = "'.$unidade->getId().'"');
+					$this->db->setCondicao('id_unidade_medida_produto = "'.$unidade->getId().'"');
 					$this->db->update($data);
 				}else{
 					$this->db->insert($data);

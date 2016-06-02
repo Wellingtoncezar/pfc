@@ -108,28 +108,10 @@ $(function(){
 
 
     $('.btn_addUnidade').on('click', function(event) {
-    var elem = '<div class="col-sm-6 col-md-3 unidMed">'
-                        +'<input type="hidden" name="idUnidadeMedida">'
-                        +'<div class="thumbnail">'
-                            +'<div class="caption">'
-                                +'<div class="input-group">'
-                                    +'<span class="input-group-addon" id="basic-addon1">Nome</span>'
-                                    +'<input type="text" class="form-control" placeholder="Nome" name="nome_unidade" value="">'
-                                +'</div>'
-                                +'<div class="input-group">'
-                                    +'<span class="input-group-addon" id="basic-addon1">Código</span>'
-                                    +'<input type="text" class="form-control" placeholder="Código" name="codigo_unidade" maxlength="6" value="">'
-                                +'</div>'
-                                +'<div class="input-group">'
-                                    +'<span class="input-group-addon" id="basic-addon1">Fator conversão</span>'
-                                    +'<input type="text" class="form-control" placeholder="Fator" name="fator_unidade" maxlength="20" value="">'
-                                +'</div>'
-                                +'<p><a href="#" class="btn btn-danger" role="button">Excluir</a></p>'
-                            +'</div>'
-                        +'</div>'
-                    +'</div>';
+        var elem = $('.modeloUnidadeMedida').clone(true);
+        elem.addClass('unidMed').removeClass('modeloUnidadeMedida hide');
         $('.groupUnidades').append(elem);
-  });
+    });
 
 
 
@@ -143,14 +125,16 @@ $(function(){
         var ordem = 0;
         $('.groupUnidades .unidMed').each(function(){
             var aux = Object();
-            var idUnidadeMedida = $('input[name=idUnidadeMedida]',this).val();
-            var nome_unidade = $('input[name=nome_unidade]',this).val();
-            var codigo_unidade = $('input[name=codigo_unidade]',this).val();
+            var idUnidadeMedidaProduto = $('input[name=idUnidadeMedidaProduto]',this).val();
+            var idUnidadeMedida = $('select[name=unidadeMedida]',this).val();
             var fator_unidade = $('input[name=fator_unidade]',this).val();
+            var venda = $('input[name=venda]',this).is(':checked');
+            var estoque = $('input[name=estoque]',this).is(':checked');
+            aux['idUnidadeMedidaProduto'] = idUnidadeMedidaProduto;
             aux['idUnidadeMedida'] = idUnidadeMedida;
-            aux['nome_unidade'] = nome_unidade;
-            aux['codigo_unidade'] = codigo_unidade;
             aux['fator_unidade'] = fator_unidade;
+            aux['venda'] = venda;
+            aux['estoque'] = estoque;
             aux['ordem'] = ordem;
             unidadeMedida[iUnid] = aux;
             iUnid++;

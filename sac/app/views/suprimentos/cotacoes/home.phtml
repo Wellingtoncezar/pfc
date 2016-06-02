@@ -8,61 +8,89 @@
       <h1>Cotações</h1>
     </div>
     <div class="middle-content">
-        <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
-        <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
-            <thead>
-                <tr>   
-                    <th width="100">Código</th>
-                    <th width="160">Requisição</th>
-                    <th width="160">Titulo</th>
-                    <th width="160">Fornecedor</th>
-                    <th width="160">Data</th>
-                    <th width="160">Status</th>
-                    <th width="180">Ações</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                   <td width="100">Código</td>
-                    <td width="160">Requisição</td>
-                    <td width="160">Titulo</td>
-                    <td width="160">Fornecedor</td>
-                    <th width="160">Data</th>
-                    <td width="160">Status</td>
-                    <td width="180">Ações</td>
-                </tr>
-            </tfoot>
-            <tbody>
-            <?php
-            if(!empty($cotacoes)):
-                foreach ($cotacoes as $cotacao):
-            ?>
-                <tr id="<?=$requsicao->getId()?>">
-                    <td><?=$requsicao->getCodigo()?></td>
-                    <td><?=$requsicao->getUsuario()->getNome()?></td>
-                    <td><?=$requsicao->getTitulo()?></td>
-                    <td><?=$requsicao->getData()?></td>
-                    <td><?=$requsicao->getStatus()?></td>
-                    <td><?=$requsicao->getAcoes()?></td>
-
-                    <td>
-                        <?= $this->templateFactory->getButton('visualizar', array('id'=> $cotacao->getId()), URL.'suprimentos/cotacoes/gerenciar/visualizar/')?>
-                        <?= $this->templateFactory->getButton('cotar', array('id'=> $cotacao->getId()), URL.'suprimentos/cotacoes/gerenciar/cotar/')?>
-                       <?= $this->templateFactory->getButton('ignorar', array('id'=> $cotacao->getId()), URL.'suprimentos/cotacoes/gerenciar/visualizar/')?>
-                        
-                    </td>
-                </tr>
-            <?php
-                endforeach;
-            endif;
-            ?>
         
-            </tbody>
-        </table>
+<div id="example">
+            <div id="grid"></div>
+            <script>
+                $(document).ready(function() {
+                    $("#grid").kendoGrid({
+                        dataSource: {
+                            type: "odata",
+                            transport: {
+                                read: "//demos.telerik.com/kendo-ui/service/Northwind.svc/Products"
+                            },
+                            schema:{
+                                model: {
+                                    fields: {
+                                        UnitsInStock: { type: "number" },
+                                        ProductName: { type: "string" },
+                                        UnitPrice: { type: "number" },
+                                        UnitsOnOrder: { type: "number" },
+                                        UnitsInStock: { type: "number" }
+                                    }
+                                }
+                            },
+                            pageSize: 7,
+                            group: {
+                                     field: "UnitsInStock", aggregates: [
+                                        { field: "ProductName", aggregate: "count" },
+                                        { field: "UnitPrice", aggregate: "sum"},
+                                        { field: "UnitsOnOrder", aggregate: "average" },
+                                        { field: "UnitsInStock", aggregate: "count" }
+                                     ]
+                                   },
+
+                            aggregate: [ { field: "ProductName", aggregate: "count" },
+                                          { field: "UnitPrice", aggregate: "sum" },
+                                          { field: "UnitsOnOrder", aggregate: "average" },
+                                          { field: "UnitsInStock", aggregate: "min" },
+                                          { field: "UnitsInStock", aggregate: "max" }]
+                        },
+                        sortable: true,
+                        scrollable: false,
+                        pageable: true,
+                        columns: [
+                            { field: "ProductName", title: "Product Name", aggregates: ["count"], footerTemplate: "Total Count: #=count#", groupFooterTemplate: "Count: #=count#" },
+                            { field: "UnitPrice", title: "Unit Price", aggregates: ["sum"] },
+                            { field: "UnitsOnOrder", title: "Units On Order", aggregates: ["average"], footerTemplate: "Average: #=average#",
+                                groupFooterTemplate: "Average: #=average#" },
+                            { field: "UnitsInStock", title: "Units In Stock", aggregates: ["min", "max", "count"], footerTemplate: "<div>Min: #= min #</div><div>Max: #= max #</div>",
+                                groupHeaderTemplate: "Units In Stock: #= value # (Count: #= count#)" }
+                        ]
+                    });
+                });
+            </script>
+        </div>
+
+        
     </div>
 
 </div>
+<link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.common-material.min.css" />
+    <link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.default.min.css" />
 
+    <script src="<?=URL?>skin/js/kendoui/js/kendo.all.min.js"></script>
+    <style type="text/css">
+    .customer-photo {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-size: 32px 35px;
+        background-position: center center;
+        vertical-align: middle;
+        line-height: 32px;
+        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+        margin-left: 5px;
+    }
+
+    .customer-name {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 32px;
+        padding-left: 3px;
+    }
+</style>
 <script type="text/javascript">
     $(function(){
         //DATATABLE
