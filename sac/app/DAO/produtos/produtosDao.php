@@ -20,14 +20,13 @@ class produtosDao extends Dao{
 	{
 		$this->db->clear();
 		$this->load->model('produtos/produtosModel');
-<<<<<<< HEAD
+
 		$this->load->model('produtos/categoriasModel');
 		$this->load->model('produtos/marcasModel');
 		$this->load->model('produtos/unidademedidaModel');
-=======
 		$this->load->model('produtos/unidadeMedidaProdutoModel');
 		$this->load->model('produtos/unidadeMedidaModel');
->>>>>>> origin/master
+
 		$produtos = Array();
 
 		if(empty($condStatus))

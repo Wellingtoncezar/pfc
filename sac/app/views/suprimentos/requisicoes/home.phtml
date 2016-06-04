@@ -11,19 +11,19 @@
         <?php
             $thead = '  <tr>
                             <th width="100">Código</th>
-                            <th width="160">Usuário</th>
+                            <th width="160">Cadastrado por</th>
+                            <th width="160">Aprovado por</th>
                             <th width="160">Titulo</th>
                             <th width="160">Data</th>
-                            <th width="160">Status</th>
                             <th width="180">Ações</th>
                         </tr>';
             $tfoot = '  <tr>
-                            <td width="100">Código</td>
-                            <td width="160">Usuário</td>
-                            <td width="160">Titulo</td>
-                            <td width="160">Data</td>
-                            <td width="160">Status</td>
-                            <td width="180">Ações</td>
+                            <td>Código</td>
+                            <th>Cadastrado por</th>
+                            <th>Aprovado por</th>
+                            <td>Titulo</td>
+                            <td>Data</td>
+                            <td>Ações</td>
                         </tr>';  
 
                 $tbody = '';
@@ -31,21 +31,18 @@
 
                     $ativo = ($requisicao->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
                     $inativo = ($requisicao->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
-                    
+
             $tbody .='  <tr id="'.$requisicao->getId().'">
                             <td>'.$requisicao->getCodigo().'</td>
-                            <td>'.$requisicao->getUsuarioCadastrado().'</td>
+                            <td>'.$requisicao->getUsuarioCadastrado()->getFuncionario()->getNome().'</td>
+                            <td></td>
                             <td>'.$requisicao->getTitulo().'</td>
                             <td>'.$requisicao->getData().'</td>
-                            <td>
-                                <select name="status" id="'.$requisicao->getId().'" class="statusSelect">
-                                    <option value="'.status::ATIVO.'" class="active" '.$ativo.'>Ativo</option>
-                                    <option value="'.status::INATIVO.'" class="inactive" '.$inativo.'>Inativo</option>
-                                </select>
-                            </td>
                             <td>'
-                                .$this->templateFactory->getButton('cancelar', array('id'=> $requisicao->getId()), URL.'funcionarios/gerenciar/excluir/').
-                                $this->templateFactory->getButton('cotar',array('id'=> $requisicao->getId()), URL.'funcionarios/gerenciar/excluir/').
+                                .$this->templateFactory->getButton('visualizar',array('href'=>'javascript:void(0)', 'title'=>'Visualizar')).
+                                $this->templateFactory->getButton('Editar',array('href'=>URL.'suprimentos/requisicoes/gerenciar/editar/'.$requisicao->getId(), 'title'=>'Editar')).
+                                $this->templateFactory->getButton('cotar',array('id'=> $requisicao->getId(), URL.'suprimentos/requisicoes/gerenciar/cotartodos/', 'title'=>'Cotar')).
+                                $this->templateFactory->getButton('cancelar', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/cancelar/').
                             '</td>
                         </tr>';
                 endforeach;
@@ -57,6 +54,22 @@
     </div>
 
 </div>
+<div class="modal fade" id="modalProdutosRequisitados">
+        <div class="modal-dialog animated zoomIn ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Lista De Produtos Requisitados</h4>
+                </div>
+                <div class="modal-body">
+                    <p></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
 <script type="text/javascript">
     $(function(){
@@ -81,6 +94,10 @@
             });
         });
 
+        table.$('.btn_visualizar').on('click',function(){
+            $('#modalProdutosRequisitados').modal('show');
+            return false;
+        })
 
     })
 </script>

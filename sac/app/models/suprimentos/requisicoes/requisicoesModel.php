@@ -39,9 +39,13 @@ class requisicoesModel{
 	{
 		array_push($this->produtosRequisitados, $produtosRequisitado);
 	}
-	public function setUsuarioCadastrado($usuarioCadastrado)
+	public function setUsuarioCadastrado(usuariosModel $usuarioCadastrado)
 	{
 		$this->usuarioCadastrado = $usuarioCadastrado;
+	}
+	public function setUsuarioAprovado(usuariosModel $usuarioAprovado)
+	{
+		$this->usuarioAprovado = $usuarioAprovado;
 	}
 
 	public function setStatus($status){
@@ -95,5 +99,9 @@ class requisicoesModel{
 	public function getUsuarioCadastrado()
 	{
 		return $this->usuarioCadastrado;
+	}
+		public function getUsuarioAprovado()
+	{
+		return $this->usuarioAprovado;
 	}
 }
