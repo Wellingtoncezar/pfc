@@ -1,5 +1,5 @@
 $(function(){
-
+	$( "select[name=listaproduto]" ).combobox();
 	$('.addProduto').click(function(){
 		var idProdutos = Array();
 		$('input[name=id_produto]').each(function(){

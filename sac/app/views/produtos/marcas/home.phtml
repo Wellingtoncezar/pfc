@@ -1,10 +1,8 @@
-<div class="actions-buttons">
-    <div class="container">
-        <a class="btn btn-primary pull-right btn_adicionar" href="<?=URL?>produtos/marcas/gerenciar/cadastrar" role="button" id="btn_adicionar"><span class="glyphicon glyphicon-plus"></span>Cadastrar</a>
-    </div>
-</div>
-
 <div class="container">
+    <?php
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'produtos/marcas/gerenciar/cadastrar'), URL.'produtos/marcas/gerenciar/cadastrar');
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
+    ?>
     <div class="page-header">
       <h1>Marcas</h1>
     </div>

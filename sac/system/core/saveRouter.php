@@ -1,6 +1,6 @@
 <?php
 /**
-*@author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
+*@author Wellington cezar - wellington-cezar@hotmail.com
 */
 if(!defined('URL')) die('Acesso não permitido');
 class saveRouter

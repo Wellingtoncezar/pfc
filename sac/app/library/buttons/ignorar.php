@@ -8,7 +8,6 @@ class ignorar implements ITemplate {
 			'title' => 'Excluir',
 			'href' => 'javascript:void(0)',
 			'id' => '',
-			'value' => status::EXCLUIDO,
 			'moreContent' => ''
 		);
 

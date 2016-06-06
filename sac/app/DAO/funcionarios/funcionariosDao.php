@@ -93,7 +93,7 @@ class funcionariosDao extends Dao{
 					$telefoneModel->setNumero( $telefone['numero_telefone'] );
 					$telefoneModel->setOperadora( $telefone['operadora_telefone'] );
 					$telefoneModel->setTipo($telefone['tipo_telefone'] );
-					$funcionario->setTelefones($telefoneModel);
+					$funcionario->addTelefone($telefoneModel);
 				}
 			endif;
 
@@ -116,7 +116,7 @@ class funcionariosDao extends Dao{
 					$emailModel->setId( $email['id_email'] );
 					$emailModel->setEmail( $email['endereco_email'] );
 					$emailModel->setTipo( $email['tipo_email'] );
-					$funcionario->setEmail($emailModel);
+					$funcionario->addEmail($emailModel);
 				}
 			endif;
 

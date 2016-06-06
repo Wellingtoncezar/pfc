@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 09-Maio-2016 às 01:40
+-- Generation Time: 06-Jun-2016 às 00:24
 -- Versão do servidor: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -58,8 +58,21 @@ CREATE TABLE IF NOT EXISTS `categorias` (
 --
 
 INSERT INTO `categorias` (`id_categoria`, `nome_categoria`, `status_categoria`, `data_cadastro_categoria`, `timestamp`) VALUES
-(1, 'Limpeza', 'ATIVO', '2016-02-23 01:22:31', '2016-02-23 03:45:38'),
+(1, 'Limpezas', 'ATIVO', '2016-02-23 01:22:31', '2016-05-16 02:44:55'),
 (2, 'Aliment&iacute;cios', 'ATIVO', '2016-02-23 01:27:31', '2016-02-23 03:27:31');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `cotacoes`
+--
+
+CREATE TABLE IF NOT EXISTS `cotacoes` (
+`id_cotacao` int(11) NOT NULL,
+  `id_requisicao` int(11) DEFAULT NULL,
+  `data_cadastro` datetime DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -72,14 +85,15 @@ CREATE TABLE IF NOT EXISTS `emails` (
   `endereco_email` varchar(255) DEFAULT NULL,
   `tipo_email` varchar(255) DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `emails`
 --
 
 INSERT INTO `emails` (`id_email`, `endereco_email`, `tipo_email`, `timestamp`) VALUES
-(4, 'wellington-cezar@hotmail.com', 'Profissional', '2016-01-18 23:50:32');
+(4, 'wellington-cezar@hotmail.com', 'Profissional', '2016-01-18 23:50:32'),
+(5, 'email@email.com', 'Pessoal', '2016-06-05 18:55:51');
 
 -- --------------------------------------------------------
 
@@ -103,6 +117,13 @@ CREATE TABLE IF NOT EXISTS `emails_funcionarios` (
   `id_email` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Extraindo dados da tabela `emails_funcionarios`
+--
+
+INSERT INTO `emails_funcionarios` (`id_funcionario`, `id_email`) VALUES
+(79, 5);
+
 -- --------------------------------------------------------
 
 --
@@ -120,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `enderecos` (
   `estado_endereco` varchar(255) DEFAULT NULL,
   `data_cadastro_endereco` datetime DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `enderecos`
@@ -135,17 +156,19 @@ INSERT INTO `enderecos` (`id_endereco`, `cep_endereco`, `rua_endereco`, `numero_
 (10, '08580-300', 'Rua Maresias', 234, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-01-20 09:43:51', '2016-01-20 23:43:03'),
 (11, '08580-300', 'Rua Maresias', 33, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-01-20 09:57:01', '2016-01-20 23:47:10'),
 (12, '08580-300', 'Rua Maresias', 2345, '34', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-02-09 02:36:16', '2016-02-09 16:36:16'),
-(13, '08580-300', 'logradouro', 123, '', 'bairro', 'cidade', 'SP', '2016-05-09 01:16:45', '2016-03-13 15:49:17'),
+(13, '08580-300', 'logradouro', 123, '', 'bairro', 'cidade', 'SP', '2016-05-16 04:39:53', '2016-03-13 15:49:17'),
 (14, '08580-300', 'rua maresias', 196, '', 'maragogipe', 'itaquaquecetuba', 'SP', '2016-03-21 03:53:35', '2016-03-13 16:48:42'),
 (15, '08572-290', 'Rua Resende', 35, '', 'Vila S&atilde;o Roberto', 'Itaquaquecetuba', 'SP', '2016-03-14 11:50:51', '2016-03-14 22:50:51'),
-(16, '08580-300', 'Rua Maresias', 123, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-08 11:17:45', '2016-05-05 05:04:28'),
+(16, '08580-300', 'Rua Maresias', 123, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-06-05 04:03:06', '2016-05-05 05:04:28'),
 (17, '08572-290', 'Rua Resende', 123, '', 'Vila S&atilde;o Roberto', 'Itaquaquecetuba', 'SP', '2016-05-05 07:05:26', '2016-05-05 05:05:26'),
 (18, '08580-300', 'Rua Maresias', 213, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-05 07:08:37', '2016-05-05 05:08:37'),
 (19, '08580-300', 'Rua Maresias', 123, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-06 01:31:03', '2016-05-05 23:31:03'),
 (20, '08580-300', 'Rua Maresias', 234, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-08 11:15:24', '2016-05-09 02:15:24'),
 (21, '08580-300', 'Rua Maresias', 234, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-08 11:16:45', '2016-05-09 02:16:45'),
 (22, '08580-300', 'Rua Maresias', 234, '', 'Jardim Maragojipe', 'Itaquaquecetuba', 'SP', '2016-05-08 11:17:06', '2016-05-09 02:17:06'),
-(23, '08572-290', 'Rua Resende', 323232, '', 'Vila S&atilde;o Roberto', 'Itaquaquecetuba', 'SP', '2016-05-08 11:32:42', '2016-05-09 02:32:42');
+(23, '08572-290', 'Rua Resende', 323232, '', 'Vila S&atilde;o Roberto', 'Itaquaquecetuba', 'SP', '2016-05-08 11:32:42', '2016-05-09 02:32:42'),
+(24, '08572-290', 'Rua Resende', 123, '', 'Vila S&atilde;o Roberto', 'Itaquaquecetuba', 'SP', '2016-05-15 09:39:24', '2016-05-15 19:39:24'),
+(25, '08572-290', 'Rua Resende', 123, '', 'Vila S&atilde;o Roberto', 'Itaquaquecetuba', 'SP', '2016-05-22 03:05:45', '2016-05-22 01:05:45');
 
 -- --------------------------------------------------------
 
@@ -191,7 +214,9 @@ INSERT INTO `enderecos_funcionarios` (`id_funcionario`, `id_endereco`) VALUES
 (82, 20),
 (83, 21),
 (84, 22),
-(85, 23);
+(85, 23),
+(86, 24),
+(87, 25);
 
 -- --------------------------------------------------------
 
@@ -323,21 +348,23 @@ CREATE TABLE IF NOT EXISTS `funcionarios` (
   `status_funcionario` enum('ATIVO','INATIVO','EXCLUIDO') NOT NULL DEFAULT 'ATIVO',
   `data_cadastro_funcionario` datetime DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `funcionarios`
 --
 
 INSERT INTO `funcionarios` (`id_funcionario`, `foto_funcionario`, `nome_funcionario`, `sobrenome_funcionario`, `data_nascimento_funcionario`, `sexo_funcionario`, `rg_funcionario`, `cpf_funcionario`, `estado_civil_funcionario`, `escolaridade_funcionario`, `codigo_funcionario`, `id_cargo`, `data_admissao_funcionario`, `data_demissao_funcionario`, `status_funcionario`, `data_cadastro_funcionario`, `timestamp`) VALUES
-(59, 'c1d693986ded7c8d7aa41e6939ae036e.jpg', 'wellington cezar', 'de s&aacute;', '2001-03-13', 'M', '21.331.313-2', '123.123.123-13', 'Solteiro', 'Ensino Superior Incompleto', '', 2, '2016-03-13', '2016-03-14', 'ATIVO', '2016-03-13 04:49:17', '2016-05-09 04:16:45'),
-(79, '651cf18f6a4cdfff6a3efe6eccb1f480.png', 'wellington cezar', 'cezar', '1991-02-04', 'M', '', '', '', '', '050516.5613', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-05 07:04:28', '2016-05-09 02:17:45'),
+(59, 'c1d693986ded7c8d7aa41e6939ae036e.jpg', 'wellington cezar ty', 'de s&aacute;', '2001-03-13', 'M', '21.331.313-2', '123.123.123-13', 'Solteiro', 'Ensino Superior Incompleto', '', 2, '2016-03-13', '2016-03-14', 'ATIVO', '2016-03-13 04:49:17', '2016-06-06 01:53:36'),
+(79, '651cf18f6a4cdfff6a3efe6eccb1f480.png', 'wellington cezar', 'cezar', '1991-02-28', 'M', '13.123.213-1', '212.121.231-31', 'Casado', 'Ensino Fundamental Incompleto', '050516.5613', 2, '1969-12-03', '2016-12-19', 'ATIVO', '2016-05-05 07:04:28', '2016-06-05 19:03:05'),
 (80, '105d91ce4b34f32d3b9facc55751d476', 'sdlkafj', 'aksjdf', '2016-05-16', 'F', '', '', '', '', '050516.6314', 2, '0000-00-00', '0000-00-00', 'EXCLUIDO', '2016-05-05 07:05:26', '2016-05-05 22:48:36'),
 (81, '', 'kjf''', 'jfasldjf', '2016-05-24', 'M', '', '', '', '', '050516.1918', 2, '0000-00-00', '0000-00-00', 'EXCLUIDO', '2016-05-05 07:08:37', '2016-05-05 22:48:42'),
-(82, 'ac28f76281ab9fb0b4a3c466e30b9dd0.jpg', 'alguem', 'sobrenome', '2016-05-17', 'M', '42.334.234-3', '234.234.234-23', 'Casado', 'Ensino Fundamental Completo', '080516.2222', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-08 11:15:24', '2016-05-09 02:15:24'),
-(83, '', 'wqrqwe', 'qwer', '2016-05-03', 'M', '', '', 'Solteiro', 'Ensino M&eacute;dio Incompleto', '080516.6578', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-08 11:16:45', '2016-05-09 02:16:45'),
-(84, '', 'wqrqwe', 'qwer', '2016-05-03', 'M', '', '', 'Solteiro', 'Ensino M&eacute;dio Incompleto', '080516.6436', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-08 11:17:06', '2016-05-09 02:17:06'),
-(85, '89e7bf07eec1366a87836c256b029fd1.png', 'funcionario', 'teste', '2016-05-02', 'M', '', '', '', '', '080516.8071', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-08 11:32:42', '2016-05-09 02:32:42');
+(82, 'ac28f76281ab9fb0b4a3c466e30b9dd0.jpg', 'alguem', 'sobrenome', '2016-05-17', 'M', '42.334.234-3', '234.234.234-23', 'Casado', 'Ensino Fundamental Completo', '080516.2222', 2, '0000-00-00', '0000-00-00', 'EXCLUIDO', '2016-05-08 11:15:24', '2016-05-15 19:35:52'),
+(83, '', 'wqrqwe', 'qwer', '2016-05-03', 'M', '', '', 'Solteiro', 'Ensino M&eacute;dio Incompleto', '080516.6578', 2, '0000-00-00', '0000-00-00', 'EXCLUIDO', '2016-05-08 11:16:45', '2016-05-15 19:31:40'),
+(84, '', 'wqrqwe', 'qwer', '2016-05-03', 'M', '', '', 'Solteiro', 'Ensino M&eacute;dio Incompleto', '080516.6436', 2, '0000-00-00', '0000-00-00', 'EXCLUIDO', '2016-05-08 11:17:06', '2016-05-15 19:35:34'),
+(85, '89e7bf07eec1366a87836c256b029fd1.png', 'funcionario', 'teste', '2016-05-02', 'M', '', '', '', '', '080516.8071', 2, '0000-00-00', '0000-00-00', 'ATIVO', '2016-05-08 11:32:42', '2016-05-09 02:32:42'),
+(86, '', 'Diego', 'hernandes', '2016-05-15', 'M', '', '', '', '', '150516.2996', 2, '2016-05-15', '2016-05-15', 'ATIVO', '2016-05-15 09:39:24', '2016-05-15 19:39:24'),
+(87, '', 'teste', 'testse', '2016-05-10', 'M', '12.342.342-3', '234.342.434-23', 'Casado', 'Ensino Fundamental Incompleto', '220516.2275', 2, '2016-05-11', '2016-05-11', 'ATIVO', '2016-05-22 03:05:45', '2016-05-22 01:05:45');
 
 -- --------------------------------------------------------
 
@@ -351,14 +378,20 @@ CREATE TABLE IF NOT EXISTS `marcas` (
   `status_marca` enum('ATIVO','INATIVO','EXCLUIDO') NOT NULL DEFAULT 'ATIVO',
   `data_cadastro_marca` datetime DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `marcas`
 --
 
 INSERT INTO `marcas` (`id_marca`, `nome_marca`, `status_marca`, `data_cadastro_marca`, `timestamp`) VALUES
-(1, 'teste', 'ATIVO', '2016-04-29 05:29:48', '2016-04-29 03:29:48');
+(1, 'Nestl&eacute;', 'ATIVO', '2016-04-29 05:29:48', '2016-06-06 02:57:56'),
+(2, 'Coca Cola', 'ATIVO', '2016-06-05 11:59:48', '2016-06-06 02:59:48'),
+(3, 'Dolce Gusto', 'ATIVO', '2016-06-06 12:00:21', '2016-06-06 03:11:22'),
+(4, 'Perdig&atilde;o', 'ATIVO', '2016-06-06 12:01:18', '2016-06-06 03:01:18'),
+(5, 'Uni&atilde;o', 'ATIVO', '2016-06-06 12:01:42', '2016-06-06 03:01:42'),
+(6, 'Colgate', 'ATIVO', '2016-06-06 12:01:51', '2016-06-06 03:01:51'),
+(7, 'Knorr', 'ATIVO', '2016-06-06 12:02:19', '2016-06-06 03:02:19');
 
 -- --------------------------------------------------------
 
@@ -387,6 +420,35 @@ INSERT INTO `nivel_acesso` (`id_nivel_acesso`, `nome_nivel_acesso`, `permissoes`
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `orcamentos`
+--
+
+CREATE TABLE IF NOT EXISTS `orcamentos` (
+`id_orcamento` int(11) NOT NULL,
+  `id_fornecedor` int(11) DEFAULT NULL,
+  `id_requisicao` int(11) NOT NULL,
+  `status_orcamento` enum('APROVADO','REPROVADO') DEFAULT NULL,
+  `data_cadastro_orcamento` datetime DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `orcamento_produto`
+--
+
+CREATE TABLE IF NOT EXISTS `orcamento_produto` (
+`id_orcamento_produto` int(11) NOT NULL,
+  `id_orcamento` int(11) DEFAULT NULL,
+  `id_requisicao_produto` int(11) DEFAULT NULL,
+  `data_cadastro` datetime DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `produtos`
 --
 
@@ -397,27 +459,20 @@ CREATE TABLE IF NOT EXISTS `produtos` (
   `id_marca` int(11) DEFAULT NULL,
   `id_categoria` int(11) DEFAULT NULL,
   `descricao_produto` text,
+  `preco_venda_produto` decimal(10,2) NOT NULL,
+  `markup_produto` decimal(10,2) NOT NULL,
   `status_produto` enum('ATIVO','INATIVO','EXCLUIDO') NOT NULL,
   `data_cadastro_produto` datetime NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `produtos`
 --
 
-INSERT INTO `produtos` (`id_produto`, `foto_produto`, `nome_produto`, `id_marca`, `id_categoria`, `descricao_produto`, `status_produto`, `data_cadastro_produto`, `timestamp`) VALUES
-(17, NULL, 'nome do produto', 3, 1, 'descri&ccedil;ao de teste', 'ATIVO', '2016-03-28 03:49:30', '2016-04-28 22:43:17'),
-(18, NULL, 'nome do produto', 3, 1, 'descri&ccedil;ao de teste', 'INATIVO', '2016-03-28 03:57:15', '2016-04-09 00:26:16'),
-(19, NULL, 'teste', 1, 1, 'teste', 'INATIVO', '2016-05-08 01:31:01', '2016-05-09 03:41:15'),
-(20, NULL, 'sfgasdfasd', 1, 1, 'asdf', 'INATIVO', '2016-05-08 01:45:32', '2016-05-09 03:41:16'),
-(21, '', 'nome do produtos', 1, 1, 'teste', 'INATIVO', '2016-05-08 11:36:12', '2016-05-09 03:41:17'),
-(22, '', 'nome do produtos', 1, 1, 'teste', 'INATIVO', '2016-05-08 11:36:53', '2016-05-09 03:39:39'),
-(23, '', 'produto de teste', 1, 1, '', 'INATIVO', '2016-05-08 11:39:16', '2016-05-09 03:41:18'),
-(24, '', 'product', 1, 2, '', 'ATIVO', '2016-05-08 11:40:50', '2016-05-09 02:40:50'),
-(25, '04628e9659719586539914ee1f911c95.png', 'aaaaa', 1, 1, 'teste', 'ATIVO', '2016-05-08 11:43:34', '2016-05-09 02:43:34'),
-(26, 'e82538c07bbd634d26f37ee5f6a7754f.png', 'algo', 1, 2, 'teste', 'ATIVO', '2016-05-08 11:44:40', '2016-05-09 02:44:40'),
-(27, '', 'nome', 1, 1, '', 'ATIVO', '2016-05-09 12:53:47', '2016-05-09 03:53:47');
+INSERT INTO `produtos` (`id_produto`, `foto_produto`, `nome_produto`, `id_marca`, `id_categoria`, `descricao_produto`, `preco_venda_produto`, `markup_produto`, `status_produto`, `data_cadastro_produto`, `timestamp`) VALUES
+(37, '87632a590e2f4ff4b7247c41e67c3edc.png', 'A&ccedil;&uacute;car Uni&atilde;o Refinado Pacote 1kg', 5, 2, 'A&ccedil;&uacute;car Uni&atilde;o Refinado, pacote de 1kg', '3.69', '0.00', 'ATIVO', '2016-06-06 12:08:07', '2016-06-06 03:08:07'),
+(38, 'f97b0bb40f5f97241a80bcb8156addf9.jpg', 'Caf&eacute; Sol&uacute;vel Original 100g - Nescaf&eacute;', 1, 2, 'Caf&eacute; Sol&uacute;vel Original 100g - Nescaf&eacute;', '9.90', '0.00', 'ATIVO', '2016-06-06 12:15:57', '2016-06-06 03:15:57');
 
 -- --------------------------------------------------------
 
@@ -432,19 +487,6 @@ CREATE TABLE IF NOT EXISTS `produto_fornecedores` (
   `fornecedor_principal` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
---
--- Extraindo dados da tabela `produto_fornecedores`
---
-
-INSERT INTO `produto_fornecedores` (`id_produto_fornecedor`, `id_produto`, `id_fornecedor`, `fornecedor_principal`) VALUES
-(19, 17, 13, 1),
-(20, 17, 15, 0),
-(21, 18, 13, 1),
-(22, 18, 15, 0),
-(23, 18, 16, 0),
-(24, 19, 11, 1),
-(25, 20, 11, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -455,9 +497,20 @@ CREATE TABLE IF NOT EXISTS `requisicao_produto` (
 `id_requisicao_produto` int(11) NOT NULL,
   `id_requisicao` int(11) DEFAULT NULL,
   `id_produto` int(11) DEFAULT NULL,
+  `id_unidade_medida_produto` int(11) NOT NULL,
   `quantidade_produto` decimal(10,2) DEFAULT NULL,
+  `status_requisicao_produto` enum('NOVO','APROVADO','REPROVADO') NOT NULL DEFAULT 'NOVO',
   `timestam` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `requisicao_produto`
+--
+
+INSERT INTO `requisicao_produto` (`id_requisicao_produto`, `id_requisicao`, `id_produto`, `id_unidade_medida_produto`, `quantidade_produto`, `status_requisicao_produto`, `timestam`) VALUES
+(15, 15, 37, 24, '100.00', 'NOVO', '2016-06-06 03:18:10'),
+(16, 15, 38, 25, '50.00', 'APROVADO', '2016-06-06 03:18:31'),
+(17, 16, 38, 25, '25.00', 'NOVO', '2016-06-06 03:19:43');
 
 -- --------------------------------------------------------
 
@@ -470,7 +523,17 @@ CREATE TABLE IF NOT EXISTS `requisicao_usuario` (
   `id_requisicao` int(11) DEFAULT NULL,
   `id_usuario` int(11) DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `requisicao_usuario`
+--
+
+INSERT INTO `requisicao_usuario` (`id_requisicao_usuario`, `id_requisicao`, `id_usuario`, `timestamp`) VALUES
+(1, 13, 1, '2016-06-05 16:51:20'),
+(2, 14, 1, '2016-06-06 02:54:48'),
+(3, 15, 1, '2016-06-06 03:18:10'),
+(4, 16, 1, '2016-06-06 03:19:43');
 
 -- --------------------------------------------------------
 
@@ -482,11 +545,19 @@ CREATE TABLE IF NOT EXISTS `requisicoes` (
 `id_requisicao` int(11) NOT NULL,
   `codigo_requisicao` varchar(255) NOT NULL,
   `titulo_requisicao` varchar(255) DEFAULT NULL,
-  `descricao_requisicao` text NOT NULL,
+  `observacoes_requisicao` text NOT NULL,
   `data_requisicao` datetime DEFAULT NULL,
   `status_requisicao` enum('NOVO','PENDENTE','APROVADO','REPROVADO','CANCELADO') DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `requisicoes`
+--
+
+INSERT INTO `requisicoes` (`id_requisicao`, `codigo_requisicao`, `titulo_requisicao`, `observacoes_requisicao`, `data_requisicao`, `status_requisicao`, `timestamp`) VALUES
+(15, '0001', 'Produtos em falta', 'Requisi&ccedil;&atilde;o de produtos em falta', '2016-06-06 00:18:10', 'NOVO', '2016-06-06 03:18:10'),
+(16, '00002', 'Nova requisi&ccedil;&atilde;o de produto', '', '2016-06-06 00:19:43', 'NOVO', '2016-06-06 03:19:43');
 
 -- --------------------------------------------------------
 
@@ -503,7 +574,7 @@ CREATE TABLE IF NOT EXISTS `sys_actions` (
   `id_pagina` int(11) DEFAULT NULL,
   `posicao_action` int(11) DEFAULT NULL,
   `data_criacao_action` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `sys_actions`
@@ -542,7 +613,9 @@ INSERT INTO `sys_actions` (`id_action`, `url_action`, `nome_action`, `status_act
 (34, 'cadastrar', NULL, 'INATIVO', 'INATIVO', 21, NULL, '2016-04-26 01:20:58'),
 (35, 'cadastrar', NULL, 'INATIVO', 'INATIVO', 19, NULL, '2016-04-29 05:28:58'),
 (36, 'cadastrar', NULL, 'INATIVO', 'INATIVO', 6, NULL, '2016-05-06 01:26:24'),
-(37, 'editar', NULL, 'INATIVO', 'INATIVO', 19, NULL, '2016-05-07 14:40:33');
+(37, 'editar', NULL, 'INATIVO', 'INATIVO', 19, NULL, '2016-05-07 14:40:33'),
+(38, 'editar', NULL, 'INATIVO', 'INATIVO', 18, NULL, '2016-05-16 04:40:08'),
+(39, 'editar', NULL, 'INATIVO', 'INATIVO', 21, NULL, '2016-06-05 13:51:38');
 
 -- --------------------------------------------------------
 
@@ -554,37 +627,38 @@ CREATE TABLE IF NOT EXISTS `sys_modulos` (
 `id_modulo` int(11) NOT NULL,
   `url_modulo` varchar(255) NOT NULL,
   `nome_modulo` varchar(255) DEFAULT NULL,
-  `posicao_modulo` varchar(255) DEFAULT NULL,
+  `posicao_modulo` int(255) DEFAULT NULL,
   `status_modulo` enum('ATIVO','INATIVO','EXCLUIDO') DEFAULT NULL,
-  `status_selecao_modulo` varchar(255) DEFAULT NULL,
+  `status_selecao_modulo` enum('ATIVO','INATIVO','EXCLUIDO') DEFAULT NULL,
   `id_modulo_pai` int(11) DEFAULT NULL,
   `icone_modulo` varchar(255) DEFAULT NULL,
   `data_criacao_modulo` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `sys_modulos`
 --
 
 INSERT INTO `sys_modulos` (`id_modulo`, `url_modulo`, `nome_modulo`, `posicao_modulo`, `status_modulo`, `status_selecao_modulo`, `id_modulo_pai`, `icone_modulo`, `data_criacao_modulo`) VALUES
-(0, '', 'ROOT', '0', 'ATIVO', 'INATIVO', NULL, NULL, '2016-01-20 00:00:00'),
-(5, 'funcionarios', 'Funcion&aacute;rios', '0', 'ATIVO', 'ATIVO', 0, 'glyphicons glyphicons-group', '2016-01-20 15:15:22'),
-(6, 'configuracoes', 'Configura&ccedil;&otilde;es', '7', 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-cogwheels', '2016-01-20 15:24:33'),
-(7, 'modulos', 'M&oacute;dulos', '', 'ATIVO', 'INATIVO', 6, NULL, '2016-01-20 15:24:40'),
-(8, 'fornecedores', 'Fornecedores', '1', 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-handshake', '2016-01-20 20:55:14'),
-(9, 'produtos', 'Produtos', '2', 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-package', '2016-01-23 16:19:53'),
-(10, 'estoque', 'Estoque', '3', 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-cargo', '2016-01-23 16:20:46'),
-(11, 'caixa', 'Caixa', '4', 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-calculator', '2016-01-23 16:21:21'),
-(14, 'relatorios', 'Relat&oacute;rios', '6', 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-stats', '2016-01-23 16:23:17'),
+(0, '', 'ROOT', 0, 'ATIVO', 'INATIVO', NULL, NULL, '2016-01-20 00:00:00'),
+(5, 'funcionarios', 'Funcion&aacute;rios', 0, 'ATIVO', 'ATIVO', 0, 'glyphicons glyphicons-group', '2016-01-20 15:15:22'),
+(6, 'configuracoes', 'Configura&ccedil;&otilde;es', 7, 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-cogwheels', '2016-01-20 15:24:33'),
+(7, 'modulos', 'M&oacute;dulos', 0, 'ATIVO', 'INATIVO', 6, NULL, '2016-01-20 15:24:40'),
+(8, 'fornecedores', 'Fornecedores', 1, 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-handshake', '2016-01-20 20:55:14'),
+(9, 'produtos', 'Produtos', 2, 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-package', '2016-01-23 16:19:53'),
+(10, 'estoque', 'Estoque', 3, 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-cargo', '2016-01-23 16:20:46'),
+(11, 'caixa', 'Caixa', 4, 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-calculator', '2016-01-23 16:21:21'),
+(14, 'relatorios', 'Relat&oacute;rios', 6, 'ATIVO', 'INATIVO', 0, 'glyphicons glyphicons-stats', '2016-01-23 16:23:17'),
 (15, 'niveis_acesso', 'N&iacute;veis de acesso', NULL, 'ATIVO', 'INATIVO', 6, NULL, '2016-01-30 15:00:29'),
 (17, 'usuarios', 'Usu&aacute;rios', NULL, 'ATIVO', 'INATIVO', 5, NULL, '2016-03-03 23:16:41'),
 (18, 'cargos', 'Cargos', NULL, 'ATIVO', 'INATIVO', 5, NULL, '2016-03-13 03:31:55'),
 (19, 'categorias', 'Categorias', NULL, 'ATIVO', 'INATIVO', 9, NULL, '2016-03-22 00:01:40'),
 (20, 'marcas', 'Marcas', NULL, 'ATIVO', 'INATIVO', 9, NULL, '2016-03-22 00:01:50'),
-(21, 'suprimentos', 'Suprimentos', '5', 'ATIVO', 'ATIVO', 0, 'glyphicons glyphicons-transfer', '2016-04-26 01:13:32'),
+(21, 'suprimentos', 'Suprimentos', 5, 'ATIVO', 'ATIVO', 0, 'glyphicons glyphicons-transfer', '2016-04-26 01:13:32'),
 (22, 'requisicoes', 'Requisi&ccedil;&otilde;es', NULL, 'ATIVO', 'INATIVO', 21, NULL, '2016-04-26 01:17:25'),
 (23, 'cotacoes', 'Cota&ccedil;&otilde;es', NULL, 'ATIVO', 'INATIVO', 21, NULL, '2016-04-26 01:17:40'),
-(24, 'pedidos', 'Pedidos', NULL, 'ATIVO', 'INATIVO', 21, NULL, '2016-04-26 01:17:52');
+(24, 'pedidos', 'Pedidos', NULL, 'ATIVO', 'INATIVO', 21, NULL, '2016-04-26 01:17:52'),
+(25, 'teste', NULL, NULL, 'INATIVO', 'INATIVO', 0, NULL, '2016-05-16 05:12:09');
 
 -- --------------------------------------------------------
 
@@ -645,14 +719,15 @@ CREATE TABLE IF NOT EXISTS `sys_usuarios` (
   `status_usuario` varchar(255) DEFAULT NULL,
   `data_criacao_usuario` datetime DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `sys_usuarios`
 --
 
 INSERT INTO `sys_usuarios` (`id_usuario`, `id_funcionario`, `id_nivel_acesso`, `email_usuario`, `login_usuario`, `senha_usuario`, `hash_acesso`, `status_usuario`, `data_criacao_usuario`, `timestamp`) VALUES
-(1, 59, 1, 'wellington-cezar@hotmail.com', 'admin', '$2a$08$MTY2MjMyMDcyMTU3MmJjNe4RI1/LIguX39aJwjjJ374Tx2TdxfSXe', '$2a$08$MTI5MTEyMzQwNzU3MmY2NudBeS6z2TsA8hKRLT3jPwnWbA1dOKK7m', 'ATIVO', NULL, '2016-05-05 22:17:49');
+(1, 59, 1, 'wellington-cezar@hotmail.com', 'admin', '$2a$08$MTY2MjMyMDcyMTU3MmJjNe4RI1/LIguX39aJwjjJ374Tx2TdxfSXe', '$2a$08$Njg1NDM0MDQ3NTc1NDY4MO4Xz/vzXJ8i8eopKqEQXSZwLxqdYX/PO', 'ATIVO', NULL, '2016-05-05 22:17:49'),
+(4, 86, 2, 'wellington.infodahora@gmail.com', 'diego', '$2a$08$ODU5ODI5MTY0NTc0MWNlYOIm5hyOn.o44CEfcKabZzY5UeuxwBbFe', '$2a$08$NzUyMjQzNDQ0NTc0MWNlYutFugdU.LQuw0N9YGYpeQqVXXxYDkBIC', 'ATIVO', '2016-05-22 05:22:19', '2016-05-22 15:22:19');
 
 -- --------------------------------------------------------
 
@@ -666,7 +741,7 @@ CREATE TABLE IF NOT EXISTS `sys_usuarios_acessos` (
   `data_acesso` date DEFAULT NULL,
   `hora_acesso` time DEFAULT NULL,
   `ip_acesso` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=195 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `sys_usuarios_acessos`
@@ -847,7 +922,26 @@ INSERT INTO `sys_usuarios_acessos` (`id_usuarios_acesso`, `id_usuario`, `data_ac
 (172, 1, '2016-05-05', '06:03:25', '::1'),
 (173, 1, '2016-05-06', '00:17:56', '::1'),
 (174, 1, '2016-05-07', '13:39:36', '::1'),
-(175, 1, '2016-05-08', '13:19:53', '::1');
+(175, 1, '2016-05-08', '13:19:53', '::1'),
+(176, 1, '2016-05-10', '01:24:39', '::1'),
+(177, 1, '2016-05-12', '23:55:13', '::1'),
+(178, 1, '2016-05-12', '23:55:35', '::1'),
+(179, 1, '2016-05-15', '18:54:18', '::1'),
+(180, 1, '2016-05-20', '00:26:22', '::1'),
+(181, 1, '2016-05-21', '21:03:22', '::1'),
+(182, 1, '2016-05-22', '17:04:34', '::1'),
+(183, 1, '2016-05-22', '17:18:53', '::1'),
+(184, 4, '2016-05-22', '17:22:49', '::1'),
+(185, 1, '2016-05-22', '18:18:53', '::1'),
+(186, 1, '2016-05-23', '04:42:35', '::1'),
+(187, 1, '2016-05-24', '00:21:03', '::1'),
+(188, 1, '2016-05-27', '19:37:31', '::1'),
+(189, 1, '2016-05-29', '04:09:44', '::1'),
+(190, 1, '2016-05-29', '04:48:03', '::1'),
+(191, 1, '2016-05-29', '05:16:16', '::1'),
+(192, 1, '2016-06-03', '00:31:22', '::1'),
+(193, 1, '2016-06-05', '13:50:19', '::1'),
+(194, 1, '2016-06-05', '14:57:41', '::1');
 
 -- --------------------------------------------------------
 
@@ -877,7 +971,7 @@ CREATE TABLE IF NOT EXISTS `telefones` (
   `tipo_telefone` varchar(255) DEFAULT NULL,
   `operadora_telefone` varchar(255) DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `telefones`
@@ -889,7 +983,10 @@ INSERT INTO `telefones` (`id_telefone`, `categoria_telefone`, `numero_telefone`,
 (6, 'telefone', '(22) 22222-2222', 'Profissional', '333', '2016-01-10 19:02:00'),
 (8, 'celular', '(42) 34234-2342', 'Pessoal', '33333333333333333333333', '2016-01-11 01:24:51'),
 (9, 'telefone', '(23) 4', 'Pessoal', '234', '2016-01-19 00:29:54'),
-(10, 'telefone', '(11) 32838-3838', 'Pessoal', 'tim', '2016-03-13 16:48:42');
+(10, 'telefone', '(11) 32838-3838', 'Pessoal', 'tim', '2016-03-13 16:48:42'),
+(11, 'celular', '(12) 31212-3123', 'Pessoal', 'oi', '2016-05-15 19:39:24'),
+(12, 'celular', '(12) 34444-4444', 'Pessoal', '221', '2016-05-22 01:05:45'),
+(15, 'telefone', '(11) 11111-1111', 'Residencial', 'Tim', '2016-06-05 18:55:51');
 
 -- --------------------------------------------------------
 
@@ -920,6 +1017,15 @@ CREATE TABLE IF NOT EXISTS `telefones_funcionarios` (
   `id_telefone` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Extraindo dados da tabela `telefones_funcionarios`
+--
+
+INSERT INTO `telefones_funcionarios` (`id_funcionario`, `id_telefone`) VALUES
+(86, 11),
+(87, 12),
+(79, 15);
+
 -- --------------------------------------------------------
 
 --
@@ -928,25 +1034,52 @@ CREATE TABLE IF NOT EXISTS `telefones_funcionarios` (
 
 CREATE TABLE IF NOT EXISTS `unidade_medida` (
 `id_unidade_medida` int(11) NOT NULL,
-  `id_produto` int(11) NOT NULL,
-  `nome_unidade_medida` varchar(255) DEFAULT NULL,
-  `codigo_unidade_medida` varchar(255) DEFAULT NULL,
-  `fator_unidade_medida` decimal(10,2) NOT NULL,
-  `ordem` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+  `nome_unidade_medida` varchar(255) NOT NULL,
+  `abreviacao_unidade_medida` varchar(10) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `unidade_medida`
 --
 
-INSERT INTO `unidade_medida` (`id_unidade_medida`, `id_produto`, `nome_unidade_medida`, `codigo_unidade_medida`, `fator_unidade_medida`, `ordem`, `timestamp`) VALUES
-(7, 23, 'unidade', 'uni', '0.00', 0, '2016-05-09 02:39:16'),
-(8, 24, 'unidade', 'uni', '0.00', 0, '2016-05-09 02:40:50'),
-(9, 24, 'caixa', 'cx', '0.00', 1, '2016-05-09 02:40:50'),
-(10, 25, '1', '1', '0.00', 0, '2016-05-09 02:43:34'),
-(11, 26, '2', '3', '0.00', 0, '2016-05-09 02:44:40'),
-(12, 27, 'aa', 'ss', '10.00', 0, '2016-05-09 03:53:47');
+INSERT INTO `unidade_medida` (`id_unidade_medida`, `nome_unidade_medida`, `abreviacao_unidade_medida`) VALUES
+(1, 'Grama(s)', 'g'),
+(2, 'Quilograma(s)', 'Kg'),
+(7, 'Pacote(s)', 'PC'),
+(10, 'Unidade(s)', 'UN'),
+(11, 'Caixa(s)', 'CX'),
+(12, 'Lata(s)', 'LT'),
+(13, 'Dúzia(s)', 'DZ'),
+(14, 'Metro(s)', 'm'),
+(15, 'Centímetro(s)', 'cm'),
+(16, 'Litro(s)', 'L'),
+(17, 'Fardo(s)', 'FD'),
+(18, 'Kit', 'KT');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `unidade_medida_produto`
+--
+
+CREATE TABLE IF NOT EXISTS `unidade_medida_produto` (
+`id_unidade_medida_produto` int(11) NOT NULL,
+  `id_produto` int(11) NOT NULL,
+  `id_unidade_medida` int(11) NOT NULL,
+  `fator_unidade_medida` decimal(10,2) NOT NULL,
+  `para_venda` tinyint(1) NOT NULL DEFAULT '0',
+  `para_estoque` tinyint(1) NOT NULL DEFAULT '0',
+  `ordem` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `unidade_medida_produto`
+--
+
+INSERT INTO `unidade_medida_produto` (`id_unidade_medida_produto`, `id_produto`, `id_unidade_medida`, `fator_unidade_medida`, `para_venda`, `para_estoque`, `ordem`, `timestamp`) VALUES
+(24, 37, 7, '1.00', 1, 1, 0, '2016-06-06 03:08:07'),
+(25, 38, 10, '1.00', 1, 1, 0, '2016-06-06 03:15:57');
 
 --
 -- Indexes for dumped tables
@@ -963,6 +1096,12 @@ ALTER TABLE `cargos`
 --
 ALTER TABLE `categorias`
  ADD PRIMARY KEY (`id_categoria`), ADD UNIQUE KEY `nome_categoria` (`nome_categoria`);
+
+--
+-- Indexes for table `cotacoes`
+--
+ALTER TABLE `cotacoes`
+ ADD PRIMARY KEY (`id_cotacao`), ADD KEY `id_requisicao` (`id_requisicao`);
 
 --
 -- Indexes for table `emails`
@@ -1043,6 +1182,18 @@ ALTER TABLE `nivel_acesso`
  ADD PRIMARY KEY (`id_nivel_acesso`);
 
 --
+-- Indexes for table `orcamentos`
+--
+ALTER TABLE `orcamentos`
+ ADD PRIMARY KEY (`id_orcamento`), ADD KEY `id_fornecedor` (`id_fornecedor`), ADD KEY `id_requisicao` (`id_requisicao`);
+
+--
+-- Indexes for table `orcamento_produto`
+--
+ALTER TABLE `orcamento_produto`
+ ADD PRIMARY KEY (`id_orcamento_produto`), ADD KEY `id_orcamento` (`id_orcamento`), ADD KEY `id_requisicao_produto` (`id_requisicao_produto`);
+
+--
 -- Indexes for table `produtos`
 --
 ALTER TABLE `produtos`
@@ -1058,7 +1209,7 @@ ALTER TABLE `produto_fornecedores`
 -- Indexes for table `requisicao_produto`
 --
 ALTER TABLE `requisicao_produto`
- ADD PRIMARY KEY (`id_requisicao_produto`);
+ ADD PRIMARY KEY (`id_requisicao_produto`), ADD KEY `id_produto` (`id_produto`), ADD KEY `id_requisicao` (`id_requisicao`), ADD KEY `id_unidade_medida_produto` (`id_unidade_medida_produto`);
 
 --
 -- Indexes for table `requisicao_usuario`
@@ -1130,7 +1281,13 @@ ALTER TABLE `telefones_funcionarios`
 -- Indexes for table `unidade_medida`
 --
 ALTER TABLE `unidade_medida`
- ADD PRIMARY KEY (`id_unidade_medida`), ADD KEY `id_produto` (`id_produto`), ADD KEY `id_produto_2` (`id_produto`);
+ ADD PRIMARY KEY (`id_unidade_medida`), ADD UNIQUE KEY `abreviacao_unidade_medida` (`abreviacao_unidade_medida`);
+
+--
+-- Indexes for table `unidade_medida_produto`
+--
+ALTER TABLE `unidade_medida_produto`
+ ADD PRIMARY KEY (`id_unidade_medida_produto`), ADD KEY `id_produto` (`id_produto`), ADD KEY `id_produto_2` (`id_produto`), ADD KEY `id_unidade_medida` (`id_unidade_medida`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -1147,15 +1304,20 @@ MODIFY `id_cargo` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 ALTER TABLE `categorias`
 MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
+-- AUTO_INCREMENT for table `cotacoes`
+--
+ALTER TABLE `cotacoes`
+MODIFY `id_cotacao` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `emails`
 --
 ALTER TABLE `emails`
-MODIFY `id_email` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `id_email` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `enderecos`
 --
 ALTER TABLE `enderecos`
-MODIFY `id_endereco` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
+MODIFY `id_endereco` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `estoque`
 --
@@ -1180,22 +1342,32 @@ MODIFY `id_agenda_notificado` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 -- AUTO_INCREMENT for table `funcionarios`
 --
 ALTER TABLE `funcionarios`
-MODIFY `id_funcionario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=86;
+MODIFY `id_funcionario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=88;
 --
 -- AUTO_INCREMENT for table `marcas`
 --
 ALTER TABLE `marcas`
-MODIFY `id_marca` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id_marca` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `nivel_acesso`
 --
 ALTER TABLE `nivel_acesso`
 MODIFY `id_nivel_acesso` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
+-- AUTO_INCREMENT for table `orcamentos`
+--
+ALTER TABLE `orcamentos`
+MODIFY `id_orcamento` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `orcamento_produto`
+--
+ALTER TABLE `orcamento_produto`
+MODIFY `id_orcamento_produto` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `produtos`
 --
 ALTER TABLE `produtos`
-MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=28;
+MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
 --
 -- AUTO_INCREMENT for table `produto_fornecedores`
 --
@@ -1205,27 +1377,27 @@ MODIFY `id_produto_fornecedor` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26
 -- AUTO_INCREMENT for table `requisicao_produto`
 --
 ALTER TABLE `requisicao_produto`
-MODIFY `id_requisicao_produto` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id_requisicao_produto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `requisicao_usuario`
 --
 ALTER TABLE `requisicao_usuario`
-MODIFY `id_requisicao_usuario` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id_requisicao_usuario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `requisicoes`
 --
 ALTER TABLE `requisicoes`
-MODIFY `id_requisicao` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id_requisicao` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `sys_actions`
 --
 ALTER TABLE `sys_actions`
-MODIFY `id_action` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=38;
+MODIFY `id_action` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=40;
 --
 -- AUTO_INCREMENT for table `sys_modulos`
 --
 ALTER TABLE `sys_modulos`
-MODIFY `id_modulo` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
+MODIFY `id_modulo` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `sys_paginas`
 --
@@ -1235,12 +1407,12 @@ MODIFY `id_pagina` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
 -- AUTO_INCREMENT for table `sys_usuarios`
 --
 ALTER TABLE `sys_usuarios`
-MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `sys_usuarios_acessos`
 --
 ALTER TABLE `sys_usuarios_acessos`
-MODIFY `id_usuarios_acesso` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=176;
+MODIFY `id_usuarios_acesso` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=195;
 --
 -- AUTO_INCREMENT for table `sys_usuarios_grupo`
 --
@@ -1250,15 +1422,26 @@ MODIFY `id_usuarios_grupo` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `telefones`
 --
 ALTER TABLE `telefones`
-MODIFY `id_telefone` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+MODIFY `id_telefone` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `unidade_medida`
 --
 ALTER TABLE `unidade_medida`
-MODIFY `id_unidade_medida` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+MODIFY `id_unidade_medida` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
+--
+-- AUTO_INCREMENT for table `unidade_medida_produto`
+--
+ALTER TABLE `unidade_medida_produto`
+MODIFY `id_unidade_medida_produto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Limitadores para a tabela `cotacoes`
+--
+ALTER TABLE `cotacoes`
+ADD CONSTRAINT `cotacoes_ibfk_1` FOREIGN KEY (`id_requisicao`) REFERENCES `requisicoes` (`id_requisicao`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `emails_fornecedores`
@@ -1313,11 +1496,33 @@ ALTER TABLE `funcionarios`
 ADD CONSTRAINT `funcionarios_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `cargos` (`id_cargo`) ON DELETE SET NULL;
 
 --
+-- Limitadores para a tabela `orcamentos`
+--
+ALTER TABLE `orcamentos`
+ADD CONSTRAINT `orcamentos_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `orcamentos_ibfk_2` FOREIGN KEY (`id_requisicao`) REFERENCES `requisicoes` (`id_requisicao`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `orcamento_produto`
+--
+ALTER TABLE `orcamento_produto`
+ADD CONSTRAINT `orcamento_produto_ibfk_1` FOREIGN KEY (`id_orcamento`) REFERENCES `orcamentos` (`id_orcamento`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `orcamento_produto_ibfk_2` FOREIGN KEY (`id_requisicao_produto`) REFERENCES `requisicao_produto` (`id_requisicao_produto`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Limitadores para a tabela `produto_fornecedores`
 --
 ALTER TABLE `produto_fornecedores`
 ADD CONSTRAINT `produto_fornecedores_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id_produto`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `produto_fornecedores_ibfk_2` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedores` (`id_fornecedor`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `requisicao_produto`
+--
+ALTER TABLE `requisicao_produto`
+ADD CONSTRAINT `requisicao_produto_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id_produto`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `requisicao_produto_ibfk_2` FOREIGN KEY (`id_requisicao`) REFERENCES `requisicoes` (`id_requisicao`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `requisicao_produto_ibfk_3` FOREIGN KEY (`id_unidade_medida_produto`) REFERENCES `unidade_medida_produto` (`id_unidade_medida_produto`);
 
 --
 -- Limitadores para a tabela `sys_actions`
@@ -1365,10 +1570,11 @@ ADD CONSTRAINT `telefones_funcionarios_ibfk_1` FOREIGN KEY (`id_funcionario`) RE
 ADD CONSTRAINT `telefones_funcionarios_ibfk_2` FOREIGN KEY (`id_telefone`) REFERENCES `telefones` (`id_telefone`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Limitadores para a tabela `unidade_medida`
+-- Limitadores para a tabela `unidade_medida_produto`
 --
-ALTER TABLE `unidade_medida`
-ADD CONSTRAINT `unidade_medida_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id_produto`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `unidade_medida_produto`
+ADD CONSTRAINT `unidade_medida_produto_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id_produto`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `unidade_medida_produto_ibfk_2` FOREIGN KEY (`id_unidade_medida`) REFERENCES `unidade_medida` (`id_unidade_medida`) ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

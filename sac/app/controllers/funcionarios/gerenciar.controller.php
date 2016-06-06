@@ -379,7 +379,7 @@ class gerenciar extends Controller{
 				$telefoneModel->setNumero( $telefone['telefone'] );
 				$telefoneModel->setOperadora( $telefone['operadora'] );
 				$telefoneModel->setTipo( $telefone['tipo_telefone'] );
-				$funcionariosModel->setTelefones($telefoneModel);
+				$funcionariosModel->addTelefone($telefoneModel);
 			}
 
 
@@ -391,7 +391,7 @@ class gerenciar extends Controller{
 				$emailModel->setId( $email['idemail'] );
 				$emailModel->setEmail( $email['email'] );
 				$emailModel->setTipo( $email['tipo_email'] );
-				$funcionariosModel->setEmail($emailModel);
+				$funcionariosModel->addEmail($emailModel);
 			}
 
 

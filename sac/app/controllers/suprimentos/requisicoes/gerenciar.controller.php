@@ -28,10 +28,15 @@ class gerenciar extends Controller{
 		$data = array(
 			'titlePage' => 'Gerenciar Requisicoes'
 		);
+		
+		$this->load->library('dataFormat',null,true);
+		$data['dataFormat'] = $this->load->dataFormat;
+
 
 		$this->load->dao('suprimentos/requisicoesDao');
 		$requisicoesDao = new requisicoesDao();
 		$data['requisicoes'] = $requisicoesDao->listar();
+
 		$this->load->view('includes/header',$data);
 		$this->load->view('suprimentos/requisicoes/home',$data);
 		$this->load->view('includes/footer',$data);
@@ -297,34 +302,13 @@ class gerenciar extends Controller{
 
 
 
-	/**
-	 * Ãção de atualizar status
-	 */
-	public function atualizarStatus()
-	{
-		$idMarcas = intval($_POST['id']);
-		$status = filter_var($_POST['status']);
-
-		//MARCA MODEL
-		$this->load->model('produtos/marcasModel');
-		$marcasModel = new marcasModel();
-		$marcasModel->setId( $idMarcas );
-		$marcasModel->setStatus( $status );
-
-		//MARCA DAO
-		$this->load->dao('produtos/marcasDao');
-		$marcasDao = new marcasDao();
-		echo $marcasDao->atualizarStatus($marcasModel);
-
-	}
-
 	public function cancelar()
 	{
-		$saveRouter = new saveRouter;
-		$saveRouter->saveModule();
-		$saveRouter->saveAction();
-		$this->load->checkPermissao->check();
-		$this->atualizarStatus();
+		// $saveRouter = new saveRouter;
+		// $saveRouter->saveModule();
+		// $saveRouter->saveAction();
+		// $this->load->checkPermissao->check();
+		// $this->atualizarStatus();
 	}
 
 
@@ -337,16 +321,68 @@ class gerenciar extends Controller{
 		$this->atualizarStatus();
 	}
 
-	public function listarProdutosRequisitados()
+	public function listarprodutosrequisitados()
 	{
-		$idRequisicao = isset($_POST['idRequisicao']) ? intval($_POST['idRequisicao']) : '';
-		$this->load->model('suprimentos/requisicoesModel');
+		$idRequisicao = intval($this->load->url->getSegment(4));
+		$this->load->model('suprimentos/requisicoes/requisicoesModel');
 		$requisicoesModel = new requisicoesModel();
 		$requisicoesModel->setId($idRequisicao);
 		$this->load->dao('suprimentos/requisicoesDao');
 		$requisicoesDao = new requisicoesDao();
-		$requisicoesDao->listarProdutosRequisitados($requisicoesModel);
+		$produtosRequisitados = $requisicoesDao->listarProdutosRequisitados($requisicoesModel);
 
+		// $arrayProdutosRequisitados = Array();
+		// $arrayProdutosRequisitados['idRequisicao'] = $produtosRequisitados->getId(); // id da requisição 
+		// $arrayProdutosRequisitados['produtos'] = Array();
+		// foreach ($produtosRequisitados->getProdutosRequisitados() as $key => $produtoRequisitado)
+		// {
+		// 	$aux = Array();
+		// 	$aux['id_produto_requisitado'] = $produtoRequisitado->getId();
+		// 	$aux['nome_produto'] = $produtoRequisitado->getProdutos()->getNome();
+		// 	$aux['nome_unidade_medida'] = $produtoRequisitado->getProdutos()->getUnidadeMedida()[0]->getUnidadeMedida()->getNome();
+		// 	$aux['quantidade'] = $produtoRequisitado->getQuantidade();
+		// 	$aux['status'] = $produtoRequisitado->getStatus();
+		// 	array_push($arrayProdutosRequisitados['produtos'], $aux);
+		// }
+		$data['produtosrequisitados'] = $produtosRequisitados;
+		$this->load->library('dataFormat',null,true);
+		$data['dataFormat'] = $this->load->dataFormat;
+		//$this->load->view('includes/header',$data);
+		$this->load->view('suprimentos/requisicoes/produtos_requisitados',$data);
+		//$this->load->view('includes/footer',$data);
 	}
+
+
+	public function aprovarcotacaoproduto()
+	{
+		$this->load->model('suprimentos/requisicoes/requisicaoProdutoModel');
+		$this->load->dao('suprimentos/requisicoesDao');
+
+		$id_produto_requisitado = intval($this->load->url->getSegment(4));
+		
+		$requisicaoProdutoModel = new requisicaoProdutoModel();
+		$requisicaoProdutoModel->setId($id_produto_requisitado);
+		$requisicaoProdutoModel->aprovar();
+
+		$requisicoesDao = new requisicoesDao();
+		echo $requisicoesDao->aprovarcotacaoproduto($requisicaoProdutoModel);
+	}
+
+	public function reprovarcotacaoproduto()
+	{
+		$this->load->model('suprimentos/requisicoes/requisicaoProdutoModel');
+		$this->load->dao('suprimentos/requisicoesDao');
+
+		$id_produto_requisitado = intval($this->load->url->getSegment(4));
+		
+		$requisicaoProdutoModel = new requisicaoProdutoModel();
+		$requisicaoProdutoModel->setId($id_produto_requisitado);
+		$requisicaoProdutoModel->reprovar();
+
+		$requisicoesDao = new requisicoesDao();
+		echo $requisicoesDao->reprovarcotacaoproduto($requisicaoProdutoModel);
+	}
+
+	
 
 }

@@ -7,7 +7,7 @@ class requisicaoProdutoModel{
 	private $id;
 	private $produto;
 	private $quantidade;
-	private $status;
+	private $status = statusRequisicoes::NOVO;
 	//SETERS
 	public function setId($id)
 	{
@@ -25,7 +25,16 @@ class requisicaoProdutoModel{
 	{
 		$this->status = $status;
 	}
-	
+
+	public function aprovar()
+	{
+		$this->status = statusRequisicoes::APROVADO;
+	}
+	public function reprovar()
+	{
+		$this->status = statusRequisicoes::REPROVADO;
+	}
+
 
 	//GETERS
 	public function getId()

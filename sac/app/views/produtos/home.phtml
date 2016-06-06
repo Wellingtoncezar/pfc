@@ -26,7 +26,6 @@
                             <th>Status (Ativo/Inativo)</th>
                             <th>Ações</th>
                         </tr>';  
-            if(!empty($produtos)):
                 $tbody = '';
                 foreach ($produtos as $prod):
 
@@ -52,9 +51,6 @@
                         </tr>';
                 endforeach;
                 echo $template->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
-            else:
-                echo '<h2>Não há registros cadastrados</h2>';
-            endif;
             ?>
 
     </div>

@@ -215,46 +215,71 @@ class requisicoesDao extends Dao{
 
 	public function listarProdutosRequisitados(requisicoesModel $requisicao)
 	{
-		// $this->db->clear();
-		// $this->db->setTabela('requisicoes');
-		// $this->db->setCondicao(" id_requisicao = ? ");
-		// $this->db->setParameter(1,$requisicao->getId());
-		// if($this->db->select()):
-		// 	$result = $this->db->resultAll();
-			
-		// 	$requisicoesModel = new requisicoesModel();
-		// 	$requisicoesModel->setId($value['id_requisicao']);
-		// 	$requisicoesModel->setCodigo($value['codigo_requisicao']);
-		// 	$requisicoesModel->setTitulo($value['titulo_requisicao']);
-		// 	$requisicoesModel->setObservacoes($value['observacoes_requisicao']);
-		// 	$requisicoesModel->setData($value['data_requisicao']);
-		// 	$requisicoesModel->setStatus(statusRequisicoes::getAttribute($value['status_requisicao']));
+		$this->load->model('produtos/produtosModel');
+		$this->load->model('suprimentos/requisicoes/requisicaoProdutoModel');
+		$this->load->model('produtos/unidademedidaModel');
+		$this->load->model('produtos/unidadeMedidaProdutoModel');
 
-		// 	$this->db->clear();
-		// 	$this->db->setTabela('produtos as a , requisicao_produto as b , unidade_media as c');
-		// 	$this->db->setCondicao("a.id_usuario = b.id_usuario and a.id_funcionario = c.id_funcionario and b.id_requisicao = ?");
-		// 	$this->db->setParameter(1,$requisicoesModel->getId());
-		// 	$usuariosModel = new usuariosModel();
-		// 	$funcionariosModel = new funcionariosModel();
-			
-		// 	if($this->db->select())
-		// 	{
-		// 		$user = $this->db->result();
-		// 		$funcionariosModel->setId($user['id_funcionario']);
-		// 		$funcionariosModel->setNome($user['nome_funcionario']);
-		// 		$funcionariosModel->setSobrenome($user['sobrenome_funcionario']);
+		try{
 
-		// 		$usuariosModel->setId($user['id_usuario']);
-		// 	}
-		// 	$usuariosModel->setFuncionario($funcionariosModel);
-		// 	$requisicoesModel->setUsuarioCadastrado($usuariosModel);
-		
-			
+			$this->db->clear();
+			$this->db->setTabela('requisicoes');
+			$this->db->setCondicao(" id_requisicao = ? ");
+			$this->db->setParameter(1,$requisicao->getId());
+			$requisicoesModel = new requisicoesModel();
+			if($this->db->select()):
+				$result = $this->db->result();
+				$requisicoesModel->setId($result['id_requisicao']);
+				$requisicoesModel->setCodigo($result['codigo_requisicao']);
+				$requisicoesModel->setTitulo($result['titulo_requisicao']);
+				$requisicoesModel->setObservacoes($result['observacoes_requisicao']);
+				$requisicoesModel->setData($result['data_requisicao']);
+				$requisicoesModel->setStatus(statusRequisicoes::getAttribute($result['status_requisicao']));
 
+				$this->db->clear();
+				$this->db->setTabela('produtos as A , requisicao_produto as B , unidade_medida_produto as C, unidade_medida as D');
+				$this->db->setCondicao("B.id_requisicao = ? AND B.id_produto = A.id_produto AND B.id_unidade_medida_produto = C.id_unidade_medida_produto AND C.id_unidade_medida = D.id_unidade_medida");
+				$this->db->setParameter(1,$requisicao->getId());
+				$usuariosModel = new usuariosModel();
+				$funcionariosModel = new funcionariosModel();
+				
+				if($this->db->select())
+				{
+					$resultProd = $this->db->resultAll();
+					foreach ($resultProd as $key => $produto) 
+					{
+						//unidade medida
+						$unidademedidaModel = new unidademedidaModel();
+						$unidademedidaModel->setId($produto['id_unidade_medida']);
+						$unidademedidaModel->setNome($produto['nome_unidade_medida']);
 
+						//unidade de medida do produto
+						$unidadeMedidaProdutoModel = new unidadeMedidaProdutoModel();
+						$unidadeMedidaProdutoModel->setId($produto['id_unidade_medida_produto']);
+						$unidadeMedidaProdutoModel->setUnidadeMedida($unidademedidaModel);
 
+						//prodtos
+						$produtosModel = new produtosModel();
+						$produtosModel->setId($produto['id_produto']);
+						$produtosModel->setNome($produto['nome_produto']);
+						$produtosModel->setFoto($produto['foto_produto']);
+						$produtosModel->addUnidadeMedida($unidadeMedidaProdutoModel);
+						
+						//produtos requisitados
+						$requisicaoProdutoModel = new requisicaoProdutoModel();
+						$requisicaoProdutoModel->setId($produto['id_requisicao_produto']);
+						$requisicaoProdutoModel->setQuantidade($produto['quantidade_produto']);
+						$requisicaoProdutoModel->addProduto($produtosModel);
+						$requisicaoProdutoModel->setStatus(statusRequisicoes::getAttribute($produto['status_requisicao_produto']));
+						$requisicoesModel ->addProdutoRequisitado($requisicaoProdutoModel);
+					}
+				}
+			endif;
+			return $requisicoesModel;	
+		} catch (Exception $e) {
 
-
+			throw new Exception($e, 1);
+		}	
 	}
 	
 
@@ -320,6 +345,52 @@ class requisicoesDao extends Dao{
 		
 	}
 
+	public function aprovarcotacaoproduto(requisicaoProdutoModel $produtoRequisitado)
+	{
+		$data = array(
+ 			'status_requisicao_produto' =>$produtoRequisitado->getStatus()
+ 		);
 
 
+ 		$this->db->clear();
+		$this->db->setTabela('requisicao_produto');
+		$this->db->setCondicao('id_requisicao_produto = ?');
+		$this->db->setParameter(1, $produtoRequisitado->getId());
+		try {
+			if($this->db->update($data))
+			{
+				return TRUE;
+	 		}else
+	 		{
+	 			return $this->db->getError();
+	 		}
+		} catch (Exception $e) {
+			throw new Exception($e, 1);
+		}
+	}
+
+	public function reprovarcotacaoproduto(requisicaoProdutoModel $produtoRequisitado)
+	{
+		$data = array(
+ 			'status_requisicao_produto' =>$produtoRequisitado->getStatus()
+ 		);
+
+
+ 		$this->db->clear();
+		$this->db->setTabela('requisicao_produto');
+		$this->db->setCondicao('id_requisicao_produto = ?');
+		$this->db->setParameter(1, $produtoRequisitado->getId());
+		try {
+			if($this->db->update($data))
+			{
+				return TRUE;
+	 		}else
+	 		{
+	 			return $this->db->getError();
+	 		}
+		} catch (Exception $e) {
+			throw new Exception($e, 1);
+		}
+	}
+	
 }

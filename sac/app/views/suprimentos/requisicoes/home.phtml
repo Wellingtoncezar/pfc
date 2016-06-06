@@ -37,20 +37,17 @@
                             <td>'.$requisicao->getUsuarioCadastrado()->getFuncionario()->getNome().'</td>
                             <td></td>
                             <td>'.$requisicao->getTitulo().'</td>
-                            <td>'.$requisicao->getData().'</td>
+                            <td>'.$dataFormat->formatar($requisicao->getData(),'datahora').'</td>
                             <td>'
-                                .$this->templateFactory->getButton('visualizar',array('href'=>'javascript:void(0)', 'title'=>'Visualizar')).
+                                .$this->templateFactory->getButton('visualizar',array('href'=>URL.'suprimentos/requisicoes/gerenciar/listarprodutosrequisitados/'.$requisicao->getId(), 'title'=>'Visualizar')).
                                 $this->templateFactory->getButton('Editar',array('href'=>URL.'suprimentos/requisicoes/gerenciar/editar/'.$requisicao->getId(), 'title'=>'Editar')).
                                 $this->templateFactory->getButton('cotar',array('id'=> $requisicao->getId(), URL.'suprimentos/requisicoes/gerenciar/cotartodos/', 'title'=>'Cotar')).
-                                $this->templateFactory->getButton('cancelar', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/cancelar/').
+                                $this->templateFactory->getButton('excluir', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/cancelar/').
                             '</td>
                         </tr>';
                 endforeach;
                 echo $this->templateFactory->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
             ?>
-        
-            </tbody>
-        </table>
     </div>
 
 </div>
@@ -62,7 +59,7 @@
                     <h4 class="modal-title">Lista De Produtos Requisitados</h4>
                 </div>
                 <div class="modal-body">
-                    <p></p>
+                   
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
@@ -96,6 +93,12 @@
 
         table.$('.btn_visualizar').on('click',function(){
             $('#modalProdutosRequisitados').modal('show');
+            
+            $.post($(this).attr('href'), {}, function(data, textStatus, xhr) {
+                $('#modalProdutosRequisitados .modal-body').html(data);
+            });
+
+
             return false;
         })
 

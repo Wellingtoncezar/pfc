@@ -48,7 +48,7 @@ class uploadFoto extends Library
 
 					$$_destCrop = $$_destCrop.$upload->getArquivo();
 
-					$w = $cropValues['w'] ;
+					$w = $cropValues['w'];
 					$h =  $cropValues['h'];
 					$x1 = $cropValues['x1'];
 					$y1 = $cropValues['y1'];
