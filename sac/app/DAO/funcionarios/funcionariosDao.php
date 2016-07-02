@@ -25,7 +25,7 @@ class funcionariosDao extends Dao{
 
 		$this->db->clear();
 		$this->db->setTabela('funcionarios AS A, cargos AS B');
-		$this->db->setCondicao(" A.status_funcionario in('".status::ATIVO."','".status::INATIVO."') ");
+		$this->db->setCondicao(" A.status_funcionario in('".status::ATIVO."','".status::INATIVO."') AND A.id_cargo = B.id_cargo");
 		$campos = array('A.id_funcionario','A.codigo_funcionario','A.foto_funcionario','A.nome_funcionario','A.sobrenome_funcionario','B.nome_cargo','B.setor_cargo','A.cpf_funcionario','A.status_funcionario', 'A.timestamp');
 		$this->db->select($campos);
 		if($this->db->rowCount() > 0):

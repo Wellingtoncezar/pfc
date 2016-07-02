@@ -217,7 +217,7 @@ class gerenciar extends Controller{
 				$telefoneModel->setNumero( $telefone['telefone'] );
 				$telefoneModel->setOperadora( $telefone['operadora'] );
 				$telefoneModel->setTipo( $telefone['tipo_telefone'] );
-				$fornecedoresModel->addTelefones($telefoneModel);
+				$fornecedoresModel->addTelefone($telefoneModel);
 				
 			}
 
@@ -376,7 +376,7 @@ class gerenciar extends Controller{
 			$fornecedoresModel->setObservacoes($observacoes);
 			$fornecedoresModel->setEndereco($enderecoModel);
 			$fornecedoresModel->setTelefones($telefonesList);
-			$fornecedoresModel->setEmail($emailList);
+			$fornecedoresModel->setEmails($emailList);
 			$fornecedoresModel->setStatus(status::ATIVO);
 			$fornecedoresModel->setDataCadastro(date('Y-m-d h:i:s'));
 
@@ -398,7 +398,7 @@ class gerenciar extends Controller{
 			$fornecedoresModel->setNomeContato($nomeContato);
 			$fornecedoresModel->setEndereco($enderecoModel);
 			$fornecedoresModel->setTelefones($telefonesList);
-			$fornecedoresModel->setEmail($emailList);
+			$fornecedoresModel->setEmails($emailList);
 			$fornecedoresModel->setDataVisita($data_visita);
 			$fornecedoresModel->setRetorno($retorno);
 

@@ -144,7 +144,7 @@ class fornecedoresDao extends Dao{
 			$fornecedor->setNomeContato($result['nome_contato_fornecedor']);
 			$fornecedor->setEndereco($endereco);
 			$fornecedor->setTelefones($telefonesList);
-			$fornecedor->setEmail($emailsList);
+			$fornecedor->setEmails($emailsList);
 			$fornecedor->setDataVisita($result['data_visita_fornecedor']);
 			$fornecedor->setRetorno($result['retorno_fornecedor']);
 			$fornecedor->setStatus(status::getAttribute($result['status_fornecedor']));
