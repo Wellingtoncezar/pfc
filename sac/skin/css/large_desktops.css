@@ -144,7 +144,7 @@
 	.navbar-default .navbar-nav>li>a {
     text-align: center;
     color: #FFF;
-    min-width: 110px;
+    min-width: 91px;
     transition:0.5s;
 	}
 	.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {

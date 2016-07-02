@@ -3,7 +3,7 @@
 *@author Wellington cezar, Diego Hernandes
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class agenda extends Controller{
+class gerenciar extends Controller{
 	public function __construct(){
 		parent::__construct();
 	}
@@ -31,7 +31,7 @@ class agenda extends Controller{
 		
 		
 		$this->load->view('includes/header',$data);
-		$this->load->view('fornecedores/agenda/home',$data);
+		$this->load->view('agenda/home',$data);
 		$this->load->view('includes/footer',$data);
 
 	}
@@ -56,7 +56,7 @@ class agenda extends Controller{
 		$data['fornecedores'] = $fornecedores->listar();
 
 		$this->load->view('includes/header',$data);
-		$this->load->view('fornecedores/agenda/cadastro',$data);
+		$this->load->view('agenda/cadastro',$data);
 		$this->load->view('includes/footer',$data);
 	}
 

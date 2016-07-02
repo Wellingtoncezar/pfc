@@ -1,0 +1,82 @@
+<div class="container">
+    <?php
+       $btnVoltar = $this->templateFactory->getButton("voltar",array('href'=>URL.'estoque/lotes'));
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnVoltar));    
+    ?>
+    <div class="page-header">
+      <h1>Lote<small> Cadastro</small></h1>
+    </div>
+    <form action="<?=URL?>estoque/lote/gerenciar/inserir" method="post" id="form_requisicao">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dados Gerais</div>
+            <div class="panel-body">
+                
+                
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Código</span>
+                    <input type="text" class="form-control" placeholder="Código" name="codigo" >
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Nome</span>
+                    <input type="text" class="form-control" placeholder="Nome" name="nome" >
+                </div>
+                 <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Estoque</span>
+                    <input type="text" class="form-control" placeholder="Estoque Atual" name="estoqueatual" >
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Estoque Minimo</span>
+                    <input type="text" class="form-control" placeholder="Estoque minimo" name="estoqueminimo" >
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Estoque Maximo</span>
+                    <input type="text" class="form-control" placeholder="Estoque Maximo" name="estoquemaximo" >
+                </div>
+                 <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Observações</span>
+                    <textarea  class="form-control" placeholder="Observações" name="observacoes" ></textarea>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Produtos</span>
+                    <select name="listaproduto" class="form-control">
+                        <?php if(!empty($produtos)):?>
+                        <?php foreach ($produtos as $produto):?>
+                        <option value="<?=$produto->getId()?>"><?=$produto->getNome()?></option>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
+                    <span class="input-group-addon" id="basic-addon1"><a href="javascript:void(0)" class="addProduto"><span class="glyphicons glyphicons-plus"></span></a></span>
+                </div>
+                    <div class="col-sm-6 col-md-2 modeloItemProduto hide" >
+                        <input type="hidden" name="id_produto_requisicao" value="">
+                        <input type="hidden" name="id_produto" value="">
+                        <div class="thumbnail">
+                            <img src="" class="imgProduct">
+                            <div class="caption">
+                                <div class="form-group">
+                                    <label class="productname">Produto</label>
+                                </div>
+                                <label>Qtd.</label>
+                                <div class="input-group">
+                                    <input type="number" name="quantidade" value="0" class="form-control">
+                                    <p class="form-control unidadeMedida"></p>
+                                    <input type="hidden" name="idUnidadeMedida" value="">
+                                </div>
+                                <p><a href="javascript:void(0)" class="btn btn-danger btn_excluir" role="button">Remover</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="listProdutos row">
+                    
+                </div>
+                <div class="btn-group pull-right" role="group">
+                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/suprimentos/requisicoes/cadastrar.js"></script>
