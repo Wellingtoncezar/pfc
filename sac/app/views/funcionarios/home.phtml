@@ -1,6 +1,5 @@
 <div class="container">
     <?php
-
         $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'funcionarios/gerenciar/cadastrar'), URL.'funcionarios/gerenciar/cadastrar');
         echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
@@ -30,7 +29,7 @@
             if(!empty($funcionarios)):
                 $tbody = '';
                 foreach ($funcionarios as $func):
-
+                    
                     $foto = $func->getFoto() != '' ? URL.'skin/uploads/funcionarios/p/'.$func->getFoto() : URL.'skin/img/imagens/semfoto.jpg';
                     $ativo = ($func->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
                     $inativo = ($func->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
@@ -41,16 +40,22 @@
                             <td>'.$func->getNome().' '.$func->getSobrenome().'</td>
                             <td>'.$func->getCargo()->getNome().'(<small>'.$func->getCargo()->getSetor().'</small>)</td>
                             <td>'.$func->getCpf().'</td>
-                            <td>
-                                <select name="status" id="'.$func->getId().'" class="statusSelect">
+                            <td>';
+
+                            //permite a mudança de status se nao for administrador
+                            if(!$func->getUserAdministrator()): 
+                    $tbody .=   '<select name="status" id="'.$func->getId().'" class="statusSelect">
                                     <option value="'.status::ATIVO.'" class="active" '.$ativo.'>Ativo</option>
                                     <option value="'.status::INATIVO.'" class="inactive" '.$inativo.'>Inativo</option>
-                                </select>
-                            </td>
+                                </select>';
+                            endif;
+                    $tbody .='</td>
                             <td>'
-                                .$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/gerenciar/editar/'.$func->getId()), URL.'funcionarios/gerenciar/editar/')
-                                .$this->templateFactory->getButton('excluir', array('id'=> $func->getId()), URL.'funcionarios/gerenciar/excluir/').
-                            '</td>
+                                .$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/gerenciar/editar/'.$func->getId()), URL.'funcionarios/gerenciar/editar/');
+                            if(!$func->getUserAdministrator()) //permite a mudança de status se nao for administrador
+                    $tbody .=  $this->templateFactory->getButton('excluir', array('id'=> $func->getId()), URL.'funcionarios/gerenciar/excluir/');
+                    
+                    $tbody .=  '</td>
                         </tr>';
                 endforeach;
                 echo $this->templateFactory->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
@@ -85,21 +90,24 @@
         });
 
         //EXCLUIR
+        var id;
+        var status;
         table.$('.btn_excluir').on('click',function(){
-            var id = $(this).attr('id');
-            var status = $(this).data('value');
             var modalDelete = $('#modalDelete').modal('show')
-            $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'funcionarios/gerenciar/excluir',{id:id,status:status},function(data){
-                    console.log(data)
-                    if(data == true){
-                        $('#modalDelete').modal('hide');
-                        $('tr#'+id).hide();
-                    }else{
-                        $('#modalDelete').modal('hide');
-                        messageDialog(data,'warning',false,null);
-                    }
-                });
+            id = $(this).attr('id');
+            status = $(this).data('value');
+        });
+
+        $('.btn_ok','#modalDelete').on('click', function(event) {
+            $.post(url+'funcionarios/gerenciar/excluir',{id:id,status:status},function(data){
+                console.log(data)
+                if(data == true){
+                    $('#modalDelete').modal('hide');
+                    $('tr#'+id).hide();
+                }else{
+                    $('#modalDelete').modal('hide');
+                    messageDialog(data,'warning',false,null);
+                }
             });
         });
 

@@ -13,10 +13,8 @@ class gerenciar extends Controller{
 	/*---------------------------
 	- PÁGINAS
 	=============================*/
-
-
 	/**
-	 * Página index
+	 * Página inicial
 	 */
 	public function index()
 	{	
@@ -29,6 +27,10 @@ class gerenciar extends Controller{
 		);
 
 		$this->load->dao('funcionarios/funcionariosDao');
+		$this->load->dao('funcionarios/IListagemFuncionarios');
+		
+		
+
 		$funcionarios = new funcionariosDao();
 		$data['funcionarios'] = $funcionarios->listar();
 
@@ -121,34 +123,34 @@ class gerenciar extends Controller{
 			return false;
 		}
 
-		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
-		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-		$sobrenome = isset($_POST['sobrenome']) ? filter_var($_POST['sobrenome']) : '';
+		$foto 			= isset($_FILES['foto']) ? $_FILES['foto'] : '';
+		$nome 			= isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
+		$sobrenome 		= isset($_POST['sobrenome']) ? filter_var($_POST['sobrenome']) : '';
 		$dataNascimento = isset($_POST['dataNascimento']) ? filter_var(trim($_POST['dataNascimento'])) : '';
-		$sexo = isset($_POST['sexo']) ? filter_var($_POST['sexo']) : '';
-		$rg = isset($_POST['rg']) ? filter_var($_POST['rg']) : '';
-		$cpf = isset($_POST['cpf']) ? filter_var($_POST['cpf']) : '';
-		$estadoCivil = isset($_POST['estadoCivil']) ? filter_var($_POST['estadoCivil']) : '';
-		$escolaridade = isset($_POST['escolaridade']) ? filter_var($_POST['escolaridade']) : '';
+		$sexo 			= isset($_POST['sexo']) ? filter_var($_POST['sexo']) : '';
+		$rg 			= isset($_POST['rg']) ? filter_var($_POST['rg']) : '';
+		$cpf 			= isset($_POST['cpf']) ? filter_var($_POST['cpf']) : '';
+		$estadoCivil 	= isset($_POST['estadoCivil']) ? filter_var($_POST['estadoCivil']) : '';
+		$escolaridade 	= isset($_POST['escolaridade']) ? filter_var($_POST['escolaridade']) : '';
 
 		//endereço
-		$cep = isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
-		$logradouro = isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
-		$numero = isset($_POST['numero']) ? filter_var(trim($_POST['numero'])) : '';
-		$complemento = isset($_POST['complemento']) ? filter_var(trim($_POST['complemento'])) : '';
-		$bairro = isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
-		$cidade = isset($_POST['cidade']) ? filter_var(trim($_POST['cidade'])) : '';
-		$estado = isset($_POST['estado']) ? filter_var(trim($_POST['estado'])) : '';
+		$cep 			= isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
+		$logradouro 	= isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
+		$numero 		= isset($_POST['numero']) ? filter_var(trim($_POST['numero'])) : '';
+		$complemento 	= isset($_POST['complemento']) ? filter_var(trim($_POST['complemento'])) : '';
+		$bairro 		= isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
+		$cidade 		= isset($_POST['cidade']) ? filter_var(trim($_POST['cidade'])) : '';
+		$estado 		= isset($_POST['estado']) ? filter_var(trim($_POST['estado'])) : '';
 
 		//contato
-		$telefones = isset($_POST['telefones']) ? filter_var_array($_POST['telefones']) : Array();
-		$emails = isset($_POST['emails']) ? filter_var_array($_POST['emails']) : Array();
+		$telefones 		= isset($_POST['telefones']) ? filter_var_array($_POST['telefones']) : Array();
+		$emails 		= isset($_POST['emails']) ? filter_var_array($_POST['emails']) : Array();
 		
 		//DADOS ADMISSIONAIS
 		$codigoAdmissao = isset($_POST['codigoAdmissao']) ? filter_var(trim($_POST['codigoAdmissao'])) : '';
-		$cargo = isset($_POST['cargo']) ? intval($_POST['cargo']) : '';
-		$dataAdmissao = isset($_POST['dataAdmissao']) ? filter_var(trim($_POST['dataAdmissao'])) : '';
-		$dataDemissao = isset($_POST['dataDemissao']) ? filter_var(trim($_POST['dataDemissao'])) : '';
+		$cargo 			= isset($_POST['cargo']) ? intval($_POST['cargo']) : '';
+		$dataAdmissao 	= isset($_POST['dataAdmissao']) ? filter_var(trim($_POST['dataAdmissao'])) : '';
+		$dataDemissao 	= isset($_POST['dataDemissao']) ? filter_var(trim($_POST['dataDemissao'])) : '';
 
 
 
@@ -159,6 +161,7 @@ class gerenciar extends Controller{
 		$this->load->dataValidator->set('Sobrenome', $sobrenome, 'sobrenome')->is_required()->min_length(2);
 		$this->load->dataValidator->set('Data de nascimento', $dataNascimento, 'dataNascimento')->is_required()->is_date('d/m/Y');
 		$this->load->dataValidator->set('Sexo', $sexo, 'sexo')->is_required();
+		$this->load->dataValidator->set('CPF', $cpf, 'cpf')->is_required()->is_cpf();
 		$this->load->dataValidator->set('CEP', $cep, 'cep')->is_required();
 		$this->load->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
 		$this->load->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
@@ -281,10 +284,8 @@ class gerenciar extends Controller{
 					echo true;
 				else
 					echo $res;
-			} catch (Exception $e) {
-				echo $e->getMessage();
-				$upload->resetUpload();
-				exit;
+			} catch (dbException $e) {
+				echo $e->getMessageError();
 			}
 		}else
 	    {
@@ -297,7 +298,7 @@ class gerenciar extends Controller{
 
 
 	/**
-	 * Ação do cadastrar
+	 * Ação do atualizar
 	 */
 	public function atualizar()
 	{
@@ -320,7 +321,6 @@ class gerenciar extends Controller{
 		$escolaridade 		= isset($_POST['escolaridade']) ? filter_var($_POST['escolaridade']) : '';
 
 		//endereço
-		
 		$id_endereco 		= isset($_POST['id_endereco']) ? filter_var(trim($_POST['id_endereco'])) : '';
 		$cep 				= isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
 		$logradouro 		= isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
@@ -350,6 +350,7 @@ class gerenciar extends Controller{
 		$this->load->dataValidator->set('Data de nascimento', $dataNascimento, 'dataNascimento')->is_required()->is_date('d/m/Y');
 		$this->load->dataValidator->set('Sexo', $sexo, 'sexo')->is_required();
 		$this->load->dataValidator->set('CEP', $cep, 'cep')->is_required();
+		$this->load->dataValidator->set('CPF', $cpf, 'cpf')->is_required()->is_cpf();
 		$this->load->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
 		$this->load->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
 		$this->load->dataValidator->set('Bairro', $bairro, 'bairro')->is_required();
@@ -506,10 +507,16 @@ class gerenciar extends Controller{
 		//FUNCIONARIO DAO
 		$this->load->dao('funcionarios/funcionariosDao');
 		$funcionariosDao = new funcionariosDao();
-		echo $funcionariosDao->atualizarStatus($funcionariosModel);
-
+		if(!$funcionariosDao->isFuncionarioAdministrador($funcionariosModel))
+			echo $funcionariosDao->atualizarStatus($funcionariosModel);
+		else
+			echo "Alteração de status ou exclusão de funcionário administrador não permitida";
 	}
 
+
+	/**
+	 * Ãção de exclusão
+	 */
 	public function excluir()
 	{
 		$saveRouter = new saveRouter;

@@ -10,68 +10,66 @@
         <div class="panel panel-default">
             <div class="panel-heading">Dados Gerais</div>
             <div class="panel-body">
-                <div class="row">
-                    <div class="col-xs-6 col-md-3">
-                        <label for="foto" class="thumbnail inputFoto preview-lg">
-                            <div class="thumbnail img-preview preview-lg">
-                                <img src="<?=URL?>skin/img/imagens/semfoto.jpg" id="img_previous">
-                            </div>
-                            <input type="file" name="foto" id="foto" accept="image/*">
-                        </label>
+                <div class="col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                    <label for="foto" class=" inputFoto preview-lg">
+                        <div class="thumbnail img-preview preview-lg">
+                            <img src="<?=URL?>skin/img/imagens/semfoto.jpg" id="img_previous">
+                        </div>
+                        <input type="file" name="foto" id="foto" accept="image/*">
+                    </label>
+                </div>
+                
+                <div class="col-xs-6 col-md-3 col-sm-3 col-lg-9">
+                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                        <label>Nome</label>
+                        <input type="text" class="form-control" placeholder="Nome" name="nome" >
                     </div>
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Nome</span>
-                    <input type="text" class="form-control" placeholder="Nome" name="nome" >
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Sobrenome</span>
-                    <input type="text" class="form-control" placeholder="Sobrenome" name="sobrenome">
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Data de nascimento</span>
-                    <input type="text" class="form-control" placeholder="Data de nascimento" name="dataNascimento">
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Sexo</span>
-                    <select class="form-control" name="sexo">
-                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Feminino</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">RG</span>
-                    <input type="text" class="form-control" placeholder="RG" name="rg">
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">CPF</span>
-                    <input type="text" class="form-control" placeholder="CPF" name="cpf">
-                </div> 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Estado Civil</span>
-                    <select class="form-control" name="estadoCivil">
-                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
-                        <option value="Casado">Casado(a)</option>
-                        <option value="Solteiro">Solteiro(a)</option>
-                        <option value="Divorciado">Divorciado(a)</option>
-                        <option value="Viúvo">Viúvo(a)</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Escolaridade</span>
-                    <select class="form-control" name="escolaridade">
-                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
-                        <option value="Ensino Fundamental Incompleto">Ensino Fundamental Incompleto</option>
-                        <option value="Ensino Fundamental Completo">Ensino Fundamental Completo</option>
-                        <option value="Ensino Médio Incompleto">Ensino Médio Incompleto</option>
-                        <option value="Ensino Médio Completo">Ensino Médio Completo</option>
-                        <option value="Ensino Superior Incompleto">Ensino Superior Incompleto</option>
-                        <option value="Ensino Superior Completo">Ensino Superior Completo</option>
-                    </select>
+                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                        <label>Sobrenome</label>
+                        <input type="text" class="form-control" placeholder="Sobrenome" name="sobrenome">
+                    </div>
+                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                        <label>Data de nascimento</label>
+                        <input type="text" class="form-control" placeholder="Data de nascimento" name="dataNascimento">
+                    </div>
+                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                        <label>Sexo</label>
+                        <select class="form-control" name="sexo">
+                            <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Feminino</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                        <label>RG</label>
+                        <input type="text" class="form-control" placeholder="RG" name="rg">
+                    </div>
+                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                        <label>CPF</label>
+                        <input type="text" class="form-control" placeholder="CPF" name="cpf">
+                    </div>
+                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                        <label>Estado Civil</label>
+                        <select class="form-control" name="estadoCivil">
+                            <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                            <option value="Casado">Casado(a)</option>
+                            <option value="Solteiro">Solteiro(a)</option>
+                            <option value="Divorciado">Divorciado(a)</option>
+                            <option value="Viúvo">Viúvo(a)</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                        <label>Escolaridade</label>
+                        <select class="form-control" name="escolaridade">
+                            <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                            <option value="Ensino Fundamental Incompleto">Ensino Fundamental Incompleto</option>
+                            <option value="Ensino Fundamental Completo">Ensino Fundamental Completo</option>
+                            <option value="Ensino Médio Incompleto">Ensino Médio Incompleto</option>
+                            <option value="Ensino Médio Completo">Ensino Médio Completo</option>
+                            <option value="Ensino Superior Incompleto">Ensino Superior Incompleto</option>
+                            <option value="Ensino Superior Completo">Ensino Superior Completo</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,38 +78,34 @@
         <div class="panel panel-default">
             <div class="panel-heading">Endereço</div>
             <div class="panel-body">
-
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">CEP</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-2">
+                    <label>CEP</label>
                     <input type="text" class="form-control" placeholder="CEP" name="cep" id="cep">
                 </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Logradouro</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                    <label>Logradouro</label>
                     <input type="text" class="form-control" placeholder="Lougradouro" name="logradouro" id="rua">
                 </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Número</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-2">
+                    <label>Número</label>
                     <input type="text" class="form-control" placeholder="Número" name="numero" id="numero">
                 </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Complemento</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-2">
+                    <label>Complemento</label>
                     <input type="text" class="form-control" placeholder="Complemento" name="complemento" id="complemento">
                 </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Bairro</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-5">
+                    <label>Bairro</label>
                     <input type="text" class="form-control" placeholder="Bairro" name="bairro" id="bairro">
                 </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Cidade</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                    <label>Cidade</label>
                     <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade">
                 </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">UF</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-1">
+                    <label>UF</label>
                     <input type="text" class="form-control" placeholder="Estado" name="estado" id="uf">
                 </div>
                 
@@ -120,51 +114,55 @@
 
         <div id="defaultCampos">
             <div class="radio telefones" id="defaultTel" style="margin-bottom:5px;display:none">
-                <span class="input-group-addon">
-                    <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Categoria</span>
-                        <select name="categoria" class="form-control">
-                            <option value="telefone" selected="selected">Telefone</option>
-                            <option value="celular">Celular</option>
-                        </select>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                            <label>Categoria</label>
+                            <select name="categoria" class="form-control">
+                                <option value="telefone" selected="selected">Telefone</option>
+                                <option value="celular">Celular</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                            <label>Número</label>
+                            <input type="tel" name="telefone" placeholder="Número" class="form-control" />
+                        </div>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                            <label>Operadora</label>
+                            <input type="text" name="operadora" placeholder="Operadora" class="form-control" />
+                        </div>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                            <label>Tipo</label>
+                            <select name="tipo_telefone" class="form-control">
+                                <option value="" selected="selected" disabled="disabled">Selecione um tipo</option>
+                                <option value="Pessoal">Pessoal</option>
+                                <option value="Residencial">Residencial</option>
+                                <option value="Profissional">Profissional</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Número</span>
-                        <input type="tel" name="telefone" placeholder="Número" class="form-control" />
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Operadora</span>
-                        <input type="text" name="operadora" placeholder="Operadora" class="form-control" />
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Tipo</span>
-                        <select name="tipo_telefone" class="form-control">
-                            <option value="" selected="selected" disabled="disabled">Selecione um tipo</option>
-                            <option value="Pessoal">Pessoal</option>
-                            <option value="Residencial">Residencial</option>
-                            <option value="Profissional">Profissional</option>
-                        </select>
-                    </div>
-                </span>
+                </div>
             </div>
 
             <div class="radio emails" id="defaultEmail" style="margin-bottom:5px;display:none">
-                <span class="input-group-addon">
-                    <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Tipo</span>
-                        <select name="tipo_email" class="form-control">
-                            <option value="" disabled="disabled">Tipo</option>
-                            <option value="Pessoal">Pessoal</option>
-                            <option value="Profissional">Profissional</option>
-                        </select>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                            <label>Tipo</label>
+                            <select name="tipo_email" class="form-control ">
+                                <option value="" disabled="disabled">Tipo</option>
+                                <option value="Pessoal">Pessoal</option>
+                                <option value="Profissional">Profissional</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                            <label>E-mail</label>
+                            <input type="email" name="email" placeholder="E-mail" class="form-control" />
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">E-mail</span>
-                        <input type="email" name="email" placeholder="E-mail" class="form-control" />
-                    </div>
-                </span>
+                </div>
             </div>
 
         </div>
@@ -174,15 +172,13 @@
         <div class="panel panel-default">
             <div class="panel-heading">Contatos</div>
             <div class="panel-body">
-
                 <div class="form-group group_tel">
-                    <a href="javascript:void(0)" class="addTel addCel"><span class="glyphicons glyphicons-earphone"></span> Adicionar o telefone</a>
+                    <button type="button" class="btn btn-default addTel addCel"><span class="glyphicons glyphicons-earphone"></span> Adicionar telefones</button>
                 </div>
 
                 <div class="form-group group_email">
-                    <a href="javascript:void(0)" class="addEmail addCel"><span class="glyphicons glyphicons-envelope"></span> Adicionar E-mail</a>
+                    <button type="button" class="btn btn-default addEmail addCel"><span class="glyphicons glyphicons-envelope"></span> Adicionar E-mail</button>
                 </div>
-               
             </div>
         </div>
 
@@ -190,8 +186,8 @@
         <div class="panel panel-default ">
             <div class="panel-heading">Dados Admissionais</div>
             <div class="panel-body">
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Cargo</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-4 col-lg-4">
+                    <label>Cargo</label>
                     <select name="cargo" id="cargo" class="form-control">
                         <option selected="selected" disabled="disabled" value="">..Selecione..</option>
                         <?php if(!empty($cargos)):?>
@@ -201,20 +197,20 @@
                         <?php endif;?>
                     </select>
                 </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Data De Admissão</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-4 col-lg-4">
+                    <label>Data De Admissão</label>
                     <input type="text" class="form-control" placeholder="Data De Admissão" name="dataAdmissao">
                 </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Data De Demissão</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-4 col-lg-4">
+                    <label>Data De Demissão</label>
                     <input type="text" class="form-control" placeholder="Data De Demissão" name="dataDemissao">
                 </div>
 
-                <div class="btn-group pull-right" role="group">
-                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
-                </div>
 
             </div>
+        </div>
+        <div class="btn-group pull-right" role="group">
+            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
         </div>
     </form>
 </div>

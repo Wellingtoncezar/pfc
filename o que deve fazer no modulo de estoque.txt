@@ -1,0 +1,9 @@
+lista dos produtos	
+	tabela de preços
+	lotes
+		preço dos lotes
+
+estoque
+	armazem - estoque
+	lotes
+

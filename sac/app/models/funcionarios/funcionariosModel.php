@@ -24,6 +24,7 @@ class funcionariosModel{
 	private $status = status::ATIVO;
 	private $dataCadastro;
 	private $dataAtualizacao;
+	private $isUserAdministrator = false;
 
  	//SETERS
  	public function setId($id)
@@ -127,6 +128,11 @@ class funcionariosModel{
 		$this->status = status::EXCLUIDO;
 	}
 
+	public function setUserAdministrator($isUserAdministrator)
+	{
+		$this->isUserAdministrator = $isUserAdministrator;
+	}
+
 	//GETERS
 	public function getId()
 	{
@@ -209,5 +215,8 @@ class funcionariosModel{
 		return $this->dataAtualizacao;
 	}
 
-
+	public function getUserAdministrator()
+	{
+		return $this->isUserAdministrator;
+	}
 }

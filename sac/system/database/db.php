@@ -12,8 +12,8 @@ class db extends activeRecord{
 	private $statement = null;
 	private $sql;
 	private $error;
-	private $errorCode;
-	private $errorCodeName;
+	private $code;
+	private $message;
 	private $i = 1;
 
 
@@ -34,11 +34,10 @@ class db extends activeRecord{
 			//die('Arquivo de configuração não está configurado corretamente. Configure o caminho do servidor mysql, com porta login e senha.');
 		}
 
-
 		$this->pdo = Conn::connect();
-		$this->error = new error_db();
-		$this->errorCode = null;
-		$this->errorCodeName = null;
+		// $this->error = new error_db();
+		$this->code = null;
+		$this->message = null;
 	}
 
 	public function __destruct()
@@ -65,17 +64,11 @@ class db extends activeRecord{
 			die('Parâmetros do insert passados incorretamente');
 		}
 
-
-		//try {
-			$this->res = new insert($this->getElementQuery());
-			$this->sql = $this->res->getQuery();
-			$this->errorCode = 'NULLINSERT';
-			$this->errorCodeName = 'inserir';
-			return $this->prepareQuery($this->sql);
-		// } catch (error_db $e) {
-		// 	throw new error_db($e);
-		// }
-			
+		$this->res = new insert($this->getElementQuery());
+		$this->sql = $this->res->getQuery();
+		$this->code = 'NULLINSERT';
+		$this->message = 'inserir';
+		return $this->prepareQuery($this->sql);
 	}
 
 
@@ -97,8 +90,8 @@ class db extends activeRecord{
 		
 		$this->res = new update($this->getElementQuery());
 		$this->sql = $this->res->getQuery();
-		$this->errorCode = 'NULLUPDATE';
-		$this->errorCodeName = 'editar';
+		$this->code = 'NULLUPDATE';
+		$this->message = 'editar';
 		return $this->prepareQuery($this->sql);
 		
 	}
@@ -119,8 +112,8 @@ class db extends activeRecord{
 		
 		$this->res = new select($this->getElementQuery());
 		$this->sql = $this->res->getQuery();
-		$this->errorCode = 'NULLSELECT';
-		$this->errorCodeName = 'selecionar';
+		$this->code = 'NULLSELECT';
+		$this->message = 'selecionar';
 		return $this->prepareQuery($this->sql);
 	}
 
@@ -129,8 +122,8 @@ class db extends activeRecord{
 	{
 		$this->res = new delete($this->getElementQuery());
 		$this->sql = $this->res->getQuery();
-		$this->errorCode = 'NULLDELETE';
-		$this->errorCodeName = 'excluir';
+		$this->code = 'NULLDELETE';
+		$this->message = 'excluir';
 		return $this->prepareQuery($this->sql);
 	}
 
@@ -143,8 +136,8 @@ class db extends activeRecord{
 		else{
 			$this->res = new query($this->getElementQuery(), $sql);
 			$this->sql = $this->res->getQuery();
-			$this->errorCode = 'NULLQUERY';
-			$this->errorCodeName = 'query';
+			$this->code = 'NULLQUERY';
+			$this->message = 'query';
 			return $this->prepareQuery($this->sql);
 		}
 	}
@@ -154,7 +147,6 @@ class db extends activeRecord{
 
 	private function prepareQuery()
 	{
-
 		try{
 			$this->statement = $this->pdo->prepare($this->sql);
 		    $this->statement->execute($this->res->getParamArray());
@@ -164,14 +156,14 @@ class db extends activeRecord{
 				return true;
 			}
 			else
-			{
+			{	
 				$this->rows_affected = 0;
 				return false;
 			}
 		}catch (PDOException $e)
 		{
-			return false;
-			//throw new Exception($this->error->getMensagemErro($e, $this->errorCodeName));
+			$this->code = $e->getCode();
+			throw new dbException($e, $this->message);
 		}
 	}
 
@@ -221,12 +213,12 @@ class db extends activeRecord{
 
 	public function getError()
 	{
-		return $this->error->getMensagemErro($this->errorCode, $this->errorCodeName);	
+		throw new dbException($this->message, $this->code);
 	}
 
-	public function getErrorCode()
+	public function getcode()
 	{
-		return $this->errorCode;	
+		return $this->code;
 	}
 
 	
