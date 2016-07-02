@@ -13,7 +13,7 @@
 
                 <div class="row col-xs-6 col-md-3 col-sm-3 col-lg-3">
                     <div class="col-xs-6 col-md-12">
-                        <label for="foto" class="thumbnail inputFoto preview-lg">
+                        <label for="foto" class="inputFoto preview-lg">
                             <div class="thumbnail img-preview preview-lg">
                                 <img src="<?=URL?>skin/img/imagens/forn.jpg" id="img_previous">
                             </div>
@@ -22,13 +22,13 @@
                     </div>
                 </div>
                 <div class="row col-xs-6 col-md-3 col-sm-9 col-lg-9">
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Nome</span>
+                    <div class="form-group">
+                        <label>Nome</label>
                         <input type="text" class="form-control" placeholder="Nome" aria-describedby="basic-addon1" name="nome">
                     </div>
 
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Marca</span>
+                    <div class="form-group">
+                        <label>Marca</label>
                         <select name="marca" id="marca" class="form-control">
                             <option selected="selected" disabled="disabled" value="">..Selecione..</option>
                             <?php if(!empty($marcas)):?>
@@ -38,8 +38,8 @@
                             <?php endif;?>
                         </select>
                     </div>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Categoria</span>
+                    <div class="form-group">
+                        <label>Categoria</label>
                         <select name="categoria" id="categoria" class="form-control">
                             <option selected="selected" disabled="disabled" value="">..Selecione..</option>
                             <?php if(!empty($categorias)):?>
@@ -49,8 +49,8 @@
                             <?php endif;?>
                         </select>
                     </div>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Descrição</span>
+                    <div class="form-group">
+                        <label>Descrição</label>
                         <textarea class="form-control" placeholder="Descrição" name="descricao"></textarea>
                     </div>
                 </div>
@@ -62,14 +62,14 @@
         <div class="panel panel-default">
             <div class="panel-heading">Valores</div>
             <div class="panel-body">
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Preço de Venda R$</span>
+                <div class="form-group">
+                    <label>Preço de Venda R$</label>
                     <input type="text" class="form-control" placeholder="Preço de Venda" aria-describedby="basic-addon1" name="preco_venda" name="preco_venda"  value="" >
-                    <span class="input-group-addon" id="basic-addon1"><input type="checkbox" name="precoVendaAutomatico">Automático</span>
+                    <label><input type="checkbox" name="precoVendaAutomatico">Automático</label>
                 </div>
 
                 <div class="input-group boxmarkup" style="display:none" >
-                    <span class="input-group-addon" id="basic-addon1">Markup %</span>
+                    <label>Markup %</label>
                     <input type="text" class="form-control" placeholder="Markup %" aria-describedby="basic-addon1" name="markup" maxlength="6" value="">
                 </div>
                 
@@ -108,8 +108,8 @@
     <input type="hidden" name="idUnidadeMedidaProduto" value="">
     <div class="thumbnail">
         <div class="caption">
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Uni. medida</span>
+            <div class="form-group">
+                <label>Uni. medida</label>
                 
                 <select name="unidadeMedida" class="form-control">
                 <?php foreach ($unidademedida as $unidade):?>
@@ -117,8 +117,8 @@
                 <?php endforeach;?>
                 </select>
             </div>
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Fator conversão</span>
+            <div class="form-group">
+                <label>Fator conversão</label>
                 <input type="text" class="form-control" placeholder="Fator" name="fator_unidade" maxlength="20" value="">
             </div>
             <fieldset class="form-group">

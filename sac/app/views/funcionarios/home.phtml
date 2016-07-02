@@ -29,7 +29,6 @@
             if(!empty($funcionarios)):
                 $tbody = '';
                 foreach ($funcionarios as $func):
-                    
                     $foto = $func->getFoto() != '' ? URL.'skin/uploads/funcionarios/p/'.$func->getFoto() : URL.'skin/img/imagens/semfoto.jpg';
                     $ativo = ($func->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
                     $inativo = ($func->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
