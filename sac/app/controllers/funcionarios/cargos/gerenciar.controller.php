@@ -110,8 +110,8 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
 		
-		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
-		$this->load->dataValidator->set('Setor', $setor, 'setor')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(1);
+		$this->load->dataValidator->set('Setor', $setor, 'setor')->is_required()->min_length(1);
 		
 		if ($this->load->dataValidator->validate())
 		{
@@ -152,8 +152,8 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator' ,null, true);
 		
-		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
-		$this->load->dataValidator->set('Setor', $setor, 'setor')->is_required()->min_length(2);
+		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(1);
+		$this->load->dataValidator->set('Setor', $setor, 'setor')->is_required()->min_length(1);
 
 		
 		if ($this->load->dataValidator->validate())
@@ -182,6 +182,8 @@ class gerenciar extends Controller{
 
 	public function excluir()
 	{
+		echo true;
+		exit;
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();

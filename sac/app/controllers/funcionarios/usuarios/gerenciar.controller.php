@@ -96,9 +96,6 @@ class gerenciar extends Controller{
 		$data['usuarios'] = $usuariosDao->consultar($usuariosModel);
 
 
-		$this->load->dao('funcionarios/gruposFuncionariosDao');
-		$gruposfuncionarios = new gruposFuncionariosDao;
-		$data['grupo_funcionarios']=$gruposfuncionarios->listar();
 		
 		
 		//DATAFORMAT
@@ -152,11 +149,11 @@ class gerenciar extends Controller{
 			$usuariosModel->setStatus(status::ATIVO);
 			$usuariosModel->setDataCadastro(date('Y-m-d h:i:s'));
             
-
-			//USUARIO DAO
+			
 			$this->load->dao('funcionarios/usuariosDao');
 			$usuariosDao = new usuariosDao();
 			echo $usuariosDao->inserir($usuariosModel);
+			
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();

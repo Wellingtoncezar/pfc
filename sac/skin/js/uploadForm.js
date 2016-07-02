@@ -405,6 +405,11 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
 */
 
 
+/*
+@author wellington cezar
+Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'Jcrop'.
+*/
+
 (function($){
     $.fn.uploadForm = function(options) {
         var configs = {
@@ -423,30 +428,55 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
         var form = $(this);
         var animate = null;
 
-        $('.generalErrors').remove();
-        form.before('<div class="panel generalErrors panel-danger" style="text-align:left; display:none;  background-color: #f2dede;"><h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4><div class="alert alert-danger" role="alert"></div></div>');
+
+        //$('.generalErrors').remove();
+
+
+        var contentpanel = '<div class="modal fade" id="alertFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">'
+							  +'<div class="modal-dialog" role="document">'
+							    +'<div class="modal-content">'
+							      +'<div class="modal-header">'
+							        +'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+							        +'<h4 class="modal-title" id="myModalLabel">Atenção</h4>'
+							      +'</div>'
+							      +'<div class="modal-body">'
+							        	+'<div class="panel generalErrors panel-danger" style="text-align:left; background-color: #f2dede;">'
+							        		+'<h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4>'
+							        		+'<div class="alert alert-danger" role="alert">'
+							        		+'</div>'
+							        	+'</div>'
+							      +'</div>'
+							     +'<div class="modal-footer">'
+							        +'<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>'
+							      +'</div>'
+							    +'</div>'
+							  +'</div>'
+							+'</div>';
+
+
+        $('body').append(contentpanel);
+
 
        	// pre-submit callback
 		function showRequest(formData, jqForm, options)
 		{ 
-			/*
-			console.log('INICIO REQUEST')
+
+			/*console.log('INICIO REQUEST')
 			console.log(formData)
 			console.log(jqForm)
 			console.log(options)
 			*/
-		    $('#carregando').remove();
-	        $('body').append('<div id="carregando">'
+		    //$('#carregando').remove();
+	        //$('body').append('<div id="carregando">'
 								    //+'<div class="demo-wrapper html5-progress-bar">'
 								        //+'<div class="progress-bar-wrapper">'
-								        	+'<img src="'+url+'skin/img/loading.gif">'
+			//					        	+'<img src="'+URL+'img/loading.gif">'
 								            //+'<progress id="progressbar" value="0" max="100"></progress>'
 								            //+'<span class="progress-value">0%</span>'
 								        //+'</div>'
 								    //+'</div>'
-								+'</div>');
-		    $('#carregando').fadeIn();
-
+			//					+'</div>');
+		    //$('#carregando').fadeIn();
 		    return true;
 		} 
  
@@ -459,18 +489,15 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
 			
 			console.log(data)
 			*/
-
-			
    			$('input, select, textarea',form).css('box-shadow','none');
 		    $('.generalErrors .alert').html('');
-		    $('.generalErrors').hide();
    			try
 			{
 				$('#carregando').fadeOut();
        			if(data != true)
        				{
-
-		       			$('.generalErrors').show();
+       					
+		       			$('#alertFormModal').modal('show');
 		       			//data = $.parseJSON(data);
 		       			$.each(data, function(index, value) {
 					        var value = ''+value;
@@ -480,8 +507,8 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
 					        });
 					        $('[name='+index+']',form).css('box-shadow','0 0 1px 1px #F00');
 						});
-		       			var erroTop = ($('.generalErrors').offset().top)
-		       			$('body,html').animate({scrollTop : erroTop-100},600);
+		       			//var erroTop = ($('.generalErrors').offset().top)
+		       			//$('body,html').animate({scrollTop : erroTop},600);
 					}else
 					{
 						$("#img_previous",form).attr('src','');
@@ -491,24 +518,20 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
                             location.href = settings.redirect
                         if(settings.resetform == true)
                             form.get(0).reset();
-						$('.generalErrors').removeClass('panel-danger').addClass('panel-success').html('<h4 class="panel-heading">Enviado com sucesso</h4>').css('background','#dff0d8').show();
-						var erroTop = ($('.generalErrors').offset().top)
-		       			$('body,html').animate({scrollTop : erroTop-100},600);
-
+						$('.generalErrors').removeClass('panel-danger').addClass('panel-success').html('<h4 class="panel-heading">Enviado com sucesso</h4>').css('background','#dff0d8');
+						$('#alertFormModal').modal('show');
+						// var erroTop = ($('.generalErrors').offset().top)
+		    //    			$('body,html').animate({scrollTop : erroTop},600);
 					}
-
 			}
 			catch(e)
 			{
-				//alert(e.responseText);
-	        	$('.generalErrors  .alert').append('<h2>'+e.responseText+'</h2>');
-				var erroTop = ($('.generalErrors').offset().top)
-       			$('body,html').animate({scrollTop : erroTop-100},0);
-	        	$('.generalErrors').show();
-	        	$('#carregando').fadeOut();
+				console.log(e)
+				console.log(data)
+				$('#alertFormModal').modal('show');
+	        	$('.generalErrors .alert').html(e.responseText);
 			}
 			return true;
-
 		} 
        	//ajaxSubmitOptions
 	    var options = { 
@@ -524,18 +547,16 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
 	        //resetForm: true        // reset the form after successful submit 
 	 		data:  settings.parameters,
 	        // $.ajax options can be used here too, for example: 
-	        //timeout:   3000 
+	        //timeout:   3000
 	        error : function(e){
-	        	//alert(e.responseText);
-	        	$('.generalErrors .alert').html('<p>'+e.responseText+'</p>')
-	        	$('.generalErrors').show();
-				var erroTop = ($('.generalErrors').offset().top)
-       			$('body,html').animate({scrollTop : erroTop-100},0);
-	        	$('#carregando').fadeOut();
+	        	//console.log(e.responseText);
+	        	$('#alertFormModal').modal('show');
+	        	$('.generalErrors .alert').html(e.responseText);
+	        	//$('#carregando').fadeOut();
 	        }
 	    }; 
 
-
+	    
 	    form.ajaxSubmit(options); 
     }; 
 })(jQuery);

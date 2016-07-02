@@ -1,7 +1,29 @@
 $(function(){
     /*MASCARAS DE CAMPOS*/
     $('input[name=dataNascimento]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true,yearRange: "-90:-15" });
-    $('input[name=dataAdmissao],input[name=dataDemissao]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true,yearRange: "-100:+0" });
+    
+    $( "input[name=dataAdmissao]" ).datepicker({
+        defaultDate: "+1w",
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true, 
+        changeYear: true,
+        yearRange: "-100:+0",
+        numberOfMonths: 2,
+        onClose: function( selectedDate ) {
+            $( "input[name=dataDemissao]" ).datepicker( "option", "minDate", selectedDate );
+        }
+    });
+    $( "input[name=dataDemissao]" ).datepicker({
+        defaultDate: "+1w",
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true, 
+        changeYear: true,
+        yearRange: "-100:+0", 
+        numberOfMonths: 2,
+        onClose: function( selectedDate ) {
+            $( "input[name=dataAdmissao]" ).datepicker( "option", "maxDate", selectedDate );
+        }
+    });
     $('input[name=cep]').wvmask('cep')
     $('input[name=numero]').wvmask('numero')
     $('input[name=cpf]').mask('999.999.999-99');

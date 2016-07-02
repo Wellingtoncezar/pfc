@@ -57,38 +57,33 @@ class usuariosDao extends Dao{
 	public function consultar(usuariosModel $usuariosModel)
 	{
 		$this->load->model('funcionarios/usuariosModel');
-		$this->load->model('funcionarios/gruposFuncionariosModel');
 		$this->load->model('funcionarios/funcionariosModel');
 
 		$this->db->clear();
 		$sql="select * from sys_usuarios as a 
-								inner join sys_usuarios_grupo as b on a.id_usuarios_grupo = b.id_usuarios_grupo
 							    inner join funcionarios as c on a.id_funcionario = c.id_funcionario 
 							    where a.id_usuario = '".$usuariosModel->getId()."' and a.status_usuario <> '".status::EXCLUIDO."'"; 
-		$this->db->query($sql);
+		try{
+			$this->db->query($sql);
 
-		if($this->db->rowCount() > 0):
-			$result = $this->db->result();
-			
-			$gruposFuncionariosModel = new gruposFuncionariosModel();
-			$funcionariosModel = new funcionariosModel();
-			$usuariosModel->setId($result['id_usuario']);
-			$gruposFuncionariosModel->setId($result['id_usuarios_grupo']);
-			$gruposFuncionariosModel->setNome($result['nome_usuarios_grupo']);
-			$funcionariosModel->setId($result['id_funcionario']);
-			$funcionariosModel->setNome($result['nome_funcionario']);
-			$funcionariosModel->setSobrenome($result['sobrenome_funcionario']);
-	        $usuariosModel->setGrupoFuncionario($gruposFuncionariosModel);
-			$usuariosModel->setFuncionario($funcionariosModel);
-			$usuariosModel->setLogin($result['login_usuario']);
-			$usuariosModel->setEmail($result['email_usuario']);
-			$usuariosModel->setStatus(status::getAttribute($result['status_usuario']));
-	
-			
+			if($this->db->rowCount() > 0):
+				$result = $this->db->result();
+				
+				$funcionariosModel = new funcionariosModel();
+				$usuariosModel->setId($result['id_usuario']);
 
-		endif;
-		
-		return $usuariosModel;
+				$funcionariosModel->setId($result['id_funcionario']);
+				$funcionariosModel->setNome($result['nome_funcionario']);
+				$funcionariosModel->setSobrenome($result['sobrenome_funcionario']);
+				$usuariosModel->setFuncionario($funcionariosModel);
+				$usuariosModel->setLogin($result['login_usuario']);
+				$usuariosModel->setEmail($result['email_usuario']);
+				$usuariosModel->setStatus(status::getAttribute($result['status_usuario']));
+			endif;
+			return $usuariosModel;
+		}catch (dbException $e) {
+			echo $e->getMessageError();
+		}
 	}
 
 	
@@ -115,14 +110,20 @@ class usuariosDao extends Dao{
 
  		$this->db->clear();
 		$this->db->setTabela('sys_usuarios');
-		$this->db->insert($data);
-		if($this->db->rowCount() > 0)
+		
+		try 
 		{
-			return true;
- 		}else
- 		{
- 			return $this->db->getError();
- 		}
+			if($this->db->insert($data))
+			{
+				return true;
+	 		}else
+	 		{
+	 			return $this->db->getError();
+	 		}
+		}catch (dbException $e) {
+			echo $e->getMessageError();
+			//echo $this->db->getCode();
+		}
 
 	}
 

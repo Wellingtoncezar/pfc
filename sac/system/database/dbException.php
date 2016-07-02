@@ -1,123 +1,74 @@
 <?php
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class error_db extends PDOException{
+class dbException extends PDOException{
 	private $msg_error;
-	private $showlogMessage = false;
-	private $nivel = '';
-	public function __construct(){
-		$this->showlogMessage = SHOWLOGMESSAGE;
-	}
+	private $dbmessage;
+	private $dbcode;
+	private $dbprevious;
+	// Redefine a exceção de forma que a mensagem não seja opcional
+    public function __construct($message, $code = 0, Exception $previous = null) {
+        	$this->dbmessage = $message;
+			$this->dbcode = $code;
+			$this->dbprevious = $previous;
+        
+    }
 
-	public function getMensagemErro($code, $tipo, $val = '')
-	{
-		if(is_object($code))
+    public function getCodeError()
+    {
+    	if(is_object($this->dbmessage))
 		{
-			switch ($code->getCode()){
-				case '23000':
-					$this->msg_error = 'Não é possível '.$tipo.'. Já existe um registro com esses dados.';
-					break;
+    		return $this->dbmessage->getCode();
+    	}else
+    	{
+    		return $this->dbmessage->getCode();
+    	}
+    }
 
-				case '1451':
-					$this->msg_error = 'Não é possível '.$tipo. '.Existem registros relacionados à ele.';
-					break;
+	public function getMessageError()
+	{
+		$errors = array(
+			'NULLSELECT' 	=> "Nenhum registro encontrado",
+			'NULLINSERT' 	=> "Nenhum registro inserido",
+			'NULLDELETE' 	=> "Nenhum registro excluído",
+			'NULLUPDATE' 	=> "Nenhum registro alterado",
+			'NULLQUERY' 	=> "Não foi possível executar",
+			'23000' 		=> "duplicateKey",
+			'1451' 			=> "Não é possível %s.Existem registros relacionados à ele.",
+			'HY000' 		=> "notfound",
+			'08004' 		=> "Excesso de conexões",
+			'21S01' 		=> "Contagem de colunas não confere com a contagem de valores",
+			'42S21' 		=> "Nome da coluna duplicado",
+			'42000' 		=> "Você não tem permissão para executar esta ação",
+			'OTHER' 		=> "Outro erro: %s",
+			'DEFAULT' 		=> "Erro indefinido"
+		);
 
-				case 'HY000':
-					$this->msg_error = 'Não pode encontrar o registro';
-					break;
 
-				case '08004':
-					$this->msg_error = 'Excesso de conexões';
-					break;
-
-				case '21S01':
-					$this->msg_error = 'Contagem de colunas não confere com a contagem de valores';
-					break;
-
-				case '42S21':
-					$this->msg_error = 'Nome da coluna duplicado';
-					break;
-				// case '42000':
-				// 	$this->msg_error = 'Você não tem permissão para executar esta ação';
-				// 	break;
-				
-				default:
-					$this->msg_error = 'Outro erro: '.$code->getMessage();
-					break;
+		if(is_object($this->dbmessage))
+		{
+			if(array_key_exists($this->dbmessage->getCode(), $errors)){
+				$str = $this->dbmessage->getMessage();
+				preg_match_all("#\'(.*?)('?)\'#", $str, $matches);
+				return $this->$errors[$this->dbmessage->getCode()]($matches);
 			}
-
-
-			if($this->showlogMessage === true)
-			{
-				$this->showlogMessage = '';
-				$traces = array_reverse($code->getTrace());
-				foreach ($traces as $ind => $errors) {
-					if(is_array($errors))
-					{
-						$this->showlogMessage .='<pre>';
-						foreach ($errors as $key => $value) {
-							if(!is_array($value)){
-								$this->showlogMessage .= '<p><strong>'.$key.'</strong>: '.$value.'</p>';
-							}else
-							{
-								$this->nivel='';
-								$this->getValues($value);
-							}
-						}
-						$this->showlogMessage .='</pre>';
-					}else
-						$this->showlogMessage .= '<p><strong>'.$ind.'</strong>: '.$value.'</p>';
-				}
-			}else{
-				$this->showlogMessage = '';
-			}
-
+			else
+				return sprintf($errors['OTHER'], $this->dbmessage->getMessage()); 
 		}else
 		{
-			switch ($code) {
-				case 'NULLSELECT':
-					$this->msg_error = 'Nenhum registro encontrado';
-					break;
-
-				case 'NULLINSERT':
-					$this->msg_error = 'Nenhum registro inserido';
-					break;
-
-				case 'NULLDELETE':
-					$this->msg_error = 'Nenhum registro excluído';
-					break;
-
-				case 'NULLUPDATE':
-					$this->msg_error = 'Nenhum registro alterado';
-					break;
-
-				case 'NULLQUERY':
-					$this->msg_error = 'Não foi possível executar';
-					break;
-
-				default:
-					$this->msg_error = 'Erro indefinido';
-					break;
-			}
-
-			// if($this->showlogMessage === true)
-			// {
-			// 	$this->showlogMessage = '';
-			// }else
-			$this->showlogMessage = '';
-		}
-
-		return $this->msg_error.$this->showlogMessage;
-	}	
-
-
-	private function getValues($values, $nivel = '')
-	{
-		$this->nivel .= $nivel;
-		foreach ($values as $key => $value) {
-			if(!is_array($value) && !is_object($value))
-				$this->showlogMessage .= '<p>'.$this->nivel.'→<strong>'.$key.'</strong>: '.$value.'</p>';
+			if(array_key_exists($this->dbcode, $errors))
+				return $errors[$this->dbcode]; 
 			else
-				$this->getValues($value,"\t");
+				return $errors['DEFAULT'];
 		}
 	}
-}
+
+
+	private function duplicateKey($matches)
+	{
+		return 'O valor '.$matches[0][0].' já existe nos registros.';
+	}
+	private function notfound($matches)
+	{	
+		return "Não pode encontrar o registro";
+	}	
+}		
