@@ -6,7 +6,7 @@
 *
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class query{
+class query implements IDbCrud{
 	private $paramArray;
 	private $sql;
 	public function __construct($elements, $sql = null)

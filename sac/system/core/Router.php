@@ -26,7 +26,7 @@ class Router{
 			define('URL',$base_url);
 		}
 		
-		$server = 'http://'.$_SERVER['SERVER_NAME'].'/'; 
+		$server = 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT']!= '') ? ':'.$_SERVER['SERVER_PORT']:'').'/'; 
 		$endereco = $_SERVER ['REQUEST_URI'];
 		$endereco = rtrim($endereco,'/'); //remove as barras do final da string
 		$endereco = ltrim($endereco,'/'); //remove as barras do começo da string

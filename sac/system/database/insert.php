@@ -7,7 +7,7 @@
 *
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class insert{
+class insert implements IDbCrud{
 	private $paramArray;
 	private $sql;
 	public function __construct($elements)

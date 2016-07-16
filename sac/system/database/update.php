@@ -6,7 +6,7 @@
 *
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class update
+class update implements IDbCrud
 {
 	private $paramArray;
 	private $sql;

@@ -6,7 +6,7 @@
 *
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class delete
+class delete implements IDbCrud
 {
 	private $paramArray;
 	private $sql;

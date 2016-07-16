@@ -19,14 +19,14 @@ $_config['UPLOADPATH']			= "skin/uploads"; //diretório dos uploads
 $_config['default_controller'] 	= "gerenciar";
 $_config['errordir'] 			= 'errors';
 
-//show message log
-$_config['SHOWLOGMESSAGE'] 		= false;
+//show message error
+$_config['SHOWDBERROR'] 		= false;
 
 
 //url
-$_config['url'] 				= 'http://'.$_SERVER['SERVER_NAME'].'/pfc/sac/';
+$_config['url'] 				= 'http://'.$_SERVER['SERVER_NAME'].(($_SERVER['SERVER_PORT']!= '') ? ':'.$_SERVER['SERVER_PORT']:'').'/pfc/sac/';
 
-//error reporting	
+//error reporting
 $_config['errorreporting'] 		= 'E_ALL';//E_ALL ou 0
 		
 ?>

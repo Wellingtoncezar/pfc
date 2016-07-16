@@ -11,7 +11,7 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class upload{
 	private $_UP = array(
 		'tamanho' => 5242880,//5mb -- 1024 * 1024 * 5
-		'extensoes' => array('jpg', 'png', 'gif'),
+		'extensoes' => array('jpg', 'jpeg', 'png', 'gif'),
 		'errors' => array(
 			0 => FALSE,
 			1 => 'O arquivo no upload é maior do que o limite do PHP',

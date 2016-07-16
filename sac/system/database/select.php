@@ -7,7 +7,7 @@
 */
 
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class select
+class select implements IDbCrud
 {
 	private $paramArray;
 	private $sql;
