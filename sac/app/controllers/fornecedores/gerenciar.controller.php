@@ -264,43 +264,44 @@ class gerenciar extends Controller{
 	 */
 	public function atualizar()
 	{
-		$idFornecedor = isset($_POST['id_fornecedor']) ? filter_var($_POST['id_fornecedor']) : '';
-		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
-		$razaoSocial = isset($_POST['razao_social']) ? filter_var($_POST['razao_social']) : '';
-		$nomeFantasia = isset($_POST['nome_fantasia']) ? filter_var($_POST['nome_fantasia']) : '';
-		$cnpj = isset($_POST['cnpj']) ? filter_var(trim($_POST['cnpj'])) : '';
-		$cpf = isset($_POST['cpf']) ? filter_var($_POST['cpf']) : '';
-		$pessoa = isset($_POST['pessoa']) ? filter_var($_POST['pessoa']) : '';
-		$site = isset($_POST['site']) ? filter_var($_POST['site']) : '';
-		$observacoes = isset($_POST['observacoes']) ? filter_var($_POST['observacoes']) : '';
+		$idFornecedor 			= isset($_POST['id_fornecedor']) ? filter_var($_POST['id_fornecedor']) : '';
+		$foto 					= isset($_FILES['foto']) ? $_FILES['foto'] : '';
+		$nome_foto 				= isset($_POST['nome_foto']) ? $_POST['nome_foto'] : '';
+		$razaoSocial 			= isset($_POST['razao_social']) ? filter_var($_POST['razao_social']) : '';
+		$nomeFantasia 			= isset($_POST['nome_fantasia']) ? filter_var($_POST['nome_fantasia']) : '';
+		$cnpj 					= isset($_POST['cnpj']) ? filter_var(trim($_POST['cnpj'])) : '';
+		$cpf 					= isset($_POST['cpf']) ? filter_var($_POST['cpf']) : '';
+		$pessoa 				= isset($_POST['pessoa']) ? filter_var($_POST['pessoa']) : '';
+		$site 					= isset($_POST['site']) ? filter_var($_POST['site']) : '';
+		$observacoes 			= isset($_POST['observacoes']) ? filter_var($_POST['observacoes']) : '';
 		
 
 		//endereço
-		$id_endereco = isset($_POST['id_endereco']) ? filter_var(trim($_POST['id_endereco'])) : '';
-		$cep = isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
-		$logradouro = isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
-		$numero = isset($_POST['numero']) ? filter_var(trim($_POST['numero'])) : '';
-        $complemento = isset($_POST['complemento']) ? filter_var(trim($_POST['complemento'])) :'';
-		$cidade = isset($_POST['cidade']) ? filter_var(trim($_POST['cidade'])) : '';
-		$bairro = isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
-		$estado = isset($_POST['estado']) ? filter_var(trim($_POST['estado'])) : '';
+		$id_endereco 			= isset($_POST['id_endereco']) ? filter_var(trim($_POST['id_endereco'])) : '';
+		$cep 					= isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
+		$logradouro 			= isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
+		$numero 				= isset($_POST['numero']) ? filter_var(trim($_POST['numero'])) : '';
+        $complemento 			= isset($_POST['complemento']) ? filter_var(trim($_POST['complemento'])) :'';
+		$cidade 				= isset($_POST['cidade']) ? filter_var(trim($_POST['cidade'])) : '';
+		$bairro 				= isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
+		$estado 				= isset($_POST['estado']) ? filter_var(trim($_POST['estado'])) : '';
 		//contato
-		$nomeContato = isset($_POST['nomeContato']) ? filter_var($_POST['nomeContato']) : '';
-		$telefones = isset($_POST['telefones']) ? filter_var_array($_POST['telefones']) : Array();
-		$emails = isset($_POST['emails']) ? filter_var_array($_POST['emails']) : Array();
+		$nomeContato 			= isset($_POST['nomeContato']) ? filter_var($_POST['nomeContato']) : '';
+		$telefones 				= isset($_POST['telefones']) ? filter_var_array($_POST['telefones']) : Array();
+		$emails 				= isset($_POST['emails']) ? filter_var_array($_POST['emails']) : Array();
 
-		$data_visita = isset($_POST['data_visita']) ? filter_var(trim($_POST['data_visita'])) : '';
-		$retorno = isset($_POST['retorno']) ? filter_var(trim($_POST['retorno'])) : '';
-
-
+		
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
 		
 		$this->load->dataValidator->set('Razao Social', $razaoSocial, 'razao_social')->is_required()->min_length(2);
 		$this->load->dataValidator->set('Nome Fantasia', $nomeFantasia, 'nome_fantasia')->is_required()->min_length(2);
-		$this->load->dataValidator->set('CNPJ', $cnpj, 'cnpj')->is_required()->is_required();
-		$this->load->dataValidator->set('CPF', $cpf, 'cpf')->is_required();
+		$this->load->dataValidator->set('CNPJ', $cnpj, 'cnpj')->is_required()->is_required()->is_cnpj();
+		$this->load->dataValidator->set('CPF', $cpf, 'cpf')->is_required()->is_cpf();
 		$this->load->dataValidator->set('Pessoa', $pessoa, 'pessoa')->is_required();
+		$this->load->dataValidator->set_message('is_required',"Informe pelo menos um e-mail");
+		$this->load->dataValidator->set('E-mail', $emails, 'emails')->is_required();
+		
 		$this->load->dataValidator->set('CEP', $cep, 'cep')->is_required();
 		$this->load->dataValidator->set('Logradouro', $logradouro, 'logradouro')->is_required();
 		$this->load->dataValidator->set('Número', $numero, 'numero')->is_required()->is_num();
@@ -360,37 +361,43 @@ class gerenciar extends Controller{
 
 			//FORMATAÇÃO DOS DADOS
 			$this->load->library('dataFormat', null, true);
-			$data_visita = $this->load->dataFormat->formatar($data_visita,'data','banco');
 
+			if(!empty($foto))
+			{
+				$cropValues = Array(
+					'w' => $_POST['w'],
+					'h' => $_POST['h'],
+					'x1' => $_POST['x1'],
+					'y1' => $_POST['y1']
+				);
+				$tamanho = Array(
+					'p' =>array(
+							'w' => 404,
+							'h' =>  158
+						)
+				);
 
-			//FORNECEDOR
-			$this->load->model('fornecedores/fornecedoresModel');
-			$fornecedoresModel = new fornecedoresModel();
-			$fornecedoresModel->setFoto($foto);
-			$fornecedoresModel->setRazaoSocial($razaoSocial);
-			$fornecedoresModel->setNomeFantasia($nomeFantasia);
-			$fornecedoresModel->setCNPJ($cnpj);
-			$fornecedoresModel->setCpf($cpf);
-			$fornecedoresModel->setPessoa($pessoa);
-			$fornecedoresModel->setSite($site);
-			$fornecedoresModel->setObservacoes($observacoes);
-			$fornecedoresModel->setEndereco($enderecoModel);
-			$fornecedoresModel->setTelefones($telefonesList);
-			$fornecedoresModel->setEmails($emailList);
-			$fornecedoresModel->setStatus(status::ATIVO);
-			$fornecedoresModel->setDataCadastro(date('Y-m-d h:i:s'));
+				if($nome_foto == '')
+					$nome_foto = md5(date('dmYHis'));
 
-
-
+				try {
+					$this->load->library('uploadFoto');
+					$upload = new uploadFoto('fornecedores', $foto, $nome_foto, $tamanho, $cropValues);
+					$nome_foto = $upload->getNomeArquivo();
+				} catch (Exception $e) {
+					echo $e->getMessage();
+					return false;
+				}
+			}
 
 			//FORNECEDOR
 			$this->load->model('fornecedores/fornecedoresModel');
 			$fornecedoresModel = new fornecedoresModel();
 			$fornecedoresModel->setId($idFornecedor);
-			$fornecedoresModel->setFoto($foto);
+			$fornecedoresModel->setFoto($nome_foto);
 			$fornecedoresModel->setRazaoSocial($razaoSocial);
 			$fornecedoresModel->setNomeFantasia($nomeFantasia);
-			$fornecedoresModel->setCnpj($cnpj);
+			$fornecedoresModel->setCNPJ($cnpj);
 			$fornecedoresModel->setCpf($cpf);
 			$fornecedoresModel->setPessoa($pessoa);
 			$fornecedoresModel->setSite($site);
@@ -399,8 +406,8 @@ class gerenciar extends Controller{
 			$fornecedoresModel->setEndereco($enderecoModel);
 			$fornecedoresModel->setTelefones($telefonesList);
 			$fornecedoresModel->setEmails($emailList);
-			$fornecedoresModel->setDataVisita($data_visita);
-			$fornecedoresModel->setRetorno($retorno);
+			$fornecedoresModel->setDataCadastro(date('Y-m-d h:i:s'));
+
 
 
 

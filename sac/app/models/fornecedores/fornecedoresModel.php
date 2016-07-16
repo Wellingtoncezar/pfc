@@ -19,7 +19,7 @@ class fornecedoresModel{
 	private $email = Array();
 	private $data_visita;
 	private $retorno;
-	private $status;
+	private $status = status::ATIVO;
 	private $dataCadastro;
 
 
@@ -101,6 +101,18 @@ class fornecedoresModel{
 	public function setDataCadastro($dataCadastro)
 	{
 		$this->dataCadastro = $dataCadastro;
+	}
+	public function ativar()
+	{
+		$this->status = status::ATIVO;
+	}
+	public function inativar()
+	{
+		$this->status = status::INATIVO;
+	}
+	public function excluir()
+	{
+		$this->status = status::EXCLUIDO;
 	}
 
 

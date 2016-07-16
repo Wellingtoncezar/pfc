@@ -357,6 +357,53 @@ class produtosDao extends Dao{
 
 
 
+	/**
+ 	 * 
+ 	 * Atualiza ou insere os telefones
+ 	 * @return void
+ 	 */
+ 	private function atualizaFornecedores(produtosModel $produto)
+	{
+		//excluir
+		$fornecedorExcluir = array();
+		foreach ($produto->getfornecedores() as $fornecedor)
+		{
+			if($fornecedor->getId() != '')
+				array_push($fornecedorExcluir,$fornecedor->getFornecedor()->getId());
+		}
+		$cond = '';
+		if(!empty($fornecedorExcluir))
+		{
+			$fornecedorExcluir = implode(',', $fornecedorExcluir);
+			$this->db->clear();
+			$cond = " AND id_fornecedor not in (".$fornecedorExcluir.")";
+		}
+		$sql = "DELETE FROM produto_fornecedores WHERE id_produto = '".$produto->getId()."' $cond";
+		$this->db->query($sql);
+		if($this->db->rowCount() > 0)
+		$this->db->clear();
+		$this->db->setTabela('produto_fornecedores');
+		foreach ($produto->getFornecedores() as $fornecedores)
+		{
+			if(!empty($fornecedores))
+			{
+				$data = array(
+					'id_produto' => $produto->getId(),
+					'id_fornecedor' => $fornecedores->getFornecedor()->getId(),
+					'fornecedor_principal' =>$fornecedores->getPrincipal()
+				);
+				if($fornecedores->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
+				{
+					$this->db->setCondicao('id_produto_fornecedor = "'.$fornecedores->getId().'"');
+					$this->db->update($data);
+				}else{
+					$this->db->insert($data);
+				}
+				if($this->db->rowCount() > 0)
+					$this->nUpdates++;
+			}
+		}
+	}
 
 
 	/**

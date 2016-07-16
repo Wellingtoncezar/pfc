@@ -10,10 +10,10 @@ class usuariosModel{
 	private $senha;
 	private $email;
 	private $nivelAcesso;
-	private $status;
+	private $status = status::ATIVO;
 	private $dataCadastro;
 	private $hash;
-	
+	private $isUserAdministrator = false;
 
 		
 
@@ -22,7 +22,7 @@ class usuariosModel{
  	{
  		$this->id = $id;
  	}
- 	public function setFuncionario($funcionario)
+ 	public function setFuncionario(funcionariosModel $funcionario)
 	{
 		$this->funcionario = $funcionario;
 	}
@@ -46,6 +46,18 @@ class usuariosModel{
 	{
 		$this->status = $status;
 	}
+	public function ativar()
+	{
+		$this->status = status::ATIVO;
+	}
+	public function inativar()
+	{
+		$this->status = status::INATIVO;
+	}
+	public function excluir()
+	{
+		$this->status = status::EXCLUIDO;
+	}
 
 	public function setDataCadastro($dataCadastro)
 	{	
@@ -54,6 +66,10 @@ class usuariosModel{
 	public function setHash($hash)
 	{	
 		$this->hash = $hash;
+	}
+	public function setUserAdministrator($isUserAdministrator)
+	{
+		$this->isUserAdministrator = $isUserAdministrator;
 	}
 
 	//GETERS

@@ -4,7 +4,7 @@
 */
 
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class unidadeMedidaProdutoModel{
+class unidadeMedidaEstoqueModel{
 	private $id;
 	private $unidadeMedida;
 	private $fator;

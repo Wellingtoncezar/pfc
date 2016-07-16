@@ -108,15 +108,45 @@
                     <input type="text" class="form-control" placeholder="Bairro" name="bairro" id="bairro"  value="<?=$funcionario->getEndereco()->getBairro()?>">
                 </div>
 
-                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-5">
                     <label>Cidade</label>
                     <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade"  value="<?=$funcionario->getEndereco()->getCidade()?>">
                 </div>
 
-                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-1">
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-2">
                     <label>UF</label>
-                    <input type="text" class="form-control" placeholder="Estado" name="estado" id="uf" value="<?=$funcionario->getEndereco()->getEstado()?>">
+                    <select class="form-control" name="estado" id="uf">
+                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+                        <option value="AC" <?=$funcionario->getEndereco()->getEstado() == 'AC' ? 'selected="selected"' : ''?>>AC - Acre</option>
+                        <option value="AL" <?=$funcionario->getEndereco()->getEstado() == 'AL' ? 'selected="selected"' : ''?>>AL - Alagoas</option>
+                        <option value="AP" <?=$funcionario->getEndereco()->getEstado() == 'AP' ? 'selected="selected"' : ''?>>AP - Amapá</option>
+                        <option value="AM" <?=$funcionario->getEndereco()->getEstado() == 'AM' ? 'selected="selected"' : ''?>>AM - Amazonas</option>
+                        <option value="BA" <?=$funcionario->getEndereco()->getEstado() == 'BA' ? 'selected="selected"' : ''?>>BA - Bahia</option>
+                        <option value="CE" <?=$funcionario->getEndereco()->getEstado() == 'CE' ? 'selected="selected"' : ''?>>CE - Ceará</option>
+                        <option value="DF" <?=$funcionario->getEndereco()->getEstado() == 'DF' ? 'selected="selected"' : ''?>>DF - Distrito Federal</option>
+                        <option value="GO" <?=$funcionario->getEndereco()->getEstado() == 'GO' ? 'selected="selected"' : ''?>>GO - Goiás</option>
+                        <option value="ES" <?=$funcionario->getEndereco()->getEstado() == 'ES' ? 'selected="selected"' : ''?>>ES - Espírito Santo</option>
+                        <option value="MA" <?=$funcionario->getEndereco()->getEstado() == 'MA' ? 'selected="selected"' : ''?>>MA - Maranhão</option>
+                        <option value="MT" <?=$funcionario->getEndereco()->getEstado() == 'MT' ? 'selected="selected"' : ''?>>MT - Mato Grosso</option>
+                        <option value="MS" <?=$funcionario->getEndereco()->getEstado() == 'MS' ? 'selected="selected"' : ''?>>MS - Mato Grosso do Sul</option>
+                        <option value="MG" <?=$funcionario->getEndereco()->getEstado() == 'MG' ? 'selected="selected"' : ''?>>MG - Minas Gerais</option>
+                        <option value="PA" <?=$funcionario->getEndereco()->getEstado() == 'PA' ? 'selected="selected"' : ''?>>PA - Pará</option>
+                        <option value="PB" <?=$funcionario->getEndereco()->getEstado() == 'PB' ? 'selected="selected"' : ''?>>PB - Paraiba</option>
+                        <option value="PR" <?=$funcionario->getEndereco()->getEstado() == 'PR' ? 'selected="selected"' : ''?>>PR - Paraná</option>
+                        <option value="PE" <?=$funcionario->getEndereco()->getEstado() == 'PE' ? 'selected="selected"' : ''?>>PE - Pernambuco</option>
+                        <option value="PI" <?=$funcionario->getEndereco()->getEstado() == 'PI' ? 'selected="selected"' : ''?>>PI - Piauí­</option>
+                        <option value="RJ" <?=$funcionario->getEndereco()->getEstado() == 'RJ' ? 'selected="selected"' : ''?>>RJ - Rio de Janeiro</option>
+                        <option value="RN" <?=$funcionario->getEndereco()->getEstado() == 'RN' ? 'selected="selected"' : ''?>>RN - Rio Grande do Norte</option>
+                        <option value="RS" <?=$funcionario->getEndereco()->getEstado() == 'RS' ? 'selected="selected"' : ''?>>RS - Rio Grande do Sul</option>
+                        <option value="RO" <?=$funcionario->getEndereco()->getEstado() == 'RO' ? 'selected="selected"' : ''?>>RO - Rondônia</option>
+                        <option value="RR" <?=$funcionario->getEndereco()->getEstado() == 'RR' ? 'selected="selected"' : ''?>>RR - Roraima</option>
+                        <option value="SP" <?=$funcionario->getEndereco()->getEstado() == 'SP' ? 'selected="selected"' : ''?>>SP - São Paulo</option>
+                        <option value="SC" <?=$funcionario->getEndereco()->getEstado() == 'SC' ? 'selected="selected"' : ''?>>SC - Santa Catarina</option>
+                        <option value="SE" <?=$funcionario->getEndereco()->getEstado() == 'SE' ? 'selected="selected"' : ''?>>SE - Sergipe</option>
+                        <option value="TO" <?=$funcionario->getEndereco()->getEstado() == 'TO' ? 'selected="selected"' : ''?>>TO - Tocantins</option>
+                    </select>
                     <input type="hidden" name="id_endereco" value="<?=$funcionario->getEndereco()->getId()?>">
+                
                 </div>
                 
             </div>

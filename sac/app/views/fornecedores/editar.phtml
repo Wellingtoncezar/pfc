@@ -10,12 +10,12 @@
         <div class="panel panel-default">
             <div class="panel-heading">Dados Empresariais</div>
             <div class="panel-body">
-                <div class="row">
+                <div class="col-xs-6 col-md-3 col-sm-3 col-lg-3">
                     <div class="col-xs-6 col-md-3">
-                        <label for="foto" class="thumbnail inputFoto preview-lg">
+                        <label for="foto" class="inputFoto preview-lg">
                             <div class="thumbnail img-preview preview-lg">
                             <?php
-                            $foto = $fornecedor->getFoto() != '' ? URL.'skin/uploads/fornecedores/'.$fornecedor->getFoto(): URL.'skin/img/imagens/semfoto.jpg';
+                            $foto = $fornecedor->getFoto() != '' ? URL.'skin/uploads/fornecedores/p/'.$fornecedor->getFoto(): URL.'skin/img/imagens/semfoto.jpg';
                             ?>
                                 <img src="<?=$foto?>" id="img_previous">
                             </div>
@@ -24,44 +24,45 @@
                         </label>
                     </div>
                 </div>
+				<div class="col-xs-6 col-md-3 col-sm-3 col-lg-9">
+	                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                    <label>Razão Social</label>
+	                    <input type="text" class="form-control" placeholder="Razão Social" aria-describedby="basic-addon1" name="razao_social" value="<?=$fornecedor->getRazaoSocial()?>">
+	                </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Razão Social</span>
-                    <input type="text" class="form-control" placeholder="Razão Social" aria-describedby="basic-addon1" name="razao_social" value="<?=$fornecedor->getRazaoSocial()?>">
-                </div>
 
+	                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                    <label>Nome Fantasia</label>
+	                    <input type="text" class="form-control" placeholder="Nome Fantasia" aria-describedby="basic-addon1" name="nome_fantasia" value="<?=$fornecedor->getNomeFantasia()?>">
+	                </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Nome Fantasia</span>
-                    <input type="text" class="form-control" placeholder="Nome Fantasia" aria-describedby="basic-addon1" name="nome_fantasia" value="<?=$fornecedor->getNomeFantasia()?>">
-                </div>
+	                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                    <label>CNPJ</label>
+	                    <input type="text" class="form-control" placeholder="CNPJ" aria-describedby="basic-addon1" name="cnpj" value="<?=$fornecedor->getCnpj()?>">
+	                </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">CNPJ</span>
-                    <input type="text" class="form-control" placeholder="CNPJ" aria-describedby="basic-addon1" name="cnpj" value="<?=$fornecedor->getCnpj()?>">
-                </div>
+	                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                    <label>CPF</label>
+	                    <input type="text" class="form-control" placeholder="CPF" aria-describedby="basic-addon1" name="cpf" value="<?=$fornecedor->getCpf()?>">
+	                </div>
+	                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                    <label>Pessoa</label>
+	                    <select class="form-control" name="pessoa">
+	                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
+	                        <option value="PF" <?=$fornecedor->getPessoa() == "PF" ? 'selected="selected"' : ''?>>Física</option>
+	                        <option value="PJ" <?=$fornecedor->getPessoa() == "PJ" ? 'selected="selected"' : ''?>>Jurídica</option>
+	                    </select>
+	                </div>
+	                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                    <label>Site</label>
+	                    <input type="text" class="form-control" placeholder="Site" aria-describedby="basic-addon1" name="site" value="<?=$fornecedor->getSite()?>"> 
+	                </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">CPF</span>
-                    <input type="text" class="form-control" placeholder="CPF" aria-describedby="basic-addon1" name="cpf" value="<?=$fornecedor->getCpf()?>">
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Pessoa</span>
-                    <select class="form-control" name="pessoa">
-                        <option value="" selected="selected" disabled="disabled">..Selecione..</option>
-                        <option value="PF" <?=$fornecedor->getPessoa() == "PF" ? 'selected="selected"' : ''?>>Física</option>
-                        <option value="PJ" <?=$fornecedor->getPessoa() == "PJ" ? 'selected="selected"' : ''?>>Jurídica</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Site</span>
-                    <input type="text" class="form-control" placeholder="Site" aria-describedby="basic-addon1" name="site" value="<?=$fornecedor->getSite()?>"> 
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Observações</span>
-                    <textarea class="form-control" placeholder="Observações" name="observacoes"><?=$fornecedor->getObservacoes()?></textarea>
-                </div>
+	                <div class="form-group col-xs-6 col-md-12 col-sm-12 col-lg-12">
+	                    <label>Observações</label>
+	                    <textarea class="form-control" placeholder="Observações" name="observacoes"><?=$fornecedor->getObservacoes()?></textarea>
+	                </div>
+	            </div>
             </div>
         </div>
         
@@ -71,52 +72,56 @@
 
         <div id="defaultCampos">
             <div class="radio telefones" id="defaultTel" style="margin-bottom:5px;display:none">
-                <span class="input-group-addon">
-                    <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Categoria</span>
-                        <select name="categoria" class="form-control">
-                            <option value="telefone" selected="selected">Telefone</option>
-                            <option value="celular">Celular</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Número</span>
-                        <input type="tel" name="telefone" placeholder="Número" class="form-control" />
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Operadora</span>
-                        <input type="text" name="operadora" placeholder="Operadora" class="form-control" />
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Tipo</span>
-                        <select name="tipo_telefone" class="form-control">
-                            <option value="" selected="selected" disabled="disabled">Selecione um tipo</option>
-                            <option value="Pessoal">Pessoal</option>
-                            <option value="Profissional">Profissional</option>
-                        </select>
-                    </div>
-                </span>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+	                    <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+	                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                        <label>Categoria</label>
+	                        <select name="categoria" class="form-control">
+	                            <option value="telefone" selected="selected">Telefone</option>
+	                            <option value="celular">Celular</option>
+	                        </select>
+	                    </div>
+	                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                        <label>Número</label>
+	                        <input type="tel" name="telefone" placeholder="Número" class="form-control" />
+	                    </div>
+	                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                        <label>Operadora</label>
+	                        <input type="text" name="operadora" placeholder="Operadora" class="form-control" />
+	                    </div>
+	                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                        <label>Tipo</label>
+	                        <select name="tipo_telefone" class="form-control">
+	                            <option value="" selected="selected" disabled="disabled">Selecione um tipo</option>
+	                            <option value="Pessoal">Pessoal</option>
+	                            <option value="Profissional">Profissional</option>
+	                        </select>
+	                    </div>
+	                </div>
+                </div>
                 <input type="hidden" id="idTelefone" value="">
             </div>
 
             <div class="radio emails" id="defaultEmail" style="margin-bottom:5px;display:none">
-                <span class="input-group-addon">
-                    <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Tipo</span>
-                        <select name="tipo_email" class="form-control">
-                            <option value="" disabled="disabled">Tipo</option>
-                            <option value="Pessoal">Pessoal</option>
-                            <option value="Profissional">Profissional</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">E-mail</span>
-                        <input type="email" name="email" placeholder="E-mail" class="form-control" />
-                    </div>
-                <input type="hidden" id="idTelefone" value="" name="idTelefone">
-                </span>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+	                    <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+	                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                        <label>Tipo</label>
+	                        <select name="tipo_email" class="form-control">
+	                            <option value="" disabled="disabled">Tipo</option>
+	                            <option value="Pessoal">Pessoal</option>
+	                            <option value="Profissional">Profissional</option>
+	                        </select>
+	                    </div>
+	                    <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                        <label>E-mail</label>
+	                        <input type="email" name="email" placeholder="E-mail" class="form-control" />
+	                    </div>
+	                	<input type="hidden" id="idTelefone" value="" name="idTelefone">
+                	</div>
+                </div>
             </div>
 
         </div>
@@ -126,45 +131,47 @@
         <div class="panel panel-default">
             <div class="panel-heading">Contatos</div>
             <div class="panel-body">
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Nome para contato</span>
+                <div class="form-group col-xs-12 col-md-12 col-sm-12 col-lg-12">
+                    <label>Nome para contato</label>
                     <input type="text" name="nomeContato" placeholder="Nome para contato" class="form-control" value="<?=$fornecedor->getNomeContato()?>"/>
                 </div>    
 
 
-                <div class="form-group group_tel">
+                <div class="form-group group_tel col-xs-12 col-md-12 col-sm-12 col-lg-12">
                     <!--TELEFONES-->
                     <?php
                     if(!empty($fornecedor->getTelefones())):
                         foreach ($fornecedor->getTelefones() as $telefone):
                     ?>
                         <div class="radio telefones" style="margin-bottom:5px;display:block">
-                            <span class="input-group-addon">
-                                <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">Categoria</span>
-                                    <select name="categoria" class="form-control">
-                                        <option value="telefone" <?=$telefone->getCategoria() == 'telefone' ? 'selected="selected"' : ''?>>Telefone</option>
-                                        <option value="celular" <?=$telefone->getCategoria() == 'celular' ? 'selected="selected"' : ''?>>Celular</option>
-                                        </select>
-                                </div>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">Número</span>
-                                    <input type="tel" name="telefone" placeholder="Número" class="form-control" value="<?=$telefone->getNumero()?>" />
-                                </div>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">Operadora</span>
-                                    <input type="text" name="operadora" placeholder="Operadora" class="form-control"  value="<?=$telefone->getOperadora()?>"/>
-                                </div>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">Tipo</span>
-                                    <select name="tipo_telefone" class="form-control">
-                                        <option value="" selected="selected" disabled="disabled">Selecione um tipo</option>
-                                        <option value="Pessoal" <?=$telefone->getTipo() == 'Pessoal' ? 'selected="selected"' : ''?>>Pessoal</option>
-                                        <option value="Profissional" <?=$telefone->getTipo() == 'Profissional' ? 'selected="selected"' : ''?>>Profissional</option>
-                                    </select>
-                                </div>
-                            </span>
+                            <div class="panel panel-default">
+                    			<div class="panel-body">
+	                                <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+	                                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                                    <label>Categoria</label>
+	                                    <select name="categoria" class="form-control">
+	                                        <option value="telefone" <?=$telefone->getCategoria() == 'telefone' ? 'selected="selected"' : ''?>>Telefone</option>
+	                                        <option value="celular" <?=$telefone->getCategoria() == 'celular' ? 'selected="selected"' : ''?>>Celular</option>
+	                                        </select>
+	                                </div>
+	                                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                                    <label>Número</label>
+	                                    <input type="tel" name="telefone" placeholder="Número" class="form-control" value="<?=$telefone->getNumero()?>" />
+	                                </div>
+	                                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                                    <label>Operadora</label>
+	                                    <input type="text" name="operadora" placeholder="Operadora" class="form-control"  value="<?=$telefone->getOperadora()?>"/>
+	                                </div>
+	                                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                                    <label>Tipo</label>
+	                                    <select name="tipo_telefone" class="form-control">
+	                                        <option value="" selected="selected" disabled="disabled">Selecione um tipo</option>
+	                                        <option value="Pessoal" <?=$telefone->getTipo() == 'Pessoal' ? 'selected="selected"' : ''?>>Pessoal</option>
+	                                        <option value="Profissional" <?=$telefone->getTipo() == 'Profissional' ? 'selected="selected"' : ''?>>Profissional</option>
+	                                    </select>
+	                                </div>
+	                            </div>
+                            </div>
                             <input type="hidden" id="idTelefone" name="idTelefone" value="<?=$telefone->getId()?>">
                         </div>
 
@@ -175,28 +182,30 @@
                     <a href="javascript:void(0)" class="addTel addCel"><span class="glyphicons glyphicons-earphone"></span> Adicionar o telefone</a>
                 </div>
 
-                <div class="form-group group_email">
+                <div class="form-group group_email col-xs-12 col-md-12 col-sm-12 col-lg-12">
                     <!--EMAILS-->
                     <?php
                     if(!empty($fornecedor->getEmail())):
                         foreach ($fornecedor->getEmail() as $email):
                     ?>
                         <div class="radio emails" style="margin-bottom:5px;display:block">
-                            <span class="input-group-addon">
-                                <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">Tipo</span>
-                                    <select name="tipo_email" class="form-control">
-                                        <option value="" disabled="disabled">Tipo</option>
-                                        <option value="Pessoal" <?=$email->getTipo() == 'Pessoal' ? 'selected="selected"' : ''?>>Pessoal</option>
-                                        <option value="Profissional" <?=$email->getTipo() == 'Profissional' ? 'selected="selected"' : ''?>>Profissional</option>
-                                    </select>
-                                </div>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">E-mail</span>
-                                    <input type="email" name="email" placeholder="E-mail" class="form-control" value="<?=$email->getEmail()?>" />
-                                </div>
-                            </span>
+                            <div class="panel panel-default">
+                    			<div class="panel-body">
+	                                <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+	                                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                                    <label>Tipo</label>
+	                                    <select name="tipo_email" class="form-control">
+	                                        <option value="" disabled="disabled">Tipo</option>
+	                                        <option value="Pessoal" <?=$email->getTipo() == 'Pessoal' ? 'selected="selected"' : ''?>>Pessoal</option>
+	                                        <option value="Profissional" <?=$email->getTipo() == 'Profissional' ? 'selected="selected"' : ''?>>Profissional</option>
+	                                    </select>
+	                                </div>
+	                                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+	                                    <label>E-mail</label>
+	                                    <input type="email" name="email" placeholder="E-mail" class="form-control" value="<?=$email->getEmail()?>" />
+	                                </div>
+	                            </div>
+                            </div>
                             <input type="hidden" id="idEmail" name="idEmail" value="<?=$email->getId()?>">
                         </div>
 
@@ -221,37 +230,37 @@
             <div class="panel-heading">Endereço</div>
             <div class="panel-body">
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">CEP</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-2">
+                    <label>CEP</label>
                     <input type="text" class="form-control" placeholder="CEP" name="cep" id="cep" value="<?=$fornecedor->getEndereco()->getCep()?>">
                 </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Logradouro</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                    <label>Logradouro</label>
                     <input type="text" class="form-control" placeholder="Lougradouro" name="logradouro" id="rua"  value="<?=$fornecedor->getEndereco()->getLogradouro()?>">
                 </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Número</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-2">
+                    <label>Número</label>
                     <input type="text" class="form-control" placeholder="Número" name="numero" id="numero"  value="<?=$fornecedor->getEndereco()->getNumero()?>">
                 </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Complemento</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-2">
+                    <label>Complemento</label>
                     <input type="text" class="form-control" placeholder="Complemento" name="complemento" id="complemento"  value="<?=$fornecedor->getEndereco()->getComplemento()?>">
                 </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Bairro</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-5">
+                    <label>Bairro</label>
                     <input type="text" class="form-control" placeholder="Bairro" name="bairro" id="bairro"  value="<?=$fornecedor->getEndereco()->getBairro()?>">
                 </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Cidade</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-5">
+                    <label>Cidade</label>
                     <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade"  value="<?=$fornecedor->getEndereco()->getCidade()?>">
                 </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">UF</span>
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-2">
+                    <label>UF</label>
                     <select class="form-control" name="estado" id="uf">
                         <option value="" selected="selected" disabled="disabled">..Selecione..</option>
                         <option value="AC" <?=$fornecedor->getEndereco()->getEstado() == 'AC' ? 'selected="selected"' : ''?>>AC - Acre</option>
@@ -287,28 +296,10 @@
                 
             </div>
         </div><!-- fim panel endereco -->
-             
-
-        
-        <div class="panel panel-default">
-            <div class="panel-heading">Agenda</div>
-            <div class="panel-body">
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Data da Visita</span>
-                    <input type="text" class="form-control" placeholder="Data da Visita" aria-describedby="basic-addon1" name="data_visita" value="<?=$dataFormat->formatar($fornecedor->getDataVisita(),'data');?>">
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Retorno</span>
-                    <input type="text" class="form-control" placeholder="Retorno" aria-describedby="basic-addon1" name="retorno" value="<?=$fornecedor->getRetorno();?>">
-                </div>
-                <input type="hidden" name="id_fornecedor" value="<?=$fornecedor->getId()?>">
-                <div class="btn-group pull-right" role="group">
-                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
-                </div>
-            </div>
-
+		<input type="hidden" name="id_fornecedor" value="<?=$fornecedor->getId()?>">
+        <div class="btn-group pull-right" role="group">
+            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
         </div>
-
     </form>
 </div>
 
@@ -322,7 +313,6 @@
 <script type="text/javascript">
 $(function(){
     /*MASCARAS DE CAMPOS*/
-    $('input[name=data_visita]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true,yearRange: "-100:+0" });
     $('input[name=cep]').wvmask('cep')
     $('input[name=numero]').wvmask('numero')
     $('input[name=retorno]').wvmask('numero')
@@ -417,7 +407,7 @@ $(function(){
         if($('input[name=idTelefone]',$(this).parent()).val() != '')
             telefonesExcluir.push($('input[name=idTelefone]',$(this).parent()).val())
 
-        $(this).parent().parent().remove();
+        $(this).parent().parent().parent().remove();
     });
 
 
@@ -433,7 +423,7 @@ $(function(){
     $(document).on('click','.delEmail',function(){
         if($('input[name=idEmail]',$(this).parent()).val() != '')
             emailsExcluir.push($('input[name=idEmail]',$(this).parent()).val())
-        $(this).parent().parent().remove();
+        $(this).parent().parent().parent().remove();
     });
     /************************************/
 

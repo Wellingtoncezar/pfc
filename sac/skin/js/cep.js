@@ -1,10 +1,10 @@
 (function($){
     $.fn.validaCep = function(options) {
         var defaults = {
-          'rua' : true,
-          'bairro' : true,
-          'cidade' : true,
-          'uf' : true
+          	'rua' : true,
+          	'bairro' : true,
+          	'cidade' : true,
+          	'uf' : true
         };
 
         var settings = $.extend( {}, defaults, options );

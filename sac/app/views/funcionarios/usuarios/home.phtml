@@ -11,6 +11,7 @@
     <div class="middle-content">
             <?php
             $thead = '  <tr>
+            				<th width="20">ID</th>
                             <th width="100">Nível</th>
                             <th width="160">Funcionário</th>
                             <th width="160">Email</th>
@@ -19,6 +20,7 @@
                             <th width="180">Ações</th>
                         </tr>';
             $tfoot = '  <tr>
+            				<th>ID</th>
                             <th>Nível</th>
                             <th>Funcionario</th>
                             <th>Email</th>
@@ -34,21 +36,26 @@
                     $inativo = ($usu->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
 
             $tbody .='  <tr id="'.$usu->getId().'">
+            				<td>'.$usu->getId().'</td>
                             <td>'.$usu->getNivelAcesso()->getNome().'</td>
                             <td>'.$usu->getFuncionario()->getNome().' '.$usu->getFuncionario()->getSobrenome().'</td>
                             <td>'.$usu->getEmail().'</td>
                             <td>'.$usu->getLogin().'</td>
-                            <td>
-                                <select name="status" id="'.$usu->getId().'" class="statusSelect">
+                            <td>';
+                            if($usu->getNivelAcesso()->getPermissoes() != '*'):
+
+            $tbody .='  		<select name="status" id="'.$usu->getId().'" class="statusSelect">
                                     <option value="'.status::ATIVO.'" class="active" '.$ativo.'>Ativo</option>
                                     <option value="'.status::INATIVO.'" class="inactive" '.$inativo.'>Inativo</option>
-                                </select>
-                            </td>
-                            <td>'
-                                .$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/usuarios/gerenciar/editar/'.$usu->getId()))
-                                .$this->templateFactory->getButton('excluir', array('id'=> $usu->getId())).
-                                
-                            '</td>
+                                </select>';
+
+                            endif;
+            $tbody .='  	</td>
+                            <td>'.$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/usuarios/gerenciar/editar/'.$usu->getId()));
+                           	if($usu->getNivelAcesso()->getPermissoes() != '*'):
+            $tbody .= 			$this->templateFactory->getButton('excluir', array('id'=> $usu->getId()));
+                            endif;
+            $tbody .= 		'</td>
                         </tr>';
                 endforeach;
                 echo $template->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));

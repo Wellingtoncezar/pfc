@@ -9,6 +9,7 @@
     <div class="middle-content">
             <?php
             $thead = '  <tr>
+            				<th width="20">ID</th>
                             <th width="100">Código</th>
                             <th width="40">Foto</th>
                             <th width="160">Nome</th>
@@ -18,6 +19,7 @@
                             <th width="180">Ações</th>
                         </tr>';
             $tfoot = '  <tr>
+            				<th>ID</th>
                             <th>Código</th>
                             <th>Foto</th>
                             <th>Nome</th>
@@ -34,6 +36,7 @@
                     $inativo = ($func->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
                     
             $tbody .='  <tr id="'.$func->getId().'">
+            				<td>'.$func->getId().'</td>
                             <td>'.$func->getCodigo().'</td>
                             <td><img src="'.$foto.'" style=" width: 60px; height: 60px;" class="img-circle"></td>
                             <td>'.$func->getNome().' '.$func->getSobrenome().'</td>

@@ -6,15 +6,18 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class produtosModel{
 	private $id;
 	private $foto;
+	private $codigoBarra;
 	private $nome;
 	private $marca;
 	private $categoria;
 	private $descricao;
-	private $unidadeMedida = Array();
-	private $precoVenda;
-	private $markup;
+	private $fornecedores = array();
+	private $unidadeMedidaEstoque = Array();
+	private $unidadeMedidaVenda;
+	private $fatorUnidadeMedidaVenda;
 	private $status = status::ATIVO;
 	private $dataCadastro;
+	private $ultimaAtualizacao;
 	
 
  	//SETERS
@@ -25,6 +28,10 @@ class produtosModel{
  	public function setFoto($foto)
 	{
 		$this->foto = $foto;
+	}
+	public function setCodigoBarra($codigoBarra)
+	{
+		$this->codigoBarra = $codigoBarra;
 	}
 	public function setNome($nome)
 	{
@@ -42,18 +49,13 @@ class produtosModel{
 	{
 		$this->descricao = $descricao;
 	}
-	public function addUnidadeMedida(unidadeMedidaProdutoModel $unidadeMedida)
+	public function addUnidadeMedidaEstoque(unidadeMedidaEstoqueModel $unidadeMedidaEstoque)
 	{
-		array_push($this->unidadeMedida, $unidadeMedida);
+		array_push($this->unidadeMedidaEstoque, $unidadeMedidaEstoque);
 	}
-
-	public function setPrecoVenda($precoVenda)
+	public function setUnidadeMedidaVenda(unidadeMedidaModel $unidadeMedidaVenda)
 	{
-		$this->precoVenda = $precoVenda;
-	}
-	public function setMarkup($markup)
-	{
-		$this->markup = $markup;
+		$this->unidadeMedidaVenda = $unidadeMedidaVenda;
 	}
 
 	public function setStatus($status)
@@ -77,6 +79,11 @@ class produtosModel{
 	{	
 		$this->dataCadastro = $dataCadastro;
 	}
+	public function setUltimaAtualizacao($ultimaAtualizacao)
+	{	
+		$this->ultimaAtualizacao = $ultimaAtualizacao;
+	}
+
 
 
 
@@ -88,6 +95,11 @@ class produtosModel{
  	public function getFoto()
 	{
 		return $this->foto;
+	}
+
+	public function getCodigoBarra()
+	{
+		return $this->codigoBarra;
 	}
 	public function getNome()
 	{
@@ -106,20 +118,15 @@ class produtosModel{
 		return $this->descricao;
 	}
 		
-	public function getUnidadeMedida()
+	public function getUnidadeMedidaEstoque()
 	{
-		return $this->unidadeMedida;
+		return $this->unidadeMedidaEstoque;
+	}
+	public function getUnidadeMedidaVenda()
+	{
+		return $this->unidadeMedidaVenda;
 	}
 
-	public function getPrecoVenda()
-	{
-		return $this->precoVenda;
-	}
-
-	public function getMarkup()
-	{
-		return $this->markup;
-	}
 	
 	public function getStatus()
 	{
@@ -128,5 +135,9 @@ class produtosModel{
 	public function getDataCadastro()
 	{	
 		return $this->dataCadastro;
+	}
+	public function getUltimaAtualizacao()
+	{	
+		return $this->ultimaAtualizacao;
 	}
 }

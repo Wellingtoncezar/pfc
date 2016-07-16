@@ -117,7 +117,7 @@ $(function(){
         if($('input[name=idTelefone]',$(this).parent()).val() != '')
             telefonesExcluir.push($('input[name=idTelefone]',$(this).parent()).val())
 
-        $(this).parent().parent().remove();
+        $(this).parent().parent().parent().remove();
     });
 
 
@@ -133,7 +133,7 @@ $(function(){
     $(document).on('click','.delEmail',function(){
         if($('input[name=idEmail]',$(this).parent()).val() != '')
             emailsExcluir.push($('input[name=idEmail]',$(this).parent()).val())
-        $(this).parent().parent().remove();
+        $(this).parent().parent().parent().remove();
     });
     /************************************/
 

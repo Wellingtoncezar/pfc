@@ -9,6 +9,7 @@
     <div class="middle-content">
         <?php
             $thead = '  <tr>
+            				<th width="20">ID</th>
                             <th width="40">Foto</th>
                             <th width="100">Razão social</th>
                             <th width="160">Nome Fantasia</th>
@@ -18,6 +19,7 @@
                             <th width="180">Ações</th>
                         </tr>';
             $tfoot = '  <tr>
+            				<th>ID</th>
                             <th>Foto</th>
                             <th>Razão social</th>
                             <th>Nome Fantasia</th>
@@ -29,11 +31,12 @@
             if(!empty($fornecedores)):
                 $tbody = '';
                 foreach ($fornecedores as $fornec):
-                    $foto = $fornec->getFoto() != '' ? URL.'skin/uploads/fornecedores/p/'.$fornec->getFoto() : URL.'skin/img/imagens/logoaqui.png';
+                    $foto = $fornec->getFoto() != '' ? URL.'skin/uploads/fornecedores/p/'.$fornec->getFoto() : URL.'skin/img/imagens/semlogo.jpg';
                     $ativo = ($fornec->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
                     $inativo = ($fornec->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
 
     $tbody .= ' <tr id="'.$fornec->getId().'">
+    				<td>'.$fornec->getId().'</td>
                     <td><img src="'.$foto.'" style=" width: 60px; height: 60px;" class="img-circle"></td>
                     <td>'.$fornec->getRazaoSocial().'</td>
                     <td>'.$fornec->getNomeFantasia().'</td>

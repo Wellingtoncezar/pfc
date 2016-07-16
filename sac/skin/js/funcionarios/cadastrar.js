@@ -102,7 +102,7 @@ $(function(){
     });
     
     $(document).on('click','.delCel',function(){
-        $(this).parent().parent().remove();
+        $(this).parent().parent().parent().remove();
     });
 
 
@@ -115,7 +115,7 @@ $(function(){
     });
     
     $(document).on('click','.delEmail',function(){
-        $(this).parent().parent().remove();
+        $(this).parent().parent().parent().remove();
     });
     /************************************/
 

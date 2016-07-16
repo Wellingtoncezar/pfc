@@ -11,8 +11,8 @@
             <div class="panel-heading">Dados Gerais</div>
             <div class="panel-body">
 
-                <div class="row col-xs-6 col-md-3 col-sm-3 col-lg-3">
-                    <div class="col-xs-6 col-md-12">
+                <div class="row col-xs-12 col-md-3 col-sm-3 col-lg-3">
+                    <div class="col-xs-12 col-md-12">
                         <label for="foto" class="inputFoto preview-lg">
                             <div class="thumbnail img-preview preview-lg">
                                 <img src="<?=URL?>skin/img/imagens/forn.jpg" id="img_previous">
@@ -20,14 +20,26 @@
                             <input type="file" name="foto" id="foto" accept="image/*">
                         </label>
                     </div>
+					<div class="col-xs-12 col-md-12">
+						<div class="form-group">
+							<div class="thumbnail preview-lg">
+								<lable>Código de barras (GTI)</lable>
+								<input type="text" id="barCodeGti" name="codigobarras" class="form-control " value="7898501069014" maxlength="13" />
+								<div class="demo-section k-content box-barcode-produto">
+						            <div id="barcode"></div>
+						        </div>
+					        </div>
+	                    </div>
+					</div>
+
                 </div>
                 <div class="row col-xs-6 col-md-3 col-sm-9 col-lg-9">
-                    <div class="form-group">
+                    <div class="form-group col-xs-12 col-md-6 col-sm-4 col-lg-4">
                         <label>Nome</label>
                         <input type="text" class="form-control" placeholder="Nome" aria-describedby="basic-addon1" name="nome">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group col-xs-12 col-md-6 col-sm-4 col-lg-4">
                         <label>Marca</label>
                         <select name="marca" id="marca" class="form-control">
                             <option selected="selected" disabled="disabled" value="">..Selecione..</option>
@@ -38,7 +50,7 @@
                             <?php endif;?>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-xs-12 col-md-6 col-sm-4 col-lg-4">
                         <label>Categoria</label>
                         <select name="categoria" id="categoria" class="form-control">
                             <option selected="selected" disabled="disabled" value="">..Selecione..</option>
@@ -49,36 +61,36 @@
                             <?php endif;?>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-xs-12 col-md-12 col-sm-12 col-lg-12">
                         <label>Descrição</label>
                         <textarea class="form-control" placeholder="Descrição" name="descricao"></textarea>
+                    </div>
+
+                   <div class="form-group col-xs-12 col-md-12 col-sm-12 col-lg-12">
+                        <label>Fornecedor</label>
+                        <div class="input-group">
+	                        <select name="listafornecedores" class="form-control">
+	                            <?php if(!empty($fornecedores)):?>
+	                            <?php foreach ($fornecedores as $fornecedores):?>
+	                            <option value="<?= $fornecedores->getId()?>" foto="<?= ($fornecedores->getFoto() != '') ? URL.'skin/uploads/fornecedores/p/'.$fornecedores->getFoto() : URL.'skin/img/imagens/semlogo.jpg'?>" nome="<?=$fornecedores->getNomeFantasia()?>"><?= $fornecedores->getNomeFantasia()?></option>
+	                            <?php endforeach;?>
+	                            <?php endif;?>
+	                        </select>
+	                        <span class="input-group-addon" id="basic-addon1"><a href="javascript:void(0)" class="addFornecedor"><span class="glyphicons glyphicons-plus"></span></a></span>
+	                   	</div>
+                    </div>
+
+                    <div class="listFornecedores">
                     </div>
                 </div>
             </div> 
 
-
         </div> <!-- fim panel dados gerais -->
         
-        <div class="panel panel-default">
-            <div class="panel-heading">Valores</div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label>Preço de Venda R$</label>
-                    <input type="text" class="form-control" placeholder="Preço de Venda" aria-describedby="basic-addon1" name="preco_venda" name="preco_venda"  value="" >
-                    <label><input type="checkbox" name="precoVendaAutomatico">Automático</label>
-                </div>
-
-                <div class="input-group boxmarkup" style="display:none" >
-                    <label>Markup %</label>
-                    <input type="text" class="form-control" placeholder="Markup %" aria-describedby="basic-addon1" name="markup" maxlength="6" value="">
-                </div>
-                
-            </div>
-        </div>
-       
+        <!--UNIDADE MEDIDA ESTOQUE-->
         <div class="panel panel-default">
             <div class="panel-heading">
-                Unidades de medida
+                Unidades de medida (controle de estoque)
                 <div class="pull-right">
                     <a href="javascript:void(0)" class="btn btn-primary btn-sm btn_addUnidade">Adicionar</a>
                 </div> 
@@ -89,18 +101,60 @@
                     <strong>Atenção!</strong> As unidades devem ser cadastradas da menor para a maior unidade.
                 </div>
                 <div class="row groupUnidades">
-                    
                 </div>
-
-
-
-                
-            </div>
-            <div class="btn-group pull-right" role="group">
-                <button type="submit" class="btn btn-success">Enviar</button>
             </div>
         </div>
+
+		<!--UNIDADE MEDIDA VENDA-->
+        <div class="panel panel-default">
+            <div class="panel-heading">Unidade de medida para venda (preço x unidade medida)</div>
+            <div class="panel-body">
+            	<div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Exemplos:</strong> 
+                    <p>• Venda de um frango por x valor o kg. No campo "Fator multiplicação" fica 1 e no campo "unidade de medida" fica Quilograma(s). Ou seja, para cada kg vendido multiplica-se por 1 (fator multiplicação)</p>
+                </div>
+                <div class="form-group col-xs-12 col-md-12 col-sm-12 col-lg-12">
+	                <div class=" col-xs-6 col-md-6 col-sm-6 col-lg-6">
+	                	<label>Fator multiplicação</label>
+		                <input type="number" min="1" value="1" class="form-control" placeholder="Fator multiplicação" aria-describedby="basic-addon1" name="fatorUnidadeMedidaVenda" maxlength="6" value="">
+		            </div> 
+		            <div class="col-xs-6 col-md-6 col-sm-6 col-lg-6">
+		            	<label>Unidade de medida</label>
+		                <select name="unidadeMedidaVenda" class="form-control">
+		                <?php foreach ($unidademedida as $unidade):?>
+		                    <option value="<?=$unidade->getId()?>"><?=$unidade->getNome()?></option>
+		                <?php endforeach;?>
+		                </select>
+		            </div>
+	            </div>
+
+                <div class="input-group boxmarkup" style="display:none">
+                    <label>Markup %</label>
+                    <input type="text" class="form-control" placeholder="Markup %" aria-describedby="basic-addon1" name="markup" maxlength="6" value="">
+                </div>
+                
+            </div>
+        </div>
+        <div class="btn-group pull-right" role="group">
+            <button type="submit" class="btn btn-success">Enviar</button>
+        </div>
     </form>
+</div>
+
+
+<div class="col-sm-6 col-md-3 col-lg-3 modeloFornecedor hide" id="">
+	<input type="hidden" name="idFornecedorProduto" value="">
+	<input type="hidden" name="idFornecedor">    
+	<div class="thumbnail">
+      	<img src="<?=URL?>skin/img/imagens/semlogo.jpg" class="fotoFornecedor">
+      	<div class="caption">
+         	<div class="form-group">
+            	<label id="nomeFornecedor">Fornecedor</label>
+          	</div>
+          	<p><a href="javascript:void()" class="btn btn-danger removeFornecedor" id="" role="button">Remover</a></p>
+        </div>
+   	</div>
 </div>
 
 
@@ -119,19 +173,25 @@
             </div>
             <div class="form-group">
                 <label>Fator conversão</label>
-                <input type="text" class="form-control" placeholder="Fator" name="fator_unidade" maxlength="20" value="">
+                <input type="text" class="form-control" placeholder="Fator" name="fator_unidade" maxlength="20" value="1">
             </div>
             <fieldset class="form-group">
-                <div class="col-sm-6 col-md-6">
-                    <label class="col-sm-6 col-md-10">Venda</label>
-                    <input type="checkbox" name="venda" value="" class="col-sm-6 col-md-2">
-                </div>
-                <div class="col-sm-6 col-md-6">
-                    <label class="col-sm-6 col-md-10">Estoque</label>
-                    <input type="radio" name="estoque" value="" class="col-sm-6 col-md-2">
-                </div>
+                <div class="input-group">
+			      	<label class="input-group-addon">
+			        	<input type="radio" name="venda" value="" >
+			      	</label>
+			      	<p class="form-control">Saída p/ cada venda</p>
+			    </div><!-- /input-group -->
+				
+				<div class="input-group">
+			      	<label class="input-group-addon">
+			        	<input type="radio" name="estoque" value="" >
+			      	</label>
+			      	<p class="form-control">Controle de estoque</p>
+			    </div><!-- /input-group -->
+
             </fieldset>
-            <p><a href="#" class="btn btn-danger" role="button">Excluir</a></p>
+            <p><a href="javascript:void(0)" class="btn btn-danger btn_removeUnidMed" role="button">Excluir</a></p>
         </div>
     </div>
 </div>

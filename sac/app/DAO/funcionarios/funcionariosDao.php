@@ -18,18 +18,25 @@ class funcionariosDao extends Dao{
 	 */
 	public function listar()
 	{
+		$this->load->dao('funcionarios/listarTodos');
+		return $this->listarFuncionarios(new listarTodos());
+	}
+
+	public function listarAtivos()
+	{
+		$this->load->dao('funcionarios/listarAtivos');
+		return $this->listarFuncionarios(new listarAtivos());
+	}
+
+	private function listarFuncionarios(iListagemFuncionarios $listafuncionarios)
+	{
 		$this->load->model('funcionarios/funcionariosModel');
 		$this->load->model('funcionarios/cargosModel');
-		
-		$funcionarios = Array();
 
-		$this->db->clear();
-		$this->db->setTabela('funcionarios AS A, cargos AS B');
-		$this->db->setCondicao(" A.status_funcionario in('".status::ATIVO."','".status::INATIVO."') AND A.id_cargo = B.id_cargo");
-		$campos = array('A.id_funcionario','A.codigo_funcionario','A.foto_funcionario','A.nome_funcionario','A.sobrenome_funcionario','B.nome_cargo','B.setor_cargo','A.cpf_funcionario','A.status_funcionario', 'A.timestamp');
-		$this->db->select($campos);
-		if($this->db->rowCount() > 0):
-			$result = $this->db->resultAll();
+		$funcionarios = Array();
+		$result = $listafuncionarios->listar($this->db);
+
+		if($result != null):
 			foreach ($result as $value)
 			{
 				$funcionariosModel = new funcionariosModel();
@@ -41,20 +48,40 @@ class funcionariosDao extends Dao{
 				$funcionariosModel->setCodigo($value['codigo_funcionario']);
 				$funcionariosModel->setStatus(status::getAttribute($value['status_funcionario']));
 				$funcionariosModel->setDataAtualizacao($value['timestamp']);
-
+				$funcionariosModel->setUserAdministrator($this->isFuncionarioAdministrador($funcionariosModel));
 				//cargo
 				$cargo = new cargosModel();
 				$cargo->setNome($value['nome_cargo']);
 				$cargo->setSetor($value['setor_cargo']);
 				$funcionariosModel->setCargo($cargo);
 
+
+
 				array_push($funcionarios, $funcionariosModel);
 				unset($funcionariosModel);
 			}
-			return $funcionarios;
-		else:
-			return $funcionarios;
 		endif;
+		return $funcionarios;
+		
+	}
+
+	/**
+	 * verifica se um funcionário úm um usuário administrador do sistema
+	 * @return boolean 
+	 **/
+	public function isFuncionarioAdministrador(funcionariosModel $funcionario)
+	{
+		//checagem de funcionário administrador
+		$sql="select * from sys_usuarios as a 
+				inner join nivel_acesso as b on a.id_nivel_acesso = b.id_nivel_acesso
+		    	where a.id_funcionario = ? and b.permissoes = '*'";
+		$this->db->clear();  
+		$this->db->setParameter(1, $funcionario->getId());
+		if($this->db->query($sql))
+		{
+			return true;
+		}else
+			return false;
 	}
 
 
@@ -62,26 +89,25 @@ class funcionariosDao extends Dao{
 	 * Retorna a consulta de um funcionário pelo id
 	 * @return object [funcionariosModel]
 	 */
-	public function consultar(funcionariosModel $funcionario)
+	public function consultar(funcionariosModel $func)
 	{
+		$funcionario = new funcionariosModel();
 		$this->db->clear();
 		$this->db->setTabela('funcionarios');
-		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
-		$this->db->select();
-
+		$this->db->setCondicao("id_funcionario = ?");
+		$this->db->setParameter(1, $func->getId());
 
 		//FUNCIONARIO
-		if($this->db->rowCount() > 0):
+		if($this->db->select()):
 			$result = $this->db->result();
 
 			//TELEFONES
 			$this->db->clear();
 			$this->db->setTabela('telefones AS A, telefones_funcionarios AS B');
-			$this->db->setCondicao("B.id_funcionario = '".$funcionario->getId()."' AND A.id_telefone = B.id_telefone");
-			$this->db->select();
-			
+			$this->db->setCondicao("B.id_funcionario = ? AND A.id_telefone = B.id_telefone");
+			$this->db->setParameter(1, $func->getId());
 
-			if($this->db->rowCount() > 0):
+			if($this->db->select()):
 				$resultTel = $this->db->resultAll();
 
 				$this->load->model('telefoneModel');
@@ -102,7 +128,7 @@ class funcionariosDao extends Dao{
 			$this->db->clear();
 			$this->db->setTabela('emails as A, emails_funcionarios AS B');
 			$this->db->setCondicao("B.id_funcionario = ? AND B.id_email = A.id_email");
-			$this->db->setParameter(1, $funcionario->getId());
+			$this->db->setParameter(1, $func->getId());
 			$this->db->select();
 			
 			if($this->db->rowCount() > 0):
@@ -124,7 +150,8 @@ class funcionariosDao extends Dao{
 			//ENDERECO
 			$this->db->clear();
 			$this->db->setTabela('enderecos as A, enderecos_funcionarios AS B');
-			$this->db->setCondicao("B.id_funcionario = '".$funcionario->getId()."' AND A.id_endereco = B.id_endereco ");
+			$this->db->setCondicao("B.id_funcionario = ? AND A.id_endereco = B.id_endereco ");
+			$this->db->setParameter(1, $func->getId());
 			$this->db->select();
 			
 			$this->load->model('enderecoModel');
@@ -142,6 +169,7 @@ class funcionariosDao extends Dao{
 				$endereco->setEstado($resultEnd['estado_endereco']);
 			endif;
 
+			$funcionario->setId($result['id_funcionario']);
 			$funcionario->setFoto($result['foto_funcionario']);
 			$funcionario->setNome($result['nome_funcionario']);
 			$funcionario->setSobrenome($result['sobrenome_funcionario']);
@@ -203,26 +231,30 @@ class funcionariosDao extends Dao{
 
  		$this->db->clear();
 		$this->db->setTabela('funcionarios');
-		$this->db->insert($data);
+		try {
+			if($this->db->insert($data))
+			{
+				$funcionario->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
+
+				$this->atualizaEndereco($funcionario);
+				//TELEFONES
+				if(!empty($funcionario->getTelefones()))
+					$this->atualizaTelefones($funcionario);
+
+				//EMAILS
+				if(!empty($funcionario->getEmail()))
+					$this->atualizaEmails($funcionario);
+
+				return true;
+	 		}else
+	 		{
+	 			return $this->db->getError();
+	 		}
+		} catch (dbException $e) {
+			return $e->getMessageError();
+		}
 		
-		if($this->db->rowCount() > 0)
-		{
-			$funcionario->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
-
-			$this->atualizaEndereco($funcionario);
-			//TELEFONES
-			if(!empty($funcionario->getTelefones()))
-				$this->atualizaTelefones($funcionario);
-
-			//EMAILS
-			if(!empty($funcionario->getEmail()))
-				$this->atualizaEmails($funcionario);
-
-			return true;
- 		}else
- 		{
- 			return $this->db->getError();
- 		}
+		
 
 	}
 
@@ -248,12 +280,20 @@ class funcionariosDao extends Dao{
  			'data_demissao_funcionario' => $funcionario->getDataDemissao()
  		);
 
- 		$this->db->clear();
-		$this->db->setTabela('funcionarios');
-		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
-		$this->db->update($data);
-		if($this->db->rowCount() > 0)
-			$this->nUpdates++;
+		try {
+	 		$this->db->clear();
+			$this->db->setTabela('funcionarios');
+			$this->db->setCondicao("id_funcionario = ?");
+			$this->db->setParameter(1, $funcionario->getId());
+			if($this->db->update($data))
+			{
+				$this->nUpdates++;
+			}
+		} catch (dbException $e) {
+			return $e->getMessageError();
+		}
+
+		
 		
 		//ENDEREÇO
 		$this->atualizaEndereco($funcionario);
@@ -268,7 +308,6 @@ class funcionariosDao extends Dao{
  		{
  			return json_encode(array('erro'=>'Erro ao editar registro'));
  		}
-
 	}
 
 
@@ -433,18 +472,18 @@ class funcionariosDao extends Dao{
  	 */
 	public function atualizarStatus(funcionariosModel $funcionario)
 	{
-		$data = array('status_funcionario'=>$funcionario->getStatus());
-		$this->db->clear();
-		$this->db->setTabela('funcionarios');
-		$this->db->setCondicao("id_funcionario = '".$funcionario->getId()."'");
 		try {
-			$this->db->update($data);
-			if($this->db->rowCount()>0)
+			$this->db->clear();
+			$this->db->setTabela('funcionarios');
+			$this->db->setCondicao("id_funcionario = ?");
+			$this->db->setParameter(1, $funcionario->getId());
+			$data = array('status_funcionario'=>$funcionario->getStatus());
+			if($this->db->update($data))
 				return true;
 			else
 				return false;
-		} catch (Exception $e) {
-			return $e->getMessage();
+		} catch (dbException $e) {
+			return $e->getMessageError();
 		}
 	}
 

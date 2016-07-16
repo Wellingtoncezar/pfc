@@ -471,8 +471,8 @@ class gerenciar extends Controller{
 			$funcionariosDao = new funcionariosDao();
 			try {
 				echo $funcionariosDao->atualizar($funcionariosModel);
-			} catch (Exception $e) {
-				echo $e->getMessage();
+			} catch (dbException $e) {
+				echo $e->getMessageError();
 				exit;
 			}
 		}else

@@ -173,8 +173,6 @@ class fornecedoresDao extends Dao{
  			'site_fornecedor' => $fornecedores->getSite(),
  			'observacoes_fornecedor' => $fornecedores->getObservacoes(),
  			'nome_contato_fornecedor' => $fornecedores->getNomeContato(),
- 			'data_visita_fornecedor' => $fornecedores->getDataVisita(),
- 			'retorno_fornecedor' => $fornecedores->getRetorno(),
  			'status_fornecedor' => $fornecedores->getStatus(),
  			'data_cadastro_fornecedor' => $fornecedores->getDataCadastro()
  		);
@@ -182,25 +180,28 @@ class fornecedoresDao extends Dao{
 
  		$this->db->clear();
 		$this->db->setTabela('fornecedores');
-		$this->db->insert($data);
-		if($this->db->rowCount() > 0)
-		{
-			$fornecedores->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
+		try {
+			if($this->db->insert($data))
+			{
+				$fornecedores->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
+				$this->atualizaEndereco($fornecedores);
+				//TELEFONES
+				if(!empty($fornecedores->getTelefones()))
+				 	$this->atualizaTelefones($fornecedores);
 
-			$this->atualizaEndereco($fornecedores);
-			//TELEFONES
-			if(!empty($fornecedores->getTelefones()))
-			 	$this->atualizaTelefones($fornecedores);
+				//EMAILS
+				if(!empty($fornecedores->getEmail()))
+				 	$this->atualizaEmails($fornecedores);
+				//echo 'inserido';
+				return true;
+	 		}else
+	 		{
+	 			return $this->db->getError();
+	 		}
+		} catch (dbException $e) {
+			return $e->getMessageError();
+		}
 
-			//EMAILS
-			if(!empty($fornecedores->getEmail()))
-			 	$this->atualizaEmails($fornecedores);
-			//echo 'inserido';
-			return true;
- 		}else
- 		{
- 			return json_encode(array('erro'=>'Erro ao inserir registro'));
- 		}
 
 	}
 
@@ -219,31 +220,34 @@ class fornecedoresDao extends Dao{
  			'pessoa_fornecedor' => $fornecedor->getPessoa(),
  			'site_fornecedor' => $fornecedor->getSite(),
  			'observacoes_fornecedor' => $fornecedor->getObservacoes(),
- 			'nome_contato_fornecedor' => $fornecedor->getNomeContato(),
- 			'data_visita_fornecedor' => $fornecedor->getDataVisita(),
- 			'retorno_fornecedor' => $fornecedor->getRetorno()
+ 			'nome_contato_fornecedor' => $fornecedor->getNomeContato()
  		);
 
- 		$this->db->clear();
-		$this->db->setTabela('fornecedores');
-		$this->db->setCondicao("id_fornecedor = '".$fornecedor->getId()."'");
-		$this->db->update($data);
-		if($this->db->rowCount() > 0)
-			$this->nUpdates++;
-		
-		//ENDEREÇO
-		$this->atualizaEndereco($fornecedor);
-		//TELEFONES
-		$this->atualizaTelefones($fornecedor);
-		//EMAILS
-		$this->atualizaEmails($fornecedor);
+		try {
+	 		$this->db->clear();
+			$this->db->setTabela('fornecedores');
+			$this->db->setCondicao("id_fornecedor = ?");
+			$this->db->setParameter(1, $fornecedor->getId());
 
- 		if($this->nUpdates > 0)
-			return true;
- 		else
- 		{
- 			return json_encode(array('erro'=>'Erro ao editar registro'));
- 		}
+			if($this->db->update($data))
+				$this->nUpdates++;
+			
+			//ENDEREÇO
+			$this->atualizaEndereco($fornecedor);
+			//TELEFONES
+			$this->atualizaTelefones($fornecedor);
+			//EMAILS
+			$this->atualizaEmails($fornecedor);
+
+	 		if($this->nUpdates > 0)
+				return true;
+	 		else
+	 		{
+	 			return $this->db->getError();
+	 		}
+	 	} catch (dbException $e) {
+			return $e->getMessageError();
+		}
 
 	}
 
@@ -258,37 +262,40 @@ class fornecedoresDao extends Dao{
  	 * */
  	public function atualizaEndereco(fornecedoresModel $fornecedor)
  	{
+ 		try{
+		 	$this->db->clear();
+			$this->db->setTabela('enderecos');
+			$data = array(
+				'cep_endereco' => $fornecedor->getEndereco()->getCep(),
+				'rua_endereco' => $fornecedor->getEndereco()->getLogradouro(),
+				'numero_endereco' => $fornecedor->getEndereco()->getNumero(),
+				'complemento_endereco' => $fornecedor->getEndereco()->getComplemento(),
+				'bairro_endereco' => $fornecedor->getEndereco()->getBairro(),
+				'cidade_endereco' => $fornecedor->getEndereco()->getCidade(),
+				'estado_endereco' => $fornecedor->getEndereco()->getEstado(),
+				'data_cadastro_endereco' => date('Y-m-d h:i:s')
+			);
+			
 
-	 	$this->db->clear();
-		$this->db->setTabela('enderecos');
-		$data = array(
-			'cep_endereco' => $fornecedor->getEndereco()->getCep(),
-			'rua_endereco' => $fornecedor->getEndereco()->getLogradouro(),
-			'numero_endereco' => $fornecedor->getEndereco()->getNumero(),
-			'complemento_endereco' => $fornecedor->getEndereco()->getComplemento(),
-			'bairro_endereco' => $fornecedor->getEndereco()->getBairro(),
-			'cidade_endereco' => $fornecedor->getEndereco()->getCidade(),
-			'estado_endereco' => $fornecedor->getEndereco()->getEstado(),
-			'data_cadastro_endereco' => date('Y-m-d h:i:s')
-		);
-		
+			if($fornecedor->getEndereco()->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
+			{
+				$this->db->setCondicao('id_endereco = "'.$fornecedor->getEndereco()->getId().'"');
+				$this->db->update($data);
+			}else
+			{
+				$this->db->insert($data);
+				$idEndereco = $this->db->getUltimoId();
+				$idFornecedor = $fornecedor->getId();
+				$this->db->query("INSERT INTO enderecos_fornecedores VALUES ('$idFornecedor','$idEndereco')");
+			}
 
-		if($fornecedor->getEndereco()->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
-		{
-			$this->db->setCondicao('id_endereco = "'.$fornecedor->getEndereco()->getId().'"');
-			$this->db->update($data);
-		}else
-		{
-			$this->db->insert($data);
-			$idEndereco = $this->db->getUltimoId();
-			$idFornecedor = $fornecedor->getId();
-			$this->db->query("INSERT INTO enderecos_fornecedores VALUES ('$idFornecedor','$idEndereco')");
+			if($this->db->rowCount() > 0)
+				$this->nUpdates++;
+			else
+				return false;
+		} catch (dbException $e) {
+			return $e->getMessageError();
 		}
-
-		if($this->db->rowCount() > 0)
-			$this->nUpdates++;
-		else
-			return false;
  	}
 
 

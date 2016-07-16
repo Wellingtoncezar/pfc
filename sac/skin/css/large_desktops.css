@@ -435,5 +435,12 @@
 	    overflow-y: auto;
 	    overflow-x: hidden;
 	}
+
+	.box-barcode-produto{
+		display: table;
+    	margin: 11px auto;
+    	border: 1px solid #CCC;
+    	padding: 8px;
+	}
 }
 
