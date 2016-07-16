@@ -6,4 +6,19 @@ lista dos produtos
 estoque
 	armazem - estoque
 	lotes
-
+================================================
+estoque
+	produto
+	codigo
+	data cadastro
+	max 
+	min
+	
+	(inserir/tirar)	
+lote
+	codigo barra
+	pedido
+	quat
+	data de validade
+	ocorrencias e obs(validade, devoluçao, outros)
+	caixa de texto
