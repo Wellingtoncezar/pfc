@@ -49,6 +49,18 @@ class produtosModel{
 	{
 		$this->descricao = $descricao;
 	}
+	public function addFornecedor(fornecedoresModel $fornecedor)
+	{
+		array_push($this->fornecedores, $fornecedor);
+	}
+	public function setFornecedores($fornecedores)
+	{
+		$this->fornecedores = $fornecedores;
+	}
+	public function setUnidadeMedidaEstoque($unidadeMedidaEstoque)
+	{
+		$this->unidadeMedidaEstoque = $unidadeMedidaEstoque;
+	}
 	public function addUnidadeMedidaEstoque(unidadeMedidaEstoqueModel $unidadeMedidaEstoque)
 	{
 		array_push($this->unidadeMedidaEstoque, $unidadeMedidaEstoque);
@@ -57,6 +69,13 @@ class produtosModel{
 	{
 		$this->unidadeMedidaVenda = $unidadeMedidaVenda;
 	}
+	public function setFatorUnidadeMedidaVenda($fatorUnidadeMedidaVenda)
+	{
+		$this->fatorUnidadeMedidaVenda = $fatorUnidadeMedidaVenda;
+	}
+
+
+
 
 	public function setStatus($status)
 	{
@@ -74,7 +93,6 @@ class produtosModel{
 	{
 		$this->status = status::EXCLUIDO;
 	}
-
 	public function setDataCadastro($dataCadastro)
 	{	
 		$this->dataCadastro = $dataCadastro;
@@ -117,6 +135,10 @@ class produtosModel{
 	{
 		return $this->descricao;
 	}
+	public function getFornecedores()
+	{
+		return $this->fornecedores;
+	}
 		
 	public function getUnidadeMedidaEstoque()
 	{
@@ -126,7 +148,10 @@ class produtosModel{
 	{
 		return $this->unidadeMedidaVenda;
 	}
-
+	public function getFatorUnidadeMedidaVenda()
+	{
+		return $this->fatorUnidadeMedidaVenda;
+	}
 	
 	public function getStatus()
 	{

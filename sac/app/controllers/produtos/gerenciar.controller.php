@@ -150,9 +150,10 @@ class gerenciar extends Controller{
 		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(3);
 		$this->load->dataValidator->set('Marca', $marca, 'marca')->is_required();
 		$this->load->dataValidator->set('Categoria', $categoria, 'categoria')->is_required();
-		$this->load->dataValidator->set('Unidade de medida', $unidadeMedida, 'unidadeMedida')->is_required();
 		$this->load->dataValidator->set('Fornecedores', $fornecedores, 'fornecedores')->is_required();
 		$this->load->dataValidator->set('Unidades de medidas de estoque', $unidadeMedidaEstoque, 'unidadeMedidaEstoque')->is_required();
+		$this->load->dataValidator->set('Unidade de medida para venda', $unidadeMedidaVenda, 'unidadeMedidaVenda')->is_required();
+		$this->load->dataValidator->set('Fator da unidade de medida para venda', $fatorUnidadeMedidaVenda, 'fatorUnidadeMedidaVenda')->is_required();
 		if ($this->load->dataValidator->validate())
 		{
 			//PRODUTOS
@@ -166,8 +167,12 @@ class gerenciar extends Controller{
 			$categoriasModel = new categoriasModel();
 			$categoriasModel->setId($categoria);
 			
-			//UNIDADES DE MEDIDA
-			foreach ($unidadeMedida as $unidade)
+			$unidadeMedidaVendaModel = new unidadeMedidaModel();
+			$unidadeMedidaVendaModel->setId($unidadeMedidaVenda);
+
+
+			//UNIDADES DE MEDIDA DE ESTOQUE
+			foreach ($unidadeMedidaEstoque as $unidade)
 			{
 				$unidade['venda'] = $unidade['venda']== "true" ? true : false;
 				$unidade['estoque'] = $unidade['estoque']== "true" ? true : false;
@@ -176,34 +181,23 @@ class gerenciar extends Controller{
 				$unidadeMedidaModel = new unidadeMedidaModel();
 				$unidadeMedidaModel->setId($unidade['idUnidadeMedida']);
 
-				$unidadeMedidaProdutoModel = new unidadeMedidaProdutoModel();
-				$unidadeMedidaProdutoModel->setId($unidade['idUnidadeMedidaProduto']);
-				$unidadeMedidaProdutoModel->setUnidadeMedida($unidadeMedidaModel);
-				$unidadeMedidaProdutoModel->setParaVenda($unidade['venda']);
-				$unidadeMedidaProdutoModel->setParaEstoque($unidade['estoque']);
-				$unidadeMedidaProdutoModel->setFator($fator);
-				$unidadeMedidaProdutoModel->setOrdem($unidade['ordem']);
-				$produtosModel->addUnidadeMedida($unidadeMedidaProdutoModel);
+				$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+				$unidadeMedidaEstoqueModel->setId($unidade['idUnidadeMedidaProduto']);
+				$unidadeMedidaEstoqueModel->setUnidadeMedida($unidadeMedidaModel);
+				$unidadeMedidaEstoqueModel->setParaVenda($unidade['venda']);
+				$unidadeMedidaEstoqueModel->setParaEstoque($unidade['estoque']);
+				$unidadeMedidaEstoqueModel->setFator($fator);
+				$unidadeMedidaEstoqueModel->setOrdem($unidade['ordem']);
+				$produtosModel->addUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
 			}
 
 			//FORNECEDORES
 			$this->load->model('fornecedores/fornecedoresModel');
-			$this->load->model('produtos/produtofornecedorModel');
 			foreach ($fornecedores as $fornec)
 			{
-				if($fornec['principal'] == 'true')
-					$principal = true;
-				else
-					$principal = false;
-
 				$fornecedoresModel = new fornecedoresModel();
 				$fornecedoresModel->setId($fornec['id']);
-
-				$produtofornecedorModel = new produtofornecedorModel();
-				$produtofornecedorModel->setFornecedor($fornecedoresModel);
-				$produtofornecedorModel->setPrincipal($principal);
-
-				$produtosModel->setFornecedores($produtofornecedorModel);
+				$produtosModel->addFornecedor($fornecedoresModel);
 			}
 
 			//IMAGEM
@@ -234,18 +228,17 @@ class gerenciar extends Controller{
 			}
 
 			// //FORMATAÇÃO DOS DADOS
-			$preco_venda = $this->load->dataFormat->formatar($preco_venda,'decimal','banco');
-			$markup = $this->load->dataFormat->formatar($markup,'decimal','banco');
+
 
 			$produtosModel->setFoto($nome_foto);
 			$produtosModel->setNome($nome);
 			$produtosModel->setMarca($marcasModel);
 			$produtosModel->setCategoria($categoriasModel);
 			$produtosModel->setDescricao($descricao);
-			$produtosModel->setPrecoVenda($preco_venda);
-			$produtosModel->setMarkup($markup);
+			$produtosModel->setUnidadeMedidaVenda($unidadeMedidaVendaModel);
+			$produtosModel->setFatorUnidadeMedidaVenda($fatorUnidadeMedidaVenda);
+			
 			$produtosModel->setDataCadastro(date('Y-m-d h:i:s'));
-
 			//PRODUTOS DAO
 			$produtosDao = new produtosDao();
 			try {

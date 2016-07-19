@@ -117,7 +117,7 @@ $(function(){
     $('#form_produto').uploadImage();
     $('#form_produto').submit(function(){
 
-    	//email
+    	  //unidade de medida
         var unidadeMedida = Object();
         var iUnid = 0;
         var ordem = 0;
@@ -139,22 +139,23 @@ $(function(){
             ordem++;
         });
 
+
+        //fornecedores
         var fornecedores = Object();
         var iFornec = 0;
         $('.group_fornecedor').each(function(){
             var aux = Object();
-            var id_fornecedor = $('input[name=fornecedor]',this).attr('idFornecedor');
-            var principal = $('input[name=principal]',this).is(':checked');
+            var id_fornecedor = $('input[name=idFornecedor]',this).val();
             aux['id'] = id_fornecedor;
-            aux['principal'] = principal;
             fornecedores[iFornec] = aux;
             iFornec++;
         });
 
     	var parameters = Object();
         parameters['fornecedores'] = fornecedores;
-        parameters['unidadeMedida'] = unidadeMedida;
+        parameters['unidadeMedidaEstoque'] = unidadeMedida;
 
+        console.log(parameters);
         //parameters['preco_venda'] = $('input[name=preco_venda]').val()
         $('#form_produto').uploadForm({
             'reload':true,

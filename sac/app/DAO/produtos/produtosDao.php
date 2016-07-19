@@ -24,7 +24,7 @@ class produtosDao extends Dao{
 		$this->load->model('produtos/categoriasModel');
 		$this->load->model('produtos/marcasModel');
 		$this->load->model('produtos/unidademedidaModel');
-		$this->load->model('produtos/unidadeMedidaProdutoModel');
+		$this->load->model('produtos/unidadeMedidaEstoqueModel');
 		$this->load->model('produtos/unidadeMedidaModel');
 
 		$produtos = Array();
@@ -84,7 +84,7 @@ class produtosDao extends Dao{
 					{
 						$unidadeMedidaModel = new unidadeMedidaModel();
 						$unidadeMedidaModel->setId($unidade['id_unidade_medida']);
-						$unidadeMedidaProdutoModel = new unidadeMedidaProdutoModel();
+						$unidadeMedidaProdutoModel = new unidadeMedidaEstoqueModel();
 						$unidadeMedidaProdutoModel->setId($unidade['id_unidade_medida_produto']);
 						$unidadeMedidaProdutoModel->setUnidadeMedida($unidadeMedidaModel);
 						$unidadeMedidaProdutoModel->setParaVenda($unidade['para_venda']);
@@ -194,12 +194,13 @@ class produtosDao extends Dao{
  	{
  		$data = array(
  			'foto_produto' => $produto->getFoto(),
+ 			'codigo_barra_gti' => $produto->getCodigoBarra(),
  			'nome_produto' => $produto->getNome(),
  			'id_marca' => $produto->getMarca()->getId(),
  			'id_categoria' => $produto->getCategoria()->getId(),
  			'descricao_produto' => $produto->getDescricao(),
- 			'preco_venda_produto' => $produto->getPrecoVenda(),
- 			'markup_produto' => $produto->getMarkup(),
+ 			'unidade_medida_venda' => $produto->getUnidadeMedidaVenda()->getId(),
+ 			'fator_unidade_medida_venda' => $produto->getFatorUnidadeMedidaVenda(),
  			'status_produto' => $produto->getStatus(),
  			'data_cadastro_produto' => $produto->getDataCadastro()
  		);
@@ -211,9 +212,13 @@ class produtosDao extends Dao{
 		{
 			$produto->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
 
+			//UNIDADE MEDIDA ESTOQUE
+			if(!empty($produto->getUnidadeMedidaEstoque()))
+			 	$this->atualizaUnidadeMedidaEstoque($produto);
+
 			//FORNECEDORES
-			if(!empty($produto->getUnidadeMedida()))
-			 	$this->atualizaUnidadeMedida($produto);
+			if(!empty($produto->getFornecedores()))
+			 	$this->atualizaFornecedores($produto);
 			return true;
  		}else
  		{
@@ -304,11 +309,11 @@ class produtosDao extends Dao{
  	 * 
  	 * @return void
  	 */
- 	private function atualizaUnidadeMedida(produtosModel $produto)
+ 	private function atualizaUnidadeMedidaEstoque(produtosModel $produto)
 	{
 		//excluir
 		$naoExcluirUnidade = array();
-		foreach ($produto->getUnidadeMedida() as $unidade)
+		foreach ($produto->getUnidadeMedidaEstoque() as $unidade)
 		{
 			if($unidade->getId() != '')
 				array_push($naoExcluirUnidade,$unidade->getFornecedor()->getId());
@@ -326,7 +331,7 @@ class produtosDao extends Dao{
 
 		$this->db->clear();
 		$this->db->setTabela('unidade_medida_produto');
-		foreach ($produto->getUnidadeMedida() as $unidade)
+		foreach ($produto->getUnidadeMedidaEstoque() as $unidade)
 		{
 			if(!empty($unidade))
 			{
@@ -359,17 +364,17 @@ class produtosDao extends Dao{
 
 	/**
  	 * 
- 	 * Atualiza ou insere os telefones
+ 	 * Atualiza ou insere os fornecedores
  	 * @return void
  	 */
  	private function atualizaFornecedores(produtosModel $produto)
 	{
 		//excluir
 		$fornecedorExcluir = array();
-		foreach ($produto->getfornecedores() as $fornecedor)
+		foreach ($produto->getFornecedores() as $fornecedor)
 		{
 			if($fornecedor->getId() != '')
-				array_push($fornecedorExcluir,$fornecedor->getFornecedor()->getId());
+				array_push($fornecedorExcluir,$fornecedor->getId());
 		}
 		$cond = '';
 		if(!empty($fornecedorExcluir))
@@ -383,20 +388,22 @@ class produtosDao extends Dao{
 		if($this->db->rowCount() > 0)
 		$this->db->clear();
 		$this->db->setTabela('produto_fornecedores');
-		foreach ($produto->getFornecedores() as $fornecedores)
+		foreach ($produto->getFornecedores() as $fornecedor)
 		{
-			if(!empty($fornecedores))
+			if(!empty($fornecedor))
 			{
 				$data = array(
 					'id_produto' => $produto->getId(),
-					'id_fornecedor' => $fornecedores->getFornecedor()->getId(),
-					'fornecedor_principal' =>$fornecedores->getPrincipal()
+					'id_fornecedor' => $fornecedor->getId()
 				);
-				if($fornecedores->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
+				echo $fornecedor->getId();
+				if($fornecedor->getId() != '')//verifica se o id existe para poder atualiza-lo - utilizado para o editar
 				{
-					$this->db->setCondicao('id_produto_fornecedor = "'.$fornecedores->getId().'"');
+					echo 'editar';
+					$this->db->setCondicao('id_produto_fornecedor = "'.$fornecedor->getId().'"');
 					$this->db->update($data);
 				}else{
+					echo 'inserir';
 					$this->db->insert($data);
 				}
 				if($this->db->rowCount() > 0)
