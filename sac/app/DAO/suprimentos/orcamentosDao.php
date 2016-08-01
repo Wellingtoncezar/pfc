@@ -4,7 +4,7 @@
  * @author Wellington cezar, Diego Hernandes
  */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class requisicoesDao extends Dao{
+class orcamentosDao extends Dao{
 	private $nUpdates = 0;
 	public function __construct(){
 		parent::__construct();
