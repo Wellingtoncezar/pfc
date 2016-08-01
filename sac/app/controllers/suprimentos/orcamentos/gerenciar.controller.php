@@ -33,9 +33,9 @@ class gerenciar extends Controller{
 		$data['dataFormat'] = $this->load->dataFormat;
 
 
-		$this->load->dao('suprimentos/requisicoesDao');
-		$requisicoesDao = new requisicoesDao();
-		$data['requisicoes'] = $requisicoesDao->listar();
+		$this->load->dao('suprimentos/orcamentosDao');
+		$orcamentosDao = new orcamentosDao();
+		$data['orcamentos'] = $orcamentosDao->listar();
 
 		$this->load->view('includes/header',$data);
 		$this->load->view('suprimentos/orcamentos/home',$data);
@@ -54,7 +54,7 @@ class gerenciar extends Controller{
 		$saveRouter->saveAction();
 		$this->load->checkPermissao->check();
 		$data = array(
-			'titlePage' => 'Cadastrar Requisição',
+			'titlePage' => 'Cadastrar Orcamento',
 			'template' => new templateFactory()
 		);
 
@@ -66,7 +66,7 @@ class gerenciar extends Controller{
 
 		
 		$this->load->view('includes/header',$data);
-		$this->load->view('suprimentos/requisicoes/cadastro',$data);
+		$this->load->view('suprimentos/orcamentos/cadastro',$data);
 		$this->load->view('includes/footer',$data);
 	}
 
@@ -81,20 +81,20 @@ class gerenciar extends Controller{
 		$saveRouter->saveAction();
 		$this->load->checkPermissao->check();
 		$data = array(
-			'titlePage' => 'Editar Requisição',
+			'titlePage' => 'Editar Orcamentos',
 			'template' => new templateFactory()
 		);
 
-		$idRequisicao = $this->load->url->getSegment(4);
-		$this->load->model('suprimentos/requisicoes/requisicoesModel');
-		$requisicoesModel = new requisicoesModel();
-		$requisicoesModel->setId($idRequisicao);
-		$this->load->dao('suprimentos/requisicoesDao');
+		$idOrcamento = $this->load->url->getSegment(4);
+		$this->load->model('suprimentos/orcamentos/orcamentosModel');
+		$orcamentosModel = new orcamentosModel();
+		$orcamentosModel->setId($idOrcamento);
+		$this->load->dao('suprimentos/orcamentosDao');
 
-		$requisicoesDao = new requisicoesDao();
-		$req = $requisicoesDao-> consultar($requisicoesModel);
-		$data['requisicoes'] = $req;
-		print_r($req);
+		$orcamentosDao = new orcamentosDao();
+		$orc = $orcamentosDao-> consultar($orcamentosModel);
+		$data['orcamentos'] = $orc;
+		print_r($orc);
 		$this->load->dao('produtos/produtosDao');
 		$produtosDao = new produtosDao();
 		$produtos = $produtosDao->listarAtivos();
@@ -102,7 +102,7 @@ class gerenciar extends Controller{
 
 		
 		$this->load->view('includes/header',$data);
-		$this->load->view('suprimentos/requisicoes/editar',$data);
+		$this->load->view('suprimentos/orcamentos/editar',$data);
 		$this->load->view('includes/footer',$data);
 	}
 

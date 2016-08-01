@@ -1,8 +1,6 @@
 <div class="container">
     <?php
 
-        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'suprimentos/orcamentos/gerenciar/cadastrar'), URL.'suprimentos/orcamentos/gerenciar/cadastrar');
-        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
     <div class="page-header">
       <h1>Orçamentos</h1>
@@ -11,38 +9,35 @@
         <?php
             $thead = '  <tr>
                             <th width="100">Código</th>
-                            <th width="160">Cadastrado por</th>
-                            <th width="160">Aprovado por</th>
+                            <th width="160">Enviado por</th>
                             <th width="160">Titulo</th>
                             <th width="160">Data</th>
                             <th width="180">Ações</th>
                         </tr>';
             $tfoot = '  <tr>
                             <td>Código</td>
-                            <th>Cadastrado por</th>
-                            <th>Aprovado por</th>
+                            <th>Enviado por</th>
                             <td>Titulo</td>
                             <td>Data</td>
                             <td>Ações</td>
                         </tr>';  
 
                 $tbody = '';
-                foreach ($requisicoes as $requisicao):
+                foreach ($orcamentos as $orcamento):
 
-                    $ativo = ($requisicao->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
-                    $inativo = ($requisicao->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
+                    $ativo = ($orcamento->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
+                    $inativo = ($orcamento->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
 
-            $tbody .='  <tr id="'.$requisicao->getId().'">
-                            <td>'.$requisicao->getCodigo().'</td>
-                            <td>'.$requisicao->getUsuarioCadastrado()->getFuncionario()->getNome().'</td>
-                            <td></td>
-                            <td>'.$requisicao->getTitulo().'</td>
-                            <td>'.$dataFormat->formatar($requisicao->getData(),'datahora').'</td>
+            $tbody .='  <tr id="'.$orcamento->getId().'">
+                            <td>'.$orcamento->getCodigo().'</td>
+                            <td>'.$orcamento->getUsuarioCadastrado()->getFuncionario()->getNome().'</td>
+                            <td>'.$orcamento->getTitulo().'</td>
+                            <td>'.$dataFormat->formatar($orcamento->getData(),'datahora').'</td>
                             <td>'
-                                .$this->templateFactory->getButton('visualizar',array('href'=>URL.'suprimentos/requisicoes/gerenciar/listarprodutosrequisitados/'.$requisicao->getId(), 'title'=>'Visualizar')).
-                                $this->templateFactory->getButton('Editar',array('href'=>URL.'suprimentos/requisicoes/gerenciar/editar/'.$requisicao->getId(), 'title'=>'Editar')).
-                                $this->templateFactory->getButton('cotar',array('id'=> $requisicao->getId(), URL.'suprimentos/requisicoes/gerenciar/cotartodos/', 'title'=>'Cotar')).
-                                $this->templateFactory->getButton('excluir', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/cancelar/').
+                                .$this->templateFactory->getButton('visualizar',array('href'=>URL.'suprimentos/orcamentos/gerenciar/listarprodutosrequisitados/'.$orcamento->getId(), 'title'=>'Visualizar')).
+                                $this->templateFactory->getButton('Editar',array('href'=>URL.'suprimentos/orcamentos/gerenciar/editar/'.$orcamento->getId(), 'title'=>'Editar')).
+                                $this->templateFactory->getButton('orcar',array('id'=> $orcamento->getId(), URL.'suprimentos/orcamentos/gerenciar/orcar/', 'title'=>'Orçar')).
+                                $this->templateFactory->getButton('excluir', array('id'=> $orcamento->getId()), URL.'suprimentos/orcamentos/gerenciar/cancelar/').
                             '</td>
                         </tr>';
                 endforeach;
