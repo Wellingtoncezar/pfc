@@ -20,7 +20,7 @@
             $tbody .='  <tr id="'.$produto->getId().'">
                             <td>'.$produto->getId().'</td>
                             <td>'.$produto->getProdutos()->getNome().'</td>
-                            <td>'.$dataFormat->formatar($produto->getQuantidade(),'decimal').' '.$produto->getProdutos()->getUnidadeMedida()[0]->getUnidadeMedida()->getNome().'</td>
+                            <td>'.$dataFormat->formatar($produto->getQuantidade(),'decimal').' '.$produto->getProdutos()->getUnidadeMedidaEstoque()[0]->getUnidadeMedida()->getNome().'</td>
                             <td>'
                                 .$this->templateFactory->getButton('reprovar', array('href'=>URL.'suprimentos/requisicoes/gerenciar/reprovarcotacaoproduto/'.$produto->getId(), 'title'=>'Reprovar', 'moreContent'=>$disabledButtons)).
                                 $this->templateFactory->getButton('aprovar',array('href'=>URL.'suprimentos/requisicoes/gerenciar/aprovarcotacaoproduto/'.$produto->getId(), 'title'=>'Aprovar', 'moreContent'=>$disabledButtons.' idProdutoRequisitado="'.$produto->getId().'"')).

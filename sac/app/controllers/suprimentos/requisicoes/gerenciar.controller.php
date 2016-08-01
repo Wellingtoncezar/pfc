@@ -130,7 +130,7 @@ class gerenciar extends Controller{
 			$imgProduct = ($produto->getFoto() != '') ? URL.'skin/uploads/produtos/p/'.$produto->getFoto() : URL.'skin/img/imagens/produtosemimagem.jpg';
 			$nomeUnidadeMedida = '';
 			$nomeUnidadeMedida = '';
-			foreach ($produto->getUnidadeMedida() as $unidadeMedida){
+			foreach ($produto->getUnidadeMedidaEstoque() as $unidadeMedida){
 				if($unidadeMedida->getParaEstoque() == true)
 				{
 					$nomeUnidadeMedida = $unidadeMedida->getUnidadeMedida()->getNome();
@@ -180,18 +180,18 @@ class gerenciar extends Controller{
 			$this->load->model('suprimentos/requisicoes/requisicoesModel');
 			$this->load->model('suprimentos/requisicoes/requisicaoProdutoModel');
 			$this->load->model('produtos/produtosModel');
-			$this->load->model('produtos/unidadeMedidaProdutoModel');
+			$this->load->model('produtos/unidadeMedidaEstoqueModel');
 			$this->load->model('funcionarios/usuarioModel');
 			
 			$requisicoesModel = new requisicoesModel();
 			foreach($produtos as $produto)
 			{
-				$unidadeMedidaProdutoModel = new unidadeMedidaProdutoModel();
-				$unidadeMedidaProdutoModel->setId($produto['idUnidadeMedida']);
+				$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+				$unidadeMedidaEstoqueModel->setId($produto['idUnidadeMedida']);
 
 				$produtoModel = new produtosModel();
 				$produtoModel->setId($produto['id_produto']);
-				$produtoModel->addUnidadeMedida($unidadeMedidaProdutoModel);
+				$produtoModel->addUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
 
 				$requisicaoProdutoModel = new requisicaoProdutoModel();
 				$requisicaoProdutoModel->addProduto($produtoModel);
@@ -255,18 +255,18 @@ class gerenciar extends Controller{
 			$this->load->model('suprimentos/requisicoes/requisicoesModel');
 			$this->load->model('suprimentos/requisicoes/requisicaoProdutoModel');
 			$this->load->model('produtos/produtosModel');
-			$this->load->model('produtos/unidadeMedidaProdutoModel');
+			$this->load->model('produtos/unidadeMedidaEstoqueModel');
 			$this->load->model('funcionarios/usuarioModel');
 			
 			$requisicoesModel = new requisicoesModel();
 			foreach($produtos as $produto)
 			{
-				$unidadeMedidaProdutoModel = new unidadeMedidaProdutoModel();
-				$unidadeMedidaProdutoModel->setId($produto['idUnidadeMedida']);
+				$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+				$unidadeMedidaEstoqueModel->setId($produto['idUnidadeMedida']);
 
 				$produtoModel = new produtosModel();
 				$produtoModel->setId($produto['id_produto']);
-				$produtoModel->addUnidadeMedida($unidadeMedidaProdutoModel);
+				$produtoModel->addUnidadeMedida($unidadeMedidaEstoqueModel);
 
 				$requisicaoProdutoModel = new requisicaoProdutoModel();
 				$requisicaoProdutoModel->addProduto($produtoModel);

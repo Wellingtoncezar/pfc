@@ -22,3 +22,25 @@ lote
 	data de validade
 	ocorrencias e obs(validade, devoluçao, outros)
 	caixa de texto
+
+
+
+
+create table produto_lote(
+	id_produto_lote int auto_increment primary key,
+    id_estoque int,
+    codigo_lote varchar(255),
+	codigo_barras_gti varchar(255),
+    codigo_barras_gst varchar(255),
+    data_validade date,
+    timestamp timestamp
+);
+
+create table localizacao_lote(
+	id_produto_lote int,
+    id_unidade_medida_produto int,
+    localizacao enum('REZERVA','SEPARACAO','EXPEDICAO'),
+    quantidade_localizacao numeric(10,2),
+    observacoes_localizacao_lote text,
+    timestamp timestamp
+);

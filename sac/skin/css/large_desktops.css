@@ -442,5 +442,98 @@
     	border: 1px solid #CCC;
     	padding: 8px;
 	}
+	.fullscreenCheckout{
+		background-image: url('../img/imagens/bgcheckout.png');
+	    position: relative;
+	    display: table;
+	    min-height: 400px;
+	    width: 100%;
+	}
+	.containercheckoutInicio{
+		display: table;
+	    position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    width: 400px;
+	    height: 400px;
+	    margin-top: -200px;
+	    margin-left: -200px;
+	}
+	.containercheckoutInicio .openfullscreen{
+    padding: 15px 40px;
+    border: 1px solid;
+    display: table;
+    margin: 18px auto;
+    border-radius: 10px;
+	}
+	.containercheckoutAbrirCaixa .figureLogo,
+	.containercheckoutInicio .figureLogo{
+		display: table;
+		margin: 10px auto;
+	}
+	
+	.containercheckoutAbrirCaixa .containerData,
+	.containercheckoutAbrirCaixa .containerHora,
+	.containercheckoutInicio .containerData,
+	.containercheckoutInicio .containerHora{
+		text-align: center;
+	}
+
+	.containercheckoutAbrirCaixa .containerHora #hora,
+	.containercheckoutInicio .containerHora #hora{
+	    color: #019be1;
+	    font-size: 70px;
+	    font-family: fantasy, arial;
+	}
+	.containercheckoutAbrirCaixa .containerData #data,
+	.containercheckoutInicio .containerData #data{
+		font-size: 20px;
+	}
+	.containercheckoutAbrirCaixa{
+    display: table;
+    width: 400px;
+    margin: 70px auto;
+    border: 1px solid #0c73b9;
+    padding: 30px;
+    border-radius: 10px;
+	}
+	.containercheckoutAbrirCaixa form{
+		
+	}
+
+	.telaVenda .sidebarcheckout{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #FFF;
+    border-right: 1px solid #278aca;
+	}
+	.telaVenda .containerProdutos
+	{
+		position: fixed;
+	    top: 0;
+	    bottom: 0;
+	    left: 0;
+	    z-index: 1000;
+	    display: block;
+	    overflow-x: hidden;
+	    overflow-y: auto;
+	}
+	.telaVenda .containerListaCompra{
+		position: fixed;
+	    top: 0;
+	    bottom: 0;
+	    left: 0;
+	    z-index: 1000;
+	    display: block;
+	    overflow-x: hidden;
+	    overflow-y: auto;
+	}
 }
 

@@ -193,11 +193,15 @@ class gerenciar extends Controller{
 
 			//FORNECEDORES
 			$this->load->model('fornecedores/fornecedoresModel');
+			$this->load->model('produtos/produtofornecedorModel');
 			foreach ($fornecedores as $fornec)
 			{
 				$fornecedoresModel = new fornecedoresModel();
 				$fornecedoresModel->setId($fornec['id']);
-				$produtosModel->addFornecedor($fornecedoresModel);
+				
+				$produtofornecedorModel = new produtofornecedorModel();
+				$produtofornecedorModel->setFornecedor($fornecedoresModel);
+				$produtosModel->addFornecedor($produtofornecedorModel);
 			}
 
 			//IMAGEM

@@ -11,6 +11,8 @@
     <div class="middle-content">
             <?php
             $thead = '  <tr>
+            				<th width="20">ID</th>
+            				<th width="40">GTI</th>
                             <th width="40">Foto</th>
                             <th width="160">Nome</th>
                             <th width="160">Categoria</th>
@@ -19,6 +21,8 @@
                             <th width="180">Ações</th>
                         </tr>';
             $tfoot = '  <tr>
+                            <th>ID</th>
+                            <th>GTI</th>
                             <th>Foto</th>
                             <th>Nome</th>
                             <th>Categoria</th>
@@ -34,6 +38,13 @@
                     $inativo = ($prod->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
                     
             $tbody .='  <tr id="'.$prod->getId().'">
+            				<td>'.$prod->getId().'</td>
+							<td>
+								<input type="hidden" id="'.$prod->getId().'" name="codigobarras" class="form-control " value="'.$prod->getCodigoBarra().'" maxlength="13" />
+								<div class="demo-section k-content box-barcode-produto">
+						            <div id="barcode'.$prod->getId().'"></div>
+						        </div>
+							</td>
                             <td><img src="'.$foto.'" style=" width: 60px; height: 60px;" class="img-circle"></td>
                             <td>'.$prod->getNome().'</td>
                             <td>'.$prod->getCategoria()->getNome().'</td>
@@ -61,6 +72,17 @@
         //DATATABLE
         var table = $('.dataTable').DataTable({
             order: [0,'asc']
+        });
+
+        table.$('input[name=codigobarras]').each(function() {
+        	console.log($(this).val())
+        	var value = $(this).val()
+
+        	$("#barcode"+$(this).attr('id')).barcode(
+		    	value, 
+		    	"ean13",
+		    	{barWidth:1, barHeight:50}
+		    );
         });
 
         //STATUS

@@ -49,7 +49,7 @@ class produtosModel{
 	{
 		$this->descricao = $descricao;
 	}
-	public function addFornecedor(fornecedoresModel $fornecedor)
+	public function addFornecedor(produtofornecedorModel $fornecedor)
 	{
 		array_push($this->fornecedores, $fornecedor);
 	}

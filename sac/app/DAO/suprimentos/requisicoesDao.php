@@ -177,7 +177,9 @@ class requisicoesDao extends Dao{
 			$this->db->clear();
 			$cond = " AND id_requisicao_produto not in (".$produtosNaoExcluir.")";
 		}
-		$sql = "DELETE FROM requisicao_produto WHERE id_produto in( SELECT B.id_produto FROM requisicao_produto AS B WHERE B.id_requisicao = '".$requisicao->getId()."' AND id_produto = B.id_produto) $cond";
+		echo $sql = "DELETE FROM requisicao_produto WHERE id_requisicao = '".$requisicao->getId()."'  $cond";
+		
+		$this->db->clear();
 		$this->db->query($sql);
 		if($this->db->rowCount() > 0)
 
@@ -189,7 +191,7 @@ class requisicoesDao extends Dao{
 			{
 				$data = array(
 					'id_produto' => $produtosRequisitado->getProdutos()->getId(),
-					'id_unidade_medida_produto' => $produtosRequisitado->getProdutos()->getUnidadeMedida()[0]->getId(),
+					'id_unidade_medida_produto' => $produtosRequisitado->getProdutos()->getUnidadeMedidaEstoque()[0]->getId(),
 					'id_requisicao' => $requisicao->getId(),
 					'quantidade_produto' => $produtosRequisitado->getQuantidade()
 				);
@@ -218,7 +220,7 @@ class requisicoesDao extends Dao{
 		$this->load->model('produtos/produtosModel');
 		$this->load->model('suprimentos/requisicoes/requisicaoProdutoModel');
 		$this->load->model('produtos/unidademedidaModel');
-		$this->load->model('produtos/unidadeMedidaProdutoModel');
+		$this->load->model('produtos/unidadeMedidaEstoqueModel');
 
 		try{
 
@@ -254,16 +256,16 @@ class requisicoesDao extends Dao{
 						$unidademedidaModel->setNome($produto['nome_unidade_medida']);
 
 						//unidade de medida do produto
-						$unidadeMedidaProdutoModel = new unidadeMedidaProdutoModel();
-						$unidadeMedidaProdutoModel->setId($produto['id_unidade_medida_produto']);
-						$unidadeMedidaProdutoModel->setUnidadeMedida($unidademedidaModel);
+						$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+						$unidadeMedidaEstoqueModel->setId($produto['id_unidade_medida_produto']);
+						$unidadeMedidaEstoqueModel->setUnidadeMedida($unidademedidaModel);
 
 						//prodtos
 						$produtosModel = new produtosModel();
 						$produtosModel->setId($produto['id_produto']);
 						$produtosModel->setNome($produto['nome_produto']);
 						$produtosModel->setFoto($produto['foto_produto']);
-						$produtosModel->addUnidadeMedida($unidadeMedidaProdutoModel);
+						$produtosModel->addUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
 						
 						//produtos requisitados
 						$requisicaoProdutoModel = new requisicaoProdutoModel();
@@ -288,7 +290,7 @@ class requisicoesDao extends Dao{
 	{
 		$this->load->model('produtos/produtosModel');
 		$this->load->model('produtos/unidademedidaModel');
-		$this->load->model('produtos/unidadeMedidaProdutoModel');
+		$this->load->model('produtos/unidadeMedidaEstoqueModel');
 		$this->db->clear();
 		$this->db->setTabela('requisicoes');
 		$this->db->setCondicao("id_requisicao = '".$requisicao->getId()."'");
@@ -320,9 +322,9 @@ class requisicoesDao extends Dao{
 					$unidademedidaModel->setId($value['id_unidade_medida']);
 
 					//unidade de medida do produto
-					$unidadeMedidaProdutoModel = new unidadeMedidaProdutoModel();
-					$unidadeMedidaProdutoModel->setId($produto['idUnidadeMedida']);
-					$unidadeMedidaProdutoModel->setUnidadeMedida($unidademedidaModel);
+					$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+					$unidadeMedidaEstoqueModel->setId($produto['idUnidadeMedida']);
+					$unidadeMedidaEstoqueModel->setUnidadeMedida($unidademedidaModel);
 
 					//prodtos
 					$produtosModel = new produtosModel();

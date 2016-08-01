@@ -1,0 +1,122 @@
+<div class="container">
+    <?php
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'suprimentos/requisicoes/gerenciar/cadastrar'), URL.'suprimentos/requisicoes/gerenciar/cadastrar');
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
+    ?>
+    <div class="page-header">
+      <h1>Estoque - <small>Zona reservada</small></h1>
+    </div>
+    <div class="middle-content">
+		
+		<div id="grid"></div>
+		<div id="details"></div>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.common-material.min.css" />
+<link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.default.min.css" />
+<script src="<?=URL?>skin/js/kendoui/js/kendo.all.min.js"></script>
+
+
+<script>
+$("#grid").kendoGrid({
+  	columns: [
+    {
+    	filterable: false,
+        field: "id",
+        title: "ID",
+        width: "40px",
+        template: '<p>#: id#</p>'
+    },
+    {
+    	filterable: false,
+        title: "Foto",
+        width: "50px",
+        template: '<img src="#: foto#" style=" width: 50px; height: 50px; margin-right:10px" class="img-circle pull-left">'
+    },
+    {
+        field: "produto",
+        title: "Produto",
+        width: "300px",
+        template: '<p>Código de barras: <strong>#:codigobarras#</strong></p>'
+	       			+'<p>Nome: <strong>#:produto#</strong></p>'
+    },
+    {
+        field: "qtdtotal",
+        title: "Quantidade Total",
+        width: "100px"
+    },
+    {
+    	filterable: false,
+        field: "nivel",
+        title: "Nível",
+        width: "200px",
+        template: '<h4><span class="pull-left label-danger label">#: min #</span></h4>'
+				+'<h4><span class="pull-right label-success label">#: max #</span></h4>'
+				+'<div class="progress">'
+				  	+'<div class="progress-bar #: progressclass # progress-bar-striped active" role="progressbar" aria-valuenow="#: nivel #" aria-valuemin="0" aria-valuemax="100" style="width: #: nivel #%">'
+				    	+'<span class="sr-only">#: nivel #% Complete</span>'
+				 	+'</div>'
+				+'</div>'
+    },
+    {
+    	filterable: false,
+        field: "acoes",
+        title: "Ações",
+        width: "100px"
+    }
+  	],
+    filterable: {
+        extra: false,
+        operators: {
+            string: {
+                startswith: "Começa com",
+                eq: "É igual a",
+                neq: "Não é igual a",
+                contains: "Contém"
+            }
+        },
+        messages: {
+	      filter: "Filtrar",
+	      clear: "Limpar",
+	      info: "Exibir itens com valores que: "
+	    }
+    },
+  	dataSource:{
+	  	transport: {
+		    read: {
+		      	url: url+"estoque/reservados/gerenciar/getjsonlote",
+		      	dataType: "json"
+		    }
+		}
+	},
+	pageable: {
+	    pageSize: 8,
+	    refresh: true
+	},
+  	detailTemplate: 'Lotes: <div class="grid"></div>',
+  	detailInit: function(e) {
+	    e.detailRow.find(".grid").kendoGrid({
+	      	dataSource: e.data.lotes,
+	      	columns: [
+	      		{ field: "id", title:"ID", width: "50px"},
+	      		{ field: "codigo", title:"Código", width: "150px" },
+	      		{ field: "codigogti", title:"Cód. barras gti", width: "150px" },
+	      		{ field: "codigogst", title:"Cód. barras gst", width: "150px" },
+	      		{ field: "validade", title:"Validade", width: "150px" },
+	      		{ field: "quantidade", title:"Quantidade", width: "200px" },
+	      		{ 
+	      			field: "acoes", 
+	      			title:"Ações" ,
+	      			template : '<a class="btn btn-primary pull-left btn_visualizar btn-sm" href="#:linkvisualizar#" data-toggle="tooltip" data-placement="top" role="button" id="btn_visualizar" title="Visualizar">'
+									+'<span class="glyphicons glyphicons-eye-open"></span>'
+								+'</a>'
+	      		}
+	        ]
+	    });
+  	}
+
+});
+
+</script>
