@@ -63,13 +63,13 @@ class gerenciar extends Controller{
 
 	public function listar()
 	{
-		$ano = isset($_POST['ano']) ? intval($_POST['ano']) : '2015';
+		$ano = isset($_POST['ano']) ? intval($_POST['ano']) : date('Y');
 		if($ano !=  0)
 		{
 			$agendaList = array();
 
 			//AGENDA DAO
-			$this->load->dao('fornecedores/agendaDao');
+			$this->load->dao('agendas/agendaDao');
 			$agendaDao = new agendaDao();
 			$agendas = $agendaDao->listar($ano);
 
@@ -77,10 +77,12 @@ class gerenciar extends Controller{
 			$this->load->library('dataFormat', null, true);
 			foreach ($agendas as $agenda) 
 			{
+				list ($ano,$mes,$dia) = explode('-', $agenda->getData());
+				
 				$aux = array(
 					'date' => $this->formatarData($agenda->getData()),
 					'title' => '',
-					'link' => '',
+					'link' => URL.'agenda/gerenciar/listarCompromissosAgendados/'.$dia.'/'.$mes.'/'.$ano,
 					'color' => 'green'
 				);
 				array_push($agendaList, $aux);
@@ -169,7 +171,7 @@ class gerenciar extends Controller{
 			$data = $this->load->dataFormat->formatar($data,'data','banco');
 
 			//AGENDA
-			$this->load->model('fornecedores/agendaModel');
+			$this->load->model('agenda/agendaModel');
 			$agendaModel = new agendaModel();
 			$agendaModel->setTitulo($titulo);
 			$agendaModel->setData($data);
@@ -179,7 +181,7 @@ class gerenciar extends Controller{
 
 
 			//AGENDA DAO
-			$this->load->dao('fornecedores/agendaDao');
+			$this->load->dao('agendas/agendaDao');
 			$agendaDao = new agendaDao();
 			echo $agendaDao->inserir($agendaModel);
 		}else
@@ -189,6 +191,18 @@ class gerenciar extends Controller{
 	    }
 
 	}
+	public function listarCompromissosAgendados()
+	{
+		$dia = $this->load->url->getSegment(3);
+		$mes = $this->load->url->getSegment(4);
+		$ano = $this->load->url->getSegment(5);
+		
+		$this->load->dao('agendas/agendaDao');
+		$agendaDao = new agendaDao();
+		$agendaCompromissos = $agendaDao->listar($ano, $mes, $dia);
+		print_r($agendaCompromissos);
+	}
+
 
 
 }

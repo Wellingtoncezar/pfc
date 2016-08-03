@@ -33,7 +33,7 @@ class agendaDao extends Dao{
 		{
 			$agendas = $this->db->resultAll();
 			//AGENDA MODEL
-			$this->load->model('fornecedores/agendaModel');
+			$this->load->model('agenda/agendaModel');
 
 			//FORNECEDORES MODEL
 			$this->load->model('fornecedores/fornecedoresModel');
