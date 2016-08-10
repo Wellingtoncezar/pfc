@@ -1,15 +1,99 @@
 <div class="container">
     <?php
-        //$btnCadastrar = $template->btnCadastrar(URL.'funcionarios/gerenciar/cadastrar');
-        //echo $template->actions_buttons($btnCadastrar);
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'caixa/gerenciar/cadastrar'), URL.'caixa/gerenciar/cadastrar');
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
     <div class="page-header">
-      <h1>Caixa</h1>
+      <h1>Gestão <small>Caixa</small></h1>
     </div>
     <div class="middle-content">
-
-        <h1>Home</h1>
-
+        
+        <div id="grid"></div>
+        <div id="details"></div>
     </div>
-
 </div>
+
+
+<link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.common-material.min.css" />
+<link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.default.min.css" />
+<script src="<?=URL?>skin/js/kendoui/js/kendo.all.min.js"></script>
+
+
+<script>
+$("#grid").kendoGrid({
+    columns: [
+    {
+        filterable: false,
+        field: "id",
+        title: "ID",
+        width: "40px",
+        template: '<p>#: id#</p>'
+    },
+    {
+        field: "codigo",
+        title: "Código",
+        width: "300px",
+    },
+    {
+        field: "ip",
+        title: "IP",
+        width: "100px"
+    },
+    {
+        filterable: false,
+        field: "acoes",
+        title: "Ações",
+        width: "100px"
+    }
+    ],
+    filterable: {
+        extra: false,
+        operators: {
+            string: {
+                startswith: "Começa com",
+                eq: "É igual a",
+                neq: "Não é igual a",
+                contains: "Contém"
+            }
+        },
+        messages: {
+          filter: "Filtrar",
+          clear: "Limpar",
+          info: "Exibir itens com valores que: "
+        }
+    },
+    dataSource:{
+        transport: {
+            read: {
+                url: url+"caixa/gerenciar/getjsoncaixa",
+                dataType: "json"
+            }
+        }
+    },
+    pageable: {
+        pageSize: 8,
+        refresh: true
+    },
+    detailTemplate: 'Lotes: <div class="grid"></div>',
+    detailInit: function(e) {
+        e.detailRow.find(".grid").kendoGrid({
+            dataSource: e.data.lotes,
+            columns: [
+                { field: "id", title:"ID", width: "50px"},
+                { field: "dateOpen", title:"Data De Abertura", width: "150px" },
+                { field: "dateClose", title:"Data De Fechamento", width: "150px" },
+                { field: "user", title:"Funcionário", width: "150px" },
+                { 
+                    field: "acoes", 
+                    title:"Ações" ,
+                    template : '<a class="btn btn-primary pull-left btn_visualizar btn-sm" href="#:linkvisualizar#" data-toggle="tooltip" data-placement="top" role="button" id="btn_visualizar" title="Visualizar">'
+                                    +'<span class="glyphicons glyphicons-eye-open"></span>'
+                                +'</a>'
+                }
+            ]
+        });
+    }
+
+});
+
+</script>

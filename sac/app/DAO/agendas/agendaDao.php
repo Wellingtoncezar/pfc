@@ -24,9 +24,9 @@ class agendaDao extends Dao{
 			$cond = "'".$ano."%'";
 		
 		$this->db->clear();
-		$this->db->setTabela('fornecedores_agenda');
-		$this->db->setCondicao("data_agenda like $cond");
-		$this->db->setOrderBy('data_agenda');
+		$this->db->setTabela('fornecedores_agenda AS  FA, fornecedores AS F');
+		$this->db->setCondicao("FA.data_agenda like $cond AND FA.id_fornecedor = F.id_fornecedor");
+		$this->db->setOrderBy('FA.data_agenda');
 		$this->db->select();
 		$agendasList = array();
 		if($this->db->rowCount() > 0)
@@ -42,6 +42,7 @@ class agendaDao extends Dao{
 			{
 				$fornecedorModel = new fornecedoresModel();
 				$fornecedorModel->setId($agenda['id_fornecedor']);
+				$fornecedorModel->setNomeFantasia($agenda['nome_fantasia_fornecedor']);
 
 				$agendaModel = new agendaModel();
 				$agendaModel->setTitulo($agenda['titulo_agenda']);

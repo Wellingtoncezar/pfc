@@ -1,10 +1,16 @@
+    
        <?php
+      //  echo "<pre>";
+      // print_r($compromissosagendados);
+      // echo "</pre>";
             $thead = '  <tr>
+                            <th width="30">Id</th>
                             <th width="30">Fornecedor</th>
                             <th width="300">Titulo</th>
                             <th width="80">Ações</th>
                         </tr>';
             $tfoot = '  <tr>
+                            <td>Id</td>
                             <td>Fornecedor</td>
                             <th>Titulo</th>
                             <td>Ações</td>
@@ -12,44 +18,47 @@
 
             $tbody = '';
 
-            foreach ($produtosrequisitados->getProdutosRequisitados() as $produto):
-            $disabledButtons = ($produto->getStatus() == statusRequisicoes::APROVADO || $produto->getStatus() == statusRequisicoes::REPROVADO || $produto->getStatus() == statusRequisicoes::CANCELADO) ? 'disabled="disabled"' : '';
+            foreach ($compromissosagendados as $compromissos):
 
-            $tbody .='  <tr id="'.$produto->getId().'">
-                            <td>'.$produto->getId().'</td>
-                            <td>'.$produto->getProdutos()->getNome().'</td>
-                            <td>'.$dataFormat->formatar($produto->getQuantidade(),'decimal').' '.$produto->getProdutos()->getUnidadeMedidaEstoque()[0]->getUnidadeMedida()->getNome().'</td>
+            $tbody .='  <tr id="'.$compromissos->getId().'">
+                            <td>'.$compromissos->getId().'</td>
+                            <td>'.$compromissos->getFornecedor()->getNomeFantasia().'</td>
+                            <td>'.$compromissos->getTitulo().'</td>
+                            <td>'.$dataFormat->formatar($compromissos->getData(),'data').'</td>
                             <td>'
-                                .$this->templateFactory->getButton('reprovar', array('href'=>URL.'suprimentos/requisicoes/gerenciar/reprovarcotacaoproduto/'.$produto->getId(), 'title'=>'Reprovar', 'moreContent'=>$disabledButtons)).
-                                $this->templateFactory->getButton('aprovar',array('href'=>URL.'suprimentos/requisicoes/gerenciar/aprovarcotacaoproduto/'.$produto->getId(), 'title'=>'Aprovar', 'moreContent'=>$disabledButtons.' idProdutoRequisitado="'.$produto->getId().'"')).
+                                .$this->templateFactory->getButton('Adiar', array('href'=>URL.'agenda/gerenciar/adiarCompromissos/'.$compromissos->getId(), 'title'=>'Adiar')).
+
                             '</td>
                         </tr>';
                 endforeach;
-                echo $this->templateFactory->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody, 'moreContent' => 'tableProdutosRequisitado'));
+                echo $this->templateFactory->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody, 'moreContent' => ''));
             ?>
+
 <script type="text/javascript">
     $(function(){
-        //DATATABLE
-        var table = $('.dataTable[tableProdutosRequisitado]').DataTable({
-            order: [0,'asc']
-        });
-        $('.dataTable[tableProdutosRequisitado]').show()
-        //EXCLUIR
-        table.$('.btn_aprovar, .btn_reprovar').on('click',function(){
-            var idProdutoRequisitado = $(this).attr('idProdutoRequisitado')
-            $.post($(this).attr('href'),{},function(data){
-                if(data == true){
-                    messageDialog('Produto aprovado','success',false,null);
-                    $('.btn_aprovar[idProdutoRequisitado='+idProdutoRequisitado+']').attr('disabled', 'disabled');
-                    $('.btn_reprovar[idProdutoRequisitado='+idProdutoRequisitado+']').attr('disabled', 'disabled');
-                }else
-                {
-                    messageDialog(data,'warning',false,null);
-                }
-            });
-            return false;
-        });
 
+            $('.dataTable').show()
+            
+            // //DATATABLE
+            // var table = $('.dataTable').DataTable({
+            //     order: [0,'asc']
+            // });
+            // //ADIAR
+            // table.$(' .btn_adiar').on('click',function(){
+            //     var idCompromissosAgendados = $(this).attr('idCompromissosAgendados')
+            //     $.post($(this).attr('href'),{},function(data){
+            //         if(data == true){
+            //             messageDialog('Produto aprovado','success',false,null);
+            //             $('.btn_adiar[idCompromissosAgendados='+idCompromissosAgendados+']').attr('disabled', 'disabled');
+            //         }else
+            //         {
+            //             messageDialog(data,'warning',false,null);
+            //         }
+            //     });
+            //     return false;
+            // });
+
+        
 
     })
 </script>

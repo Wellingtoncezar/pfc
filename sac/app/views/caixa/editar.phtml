@@ -1,0 +1,27 @@
+<div class="container">
+    <?php
+       $btnVoltar = $this->templateFactory->getButton("voltar",array('href'=>URL.'caixas'));
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnVoltar));    ?>
+    <div class="page-header">
+      <h1>Caixas<small> Editar</small></h1>
+    </div>
+    <form action="<?=URL?>caixa/gerenciar/atualizar" method="post" id="form_caixa">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dados Gerais</div>
+            <div class="panel-body">
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Codigo Checkout</span>
+                    <input type="text" class="form-control" placeholder="Codigo Checkout" name="codigo" value="<?=$caixa->getCodigo()?>" >
+                </div>
+                 <input type="hidden" name="id" value="<?=$caixa->getId()?>">
+                <div class="btn-group pull-right" role="group">
+                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/caixas/cadastrar.js"></script>

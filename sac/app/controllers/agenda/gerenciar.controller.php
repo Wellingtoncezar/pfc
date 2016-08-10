@@ -200,7 +200,29 @@ class gerenciar extends Controller{
 		$this->load->dao('agendas/agendaDao');
 		$agendaDao = new agendaDao();
 		$agendaCompromissos = $agendaDao->listar($ano, $mes, $dia);
-		print_r($agendaCompromissos);
+		$data = array(
+			"compromissosagendados" => $agendaCompromissos,
+			'dataFormat' => new dataFormat()
+		);
+		$this->load->view('agenda/compromissos_agendados',$data);
+
+	}
+	public function adiarCompromissos()
+	{
+		$this->load->model('agenda/agendaModel');
+		$this->load->dao('agendas/agendaDao');
+
+		$data = isset($_POST['data']) ? filter_var(trim($_POST['data'])) : '';
+		
+		$agendaModel = new agendaModel();
+		$agendaModel->setId($id_agenda);
+		$agendaModel->setData();
+
+		$agendaDao = new agendaDao();
+		echo $agendaDao->adiarCompromissos($agendaModel);
+
+		$this->load->library('dataValidator', null, true);
+        $this->load->dataValidator->set('Data', $data, 'data')->is_required();
 	}
 
 
