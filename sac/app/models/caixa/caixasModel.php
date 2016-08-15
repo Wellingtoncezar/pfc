@@ -7,6 +7,7 @@ class caixasModel{
 	private $id_checkout;
 	private $codigo;
 	private $ip;
+	private $ListOpenBox = array();
 	private $dataCadastro;
 	
 
@@ -23,6 +24,14 @@ class caixasModel{
 	public function setIp($ip)
 	{
 		$this->ip = $ip;
+	}
+	public function setListOpenBox($ListOpenBox)
+	{
+		$this->ListOpenBox = $ListOpenBox;
+	}
+	public function addListOpenBox(caixaAbertoModel $ListOpenBox)
+	{
+		array_push($this->ListOpenBox, $ListOpenBox);
 	}
 	public function setDataCadastro($dataCadastro)
 	{
@@ -41,6 +50,10 @@ class caixasModel{
 	public function getIp()
 	{
 		return $this->ip;
+	}
+	public function getListOpenBox()
+	{
+		return $this->ListOpenBox;
 	}
 	public function getDataCadastro()
 	{

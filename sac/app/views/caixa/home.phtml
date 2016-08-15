@@ -43,7 +43,10 @@ $("#grid").kendoGrid({
         filterable: false,
         field: "acoes",
         title: "Ações",
-        width: "100px"
+        width: "100px",
+        template : '<a class="btn btn-primary btn_editar btn-sm pull-left" href="#:linkEditar#" data-toggle="tooltip" data-placement="top" role="button" id-record=""  title="">'
+                +'<span class="glyphicon glyphicon-pencil"></span>' 
+            +'</a>'
     }
     ],
     filterable: {

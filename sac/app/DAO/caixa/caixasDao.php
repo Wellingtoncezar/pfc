@@ -18,7 +18,7 @@ class caixasDao extends Dao{
 	public function listar()
 	{
 		$this->load->model('caixa/caixasModel');
-		$caixas = Array();
+		$caixa = Array();
 
 		$this->db->clear();
 		$this->db->setTabela('checkout');
@@ -27,22 +27,31 @@ class caixasDao extends Dao{
 			$result = $this->db->resultAll();
 			foreach ($result as $value)
 			{
-				$marcasModel = new marcasModel();
-				$marcasModel->setId($value['id_marca']);
-				$marcasModel->setNome($value['nome_marca']);
-				$marcasModel->setStatus(status::getAttribute($value['status_marca']));
-				array_push($marcas, $marcasModel);
-				unset($marcasModel);
+
+				$this->db->clear();
+				$this->db->query("select abertura_caixa.*, funcionarios.nome_funcionario, funcionarios.sobrenome_funcionario from abertura_caixa 
+					inner join checkout on abertura_caixa.id_checkout = checkout.id_checkout 
+					inner join sys_usuarios on abertura_caixa.id_usuario = sys_usuarios.id_usuario 
+					inner join funcionarios on funcionarios.id_funcionario = sys_usuarios.id_funcionario
+					// where checkout.id_checkout=
+					");
+
+
+
+				$caixasModel = new caixasModel();
+				$caixasModel->setId($value['id_checkout']);
+				$caixasModel->setCodigo($value['codigo_checkout']);
+				$caixasModel->setIp($value['ip_maquina']);
+				array_push($caixa, $caixasModel);
+				unset($caixasModel);
 			}
-			return $marcas;
-		else:
-			return $marcas;
 		endif;
+		return $this->getJsoncaixa($caixa);
 	}
 
 
 	/**
-	 * Retorna a consulta de um marcas pelo id
+	 * Retorna a consulta de um caixa pelo id
 	 * @return object [caixasModel]
 	 */
 	public function consultar(caixasModel $caixa)
@@ -119,5 +128,47 @@ class caixasDao extends Dao{
  		}
  	}
 
+
+ 	public function getJsoncaixa($caixa)
+	{
+		$this->load->library('dataformat');
+		$dataformat = new dataformat();
+		$_arCaixa = Array();
+		foreach ($caixa as $cx):
+			$aux = array(
+				    	'id'=> $cx->getId(),
+				    	'codigo' => $cx->getCodigo(),
+						'ip'=> $cx->getIp(),
+						'acoes'=> "",
+						'linkEditar'=> URL.'caixa/gerenciar/editar/'.$cx->getId(),
+						'lotes'=> array()
+				    );
+			// $arrLotes = array();
+			// foreach ($cx->getLotes() as $lotes){
+			// 	$valorUndEstoque = 0;
+			// 	foreach ($lotes->getLocalizacao() as $localizacao){
+			// 		$fatorUnidadeLote = $localizacao->getUnidadeMedidaEstoque()->getFator();
+			// 		$qtdLoteLocal = $localizacao->getQuantidade(); //quantidade do lote por localização
+			// 		$valorUndEstoque += (double)$qtdLoteLocal;
+			// 	}
+		 //        $aux2 = array( 
+			// 	        	'id' => $lotes->getId(),
+			// 				'codigo' => $lotes->getCodigoLote(),
+			// 				'codigogti' => ($lotes->getCodigoBarrasGti() != '') ? $lotes->getCodigoBarrasGti() : $estoqueProd->getProduto()->getCodigoBarra(),
+			// 				'codigogst' => $lotes->getCodigoBarrasGst(),
+			// 				'validade' => $dataformat->formatar($lotes->getDataValidade(),'data'),
+			// 				'quantidade' => $valorUndEstoque. ' '.$lotes->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getUnidadeMedida()->getNome(),
+			// 				'acoes' => "",
+			// 				'linkvisualizar' => ""
+			// 	    	);
+
+			// 	array_push($aux['lotes'], $aux2);
+			// }
+
+			array_push($_arCaixa, $aux);
+        endforeach;
+
+        return json_encode($_arCaixa);
+	}
 
 }
