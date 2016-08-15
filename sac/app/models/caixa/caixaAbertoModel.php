@@ -49,6 +49,10 @@ class caixaAbertoModel{
  	{
  		return $this->id;
  	}
+ 	public function getUsuario()
+ 	{
+ 		return $this->usuario;
+ 	}
 
  	public function getSaldoInicial()
  	{

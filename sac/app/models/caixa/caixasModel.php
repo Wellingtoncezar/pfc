@@ -10,6 +10,7 @@ class caixasModel{
 	private $ListOpenBox = array();
 	private $dataCadastro;
 	
+	
 
 
  	//SETERS
