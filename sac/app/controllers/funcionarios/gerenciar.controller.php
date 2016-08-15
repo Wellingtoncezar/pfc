@@ -99,6 +99,7 @@ class gerenciar extends Controller{
 		$this->load->library('dataFormat',null,true);
 		$data['dataFormat'] = $this->load->dataFormat;
 
+
 		$this->load->view('includes/header',$data);
 		$this->load->view('funcionarios/editar',$data);
 		$this->load->view('includes/footer',$data);
@@ -119,38 +120,39 @@ class gerenciar extends Controller{
 
 		if(!$this->load->checkPermissao->check(false,URL.'funcionarios/gerenciar/cadastrar'))
 		{
-			echo "Ação não permitida";
+			$this->http->response("Ação não permitida");
 			return false;
 		}
 
 		$foto 			= isset($_FILES['foto']) ? $_FILES['foto'] : '';
-		$nome 			= isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-		$sobrenome 		= isset($_POST['sobrenome']) ? filter_var($_POST['sobrenome']) : '';
-		$dataNascimento = isset($_POST['dataNascimento']) ? filter_var(trim($_POST['dataNascimento'])) : '';
-		$sexo 			= isset($_POST['sexo']) ? filter_var($_POST['sexo']) : '';
-		$rg 			= isset($_POST['rg']) ? filter_var($_POST['rg']) : '';
-		$cpf 			= isset($_POST['cpf']) ? filter_var($_POST['cpf']) : '';
-		$estadoCivil 	= isset($_POST['estadoCivil']) ? filter_var($_POST['estadoCivil']) : '';
-		$escolaridade 	= isset($_POST['escolaridade']) ? filter_var($_POST['escolaridade']) : '';
+		$nome 			= filter_var($this->http->getRequest('nome'));
+		$sobrenome 		= filter_var($this->http->getRequest('sobrenome'));
+		$dataNascimento = filter_var($this->http->getRequest('dataNascimento'));
+		$sexo 			= filter_var($this->http->getRequest('sexo'));
+		$rg 			= filter_var($this->http->getRequest('rg'));
+		$cpf 			= filter_var($this->http->getRequest('cpf'));
+		$estadoCivil 	= filter_var($this->http->getRequest('estadoCivil'));
+		$escolaridade 	= filter_var($this->http->getRequest('escolaridade'));
 
 		//endereço
-		$cep 			= isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
-		$logradouro 	= isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
-		$numero 		= isset($_POST['numero']) ? filter_var(trim($_POST['numero'])) : '';
-		$complemento 	= isset($_POST['complemento']) ? filter_var(trim($_POST['complemento'])) : '';
-		$bairro 		= isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
-		$cidade 		= isset($_POST['cidade']) ? filter_var(trim($_POST['cidade'])) : '';
-		$estado 		= isset($_POST['estado']) ? filter_var(trim($_POST['estado'])) : '';
+		$cep 			= filter_var($this->http->getRequest('cep'));
+		$logradouro 	= filter_var($this->http->getRequest('logradouro'));
+		$numero 		= filter_var($this->http->getRequest('numero'));
+		$complemento 	= filter_var($this->http->getRequest('complemento'));
+		$bairro 		= filter_var($this->http->getRequest('bairro'));
+		$cidade 		= filter_var($this->http->getRequest('cidade'));
+		$estado 		= filter_var($this->http->getRequest('estado'));
 
 		//contato
-		$telefones 		= isset($_POST['telefones']) ? filter_var_array($_POST['telefones']) : Array();
-		$emails 		= isset($_POST['emails']) ? filter_var_array($_POST['emails']) : Array();
+		$telefones 		= filter_var_array( (array) $this->http->getRequest('telefones'));
+		$emails 		= filter_var_array( (array) $this->http->getRequest('emails'));
+		
 		
 		//DADOS ADMISSIONAIS
-		$codigoAdmissao = isset($_POST['codigoAdmissao']) ? filter_var(trim($_POST['codigoAdmissao'])) : '';
-		$cargo 			= isset($_POST['cargo']) ? intval($_POST['cargo']) : '';
-		$dataAdmissao 	= isset($_POST['dataAdmissao']) ? filter_var(trim($_POST['dataAdmissao'])) : '';
-		$dataDemissao 	= isset($_POST['dataDemissao']) ? filter_var(trim($_POST['dataDemissao'])) : '';
+		$codigoAdmissao = filter_var($this->http->getRequest('codigoAdmissao'));
+		$cargo 			= filter_var($this->http->getRequest('cargo'));
+		$dataAdmissao 	= filter_var($this->http->getRequest('dataAdmissao'));
+		$dataDemissao 	= filter_var($this->http->getRequest('dataDemissao'));
 
 
 
@@ -222,10 +224,10 @@ class gerenciar extends Controller{
 			$dataDemissao = $this->load->dataFormat->formatar($dataDemissao,'data','banco');
 
 			$cropValues = Array(
-				'w' => $_POST['w'],
-				'h' => $_POST['h'],
-				'x1' => $_POST['x1'],
-				'y1' => $_POST['y1']
+				'w' => $this->http->getRequest('w'),
+				'h' => $this->http->getRequest('h'),
+				'x1' => $this->http->getRequest('x1'),
+				'y1' => $this->http->getRequest('y1')
 			);
 			$tamanho = Array(
 				'p' =>array(
@@ -243,7 +245,7 @@ class gerenciar extends Controller{
 					$nome_foto = $upload->getNomeArquivo();
 				} catch (Exception $e) {
 					
-					echo $e->getMessage();
+					$this->http->response($e->getMessage());
 					return false;
 				}
 			}
@@ -280,17 +282,18 @@ class gerenciar extends Controller{
 
 			try {
 				$res = $funcionariosDao->inserir($funcionariosModel);
-				if($res)
-					echo true;
+				if($res){
+					$this->http->response(true);
+				}
 				else
-					echo $res;
+					$this->http->response($res);
 			} catch (dbException $e) {
-				echo $e->getMessageError();
+				$this->http->response($e->getMessageError());
 			}
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();
-			echo json_encode($todos_erros);
+			$this->http->response(json_encode($todos_erros));
 	    }
 
 	}
@@ -304,41 +307,42 @@ class gerenciar extends Controller{
 	{
 		if(!$this->load->checkPermissao->check(false, URL.'funcionarios/gerenciar/editar'))
 		{
-			echo "Ação não permitida";
+			$this->http->response("Ação não permitida");
 			return false;
 		}
 
-		$idFuncionario 		= isset($_POST['id_funcionario']) ? filter_var($_POST['id_funcionario']) : '';
+		$idFuncionario 		= filter_var((int)$this->http->getRequest('id_funcionario'));
 		$foto 				= isset($_FILES['foto']) ? $_FILES['foto'] : '';
-		$nome_foto 			= isset($_POST['nome_foto']) ? $_POST['nome_foto'] : '';
-		$nome 				= isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-		$sobrenome 			= isset($_POST['sobrenome']) ? filter_var($_POST['sobrenome']) : '';
-		$dataNascimento 	= isset($_POST['dataNascimento']) ? filter_var(trim($_POST['dataNascimento'])) : '';
-		$sexo 				= isset($_POST['sexo']) ? filter_var($_POST['sexo']) : '';
-		$rg 				= isset($_POST['rg']) ? filter_var($_POST['rg']) : '';
-		$cpf 				= isset($_POST['cpf']) ? filter_var($_POST['cpf']) : '';
-		$estadoCivil 		= isset($_POST['estadoCivil']) ? filter_var($_POST['estadoCivil']) : '';
-		$escolaridade 		= isset($_POST['escolaridade']) ? filter_var($_POST['escolaridade']) : '';
+		$nome_foto 			= filter_var($this->http->getRequest('nome_foto'));
+		$nome 				= filter_var($this->http->getRequest('nome'));
+		$sobrenome 			= filter_var($this->http->getRequest('sobrenome'));
+		$dataNascimento 	= filter_var($this->http->getRequest('dataNascimento'));
+		$sexo 				= filter_var($this->http->getRequest('sexo'));
+		$rg 				= filter_var($this->http->getRequest('rg'));
+		$cpf 				= filter_var($this->http->getRequest('cpf'));
+		$estadoCivil 		= filter_var($this->http->getRequest('estadoCivil'));
+		$escolaridade 		= filter_var($this->http->getRequest('escolaridade'));
 
 		//endereço
-		$id_endereco 		= isset($_POST['id_endereco']) ? filter_var(trim($_POST['id_endereco'])) : '';
-		$cep 				= isset($_POST['cep']) ? filter_var(trim($_POST['cep'])) : '';
-		$logradouro 		= isset($_POST['logradouro']) ? filter_var(trim($_POST['logradouro'])) : '';
-		$numero 			= isset($_POST['numero']) ? filter_var(trim($_POST['numero'])) : '';
-		$complemento 		= isset($_POST['complemento']) ? filter_var(trim($_POST['complemento'])) : '';
-		$bairro 			= isset($_POST['bairro']) ? filter_var(trim($_POST['bairro'])) : '';
-		$cidade 			= isset($_POST['cidade']) ? filter_var(trim($_POST['cidade'])) : '';
-		$estado 			= isset($_POST['estado']) ? filter_var(trim($_POST['estado'])) : '';
+		$id_endereco 		= filter_var((int)$this->http->getRequest('id_endereco'));
+		$cep 				= filter_var($this->http->getRequest('cep'));
+		$logradouro 		= filter_var($this->http->getRequest('logradouro'));
+		$numero 			= filter_var($this->http->getRequest('numero'));
+		$complemento 		= filter_var($this->http->getRequest('complemento'));
+		$bairro 			= filter_var($this->http->getRequest('bairro'));
+		$cidade 			= filter_var($this->http->getRequest('cidade'));
+		$estado 			= filter_var($this->http->getRequest('estado'));
 
 		//contato
-		$telefones 			= isset($_POST['telefones']) ? filter_var_array($_POST['telefones']) : Array();
-		$emails 			= isset($_POST['emails']) ? filter_var_array($_POST['emails']) : Array();
-		
+		$telefones 		= filter_var_array( (array) $this->http->getRequest('telefones'));
+		$emails 		= filter_var_array( (array) $this->http->getRequest('emails'));
+
+
 		//DADOS ADMISSIONAIS
-		$codigoAdmissao 	= isset($_POST['codigoAdmissao']) ? filter_var(trim($_POST['codigoAdmissao'])) : '';
-		$cargo 				= isset($_POST['cargo']) ? intval($_POST['cargo']) : '';
-		$dataAdmissao 		= isset($_POST['dataAdmissao']) ? filter_var(trim($_POST['dataAdmissao'])) : '';
-		$dataDemissao 		= isset($_POST['dataDemissao']) ? filter_var(trim($_POST['dataDemissao'])) : '';
+		$codigoAdmissao 	= filter_var($this->http->getRequest('codigoAdmissao'));
+		$cargo 				= filter_var($this->http->getRequest('cargo'));
+		$dataAdmissao 		= filter_var($this->http->getRequest('dataAdmissao'));
+		$dataDemissao 		= filter_var($this->http->getRequest('dataDemissao'));
 
 
 
@@ -420,10 +424,10 @@ class gerenciar extends Controller{
 			if(!empty($foto))
 			{
 				$cropValues = Array(
-					'w' => $_POST['w'],
-					'h' => $_POST['h'],
-					'x1' => $_POST['x1'],
-					'y1' => $_POST['y1']
+					'w' => $this->http->getRequest('w'),
+					'h' => $this->http->getRequest('h'),
+					'x1' => $this->http->getRequest('x1'),
+					'y1' => $this->http->getRequest('y1')
 				);
 				$tamanho = Array(
 					'p' =>array(
@@ -440,7 +444,7 @@ class gerenciar extends Controller{
 					$upload = new uploadFoto('funcionarios', $foto, $nome_foto, $tamanho, $cropValues);
 					$nome_foto = $upload->getNomeArquivo();
 				} catch (Exception $e) {
-					echo $e->getMessage();
+					$this->http->response($e->getMessage());
 					return false;
 				}
 			}
@@ -470,15 +474,15 @@ class gerenciar extends Controller{
 			$this->load->dao('funcionarios/funcionariosDao');
 			$funcionariosDao = new funcionariosDao();
 			try {
-				echo $funcionariosDao->atualizar($funcionariosModel);
+				$this->http->response($funcionariosDao->atualizar($funcionariosModel));
 			} catch (dbException $e) {
-				echo $e->getMessageError();
+				$this->http->response($e->getMessageError());
 				exit;
 			}
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();
-			echo json_encode($todos_erros);
+			$this->http->response(json_encode($todos_erros));
 	    }
 
 	}
@@ -489,8 +493,8 @@ class gerenciar extends Controller{
 	 */
 	public function atualizarStatus()
 	{
-		$idFuncionario = intval($_POST['id']);
-		$status = filter_var($_POST['status']);
+		$idFuncionario = (int) $this->http->getRequest('id');
+		$status = filter_var($this->http->getRequest('status'));
 
 		//FUNCIONARIO MODEL
 		$this->load->model('funcionarios/funcionariosModel');
@@ -508,9 +512,9 @@ class gerenciar extends Controller{
 		$this->load->dao('funcionarios/funcionariosDao');
 		$funcionariosDao = new funcionariosDao();
 		if(!$funcionariosDao->isFuncionarioAdministrador($funcionariosModel))
-			echo $funcionariosDao->atualizarStatus($funcionariosModel);
+			$this->http->response($funcionariosDao->atualizarStatus($funcionariosModel));
 		else
-			echo "Alteração de status ou exclusão de funcionário administrador não permitida";
+			$this->http->response("Alteração de status ou exclusão de funcionário administrador não permitida");
 	}
 
 
@@ -525,7 +529,7 @@ class gerenciar extends Controller{
 
 		if(!$this->load->checkPermissao->check(false,URL.'funcionarios/gerenciar/excluir'))
 		{
-			echo "Ação não permitida";
+			$this->http->response("Ação não permitida");
 			return false;
 		}
 		$this->atualizarStatus();

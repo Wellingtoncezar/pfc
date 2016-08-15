@@ -104,8 +104,8 @@ class gerenciar extends Controller{
 	public function inserir()
 	{
 		
-		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-		$setor = isset($_POST['setor']) ? filter_var($_POST['setor']) : '';
+		$nome = filter_var($this->http->getRequest('nome'));
+		$setor = filter_var($this->http->getRequest('setor'));
 
 		//validação dos dados
 		$this->load->library('dataValidator', null, true);
@@ -126,11 +126,11 @@ class gerenciar extends Controller{
 			//CARGOS DAO
 			$this->load->dao('funcionarios/cargosDao');
 			$cargosDao = new cargosDao();
-			echo $cargosDao->inserir($cargosModel);
+			$this->http->response($cargosDao->inserir($cargosModel));
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();
-			echo json_encode($todos_erros);
+			$this->http->response(json_encode($todos_erros));
 	    }
 
 	}
@@ -145,9 +145,9 @@ class gerenciar extends Controller{
 	 */
 	public function atualizar()
 	{
-		$idCargo = isset($_POST['idCargo']) ? filter_var($_POST['idCargo']) : '';
-		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-		$setor = isset($_POST['setor']) ? filter_var($_POST['setor']) : '';
+		$idCargo = (int) $this->http->getRequest('idCargo');
+		$nome = filter_var($this->http->getRequest('nome'));
+		$setor = filter_var($this->http->getRequest('setor'));
 
 		//validação dos dados
 		$this->load->library('dataValidator' ,null, true);
@@ -170,11 +170,11 @@ class gerenciar extends Controller{
 			//SETOR DAO
 			$this->load->dao('funcionarios/cargosDao');
 			$cargosDao = new cargosDao();
-			echo $cargosDao->atualizar($cargosModel);
+			$this->http->response($cargosDao->atualizar($cargosModel));
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();
-			echo json_encode($todos_erros);
+			$this->http->response(json_encode($todos_erros));
 	    }
 
 	}
@@ -182,14 +182,12 @@ class gerenciar extends Controller{
 
 	public function excluir()
 	{
-		echo true;
-		exit;
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
 		$this->load->checkPermissao->check();
 		
-		$idCargo = intval($_POST['id']);
+		$idCargo = (int) $this->http->getRequest('id');
 
 		//CARGOS MODEL
 		$this->load->model('funcionarios/cargosModel');
@@ -199,7 +197,7 @@ class gerenciar extends Controller{
 		//CARGOS DAO
 		$this->load->dao('funcionarios/cargosDao');
 		$cargosDao = new cargosDao();
-		echo $cargosDao->excluir($cargosModel);
+		$this->http->response($cargosDao->excluir($cargosModel));
 	}
 
 }

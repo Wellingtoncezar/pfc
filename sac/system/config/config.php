@@ -2,7 +2,7 @@
 if(!defined('BASEPATH')) die('Acesso não permitido');
 /**
 * Arquivo de configuração geral
-* @author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
+* @author Wellington cezar  - wellington-cezar@hotmail.com
 * @since 05/03/2015
 * @version 3.0
 *

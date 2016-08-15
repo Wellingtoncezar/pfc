@@ -125,11 +125,11 @@ class gerenciar extends Controller{
 	 */
 	public function inserir()
 	{
-	    $nivel = isset($_POST['nivel']) ? intval($_POST['nivel']) : '';
-		$funcionario = isset($_POST['funcionario']) ? intval($_POST['funcionario']) : '';
-		$email = isset($_POST['email']) ? filter_var(trim($_POST['email'])) : '';
-		$login = isset($_POST['login']) ? filter_var($_POST['login']) : '';
-		$senha = isset($_POST['senha']) ? filter_var($_POST['senha']) : '';
+	    $nivel 			= (int) $this->http->getRequest('nivel');
+		$funcionario 	= $this->http->getRequest('funcionario');
+		$email 			= $this->http->getRequest('email');
+		$login 			= $this->http->getRequest('login');
+		$senha 			= $this->http->getRequest('senha');
 
 
 		//validação dos dados
@@ -162,14 +162,13 @@ class gerenciar extends Controller{
 			$this->load->dao('funcionarios/usuariosDao');
 			$usuariosDao = new usuariosDao();
 			if($usuariosDao->checkFuncionarioDuplicado($funcionariosModel))
-				echo "Funcionário já possui um usuário cadastrado";
+				$this->http->response("Funcionário já possui um usuário cadastrado");
 			else
-				echo $usuariosDao->inserir($usuariosModel);
-			
+				$this->http->response($usuariosDao->inserir($usuariosModel));
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();
-			echo json_encode($todos_erros);
+			$this->http->response(json_encode($todos_erros));
 	    }
 
 	}
@@ -181,10 +180,10 @@ class gerenciar extends Controller{
 	 */
 	public function atualizar()
 	{
-		$id_usuario = isset($_POST['id_usuario']) ? intval($_POST['id_usuario']):'';
-		$nivel = isset($_POST['nivel']) ? intval($_POST['nivel']) : '';
-		$funcionario = isset($_POST['funcionario']) ? intval($_POST['funcionario']) : '';
-		$email = isset($_POST['email']) ? filter_var(trim($_POST['email'])) : '';
+		$id_usuario 	= (int) $this->http->getRequest('id_usuario');
+		$nivel 			= $this->http->getRequest('nivel');
+		$funcionario 	= $this->http->getRequest('funcionario');
+		$email 			= $this->http->getRequest('email');
 
 		//validação dos dados
 		$this->load->library('dataValidator',null,true);
@@ -212,13 +211,13 @@ class gerenciar extends Controller{
 			$this->load->dao('funcionarios/usuariosDao');
 			$usuariosDao = new usuariosDao();
 			if($usuariosDao->checkFuncionarioDuplicado($funcionariosModel, $id_usuario))
-				echo "Funcionário já possui um usuário cadastrado";
+				$this->http->response("Funcionário já possui um usuário cadastrado");
 			else
-				echo $usuariosDao->atualizar($usuariosModel);
+				$this->http->response($usuariosDao->atualizar($usuariosModel));
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();
-			echo json_encode($todos_erros);
+			$this->http->response(json_encode($todos_erros));
 	    }
 
 	}
@@ -228,8 +227,8 @@ class gerenciar extends Controller{
 	 */
 	public function atualizarStatus()
 	{
-		$idUsuario = intval($_POST['id']);
-		$status = filter_var($_POST['status']);
+		$idUsuario = (int) $this->http->getRequest('id');
+		$status = $this->http->getRequest('status');
 
 		//FUNCIONARIO MODEL
 		$this->load->model('funcionarios/usuariosModel');
@@ -240,7 +239,7 @@ class gerenciar extends Controller{
 		//FUNCIONARIO DAO
 		$this->load->dao('funcionarios/usuariosDao');
 		$usuariosDao = new usuariosDao();
-		echo $usuariosDao->atualizarStatus($usuariosModel);
+		$this->http->response($usuariosDao->atualizarStatus($usuariosModel));
 
 	}
 
