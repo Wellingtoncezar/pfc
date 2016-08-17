@@ -94,7 +94,7 @@ class gerenciar extends Controller{
 		$requisicoesDao = new requisicoesDao();
 		$req = $requisicoesDao-> consultar($requisicoesModel);
 		$data['requisicoes'] = $req;
-		print_r($req);
+		// print_r($req);
 		$this->load->dao('produtos/produtosDao');
 		$produtosDao = new produtosDao();
 		$produtos = $produtosDao->listarAtivos();
@@ -302,13 +302,24 @@ class gerenciar extends Controller{
 
 
 
-	public function cancelar()
+	public function excluir()
 	{
-		// $saveRouter = new saveRouter;
-		// $saveRouter->saveModule();
-		// $saveRouter->saveAction();
-		// $this->load->checkPermissao->check();
-		// $this->atualizarStatus();
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
+		
+		$idRequisicao = (int) $this->http->getRequest('id');
+
+		//REQUISIÇÃO MODEL
+		$this->load->model('suprimentos/requisicoes/requisicoesModel');
+		$requisicoesModel = new requisicoesModel();
+		$requisicoesModel->setId( $idRequisicao );
+
+		//REQUISIÇÃO DAO
+		$this->load->dao('suprimentos/requisicoesDao');
+		$requisicoesDao = new requisicoesDao();
+		$this->http->response($requisicoesDao->excluir($requisicoesModel));
 	}
 
 
@@ -331,19 +342,6 @@ class gerenciar extends Controller{
 		$requisicoesDao = new requisicoesDao();
 		$produtosRequisitados = $requisicoesDao->listarProdutosRequisitados($requisicoesModel);
 
-		// $arrayProdutosRequisitados = Array();
-		// $arrayProdutosRequisitados['idRequisicao'] = $produtosRequisitados->getId(); // id da requisição 
-		// $arrayProdutosRequisitados['produtos'] = Array();
-		// foreach ($produtosRequisitados->getProdutosRequisitados() as $key => $produtoRequisitado)
-		// {
-		// 	$aux = Array();
-		// 	$aux['id_produto_requisitado'] = $produtoRequisitado->getId();
-		// 	$aux['nome_produto'] = $produtoRequisitado->getProdutos()->getNome();
-		// 	$aux['nome_unidade_medida'] = $produtoRequisitado->getProdutos()->getUnidadeMedida()[0]->getUnidadeMedida()->getNome();
-		// 	$aux['quantidade'] = $produtoRequisitado->getQuantidade();
-		// 	$aux['status'] = $produtoRequisitado->getStatus();
-		// 	array_push($arrayProdutosRequisitados['produtos'], $aux);
-		// }
 		$data['produtosrequisitados'] = $produtosRequisitados;
 		$this->load->library('dataFormat',null,true);
 		$data['dataFormat'] = $this->load->dataFormat;

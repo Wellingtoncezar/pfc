@@ -41,8 +41,7 @@
                             <td>'
                                 .$this->templateFactory->getButton('visualizar',array('href'=>URL.'suprimentos/requisicoes/gerenciar/listarprodutosrequisitados/'.$requisicao->getId(), 'title'=>'Visualizar')).
                                 $this->templateFactory->getButton('Editar',array('href'=>URL.'suprimentos/requisicoes/gerenciar/editar/'.$requisicao->getId(), 'title'=>'Editar')).
-                                $this->templateFactory->getButton('cotar',array('id'=> $requisicao->getId(), URL.'suprimentos/requisicoes/gerenciar/cotartodos/', 'title'=>'Cotar')).
-                                $this->templateFactory->getButton('excluir', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/cancelar/').
+                                $this->templateFactory->getButton('excluir', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/excluir/').
                             '</td>
                         </tr>';
                 endforeach;
@@ -76,12 +75,12 @@
         });
 
         //EXCLUIR
-        table.$('.btn_cancelar').on('click',function(){
+        table.$('.btn_excluir').on('click',function(){
             var id = $(this).attr('id');
             var status = $(this).data('value');
             var modalDelete = $('#modalDelete').modal('show')
             $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'suprimentos/requisicoes/gerenciar/cancelar',{id:id,status:status},function(data){
+                $.post(url+'suprimentos/requisicoes/gerenciar/excluir',{id:id,status:status},function(data){
                     console.log(data)
                     if(data == true){
                         $('#modalDelete').modal('hide');

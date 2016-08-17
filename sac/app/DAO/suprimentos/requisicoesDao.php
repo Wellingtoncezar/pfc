@@ -288,6 +288,8 @@ class requisicoesDao extends Dao{
 
 	public function consultar(requisicoesModel $requisicao)
 	{
+		try {
+			
 		$this->load->model('produtos/produtosModel');
 		$this->load->model('produtos/unidademedidaModel');
 		$this->load->model('produtos/unidadeMedidaEstoqueModel');
@@ -297,9 +299,9 @@ class requisicoesDao extends Dao{
 		$this->db->select();
 
 		//Requisição
+		$requisicoesModel = new requisicoesModel();
 		if($this->db->rowCount() > 0):
 			$value = $this->db->result();
-			$requisicoesModel = new requisicoesModel();
 			$requisicoesModel->setId($value['id_requisicao']);
 			$requisicoesModel->setCodigo($value['codigo_requisicao']);
 			$requisicoesModel->setTitulo($value['titulo_requisicao']);
@@ -308,8 +310,8 @@ class requisicoesDao extends Dao{
 			$requisicoesModel->setStatus(statusRequisicoes::getAttribute($value['status_requisicao']));
 
 			$this->db->clear();
-	 		$this->db->setTabela('produtos as a , requisicao_produto as b , unidade_media as c, unidade_medida_produto as d');
-			$this->db->setCondicao("a.id_produto = b.id_produto and b.id_requisicao = ? and b.id_unidade_medida_produto = c.id_unidade_medida_produto c.id_unidade_medida = d.id_unidade_medida");
+	 		$this->db->setTabela('produtos as a , requisicao_produto as b , unidade_medida as c, unidade_medida_produto as d');
+			$this->db->setCondicao("a.id_produto = b.id_produto and b.id_requisicao = ? and b.id_unidade_medida_produto = c.id_unidade_medida AND c.id_unidade_medida = d.id_unidade_medida");
 			$this->db->setParameter(1,$value['id_requisicao']);
 
 			if($this->db->select())
@@ -343,8 +345,11 @@ class requisicoesDao extends Dao{
 
 		endif;
 
-		return $requisicao;
+		return $requisicoesModel;
 		
+		} catch (dbException $e) {
+			return $e->getMessageError();
+		}
 	}
 
 	public function aprovarcotacaoproduto(requisicaoProdutoModel $produtoRequisitado)
@@ -393,6 +398,29 @@ class requisicoesDao extends Dao{
 		} catch (Exception $e) {
 			throw new Exception($e, 1);
 		}
+	}
+
+	public function excluir (requisicoesModel $requisicoes)
+	{
+
+		$this->db->clear();
+		$this->db->setTabela('requisicoes');
+		$this->db->setCondicao('id_requisicao = ?');
+		$this->db->setParameter(1, $requisicoes->getId());
+		try {
+			if($this->db->delete())
+			{
+				return TRUE;
+	 		}else
+	 		{
+	 			return $this->db->getError();
+	 		}
+		} catch (dbException $e) {
+			return $e->getMessageError();
+		}
+
+
+
 	}
 	
 }
