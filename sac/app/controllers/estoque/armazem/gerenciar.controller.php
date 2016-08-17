@@ -25,11 +25,11 @@ class gerenciar extends Controller{
 		$this->load->checkPermissao->check();
 
 		$data = array(
-			'titlePage' => 'Zona Reservada - Estoque'
+			'titlePage' => 'Armazém - Estoque'
 		);
 		
 		$this->load->view('includes/header',$data);
-		$this->load->view('estoque/reservados/home2',$data);
+		$this->load->view('estoque/armazem/home',$data);
 		$this->load->view('includes/footer',$data);
 	}
 
@@ -37,10 +37,10 @@ class gerenciar extends Controller{
 	{
 		$this->load->dao('estoque/estoqueDao');
 		$this->load->dao('estoque/iListagemEstoque');
-		$this->load->dao('estoque/listarReservados');
+		$this->load->dao('estoque/listarArmazem');
 		$estoqueDao = new estoqueDao();
-		$estoque = $estoqueDao->listar(new listarReservados());
-		echo $estoqueDao->getJsonEstoque($estoque);
+		$estoque = $estoqueDao->listar(new listarArmazem());
+		$this->http->response($estoqueDao->getJsonEstoque($estoque));
 	}
 
 }

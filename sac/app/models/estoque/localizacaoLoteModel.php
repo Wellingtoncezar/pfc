@@ -6,7 +6,7 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class localizacaoLoteModel{
 	private $id;
 	private $unidadeMedidaEstoque;
-	private $localizacao = localizacoes::RESERVADO;
+	private $localizacao = localizacoes::ARMAZEM;
 	private $quantidade;
 	private $observacoes;
 	private $ultimaAtualizacao;
@@ -37,27 +37,22 @@ class localizacaoLoteModel{
 		$this->ultimaAtualizacao = $ultimaAtualizacao; 
 	}
 
-	public function reservar()
+	public function armazenar()
 	{
-		$this->localizacao = localizacoes::RESERVADO; 
+		$this->localizacao = localizacoes::ARMAZEM; 
 	}
 
-	public function separar()
+	public function emprateleirar()
 	{
-		$this->localizacao = localizacoes::SEPARADO; 
+		$this->localizacao = localizacoes::PRATELEIRA; 
 	}
 
-	public function disponivel()
+	public function descartar()
 	{
-		$this->localizacao = localizacoes::DISPONIVEL;
+		$this->localizacao = localizacoes::DESCARTADOS;
 	}
 
-	public function perdido()
-	{
-		$this->localizacao = localizacoes::PERDIDO;
-	}
-
-
+	
 
 	//GET
 	public function getId()

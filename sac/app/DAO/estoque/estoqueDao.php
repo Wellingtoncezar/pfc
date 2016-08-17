@@ -25,6 +25,8 @@ class estoqueDao extends Dao{
 			{
 				$estoqueModel = new estoqueModel();
 				$estoqueModel->setId($value['id_estoque']);
+				$estoqueModel->setQuantidadeMinima($value['quantidade_minima']);
+				$estoqueModel->setQuantidadeMaxima($value['quantidade_maxima']);
 
 				$produtoModel = new produtosModel();
 				$produtoModel->setId($value['id_produto']);
@@ -83,9 +85,9 @@ class estoqueDao extends Dao{
 						'produto'=> $estoqueProd->getProduto()->getNome(),
 						'foto'=> $foto,
 						'qtdtotal'=> $dataformat->formatar($estoqueProd->getQuantidadeTotal(),'decimal').' '.$estoqueProd->getUnidadeMedidaParaEstoque()->getUnidadeMedida()->getNome(),
-						'min'=> 3,
-						'max'=> 20,
-						'nivel'=> 50,
+						'min'=> $dataformat->formatar($estoqueProd->getQuantidadeMinima(),'decimal'),
+						'max'=> $dataformat->formatar($estoqueProd->getQuantidadeMaxima(),'decimal'),
+						'nivel'=> (($estoqueProd->getQuantidadeTotal()- $estoqueProd->getQuantidadeMinima()) * 100) / ($estoqueProd->getQuantidadeMaxima() - $estoqueProd->getQuantidadeMinima()),
 						'progressclass' => "progress-bar-success",
 						'acoes'=> "",
 				      	'lotes'=> array()

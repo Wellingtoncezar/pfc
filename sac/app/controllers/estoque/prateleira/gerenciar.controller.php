@@ -19,22 +19,30 @@ class gerenciar extends Controller{
 	*/
 	public function index()
 	{
-		echo 'teste';
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
 		$this->load->checkPermissao->check();
 
 		$data = array(
-			'titlePage' => 'Estoque'
+			'titlePage' => 'Prateleira - Estoque'
 		);
 		
 		$this->load->view('includes/header',$data);
-		$this->load->view('estoque/lotes/home',$data);
+		$this->load->view('estoque/prateleira/home',$data);
 		$this->load->view('includes/footer',$data);
 	}
 
-	
+	public function getjsonlote()
+	{
+		$this->load->dao('estoque/estoqueDao');
+		$this->load->dao('estoque/iListagemEstoque');
+		$this->load->dao('estoque/listarPrateleira');
+		$estoqueDao = new estoqueDao();
+		$estoque = $estoqueDao->listar(new listarPrateleira());
+		$this->http->response($estoqueDao->getJsonEstoque($estoque));
+	}
+
 }
 
 /**

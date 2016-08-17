@@ -4,10 +4,9 @@
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 abstract class localizacoes{
-	const RESERVADO = 'RESERVADO';
-	const SEPARADO = 'SEPARADO';
-	const DISPONIVEL = 'DISPONIVEL';
-	const PERDIDO = 'PERDIDO';
+	const ARMAZEM = 'ARMAZEM';
+	const PRATELEIRA = 'PRATELEIRA';
+	const DESCARTADOS = 'DESCARTADOS';
 
 	public static function getAttribute($attr)
 	{
