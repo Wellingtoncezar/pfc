@@ -201,7 +201,7 @@ class funcionariosDao extends Dao{
 
 	/**
 	 * Insere novos funcionários
-	 * @return boolean, json
+	 * @return boolean
 	 */
  	public function inserir(funcionariosModel $funcionario)
  	{
@@ -260,7 +260,7 @@ class funcionariosDao extends Dao{
 
 	/**
 	 * Atualiza funcionários
-	 * @return boolean, json
+	 * @return boolean
 	 */
  	public function atualizar(funcionariosModel $funcionario)
  	{
@@ -316,7 +316,7 @@ class funcionariosDao extends Dao{
 
  	/**
  	 * Atualiza ou insere o endereço
- 	 * @return void
+ 	 * @return boolean
  	 * */
  	public function atualizaEndereco(funcionariosModel $funcionario)
  	{
@@ -346,8 +346,10 @@ class funcionariosDao extends Dao{
 			$this->db->query("INSERT INTO enderecos_funcionarios VALUES ('$idFuncionario','$idEndereco')");
 		}
 
-		if($this->db->rowCount() > 0)
+		if($this->db->rowCount() > 0){
 			$this->nUpdates++;
+			return true;
+		}
 		else
 			return false;
  	}
