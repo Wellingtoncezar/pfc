@@ -1,0 +1,1 @@
+criar uma função no banco de dados para excluir os registros mais antigos 

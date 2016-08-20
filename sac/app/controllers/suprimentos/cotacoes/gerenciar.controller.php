@@ -10,14 +10,9 @@ class gerenciar extends Controller{
 	}
 
 
-	/*---------------------------
-	- PÁGINAS
-	=============================*/
-
-
 	/**
-	 * Página index
-	 */
+	*Página index
+	*/
 	public function index()
 	{
 		$saveRouter = new saveRouter;
@@ -26,203 +21,25 @@ class gerenciar extends Controller{
 		$this->load->checkPermissao->check();
 
 		$data = array(
-			'titlePage' => 'Gerenciar Cotacoes',
-			'template' => new templateFactory()
+			'titlePage' => 'Armazém - Estoque'
 		);
-
-		$this->load->dao('produtos/marcasDao');
-		$marcas = new marcasDao();
-		$data['marcas'] = $marcas->listar();
-
+		
 		$this->load->view('includes/header',$data);
 		$this->load->view('suprimentos/cotacoes/home',$data);
 		$this->load->view('includes/footer',$data);
+	}
 
+	public function getjsonlote()
+	{
+		$this->load->dao('estoque/estoqueDao');
+		$this->load->dao('estoque/iListagemEstoque');
+		$this->load->dao('estoque/listarArmazem');
+		$estoqueDao = new estoqueDao();
+		$estoque = $estoqueDao->listar(new listarArmazem());
+		$this->http->response($estoqueDao->getJsonEstoque($estoque));
 	}
 
 
-	/**
-	 * Página de cadastro
-	 */
-	public function cadastrar()
-	{
-		$saveRouter = new saveRouter;
-		$saveRouter->saveModule();
-		$saveRouter->saveAction();
-		$this->load->checkPermissao->check();
-		$data = array(
-			'titlePage' => 'Cadastrar Orcamento',
-			'template' => new templateFactory()
-		);
-
-
-		$this->load->dao('produtos/produtosDao');
-		$produtosDao = new produtosDao();
-		$produtos = $produtosDao->listar();
-		$data['produtos'] = $produtos;
-
-		
-		$this->load->view('includes/header',$data);
-		$this->load->view('suprimentos/cotacoes/cadastro',$data);
-		$this->load->view('includes/footer',$data);
-	}
-
-
-	/**
-	 * Página de edição
-	 */
-	public function editar()
-	{
-		$saveRouter = new saveRouter;
-		$saveRouter->saveModule();
-		$saveRouter->saveAction();
-		$this->load->checkPermissao->check();
-
-		$data = array(
-			'titlePage' => 'Editar cotacao',
-			'template' => new templateFactory()
-		);
-		//ID
-		$idMarcas = intval($this->load->url->getSegment(4));
-		
-		//marca MODEL
-		$this->load->model('produtos/marcasModel');
-		$marcasModel = new marcasModel();
-		$marcasModel->setId($idMarcas);
-
-		//marca DAO
-		$this->load->dao('produtos/marcasDao');
-		$marcasDao = new marcasDao();
-		$data['marca'] = $marcasDao->consultar($marcasModel);
-		
-		//DATAFORMAT
-		$this->load->library('dataFormat', null, true);
-		$data['dataFormat'] = $this->load->dataFormat;
-
-		$this->load->view('includes/header',$data);
-		$this->load->view('suprimentos/cotacoes/editar',$data);
-		$this->load->view('includes/footer',$data);
-	}
-
-
-
-
-
-	/*----------------------------
-	- AÇÕES
-	=============================*/
-	/**
-	 * Ação do cadastrar
-	 */
-	public function inserir()
-	{
-		
-		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
 	
-
-		//validação dos dados
-		$this->load->library('dataValidator', null, true);
-		
-		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
-
-		
-		if ($this->load->dataValidator->validate())
-		{
-		
-			//MARCAS
-			$this->load->model('produtos/marcasModel');
-			$marcasModel = new marcasModel();
-			
-			$marcasModel->setNome($nome);
-			$marcasModel->setStatus(status::ATIVO);
-			$marcasModel->setDataCadastro(date('Y-m-d h:i:s'));
-
-
-			//marcas DAO
-			$this->load->dao('produtos/marcasDao');
-			$marcasDao = new marcasDao();
-			echo $marcasDao->inserir($marcasModel);
-		}else
-	    {
-			$todos_erros = $this->load->dataValidator->get_errors();
-			echo json_encode($todos_erros);
-	    }
-
-	}
-
-
-
-	/**
-	 * Ação do editar
-	 */
-	/**
-	 * Ação do cadastrar
-	 */
-	public function atualizar()
-	{
-		$idMarcas = isset($_POST['idMarca']) ? filter_var($_POST['idMarca']) : '';
-		$nome = isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-
-
-		//validação dos dados
-		$this->load->library('dataValidator', null, true);
-		
-		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(2);
-		
-
-		
-		if ($this->load->dataValidator->validate())
-		{
-		
-			//CATEGORIA
-			$this->load->model('produtos/marcasModel');
-			$marcasModel = new marcasModel();
-			$marcasModel->setId($idMarcas);
-			$marcasModel->setNome($nome);
-			$marcasModel->setStatus(status::ATIVO);
-			$marcasModel->setDataCadastro(date('Y-m-d h:i:s'));
-
-
-			//CATEGORIA DAO
-			$this->load->dao('produtos/marcasDao');
-			$marcasDao = new marcasDao();
-			echo $marcasDao->atualizar($marcasModel);
-		}else
-	    {
-			$todos_erros = $this->load->dataValidator->get_errors();
-			echo json_encode($todos_erros);
-	    }
-
-	}
-
-	/**
-	 * Ãção de atualizar status
-	 */
-	public function atualizarStatus()
-	{
-		$idMarcas = intval($_POST['id']);
-		$status = filter_var($_POST['status']);
-
-		//MARCA MODEL
-		$this->load->model('produtos/marcasModel');
-		$marcasModel = new marcasModel();
-		$marcasModel->setId( $idMarcas );
-		$marcasModel->setStatus( $status );
-
-		//MARCA DAO
-		$this->load->dao('produtos/marcasDao');
-		$marcasDao = new marcasDao();
-		echo $marcasDao->atualizarStatus($marcasModel);
-
-	}
-
-	public function excluir()
-	{
-		$saveRouter = new saveRouter;
-		$saveRouter->saveModule();
-		$saveRouter->saveAction();
-		$this->load->checkPermissao->check();
-		$this->atualizarStatus();
-	}
 
 }

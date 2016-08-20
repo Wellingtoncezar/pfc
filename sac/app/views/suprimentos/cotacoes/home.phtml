@@ -1,120 +1,119 @@
 <div class="container">
-    <?php
 
-        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'suprimentos/cotacoes/gerenciar/cadastrar'), URL.'suprimentos/cotacoes/gerenciar/cadastrar');
-        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
-    ?>
     <div class="page-header">
-      <h1>Cotações</h1>
+      <h1>Suprimentos - <small>Cotações</small></h1>
     </div>
     <div class="middle-content">
-        
-<div id="example">
-            <div id="grid"></div>
-            <script>
-                $(document).ready(function() {
-                    $("#grid").kendoGrid({
-                        dataSource: {
-                            type: "odata",
-                            transport: {
-                                read: "//demos.telerik.com/kendo-ui/service/Northwind.svc/Products"
-                            },
-                            schema:{
-                                model: {
-                                    fields: {
-                                        UnitsInStock: { type: "number" },
-                                        ProductName: { type: "string" },
-                                        UnitPrice: { type: "number" },
-                                        UnitsOnOrder: { type: "number" },
-                                        UnitsInStock: { type: "number" }
-                                    }
-                                }
-                            },
-                            pageSize: 7,
-                            group: {
-                                     field: "UnitsInStock", aggregates: [
-                                        { field: "ProductName", aggregate: "count" },
-                                        { field: "UnitPrice", aggregate: "sum"},
-                                        { field: "UnitsOnOrder", aggregate: "average" },
-                                        { field: "UnitsInStock", aggregate: "count" }
-                                     ]
-                                   },
-
-                            aggregate: [ { field: "ProductName", aggregate: "count" },
-                                          { field: "UnitPrice", aggregate: "sum" },
-                                          { field: "UnitsOnOrder", aggregate: "average" },
-                                          { field: "UnitsInStock", aggregate: "min" },
-                                          { field: "UnitsInStock", aggregate: "max" }]
-                        },
-                        sortable: true,
-                        scrollable: false,
-                        pageable: true,
-                        columns: [
-                            { field: "ProductName", title: "Product Name", aggregates: ["count"], footerTemplate: "Total Count: #=count#", groupFooterTemplate: "Count: #=count#" },
-                            { field: "UnitPrice", title: "Unit Price", aggregates: ["sum"] },
-                            { field: "UnitsOnOrder", title: "Units On Order", aggregates: ["average"], footerTemplate: "Average: #=average#",
-                                groupFooterTemplate: "Average: #=average#" },
-                            { field: "UnitsInStock", title: "Units In Stock", aggregates: ["min", "max", "count"], footerTemplate: "<div>Min: #= min #</div><div>Max: #= max #</div>",
-                                groupHeaderTemplate: "Units In Stock: #= value # (Count: #= count#)" }
-                        ]
-                    });
-                });
-            </script>
-        </div>
-
-        
+		
+		<div id="grid"></div>
+		<div id="details"></div>
     </div>
-
 </div>
+
+
 <link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.common-material.min.css" />
-    <link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.default.min.css" />
+<link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.default.min.css" />
+<script src="<?=URL?>skin/js/kendoui/js/kendo.all.min.js"></script>
 
-    <script src="<?=URL?>skin/js/kendoui/js/kendo.all.min.js"></script>
-    <style type="text/css">
-    .customer-photo {
-        display: inline-block;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background-size: 32px 35px;
-        background-position: center center;
-        vertical-align: middle;
-        line-height: 32px;
-        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
-        margin-left: 5px;
+
+<script>
+$("#grid").kendoGrid({
+  	columns: [
+    {
+    	filterable: false,
+        field: "id",
+        title: "ID",
+        width: "40px",
+        template: '<p>#: id#</p>'
+    },
+    {
+    	filterable: false,
+        title: "Foto",
+        width: "50px",
+        template: '<img src="#: foto#" style=" width: 50px; height: 50px; margin-right:10px" class="img-circle pull-left">'
+    },
+    {
+        field: "produto",
+        title: "Produto",
+        width: "300px",
+        template: '<p>Código de barras: <strong>#:codigobarras#</strong></p>'
+	       			+'<p>Nome: <strong>#:produto#</strong></p>'
+    },
+    {
+        field: "qtdtotal",
+        title: "Quantidade Total",
+        width: "100px"
+    },
+    {
+    	filterable: false,
+        field: "nivel",
+        title: "Nível",
+        width: "200px",
+        template: '<h4><span class="pull-left label-danger label">#: min #</span></h4>'
+				+'<h4><span class="pull-right label-success label">#: max #</span></h4>'
+				+'<div class="progress">'
+				  	+'<div class="progress-bar #: progressclass # progress-bar-striped active" role="progressbar" aria-valuenow="#: nivel #" aria-valuemin="0" aria-valuemax="100" style="width: #: nivel #%">'
+				    	+'<span class="sr-only">#: nivel #% Complete</span>'
+				 	+'</div>'
+				+'</div>'
+    },
+    {
+    	filterable: false,
+        field: "acoes",
+        title: "Ações",
+        width: "100px"
     }
+  	],
+    filterable: {
+        extra: false,
+        operators: {
+            string: {
+                startswith: "Começa com",
+                eq: "É igual a",
+                neq: "Não é igual a",
+                contains: "Contém"
+            }
+        },
+        messages: {
+	      filter: "Filtrar",
+	      clear: "Limpar",
+	      info: "Exibir itens com valores que: "
+	    }
+    },
+  	dataSource:{
+	  	transport: {
+		    read: {
+		      	url: url+"estoque/armazem/gerenciar/getjsonlote",
+		      	dataType: "json"
+		    }
+		}
+	},
+	pageable: {
+	    pageSize: 8,
+	    refresh: true
+	},
+  	detailTemplate: 'Lotes: <div class="grid"></div>',
+  	detailInit: function(e) {
+	    e.detailRow.find(".grid").kendoGrid({
+	      	dataSource: e.data.lotes,
+	      	columns: [
+	      		{ field: "id", title:"ID", width: "50px"},
+	      		{ field: "codigo", title:"Código", width: "150px" },
+	      		{ field: "codigogti", title:"Cód. barras gti", width: "150px" },
+	      		{ field: "codigogst", title:"Cód. barras gst", width: "150px" },
+	      		{ field: "validade", title:"Validade", width: "150px" },
+	      		{ field: "quantidade", title:"Quantidade", width: "200px" },
+	      		{ 
+	      			field: "acoes", 
+	      			title:"Ações" ,
+	      			template : '<a class="btn btn-primary pull-left btn_visualizar btn-sm" href="#:linkvisualizar#" data-toggle="tooltip" data-placement="top" role="button" id="btn_visualizar" title="Visualizar">'
+									+'<span class="glyphicons glyphicons-eye-open"></span>'
+								+'</a>'
+	      		}
+	        ]
+	    });
+  	}
 
-    .customer-name {
-        display: inline-block;
-        vertical-align: middle;
-        line-height: 32px;
-        padding-left: 3px;
-    }
-</style>
-<script type="text/javascript">
-    $(function(){
-        //DATATABLE
-        var table = $('.dataTable').DataTable({
-            order: [0,'asc']
-        });
+});
 
-        //EXCLUIR
-        table.$('.btn_cancelar').on('click',function(){
-            var id = $(this).attr('id');
-            var status = $(this).data('value');
-            var modalDelete = $('#modalDelete').modal('show')
-            $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'suprimentos/cotacoes/gerenciar/cancelar',{id:id,status:status},function(data){
-                    console.log(data)
-                    if(data == true){
-                        $('#modalDelete').modal('hide');
-                        $('tr#'+id).hide();
-                    }
-                });
-            });
-        });
-
-
-    })
 </script>
-
