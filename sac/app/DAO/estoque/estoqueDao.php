@@ -72,53 +72,7 @@ class estoqueDao extends Dao{
 		return $estoque;
 	}
 
-	public function getJsonEstoque($estoque)
-	{
-		$this->load->library('dataformat');
-		$dataformat = new dataformat();
-		$_arEstoque = Array();
-		foreach ($estoque as $estoqueProd):
-			$foto = $estoqueProd->getProduto()->getFoto() != '' ? URL.'skin/uploads/produtos/p/'.$estoqueProd->getProduto()->getFoto() : URL.'skin/img/imagens/forn.jpg';
-			$aux = array(
-				    	'id'=> $estoqueProd->getId(),
-				    	'codigobarras' => $estoqueProd->getProduto()->getCodigoBarra(),
-						'produto'=> $estoqueProd->getProduto()->getNome(),
-						'foto'=> $foto,
-						'qtdtotal'=> $dataformat->formatar($estoqueProd->getQuantidadeTotal(),'decimal').' '.$estoqueProd->getUnidadeMedidaParaEstoque()->getUnidadeMedida()->getNome(),
-						'min'=> $dataformat->formatar($estoqueProd->getQuantidadeMinima(),'decimal'),
-						'max'=> $dataformat->formatar($estoqueProd->getQuantidadeMaxima(),'decimal'),
-						'nivel'=> (($estoqueProd->getQuantidadeTotal()- $estoqueProd->getQuantidadeMinima()) * 100) / ($estoqueProd->getQuantidadeMaxima() - $estoqueProd->getQuantidadeMinima()),
-						'progressclass' => "progress-bar-success",
-						'acoes'=> "",
-				      	'lotes'=> array()
-				    );
-			$arrLotes = array();
-			foreach ($estoqueProd->getLotes() as $lotes){
-				$valorUndEstoque = 0;
-				foreach ($lotes->getLocalizacao() as $localizacao){
-					$fatorUnidadeLote = $localizacao->getUnidadeMedidaEstoque()->getFator();
-					$qtdLoteLocal = $localizacao->getQuantidade(); //quantidade do lote por localização
-					$valorUndEstoque += (double)$qtdLoteLocal;
-				}
-		        $aux2 = array( 
-				        	'id' => $lotes->getId(),
-							'codigo' => $lotes->getCodigoLote(),
-							'codigogti' => ($lotes->getCodigoBarrasGti() != '') ? $lotes->getCodigoBarrasGti() : $estoqueProd->getProduto()->getCodigoBarra(),
-							'codigogst' => $lotes->getCodigoBarrasGst(),
-							'validade' => $dataformat->formatar($lotes->getDataValidade(),'data'),
-							'quantidade' => $valorUndEstoque. ' '.$lotes->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getUnidadeMedida()->getNome(),
-							'acoes' => "",
-							'linkvisualizar' => ""
-				    	);
-
-				array_push($aux['lotes'], $aux2);
-			}
-
-			array_push($_arEstoque, $aux);
-        endforeach;
-
-        return json_encode($_arEstoque);
-	}
+	
 
 
 	public function listarLotes(estoqueModel $estoque, $localizacao)
@@ -132,7 +86,7 @@ class estoqueDao extends Dao{
 		$this->db->setParameter(2,$estoque->getId());
 		$res = $this->db->query("select * from produto_lote 
 							inner join localizacao_lote on produto_lote.id_produto_lote = localizacao_lote.id_produto_lote AND localizacao_lote.localizacao = ?
-				    		WHERE produto_lote.id_estoque =? GROUP BY produto_lote.id_produto_lote ORDER BY produto_lote.id_produto_lote DESC");
+				    		WHERE produto_lote.id_estoque =? and localizacao_lote.quantidade_localizacao > 0 GROUP BY produto_lote.id_produto_lote ORDER BY produto_lote.id_produto_lote DESC");
 		$arrLotes = Array();
 		if($res)
 		{

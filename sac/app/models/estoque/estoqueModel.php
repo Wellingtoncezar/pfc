@@ -66,12 +66,19 @@ class estoqueModel{
 			foreach ($lotes->getLocalizacao() as $localizacao){
 				$fatorUnidadeLote = $localizacao->getUnidadeMedidaEstoque()->getFator();
 				$qtdLoteLocal = $localizacao->getQuantidade(); //quantidade do lote por localização
-				$valorUndEstoque += ((double)$qtdLoteLocal * (double)$fatorUnidadeLote) / $this->getUnidadeMedidaParaEstoque()->getFator();
+				if(localizacoes::ARMAZEM == $localizacao->getLocalizacao())
+				{
+					$fator = $this->getUnidadeMedidaParaEstoque()->getFator();
+				}else
+				if(localizacoes::PRATELEIRA == $localizacao->getLocalizacao())
+				{
+					$fator = $this->getUnidadeMedidaParaVenda()->getFator();
+				}
+				$valorUndEstoque += ((double)$qtdLoteLocal * (double)$fatorUnidadeLote) / $fator;
 			}
 		}
 
 		$this->quantidade_total = $valorUndEstoque;
-
 
 		return $this->quantidade_total;
 	}
@@ -85,6 +92,17 @@ class estoqueModel{
 			}
 		}
 		return $unidadeMedidaEstoque;
+	}
+
+	public function getUnidadeMedidaParaVenda()
+	{
+		$unidadeMedidaVenda = null;
+		foreach ($this->produto->getUnidadeMedidaEstoque() as $undMed){
+			if($undMed->getParaVenda()){
+				$unidadeMedidaVenda = $undMed;
+			}
+		}
+		return $unidadeMedidaVenda;
 	}
 
 	public function getLotes()

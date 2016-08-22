@@ -17,6 +17,22 @@
 <link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.common-material.min.css" />
 <link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.default.min.css" />
 <script src="<?=URL?>skin/js/kendoui/js/kendo.all.min.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+
+
+<script type="text/x-kendo-template" id="template">
+    <div id="details-container">
+    	<form action="#=linkemprateleirar#" id="formTransferir" method="post">
+    		<input type="text" name="idlote" value="#= id #">
+	        <input type="text" name="idUnidadeMedidaVenda" value="#= idUnidadeMedidaPraVenda #">
+	        <div class="input-group">
+			  	<input type="number" class="form-control" name="quantidade" value="">
+			  	<span class="input-group-addon" id="basic-addon1">#=nomeUnidadeMedida#</span>
+			</div>
+			<button type="submit" class="btn btn-success pull-rigth btnTrasferir">Transferir</button>
+    	</form>
+    </div>
+</script>
 
 
 <script>
@@ -50,7 +66,7 @@ $("#grid").kendoGrid({
     {
     	filterable: false,
         field: "nivel",
-        title: "Nível",
+        title: "Nível",	
         width: "200px",
         template: '<h4><span class="pull-left label-danger label">#: min #</span></h4>'
 				+'<h4><span class="pull-right label-success label">#: max #</span></h4>'
@@ -107,11 +123,14 @@ $("#grid").kendoGrid({
 	      		{ field: "validade", title:"Validade", width: "150px" },
 	      		{ field: "quantidade", title:"Quantidade", width: "200px" },
 	      		{ 
-	      			field: "acoes", 
-	      			title:"Ações" ,
-	      			template : '<a class="btn btn-primary pull-left btn_visualizar btn-sm" href="#:linkvisualizar#" data-toggle="tooltip" data-placement="top" role="button" id="btn_visualizar" title="Visualizar">'
-									+'<span class="glyphicons glyphicons-eye-open"></span>'
-								+'</a>'
+	      			command: { 
+		      			text: "",
+		      			name: "details",
+		      			template: '<a href="" data-command="popup" class="k-button k-button-icontext k-grid-details"><span class="glyphicon glyphicon-transfer"></span></a>',
+		      			click: showDetails 
+	      			}, 
+	      			title: " ", 
+	      			width: "180px" 
 	      		}
 	        ]
 	    });
@@ -119,4 +138,31 @@ $("#grid").kendoGrid({
 
 });
 
+wnd = $("#details")
+.kendoWindow({
+    title: "Transferir para a prateleira",
+    modal: true,
+    visible: false,
+    resizable: false,
+    width: 400
+}).data("kendoWindow");
+
+detailsTemplate = kendo.template($("#template").html());
+function showDetails(e) {
+    e.preventDefault();
+
+    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+    wnd.content(detailsTemplate(dataItem));
+    wnd.center().open();
+}
+
+$(document).on('submit', '#formTransferir', function(event) {
+	event.preventDefault();
+	$('#formTransferir').uploadForm({
+        'reload':false
+    });
+});
+
 </script>
+
+

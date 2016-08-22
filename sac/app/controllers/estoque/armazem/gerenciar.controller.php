@@ -9,11 +9,6 @@ class gerenciar extends Controller{
 	}
 
 
-	/*---------------------------
-	- PÁGINAS
-	=============================*/
-
-
 	/**
 	*Página index
 	*/
@@ -40,14 +35,83 @@ class gerenciar extends Controller{
 		$this->load->dao('estoque/listarArmazem');
 		$estoqueDao = new estoqueDao();
 		$estoque = $estoqueDao->listar(new listarArmazem());
-		$this->http->response($estoqueDao->getJsonEstoque($estoque));
+		$this->http->response($this->getJsonEstoque($estoque));
+	}
+
+
+	public function getJsonEstoque($estoque)
+	{
+		$this->load->library('dataformat');
+		$dataformat = new dataformat();
+		$_arEstoque = Array();
+
+		//loop de listagem de produtos no estoque
+		foreach ($estoque as $estoqueProd):
+			$foto = $estoqueProd->getProduto()->getFoto() != '' ? URL.'skin/uploads/produtos/p/'.$estoqueProd->getProduto()->getFoto() : URL.'skin/img/imagens/forn.jpg';
+			$aux = array(
+				    	'id'=> $estoqueProd->getId(),
+				    	'codigobarras' => $estoqueProd->getProduto()->getCodigoBarra(),
+						'produto'=> $estoqueProd->getProduto()->getNome(),
+						'foto'=> $foto,
+						'qtdtotal'=> $dataformat->formatar($estoqueProd->getQuantidadeTotal(),'decimal').' '.$estoqueProd->getUnidadeMedidaParaEstoque()->getUnidadeMedida()->getNome(),
+						'min'=> $dataformat->formatar($estoqueProd->getQuantidadeMinima(),'decimal'),
+						'max'=> $dataformat->formatar($estoqueProd->getQuantidadeMaxima(),'decimal'),
+						'nivel'=> (($estoqueProd->getQuantidadeTotal()- $estoqueProd->getQuantidadeMinima()) * 100) / ($estoqueProd->getQuantidadeMaxima() - $estoqueProd->getQuantidadeMinima()),
+						'progressclass' => "progress-bar-success",
+						'acoes'=> "",
+				      	'lotes'=> array()
+				    );
+			$arrLotes = array();
+
+
+			//loop de listagem dos lotes
+			foreach ($estoqueProd->getLotes() as $lotes){
+				$valorUndEstoque = 0;
+				foreach ($lotes->getLocalizacao() as $localizacao){
+					$fatorUnidadeLote = $localizacao->getUnidadeMedidaEstoque()->getFator();
+					$qtdLoteLocal = $localizacao->getQuantidade(); //quantidade do lote por localização
+					$valorUndEstoque += (double)$qtdLoteLocal;
+				}
+		        $aux2 = array( 
+				        	'id' => $lotes->getId(),
+				        	'idProduto' => $estoqueProd->getId(),
+							'codigo' => $lotes->getCodigoLote(),
+							'codigogti' => ($lotes->getCodigoBarrasGti() != '') ? $lotes->getCodigoBarrasGti() : $estoqueProd->getProduto()->getCodigoBarra(),
+							'codigogst' => $lotes->getCodigoBarrasGst(),
+							'validade' => $dataformat->formatar($lotes->getDataValidade(),'data'),
+							'quantidade' => $valorUndEstoque. ' '.$lotes->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getUnidadeMedida()->getNome(),
+							'acoes' => "",
+							'idUnidadeMedidaPraVenda' => $estoqueProd->getUnidadeMedidaParaVenda()->getId(),
+							'nomeUnidadeMedida' => $estoqueProd->getUnidadeMedidaParaVenda()->getUnidadeMedida()->getNome(),
+							'linkemprateleirar' => URL."estoque/armazem/gerenciar/emprateleirar",
+							'linkdescartar' => URL."estoque/armazem/gerenciar/descartar"
+				    	);
+
+				array_push($aux['lotes'], $aux2);
+			}
+
+			array_push($_arEstoque, $aux);
+        endforeach;
+
+        return json_encode($_arEstoque);
+	}
+
+
+	//trasferencia de lotes para a prateleira
+	public function emprateleirar()
+	{
+		$this->load->dao('estoque/estoqueDao');
+		$this->load->model('estoque/lotesModel');
+
+		$idlote = (int) $this->http->getRequest('idlote');
+		$idUnidadeMedidaVenda  = (int) $this->http->getRequest('idUnidadeMedidaVenda');
+		$quantidade = filter_var( $this->http->getRequest('quantidade'));
+
+		$lotesModel = new lotesModel();
+		$lotesModel->setId($idlote);
+
+
 	}
 
 }
 
-/**
-*
-*class: home
-*
-*location : controllers/home.controller.php
-*/
