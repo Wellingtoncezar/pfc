@@ -45,6 +45,7 @@ class agendaDao extends Dao{
 				$fornecedorModel->setNomeFantasia($agenda['nome_fantasia_fornecedor']);
 
 				$agendaModel = new agendaModel();
+				$agendaModel->setId($agenda['id_fornecedor_agenda']);
 				$agendaModel->setTitulo($agenda['titulo_agenda']);
 				$agendaModel->setData($agenda['data_agenda']);
 				$agendaModel->setObservacoes($agenda['observacoes_agenda']);
@@ -139,6 +140,43 @@ class agendaDao extends Dao{
 			}
  		}
  		return $agendasList;
+	}
+	public function adiarCompromissos($agendaModel)
+	{
+		try {
+			$this->db->clear();
+			$this->db->setTabela('fornecedores_agenda');
+			$this->db->setCondicao("id_fornecedor_agenda = ?");
+			$this->db->setParameter(1,$agendaModel->getId());
+			if($this->db->update(array('data_agenda'=>$agendaModel->getData()))){
+				
+				//selecionando o email do fornecedor 
+				$this->db->clear();
+				$this->db->setTabela('fornecedores as A, fornecedores_agenda as B, emails_fornecedores as C, emails as D');
+				$this->db->setCondicao("B.id_fornecedor_agenda = ? AND B.id_fornecedor = A.id_fornecedor AND A.id_fornecedor = C.id_fornecedor AND C.id_email = D.id_email");
+				$this->db->setParameter(1,$agendaModel->getId());
+				if($this->db->select())
+				{
+					$res = $this->db->resultAll();
+					foreach ($variable as $key => $value) {
+						$email = new email();
+						$email->de('prysmarket@gmail.com');
+						$email->para($res['endereco_email']);
+						$email->mensagem('teste');
+						$email->send();
+					}
+				}
+
+
+
+				return true;
+			}else{
+				return $this->db->getError();
+			}
+		} catch (Exception $e) {
+			return $e->getMessageError();
+		}
+
 	}
 
 

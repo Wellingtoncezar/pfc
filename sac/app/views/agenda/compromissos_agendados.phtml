@@ -7,12 +7,14 @@
                             <th width="30">Id</th>
                             <th width="30">Fornecedor</th>
                             <th width="300">Titulo</th>
+                            <th width="300">Data</th>
                             <th width="80">Ações</th>
                         </tr>';
             $tfoot = '  <tr>
                             <td>Id</td>
                             <td>Fornecedor</td>
                             <th>Titulo</th>
+                            <th>Data</th>
                             <td>Ações</td>
                         </tr>';  
 
@@ -24,15 +26,17 @@
                             <td>'.$compromissos->getId().'</td>
                             <td>'.$compromissos->getFornecedor()->getNomeFantasia().'</td>
                             <td>'.$compromissos->getTitulo().'</td>
-                            <td>'.$dataFormat->formatar($compromissos->getData(),'data').'</td>
+                            <td><input type="date" iddata="'.$compromissos->getId().'" name="dataAgenda" disabled value="'.$compromissos->getData().'" /></td>
+                            
                             <td>'
-                                .$this->templateFactory->getButton('Adiar', array('href'=>URL.'agenda/gerenciar/adiarCompromissos/'.$compromissos->getId(), 'title'=>'Adiar')).
+                                .$this->templateFactory->getButton('Adiar', array('href'=>URL.'agenda/gerenciar/adiarCompromissos/'.$compromissos->getId(), 'title'=>'Adiar', 'moreContent'=>' habilitar iddata="'.$compromissos->getId().'"')).
 
                             '</td>
                         </tr>';
                 endforeach;
                 echo $this->templateFactory->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody, 'moreContent' => ''));
-            ?>
+            ?>  
+
 
 <script type="text/javascript">
     $(function(){
@@ -57,8 +61,29 @@
             //     });
             //     return false;
             // });
-
-        
+            $.fn.hasAttr = function(name) {  
+               return this.attr(name) !== undefined;
+            };
+             $('.btn_adiar').on('click',function(){
+                var id = $(this).attr('iddata')
+                if($(this).hasAttr('habilitar')){
+                    $('input[iddata='+id+']').prop('disabled',false)
+                    $(this).removeAttr('habilitar');
+                    $(this).removeClass('btn-primary').addClass('btn-success')
+                    $('span',this).removeClass('glyphicons-history').addClass('glyphicons-ok')
+                }else{
+                    $.post( url+"agenda/gerenciar/adiarCompromissos", { 
+                        data: $('input[iddata='+id+']').val(),
+                        id_agenda: id
+                    })
+                      .done(function( data ) {
+                        if(data){
+                            location.reload()
+                        }
+                    });
+                }
+                return false;
+             })
 
     })
 </script>

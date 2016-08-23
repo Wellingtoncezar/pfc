@@ -212,19 +212,32 @@ class gerenciar extends Controller{
 		$this->load->model('agenda/agendaModel');
 		$this->load->dao('agendas/agendaDao');
 
+		$id_agenda = isset($_POST['id_agenda']) ? filter_var(trim($_POST['id_agenda'])) : '';
 		$data = isset($_POST['data']) ? filter_var(trim($_POST['data'])) : '';
-		
+
 		$agendaModel = new agendaModel();
 		$agendaModel->setId($id_agenda);
-		$agendaModel->setData();
+		$agendaModel->setData($data);
 
 		$agendaDao = new agendaDao();
 		echo $agendaDao->adiarCompromissos($agendaModel);
 
-		$this->load->library('dataValidator', null, true);
-        $this->load->dataValidator->set('Data', $data, 'data')->is_required();
+		// $this->load->library('dataValidator', null, true);
+        // $this->load->dataValidator->set('Data', $data, 'data')->is_required();
 	}
 
+
+	public function sendteste()
+	{
+		$email = new email();
+		$email->de('prysmarket@gmail.com');
+		$email->para('prysmarket@gmail.com');
+		$email->mensagem('teste');
+		if($email->send())
+			echo 'E-mail Enviado';
+		else
+			echo 'Erro ao enviar';
+	}
 
 
 }

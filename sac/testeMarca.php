@@ -1,9 +1,45 @@
 <?php
-define('SYSTEMPATH','system');
-define('LIBRARYPATH','library');
-define('APPPATH','app');
-require_once('include.php');
-config::getInstance();
+
+require_once('class.phpmailer.php'); //chama a classe de onde você a colocou.
+require_once('class.smtp.php');
+require_once('class.pop3.php');
+
+$mail = new PHPMailer(); // instancia a classe PHPMailer
+
+$mail->IsSMTP();
+
+//configuração do gmail
+$mail->Port = '465'; //porta usada pelo gmail.
+$mail->Host = 'smtp.gmail.com'; 
+$mail->IsHTML(true); 
+$mail->Mailer = 'smtp'; 
+$mail->SMTPSecure = 'ssl';
+
+//configuração do usuário do gmail
+$mail->SMTPAuth = true;
+$mail->Username = 'prysmarket@gmail.com'; // usuario gmail.   
+$mail->Password = 'prysmarket123'; // senha do email.
+
+$mail->SingleTo = true; 
+
+// configuração do email a ver enviado.
+$mail->From = "prysmarket@gmail.com"; 
+$mail->FromName = "welington"; 
+
+$mail->addAddress("prysmarket@gmail.com"); // email do destinatario.
+
+$mail->Subject = "Mudança de Data Agendada"; 
+$mail->Body = ".";
+
+if(!$mail->Send())
+    echo "Erro ao enviar Email:" . $mail->ErrorInfo;
+
+
+// define('SYSTEMPATH','system');
+// define('LIBRARYPATH','library');
+// define('APPPATH','app');
+// require_once('include.php');
+/*config::getInstance();
 config::getConfig();
 require_once(BASEPATH.'/app/DAO/produtos/marcasDao.php');
 require_once(BASEPATH.'/app/models/produtos/marcasModel.php');
@@ -49,3 +85,13 @@ class testeMarca extends PHPUnit_Framework_TestCase{
 	}
 
 }
+*/
+// $email = new email();
+// $email->de('prysmarket@gmail.com');
+// $email->para('prysmarket@gmail.com');
+// $email->mensagem('teste');
+// if($email->send())
+// 	echo 'E-mail Enviado';
+// else
+// 	echo 'Erro ao enviar';
+

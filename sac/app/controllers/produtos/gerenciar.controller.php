@@ -235,6 +235,7 @@ class gerenciar extends Controller{
 
 
 			$produtosModel->setFoto($nome_foto);
+			$produtosModel->setCodigoBarra($codigoBarra);
 			$produtosModel->setNome($nome);
 			$produtosModel->setMarca($marcasModel);
 			$produtosModel->setCategoria($categoriasModel);
