@@ -227,17 +227,4 @@ class gerenciar extends Controller{
 	}
 
 
-	public function sendteste()
-	{
-		$email = new email();
-		$email->de('prysmarket@gmail.com');
-		$email->para('prysmarket@gmail.com');
-		$email->mensagem('teste');
-		if($email->send())
-			echo 'E-mail Enviado';
-		else
-			echo 'Erro ao enviar';
-	}
-
-
 }

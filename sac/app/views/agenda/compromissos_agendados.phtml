@@ -44,27 +44,11 @@
             $('.dataTable').show()
             
             // //DATATABLE
-            // var table = $('.dataTable').DataTable({
-            //     order: [0,'asc']
-            // });
-            // //ADIAR
-            // table.$(' .btn_adiar').on('click',function(){
-            //     var idCompromissosAgendados = $(this).attr('idCompromissosAgendados')
-            //     $.post($(this).attr('href'),{},function(data){
-            //         if(data == true){
-            //             messageDialog('Produto aprovado','success',false,null);
-            //             $('.btn_adiar[idCompromissosAgendados='+idCompromissosAgendados+']').attr('disabled', 'disabled');
-            //         }else
-            //         {
-            //             messageDialog(data,'warning',false,null);
-            //         }
-            //     });
-            //     return false;
-            // });
-            $.fn.hasAttr = function(name) {  
-               return this.attr(name) !== undefined;
-            };
-             $('.btn_adiar').on('click',function(){
+            var table = $('.dataTable').DataTable({
+                order: [0,'asc']
+            });
+            //ADIAR
+            table.$(' .btn_adiar').on('click',function(){
                 var id = $(this).attr('iddata')
                 if($(this).hasAttr('habilitar')){
                     $('input[iddata='+id+']').prop('disabled',false)
@@ -79,11 +63,15 @@
                       .done(function( data ) {
                         if(data){
                             location.reload()
-                        }
+                        }else
+                            console.log(data)
                     });
                 }
                 return false;
-             })
+            });
+            $.fn.hasAttr = function(name) {  
+               return this.attr(name) !== undefined;
+            };
 
     })
 </script>

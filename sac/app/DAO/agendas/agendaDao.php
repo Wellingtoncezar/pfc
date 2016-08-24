@@ -157,18 +157,12 @@ class agendaDao extends Dao{
 				$this->db->setParameter(1,$agendaModel->getId());
 				if($this->db->select())
 				{
+
 					$res = $this->db->resultAll();
-					foreach ($variable as $key => $value) {
-						$email = new email();
-						$email->de('prysmarket@gmail.com');
-						$email->para($res['endereco_email']);
-						$email->mensagem('teste');
-						$email->send();
+					foreach ($res as $e) {
+						$this->sendMail($e['endereco_email'], $agendaModel->getData());
 					}
 				}
-
-
-
 				return true;
 			}else{
 				return $this->db->getError();
@@ -177,6 +171,44 @@ class agendaDao extends Dao{
 			return $e->getMessageError();
 		}
 
+	}
+
+
+
+	private function sendMail($emailPara, $novadata)
+	{
+		$dataFormat = new dataFormat();
+		$novadata = $dataFormat->formatar($novadata, 'data');
+		$corpo = utf8_decode('<table border=0 cellpacing=0 cellpadding=0 style="border:1px solid #CCC"> <thead> <tr> <th><img src=skin/img/imagens/topo_email.png> <tbody> <tr> <td> <h3 style=margin:0;font-size:23px;color:#FFF;background-color:#008fd4;padding:8px;text-align:center;font-family:monospace>Informativo importante</h3> <tr> <td style=font-family:monospace;font-size:14px;padding:5px> <p>A data de visita foi alterada, verifique a nova data</p><p>Nova data agendada: '.$novadata.'</p><p>Em caso de dúvidas entre em contato. (11) 1234-5678</p><tr> <td style=padding:0;background-color:#024D82> <p style=margin:5px;color:#FFF><small>Start Softwares - Prysmarket</small> </table>');
+		$mail = new PHPMailer(); // instancia a classe PHPMailer
+		$mail->IsSMTP();
+
+		//configuração do gmail
+		$mail->Port = '465'; //porta usada pelo gmail.
+		$mail->Host = 'smtp.gmail.com'; 
+		$mail->IsHTML(true); 
+		$mail->Mailer = 'smtp'; 
+		$mail->SMTPSecure = 'ssl';
+
+		//configuração do usuário do gmail
+		$mail->SMTPAuth = true;
+		$mail->Username = 'prysmarket@gmail.com'; // usuario gmail.   
+		$mail->Password = 'prysmarket123'; // senha do email.
+
+		$mail->SingleTo = true; 
+
+		// configuração do email a ver enviado.
+		$mail->From = "prysmarket@gmail.com";
+		$mail->FromName = "Prysmarket"; 
+
+		$mail->addAddress($emailPara); // email do destinatario.
+
+		$mail->Subject = utf8_decode("Mudança de Data Agendada"); 
+		$mail->Body = $corpo;
+
+		$mail->IsHTML(true); 
+		if(!$mail->Send())
+		    echo "Erro ao enviar Email:" . $mail->ErrorInfo;
 	}
 
 
