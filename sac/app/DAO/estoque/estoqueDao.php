@@ -11,65 +11,70 @@ class estoqueDao extends Dao{
 
 	public function listar(iListagemEstoque $listaestoque)
 	{
-		$this->load->model('estoque/estoqueModel');
-		$this->load->model('produtos/produtosModel');
-		$this->load->model('produtos/unidademedidaModel');
-		$this->load->model('produtos/unidadeMedidaEstoqueModel');
-		$this->load->model('produtos/unidadeMedidaModel');
+		try {
+				
+			$this->load->model('estoque/estoqueModel');
+			$this->load->model('produtos/produtosModel');
+			$this->load->model('produtos/unidademedidaModel');
+			$this->load->model('produtos/unidadeMedidaEstoqueModel');
+			$this->load->model('produtos/unidadeMedidaModel');
 
-		$estoque = Array();
-		$result = $listaestoque->listar($this->db);
-		if($result != null)
-		{
-			foreach ($result as $value)
+			$estoque = Array();
+			$result = $listaestoque->listar($this->db);
+			if($result != null)
 			{
-				$estoqueModel = new estoqueModel();
-				$estoqueModel->setId($value['id_estoque']);
-				$estoqueModel->setQuantidadeMinima($value['quantidade_minima']);
-				$estoqueModel->setQuantidadeMaxima($value['quantidade_maxima']);
-
-				$produtoModel = new produtosModel();
-				$produtoModel->setId($value['id_produto']);
-				$produtoModel->setFoto($value['foto_produto']);
-				$produtoModel->setCodigoBarra($value['codigo_barra_gti']);
-				$produtoModel->setNome($value['nome_produto']);
-
-				$estoqueModel->setProduto($produtoModel);
-
-				$this->db->clear();
-				$this->db->setTabela('unidade_medida as A, unidade_medida_produto AS B');
-				$this->db->setCondicao("B.id_produto = ? AND A.id_unidade_medida = B.id_unidade_medida");
-				$this->db->setOrderBy("B.ordem");
-				$this->db->setParameter(1, $value['id_produto']);
-				if($this->db->select())
+				foreach ($result as $value)
 				{
-					$unidadeMedida = $this->db->resultAll();
-					foreach ($unidadeMedida as $unidade)
+					$estoqueModel = new estoqueModel();
+					$estoqueModel->setId($value['id_estoque']);
+					$estoqueModel->setQuantidadeMinima($value['quantidade_minima']);
+					$estoqueModel->setQuantidadeMaxima($value['quantidade_maxima']);
+
+					$produtoModel = new produtosModel();
+					$produtoModel->setId($value['id_produto']);
+					$produtoModel->setFoto($value['foto_produto']);
+					$produtoModel->setCodigoBarra($value['codigo_barra_gti']);
+					$produtoModel->setNome($value['nome_produto']);
+
+					$estoqueModel->setProduto($produtoModel);
+
+					$this->db->clear();
+					$this->db->setTabela('unidade_medida as A, unidade_medida_produto AS B');
+					$this->db->setCondicao("B.id_produto = ? AND A.id_unidade_medida = B.id_unidade_medida");
+					$this->db->setOrderBy("B.ordem");
+					$this->db->setParameter(1, $value['id_produto']);
+					if($this->db->select())
 					{
-						$unidadeMedidaModel = new unidadeMedidaModel();
-						$unidadeMedidaModel->setId($unidade['id_unidade_medida']);
-						$unidadeMedidaModel->setNome($unidade['nome_unidade_medida']);
-						$unidadeMedidaModel->setAbreviacao($unidade['abreviacao_unidade_medida']);
+						$unidadeMedida = $this->db->resultAll();
+						foreach ($unidadeMedida as $unidade)
+						{
+							$unidadeMedidaModel = new unidadeMedidaModel();
+							$unidadeMedidaModel->setId($unidade['id_unidade_medida']);
+							$unidadeMedidaModel->setNome($unidade['nome_unidade_medida']);
+							$unidadeMedidaModel->setAbreviacao($unidade['abreviacao_unidade_medida']);
 
-						$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
-						$unidadeMedidaEstoqueModel->setId($unidade['id_unidade_medida_produto']);
-						$unidadeMedidaEstoqueModel->setUnidadeMedida($unidadeMedidaModel);
-						$unidadeMedidaEstoqueModel->setParaVenda((bool)$unidade['para_venda']);
-						$unidadeMedidaEstoqueModel->setParaEstoque((bool)$unidade['para_estoque']);
-						$unidadeMedidaEstoqueModel->setFator($unidade['fator_unidade_medida']);
-						$unidadeMedidaEstoqueModel->setOrdem($unidade['ordem']);
-						$produtoModel->addUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
+							$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+							$unidadeMedidaEstoqueModel->setId($unidade['id_unidade_medida_produto']);
+							$unidadeMedidaEstoqueModel->setUnidadeMedida($unidadeMedidaModel);
+							$unidadeMedidaEstoqueModel->setParaVenda((bool)$unidade['para_venda']);
+							$unidadeMedidaEstoqueModel->setParaEstoque((bool)$unidade['para_estoque']);
+							$unidadeMedidaEstoqueModel->setFator($unidade['fator_unidade_medida']);
+							$unidadeMedidaEstoqueModel->setOrdem($unidade['ordem']);
+							$produtoModel->addUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
+						}
 					}
-				}
 
-				$estoqueModel->setLotes($this->listarLotes($estoqueModel, $listaestoque->getLocalizacao()));
+					$estoqueModel->setLotes($this->listarLotes($estoqueModel, $listaestoque->getLocalizacao()));
 
-				array_push($estoque, $estoqueModel);
-				unset($estoqueModel);
-			}		
+					array_push($estoque, $estoqueModel);
+					unset($estoqueModel);
+				}		
+			}
+
+			return $estoque;
+		} catch (dbException $e) {
+			return $e->getMessageError();
 		}
-
-		return $estoque;
 	}
 
 	
@@ -149,7 +154,26 @@ class estoqueDao extends Dao{
 	}
 
 
+	public function emprateleirar(lotesModel $lote)
+	{
+		// try {
 
+		// 	$data = array(
+		// 		''
+		// 	);
+
+
+		// 	$this->db->clear();
+		// 	$this->db->setTabela('localizacao_lote');
+
+
+
+
+		// } catch (dbException $e) {
+		// 	return $e->getMessageError();
+		// }
+
+	}
 
 
 

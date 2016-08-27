@@ -102,16 +102,33 @@ class gerenciar extends Controller{
 	{
 		$this->load->dao('estoque/estoqueDao');
 		$this->load->model('estoque/lotesModel');
+		$this->load->model('estoque/localizacaoLoteModel');
+		$this->load->model('produtos/unidadeMedidaEstoqueModel');
+		
 
 		$idlote = (int) $this->http->getRequest('idlote');
 		$idUnidadeMedidaVenda  = (int) $this->http->getRequest('idUnidadeMedidaVenda');
 		$quantidade = filter_var( $this->http->getRequest('quantidade'));
 
+		
+		$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+		$unidadeMedidaEstoqueModel->setId($idUnidadeMedidaVenda);
+
+
+		$localizacaoLoteModel = new localizacaoLoteModel();
+		$localizacaoLoteModel->setUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
+		$localizacaoLoteModel->setQuantidade($quantidade);
+		$localizacaoLoteModel->emprateleirar();
+
 		$lotesModel = new lotesModel();
 		$lotesModel->setId($idlote);
+		$lotesModel->addLocalizacao($localizacaoLoteModel);
 
+		$estoqueDao = new esoqueDao();
+		$estoqueDao->emprateleirar($lotesModel);
 
 	}
+
 
 }
 
