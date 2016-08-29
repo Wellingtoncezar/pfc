@@ -118,19 +118,16 @@ class produtosDao extends Dao{
 	}
 
 	/**
-	 * Retorna a consulta de um produto pelo id
+	 * Retorna a consulta de um produto
 	 * @return object [produtosModel]
 	 */
-	public function consultar(produtosModel $produto)
-	{
-		$this->db->clear();
-		$this->db->setTabela('produtos as a, categorias as b , marcas as c');
-		$this->db->setCondicao("a.id_produto = ? and b.id_categoria = a.id_categoria and c.id_marca = a.id_marca");
-		$this->db->setParameter(1, $produto->getId());
 
-		//PRODUTO
-		if($this->db->select()):
-			$result = $this->db->result();
+	public function consultar(IConsultaProduto $consultaProduto, produtosModel $produto, $status)
+	{
+
+		$result = $consultaProduto->consultar($this->db, $produto, $status);
+		$produto = new produtosModel();
+		if($result != null):
 			//CATEGORIA
 			$this->load->model('produtos/categoriasModel');
 			$categoriasModel= new categoriasModel();
@@ -147,7 +144,10 @@ class produtosDao extends Dao{
 			$marcasModel->setStatus(status::getAttribute($result['status_marca']));
 			$marcasModel->setDataCadastro($result['data_cadastro_marca']);
 			
+			//PRODUTO
+			$produto->setId($result['id_produto']);
 			$produto->setFoto($result['foto_produto']);
+			$produto->setCodigoBarra($result['codigo_barra_gti']);
 			$produto->setNome($result['nome_produto']);
 			$produto->setMarca($marcasModel);
 			$produto->setCategoria($categoriasModel);
@@ -164,7 +164,7 @@ class produtosDao extends Dao{
 			{
 				$this->load->model('produtos/unidadeMedidaModel');	
 				$this->load->model('produtos/unidadeMedidaEstoqueModel');	
-				
+				//UNIDADE DE MEDIDA
 				$unidadeMedida = $this->db->resultAll();
 				foreach ($unidadeMedida as $unidade)
 				{

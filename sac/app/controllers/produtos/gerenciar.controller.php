@@ -85,19 +85,23 @@ class gerenciar extends Controller{
 		$this->load->dao('produtos/produtosDao');
 		$this->load->dao('produtos/marcasDao');
 		$this->load->dao('produtos/categoriasDao');
-		// $this->load->dao('produtos/unidademedidaDao');
+		$this->load->dao('produtos/iConsultaProduto');
+		$this->load->dao('produtos/consultaPorId');
 
 		$data = array(
 			'titlePage' => 'Editar Produto'
 		);
 
-		$idProduto = $this->load->url->getSegment(3);
+		$idProduto = (int) $this->load->url->getSegment(3);
 		
+		$status = Array(
+			status::ATIVO,
+			status::INATIVO
+		);
 		$produtosModel = new produtosModel();
 		$produtosModel->setId($idProduto);
-		
 		$produtos = new produtosDao();
-		$data['produto'] = $produtos->consultar($produtosModel);
+		$data['produto'] = $produtos->consultar(new consultaPorId(), $produtosModel, $status);
 
 		//marcas
 		$marcas = new marcasDao;
@@ -135,7 +139,7 @@ class gerenciar extends Controller{
 
 		$foto 					= isset($_FILES['foto']) ? $_FILES['foto'] : '';
 		$nome 					= isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-		$codigoBarra 			= isset($_POST['codigoBarra']) ? intval($_POST['codigoBarra']) : '';
+		$codigoBarra 			= isset($_POST['codigobarras']) ? filter_var($_POST['codigobarras']) : '';
 		$marca 					= isset($_POST['marca']) ? intval($_POST['marca']) : '';
 		$categoria 				= isset($_POST['categoria']) ? intval($_POST['categoria']) : '';
         $descricao 				= isset($_POST['descricao']) ? filter_var(trim($_POST['descricao'])) : '';
@@ -150,7 +154,7 @@ class gerenciar extends Controller{
 		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(3);
 		$this->load->dataValidator->set('Marca', $marca, 'marca')->is_required();
 		$this->load->dataValidator->set('Categoria', $categoria, 'categoria')->is_required();
-		$this->load->dataValidator->set('Fornecedores', $fornecedores, 'fornecedores')->is_required();
+		$this->load->dataValidator->set('Fornecedores', $fornecedores, 'fornecedores')->is_required()->min_value(3);
 		$this->load->dataValidator->set('Unidades de medidas de estoque', $unidadeMedidaEstoque, 'unidadeMedidaEstoque')->is_required();
 		$this->load->dataValidator->set('Unidade de medida para venda', $unidadeMedidaVenda, 'unidadeMedidaVenda')->is_required();
 		$this->load->dataValidator->set('Fator da unidade de medida para venda', $fatorUnidadeMedidaVenda, 'fatorUnidadeMedidaVenda')->is_required();
