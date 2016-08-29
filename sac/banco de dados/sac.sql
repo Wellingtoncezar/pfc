@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 31-Jul-2016 às 22:26
+-- Generation Time: 28-Ago-2016 às 23:20
 -- Versão do servidor: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -276,8 +276,6 @@ INSERT INTO `enderecos_funcionarios` (`id_funcionario`, `id_endereco`) VALUES
 CREATE TABLE IF NOT EXISTS `estoque` (
 `id_estoque` int(11) NOT NULL,
   `id_produto` int(11) NOT NULL,
-  `quantidade_minima` decimal(10,2) NOT NULL,
-  `quantidade_maxima` decimal(10,2) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
@@ -285,9 +283,9 @@ CREATE TABLE IF NOT EXISTS `estoque` (
 -- Extraindo dados da tabela `estoque`
 --
 
-INSERT INTO `estoque` (`id_estoque`, `id_produto`, `quantidade_minima`, `quantidade_maxima`, `timestamp`) VALUES
-(1, 49, '0.00', '0.00', '2016-07-19 20:37:06'),
-(2, 50, '0.00', '0.00', '2016-07-21 21:14:23');
+INSERT INTO `estoque` (`id_estoque`, `id_produto`, `timestamp`) VALUES
+(1, 58, '2016-08-28 17:04:39'),
+(2, 52, '2016-08-28 17:04:47');
 
 -- --------------------------------------------------------
 
@@ -427,20 +425,22 @@ CREATE TABLE IF NOT EXISTS `localizacao_lote` (
 `id_localizacao_lote` int(11) NOT NULL,
   `id_produto_lote` int(11) DEFAULT NULL,
   `id_unidade_medida_produto` int(11) DEFAULT NULL,
-  `localizacao` enum('RESERVADO','SEPARADO','DISPONIVEL','PERDIDO') DEFAULT NULL,
+  `localizacao` enum('ARMAZEM','PRATELEIRA','DESCARTADOS') NOT NULL DEFAULT 'ARMAZEM',
   `quantidade_localizacao` decimal(10,2) DEFAULT NULL,
   `observacoes_localizacao_lote` text,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `localizacao_lote`
 --
 
 INSERT INTO `localizacao_lote` (`id_localizacao_lote`, `id_produto_lote`, `id_unidade_medida_produto`, `localizacao`, `quantidade_localizacao`, `observacoes_localizacao_lote`, `timestamp`) VALUES
-(1, 1, 37, 'RESERVADO', '1.00', NULL, '2016-07-20 23:11:32'),
-(2, 2, 36, 'RESERVADO', '5.00', NULL, '2016-07-22 00:09:59'),
-(3, 3, 36, 'RESERVADO', '100.00', NULL, '2016-07-21 21:15:59');
+(1, 1, 38, 'ARMAZEM', '6.00', NULL, '2016-08-28 17:06:25'),
+(2, 2, 36, 'ARMAZEM', '1.00', NULL, '2016-08-27 23:25:37'),
+(3, 3, 36, 'ARMAZEM', '100.00', NULL, '2016-08-21 20:18:43'),
+(5, 1, 36, 'PRATELEIRA', '2.00', '', '2016-08-27 23:00:09'),
+(6, 2, 36, 'PRATELEIRA', '4.00', '', '2016-08-27 23:25:37');
 
 -- --------------------------------------------------------
 
@@ -496,6 +496,28 @@ INSERT INTO `nivel_acesso` (`id_nivel_acesso`, `nome_nivel_acesso`, `permissoes`
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `nivel_estoque`
+--
+
+CREATE TABLE IF NOT EXISTS `nivel_estoque` (
+`id_nivel_estoque` int(11) NOT NULL,
+  `id_estoque` int(11) DEFAULT NULL,
+  `quantidade_minima` decimal(10,2) DEFAULT NULL,
+  `quantidade_maxima` decimal(10,2) DEFAULT NULL,
+  `localizacao_estoque` enum('ARMAZEM','PRATELEIRA','DESCARTADOS') DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `nivel_estoque`
+--
+
+INSERT INTO `nivel_estoque` (`id_nivel_estoque`, `id_estoque`, `quantidade_minima`, `quantidade_maxima`, `localizacao_estoque`) VALUES
+(1, 1, '0.50', '2.00', 'ARMAZEM'),
+(2, 1, '1.00', '10.00', 'PRATELEIRA');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `orcamentos`
 --
 
@@ -539,17 +561,26 @@ CREATE TABLE IF NOT EXISTS `produtos` (
   `unidade_medida_venda` int(11) NOT NULL,
   `fator_unidade_medida_venda` decimal(10,2) NOT NULL,
   `status_produto` enum('ATIVO','INATIVO','EXCLUIDO') NOT NULL,
+  `data_validade_controlada` tinyint(1) NOT NULL DEFAULT '0',
   `data_cadastro_produto` datetime NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `produtos`
 --
 
-INSERT INTO `produtos` (`id_produto`, `foto_produto`, `codigo_barra_gti`, `nome_produto`, `id_marca`, `id_categoria`, `descricao_produto`, `unidade_medida_venda`, `fator_unidade_medida_venda`, `status_produto`, `data_cadastro_produto`, `timestamp`) VALUES
-(49, '', '7898501069014', 'nome do produto', 1, 1, 'descri&ccedil;&atilde;o', 1, '1.00', 'ATIVO', '2016-07-19 03:40:23', '2016-07-19 19:14:04'),
-(50, '', '7898501069021', 'Pasta de dente', 6, 1, 'Pasta de dente', 10, '1.00', 'ATIVO', '2016-07-19 03:54:53', '2016-07-19 19:14:21');
+INSERT INTO `produtos` (`id_produto`, `foto_produto`, `codigo_barra_gti`, `nome_produto`, `id_marca`, `id_categoria`, `descricao_produto`, `unidade_medida_venda`, `fator_unidade_medida_venda`, `status_produto`, `data_validade_controlada`, `data_cadastro_produto`, `timestamp`) VALUES
+(49, '', '7898501069014', 'nome do produto', 1, 1, 'descri&ccedil;&atilde;o', 1, '1.00', 'ATIVO', 0, '2016-07-19 03:40:23', '2016-08-27 21:25:37'),
+(50, '', '7898501069021', 'Pasta de dente', 6, 1, 'Pasta de dente', 10, '1.00', 'ATIVO', 0, '2016-07-19 03:54:53', '2016-07-19 19:14:21'),
+(51, '', '', 'teste', 1, 2, 'teste', 2, '1.00', 'EXCLUIDO', 0, '2016-08-28 01:03:37', '2016-08-28 16:29:51'),
+(52, '', '', 'asdf', 1, 1, '', 1, '1.00', 'EXCLUIDO', 0, '2016-08-28 01:24:02', '2016-08-28 16:29:54'),
+(53, '', '', 'asdf', 1, 1, '', 1, '1.00', 'EXCLUIDO', 0, '2016-08-28 01:24:32', '2016-08-28 16:29:57'),
+(54, '', '2147483647', 'fsdsdfg', 1, 1, 'sdf', 1, '1.00', 'EXCLUIDO', 0, '2016-08-28 01:25:39', '2016-08-28 16:29:59'),
+(55, '', '2147483647', 'safsdfasd', 2, 1, '', 1, '1.00', 'EXCLUIDO', 0, '2016-08-28 01:28:33', '2016-08-28 16:30:01'),
+(56, '', '2147483647', 'asdf', 2, 2, '', 1, '1.00', 'EXCLUIDO', 0, '2016-08-28 01:30:25', '2016-08-28 16:32:01'),
+(57, '', '7898501069014', 'asdr54444', 2, 1, 'asd', 1, '1.00', 'ATIVO', 0, '2016-08-28 01:31:46', '2016-08-28 16:31:46'),
+(58, '6b7a3503b14def03a9402a1a00e26dd7.jpg', '7896006752837', 'Arroz Camil 5kg - tipo1', 7, 2, 'Arroz Camil 5kg, tipo 1.\r\nArroz classe longo fino', 7, '1.00', 'ATIVO', 0, '2016-08-28 02:01:50', '2016-08-28 17:03:14');
 
 -- --------------------------------------------------------
 
@@ -577,7 +608,7 @@ CREATE TABLE IF NOT EXISTS `produto_fornecedores` (
 `id_produto_fornecedor` int(11) NOT NULL,
   `id_produto` int(11) DEFAULT NULL,
   `id_fornecedor` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `produto_fornecedores`
@@ -588,7 +619,17 @@ INSERT INTO `produto_fornecedores` (`id_produto_fornecedor`, `id_produto`, `id_f
 (10, 49, 11),
 (11, 50, 18),
 (12, 50, 10),
-(13, 50, 17);
+(13, 50, 17),
+(14, 51, 11),
+(15, 52, 10),
+(16, 53, 10),
+(17, 54, 10),
+(18, 55, 10),
+(19, 56, 10),
+(20, 57, 10),
+(21, 58, 18),
+(22, 58, 17),
+(23, 58, 16);
 
 -- --------------------------------------------------------
 
@@ -600,7 +641,7 @@ CREATE TABLE IF NOT EXISTS `produto_lote` (
 `id_produto_lote` int(11) NOT NULL,
   `id_estoque` int(11) DEFAULT NULL,
   `codigo_lote` varchar(255) DEFAULT NULL,
-  `codigo_barras_gti` varchar(255) DEFAULT NULL,
+  `codigo_barras_gti` varchar(15) DEFAULT NULL,
   `codigo_barras_gst` varchar(255) DEFAULT NULL,
   `data_validade` date DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -611,7 +652,7 @@ CREATE TABLE IF NOT EXISTS `produto_lote` (
 --
 
 INSERT INTO `produto_lote` (`id_produto_lote`, `id_estoque`, `codigo_lote`, `codigo_barras_gti`, `codigo_barras_gst`, `data_validade`, `timestamp`) VALUES
-(1, 1, 'cod1', NULL, '132132131122', '2016-07-22', '2016-07-19 20:39:46'),
+(1, 1, 'cod1', '', '132132131122', '2016-07-22', '2016-08-28 17:16:43'),
 (2, 1, '222', '1234567891012', '1234567897897', '2016-07-21', '2016-07-20 18:11:14'),
 (3, 2, '1234567897892', '1234654654646', '1212331312132', NULL, '2016-07-22 00:24:22');
 
@@ -640,7 +681,7 @@ INSERT INTO `requisicao_produto` (`id_requisicao_produto`, `id_requisicao`, `id_
 (2, 23, 49, 37, '7.00', 'APROVADO', '2016-07-27 00:42:11'),
 (3, 23, 50, 38, '3.00', 'APROVADO', '2016-07-27 00:42:35'),
 (4, 24, 49, 37, '7.00', 'NOVO', '2016-07-27 00:38:19'),
-(5, 24, 50, 38, '3.00', 'NOVO', '2016-07-27 00:38:19');
+(5, 24, 50, 38, '3.00', 'APROVADO', '2016-08-01 23:32:22');
 
 -- --------------------------------------------------------
 
@@ -715,7 +756,7 @@ CREATE TABLE IF NOT EXISTS `sys_actions` (
   `id_pagina` int(11) DEFAULT NULL,
   `posicao_action` int(11) DEFAULT NULL,
   `data_criacao_action` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `sys_actions`
@@ -762,7 +803,9 @@ INSERT INTO `sys_actions` (`id_action`, `url_action`, `nome_action`, `status_act
 (42, 'index', NULL, 'ATIVO', 'INATIVO', 24, NULL, '2016-07-20 14:34:06'),
 (43, 'index', NULL, 'ATIVO', 'INATIVO', 25, NULL, '2016-07-20 14:35:33'),
 (44, 'index', NULL, 'ATIVO', 'INATIVO', 26, NULL, '2016-07-20 14:35:41'),
-(45, 'index', 'Home', 'ATIVO', 'INATIVO', 27, NULL, '2016-07-22 16:33:39');
+(45, 'index', 'Home', 'ATIVO', 'INATIVO', 27, NULL, '2016-07-22 16:33:39'),
+(46, 'index', NULL, 'ATIVO', 'INATIVO', 28, NULL, '2016-08-20 18:17:49'),
+(47, 'entrada', NULL, 'INATIVO', 'INATIVO', 25, NULL, '2016-08-27 21:43:08');
 
 -- --------------------------------------------------------
 
@@ -780,7 +823,7 @@ CREATE TABLE IF NOT EXISTS `sys_modulos` (
   `id_modulo_pai` int(11) DEFAULT NULL,
   `icone_modulo` varchar(255) DEFAULT NULL,
   `data_criacao_modulo` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `sys_modulos`
@@ -805,10 +848,11 @@ INSERT INTO `sys_modulos` (`id_modulo`, `url_modulo`, `nome_modulo`, `posicao_mo
 (22, 'requisicoes', 'Requisi&ccedil;&otilde;es', NULL, 'ATIVO', 'INATIVO', 21, NULL, '2016-04-26 01:17:25'),
 (23, 'cotacoes', 'Cota&ccedil;&otilde;es', NULL, 'ATIVO', 'INATIVO', 21, NULL, '2016-04-26 01:17:40'),
 (24, 'pedidos', 'Pedidos', NULL, 'ATIVO', 'INATIVO', 21, NULL, '2016-04-26 01:17:52'),
-(25, 'disponivel', 'Zona dos dispon&iacute;veis', NULL, 'ATIVO', 'INATIVO', 10, NULL, '2016-07-20 14:34:06'),
-(26, 'reservados', 'Zona dos reservados', NULL, 'ATIVO', 'INATIVO', 10, NULL, '2016-07-20 14:35:33'),
-(27, 'perdidos', 'Zona dos perdidos', NULL, 'ATIVO', 'INATIVO', 10, NULL, '2016-07-20 14:35:41'),
-(28, 'checkout', 'Checkout', NULL, 'ATIVO', 'INATIVO', 11, NULL, '2016-07-22 16:33:39');
+(25, 'prateleira', 'Prateleira', NULL, 'ATIVO', 'INATIVO', 10, NULL, '2016-07-20 14:34:06'),
+(26, 'armazem', 'Armaz&eacute;m', NULL, 'ATIVO', 'INATIVO', 10, NULL, '2016-07-20 14:35:33'),
+(27, 'descartados', 'Descartados', NULL, 'ATIVO', 'INATIVO', 10, NULL, '2016-07-20 14:35:41'),
+(28, 'checkout', 'Checkout', NULL, 'ATIVO', 'INATIVO', 11, NULL, '2016-07-22 16:33:39'),
+(29, 'orcamentos', 'Or&ccedil;amentos', NULL, 'ATIVO', 'INATIVO', 21, NULL, '2016-08-20 18:17:49');
 
 -- --------------------------------------------------------
 
@@ -825,7 +869,7 @@ CREATE TABLE IF NOT EXISTS `sys_paginas` (
   `status_selecao_pagina` varchar(255) DEFAULT NULL,
   `id_modulo` int(11) DEFAULT NULL,
   `data_criacao_pagina` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `sys_paginas`
@@ -854,7 +898,8 @@ INSERT INTO `sys_paginas` (`id_pagina`, `url_pagina`, `nome_pagina`, `posicao_pa
 (24, 'gerenciar', NULL, NULL, 'ATIVO', 'INATIVO', 25, '2016-07-20 14:34:06'),
 (25, 'gerenciar', NULL, NULL, 'ATIVO', 'INATIVO', 26, '2016-07-20 14:35:33'),
 (26, 'gerenciar', NULL, NULL, 'ATIVO', 'INATIVO', 27, '2016-07-20 14:35:41'),
-(27, 'gerenciar', 'Gerenciar', NULL, 'ATIVO', 'INATIVO', 28, '2016-07-22 16:33:39');
+(27, 'gerenciar', 'Gerenciar', NULL, 'ATIVO', 'INATIVO', 28, '2016-07-22 16:33:39'),
+(28, 'gerenciar', NULL, NULL, 'ATIVO', 'INATIVO', 29, '2016-08-20 18:17:49');
 
 -- --------------------------------------------------------
 
@@ -880,7 +925,7 @@ CREATE TABLE IF NOT EXISTS `sys_usuarios` (
 --
 
 INSERT INTO `sys_usuarios` (`id_usuario`, `id_funcionario`, `id_nivel_acesso`, `email_usuario`, `login_usuario`, `senha_usuario`, `hash_acesso`, `status_usuario`, `data_criacao_usuario`, `timestamp`) VALUES
-(1, 59, 1, 'wellington-cezar@hotmail.com', 'admin', '$2a$08$MTY2MjMyMDcyMTU3MmJjNe4RI1/LIguX39aJwjjJ374Tx2TdxfSXe', '$2a$08$MTQ2MDMzODY5MjU3OTkzZOZ4QJGU3YEr7P5F/zkBk8YPoSvswz85K', 'ATIVO', NULL, '2016-05-05 22:17:49'),
+(1, 59, 1, 'wellington-cezar@hotmail.com', 'admin', '$2a$08$MTY2MjMyMDcyMTU3MmJjNe4RI1/LIguX39aJwjjJ374Tx2TdxfSXe', '$2a$08$NzQwMTMyOTMzNTdjMzkxMOIN4lUA3xmYLDfMPJknK9fcN8LYnpTeW', 'ATIVO', NULL, '2016-05-05 22:17:49'),
 (3, 95, 2, 'wellingtomn@teste.com', 'teste', '$2a$08$NTAwNjMzMTU3NTc4NDI5YO6ViD6tpsjCgUetSgJl2qr8zzKBO.5Ne', NULL, 'ATIVO', '2016-07-11 08:20:13', '2016-07-11 23:20:13');
 
 -- --------------------------------------------------------
@@ -895,7 +940,7 @@ CREATE TABLE IF NOT EXISTS `sys_usuarios_acessos` (
   `data_acesso` date DEFAULT NULL,
   `hora_acesso` time DEFAULT NULL,
   `ip_acesso` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=227 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=240 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `sys_usuarios_acessos`
@@ -1127,7 +1172,20 @@ INSERT INTO `sys_usuarios_acessos` (`id_usuarios_acesso`, `id_usuario`, `data_ac
 (223, 1, '2016-07-25', '21:32:54', '::1'),
 (224, 1, '2016-07-26', '21:00:31', '::1'),
 (225, 1, '2016-07-26', '21:13:39', '::1'),
-(226, 1, '2016-07-27', '20:05:10', '::1');
+(226, 1, '2016-07-27', '20:05:10', '::1'),
+(227, 1, '2016-08-03', '01:01:14', '::1'),
+(228, 1, '2016-08-09', '00:38:31', '::1'),
+(229, 1, '2016-08-10', '01:05:38', '::1'),
+(230, 1, '2016-08-12', '00:45:45', '::1'),
+(231, 1, '2016-08-16', '00:20:20', '::1'),
+(232, 1, '2016-08-17', '00:35:36', '::1'),
+(233, 1, '2016-08-19', '00:21:44', '::1'),
+(234, 1, '2016-08-20', '23:16:40', '::1'),
+(235, 1, '2016-08-21', '12:40:13', '::1'),
+(236, 1, '2016-08-27', '16:08:21', '::1'),
+(237, 1, '2016-08-27', '19:29:17', '::1'),
+(238, 1, '2016-08-28', '12:59:31', '::1'),
+(239, 1, '2016-08-28', '22:34:16', '::1');
 
 -- --------------------------------------------------------
 
@@ -1247,7 +1305,7 @@ CREATE TABLE IF NOT EXISTS `unidade_medida_produto` (
   `para_estoque` tinyint(1) NOT NULL DEFAULT '0',
   `ordem` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `unidade_medida_produto`
@@ -1256,7 +1314,15 @@ CREATE TABLE IF NOT EXISTS `unidade_medida_produto` (
 INSERT INTO `unidade_medida_produto` (`id_unidade_medida_produto`, `id_produto`, `id_unidade_medida`, `fator_unidade_medida`, `para_venda`, `para_estoque`, `ordem`, `timestamp`) VALUES
 (36, 49, 10, '1.00', 1, 0, 0, '2016-07-20 23:26:21'),
 (37, 49, 11, '10.00', 0, 1, 1, '2016-07-20 23:26:17'),
-(38, 50, 10, '1.00', 1, 1, 0, '2016-07-21 21:17:21');
+(38, 50, 10, '1.00', 1, 1, 0, '2016-07-21 21:17:21'),
+(39, 51, 2, '1.00', 1, 1, 0, '2016-08-28 16:03:37'),
+(40, 52, 1, '1.00', 0, 0, 0, '2016-08-28 16:24:02'),
+(41, 53, 1, '1.00', 0, 0, 0, '2016-08-28 16:24:32'),
+(42, 54, 1, '1.00', 0, 0, 0, '2016-08-28 16:25:39'),
+(43, 55, 1, '1.00', 0, 0, 0, '2016-08-28 16:28:33'),
+(44, 56, 1, '1.00', 0, 0, 0, '2016-08-28 16:30:25'),
+(45, 57, 1, '1.00', 0, 0, 0, '2016-08-28 16:31:46'),
+(46, 58, 7, '1.00', 1, 1, 0, '2016-08-28 17:01:50');
 
 -- --------------------------------------------------------
 
@@ -1391,6 +1457,12 @@ ALTER TABLE `nivel_acesso`
  ADD PRIMARY KEY (`id_nivel_acesso`);
 
 --
+-- Indexes for table `nivel_estoque`
+--
+ALTER TABLE `nivel_estoque`
+ ADD PRIMARY KEY (`id_nivel_estoque`), ADD KEY `id_estoque` (`id_estoque`);
+
+--
 -- Indexes for table `orcamentos`
 --
 ALTER TABLE `orcamentos`
@@ -1424,7 +1496,7 @@ ALTER TABLE `produto_fornecedores`
 -- Indexes for table `produto_lote`
 --
 ALTER TABLE `produto_lote`
- ADD PRIMARY KEY (`id_produto_lote`), ADD KEY `id_estoque` (`id_estoque`);
+ ADD PRIMARY KEY (`id_produto_lote`), ADD UNIQUE KEY `codigo_lote` (`codigo_lote`), ADD KEY `id_estoque` (`id_estoque`);
 
 --
 -- Indexes for table `requisicao_produto`
@@ -1584,7 +1656,7 @@ MODIFY `id_funcionario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=96;
 -- AUTO_INCREMENT for table `localizacao_lote`
 --
 ALTER TABLE `localizacao_lote`
-MODIFY `id_localizacao_lote` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `id_localizacao_lote` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `marcas`
 --
@@ -1595,6 +1667,11 @@ MODIFY `id_marca` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 ALTER TABLE `nivel_acesso`
 MODIFY `id_nivel_acesso` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `nivel_estoque`
+--
+ALTER TABLE `nivel_estoque`
+MODIFY `id_nivel_estoque` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `orcamentos`
 --
@@ -1609,7 +1686,7 @@ MODIFY `id_orcamento_produto` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `produtos`
 --
 ALTER TABLE `produtos`
-MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
+MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=59;
 --
 -- AUTO_INCREMENT for table `produtos_vendidos`
 --
@@ -1619,7 +1696,7 @@ MODIFY `id_produto_vendido` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `produto_fornecedores`
 --
 ALTER TABLE `produto_fornecedores`
-MODIFY `id_produto_fornecedor` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+MODIFY `id_produto_fornecedor` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT for table `produto_lote`
 --
@@ -1644,17 +1721,17 @@ MODIFY `id_requisicao` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
 -- AUTO_INCREMENT for table `sys_actions`
 --
 ALTER TABLE `sys_actions`
-MODIFY `id_action` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=46;
+MODIFY `id_action` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=48;
 --
 -- AUTO_INCREMENT for table `sys_modulos`
 --
 ALTER TABLE `sys_modulos`
-MODIFY `id_modulo` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=29;
+MODIFY `id_modulo` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT for table `sys_paginas`
 --
 ALTER TABLE `sys_paginas`
-MODIFY `id_pagina` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=28;
+MODIFY `id_pagina` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT for table `sys_usuarios`
 --
@@ -1664,7 +1741,7 @@ MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 -- AUTO_INCREMENT for table `sys_usuarios_acessos`
 --
 ALTER TABLE `sys_usuarios_acessos`
-MODIFY `id_usuarios_acesso` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=227;
+MODIFY `id_usuarios_acesso` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=240;
 --
 -- AUTO_INCREMENT for table `sys_usuarios_grupo`
 --
@@ -1684,7 +1761,7 @@ MODIFY `id_unidade_medida` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
 -- AUTO_INCREMENT for table `unidade_medida_produto`
 --
 ALTER TABLE `unidade_medida_produto`
-MODIFY `id_unidade_medida_produto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
+MODIFY `id_unidade_medida_produto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=47;
 --
 -- AUTO_INCREMENT for table `vendas`
 --
@@ -1764,6 +1841,12 @@ ADD CONSTRAINT `funcionarios_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `cargos
 ALTER TABLE `localizacao_lote`
 ADD CONSTRAINT `localizacao_lote_ibfk_1` FOREIGN KEY (`id_produto_lote`) REFERENCES `produto_lote` (`id_produto_lote`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `localizacao_lote_ibfk_2` FOREIGN KEY (`id_unidade_medida_produto`) REFERENCES `unidade_medida_produto` (`id_unidade_medida_produto`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `nivel_estoque`
+--
+ALTER TABLE `nivel_estoque`
+ADD CONSTRAINT `nivel_estoque_ibfk_1` FOREIGN KEY (`id_estoque`) REFERENCES `estoque` (`id_estoque`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `orcamentos`
