@@ -207,7 +207,10 @@ class dataValidator {
      * @return Data_Validator The self instance
      */
     public function min_value($value, $inclusive = false){
-        $verify = ($inclusive === true ? !is_numeric($this->_data['value']) || $this->_data['value'] >= $value : !is_numeric($this->_data['value']) || $this->_data['value'] > $value);
+    	if(is_array($this->_data['value']))
+    		$verify = (count($this->_data['value']) >= $value) ? true : false;
+    	else
+        	$verify = ($inclusive === true ? !is_numeric($this->_data['value']) || $this->_data['value'] >= $value : !is_numeric($this->_data['value']) || $this->_data['value'] > $value);
         if (!$verify){
             $this->set_error(sprintf($this->_messages['min_value'], $this->_data['name'], $value));
         }

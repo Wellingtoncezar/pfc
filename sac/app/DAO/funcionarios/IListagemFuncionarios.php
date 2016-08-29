@@ -4,5 +4,5 @@
  */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 interface IListagemFuncionarios{
-	public function listar($db);
+	public function listar(db $db);
 }

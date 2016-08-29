@@ -5,7 +5,7 @@
  */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class listarTodos implements iListagemFuncionarios{
-	public function listar($db)
+	public function listar(db $db)
 	{
 		$db->clear();
 		$db->setTabela('funcionarios AS A, cargos AS B');

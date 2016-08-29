@@ -1,6 +1,6 @@
 <div class="container">
     <?php
-        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'suprimentos/requisicoes/gerenciar/cadastrar'), URL.'suprimentos/requisicoes/gerenciar/cadastrar');
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'estoque/armazem/gerenciar/entrada', 'title'=>'Entrada'), URL.'estoque/armazem/gerenciar/entrada');
         echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
     <div class="page-header">
@@ -26,8 +26,11 @@
     		<input type="text" name="idlote" value="#= id #">
 	        <input type="text" name="idUnidadeMedidaVenda" value="#= idUnidadeMedidaPraVenda #">
 	        <div class="input-group">
-			  	<input type="number" class="form-control" name="quantidade" value="">
+			  	<input type="number" class="form-control" name="quantidade" value="0" min="0">
 			  	<span class="input-group-addon" id="basic-addon1">#=nomeUnidadeMedida#</span>
+			</div>
+			<div class="input-group">
+			  	<textarea class="form-control" name="observacoes" placeholder="Observações"></textarea>
 			</div>
 			<button type="submit" class="btn btn-success pull-rigth btnTrasferir">Transferir</button>
     	</form>

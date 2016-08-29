@@ -154,27 +154,127 @@ class estoqueDao extends Dao{
 	}
 
 
-	public function emprateleirar(lotesModel $lote)
+	public function emprateleirar(lotesModel $lotesModel)
 	{
-		// try {
+		try {
+			$this->db->clear();
+			$this->db->query('BEGIN');
 
-		// 	$data = array(
-		// 		''
-		// 	);
+			$this->db->setTabela('localizacao_lote, produto_lote, estoque, produtos, unidade_medida_produto');
+			$this->db->setCondicao("
+						produto_lote.id_produto_lote = ?
+						AND produto_lote.id_produto_lote = localizacao_lote.id_produto_lote 
+						AND localizacao_lote.localizacao = ?
+						AND produto_lote.id_estoque = estoque.id_estoque
+						AND estoque.id_produto = produtos.id_produto
+						AND unidade_medida_produto.id_produto = produtos.id_produto
+						AND unidade_medida_produto.para_venda = ?
+						");
+			$this->db->setParameter(1, $lotesModel->getId());
+			$this->db->setParameter(2, localizacoes::ARMAZEM);
+			$this->db->setParameter(3, true);
+			if($this->db->select())
+			{
+				$lote = $this->db->result();
+
+				//obtençao da quantidade que será transferida à prateleira, 
+				//A quantidade está relacionada com a unidade de venda
+				$qtdLocalTransferencia = $lotesModel->getLocalizacao()[0]->getQuantidade();
+
+				//converção da unidade de venda para a menor unidade de medida cadastrada
+				$qtdLocalTransferencia = $qtdLocalTransferencia * $lote['fator_unidade_medida'];
+
+				//verificando se a quantidade a ser transferido é suficiênte para realizá-lo
+				if($qtdLocalTransferencia <= $lote['quantidade_localizacao'])
+				{
+					//return 'quantidade suficiente';
+					// //verificando se 
+					// if($lote['data_validade_controlada'])
+					// 	$this->verificaDataValidade($lote['data_validade_controlada'], $lote['data_validade'], $lote['id_estoque'] );
+
+					//dados do lote coletado para transferência
+					$data = array(
+						'quantidade_localizacao' => ($lote['quantidade_localizacao'] - $qtdLocalTransferencia)
+					);
+
+					$this->db->clear();
+					$this->db->setTabela('localizacao_lote');
+					$this->db->setCondicao("id_localizacao_lote = ?");
+					$this->db->setParameter(1, $lote['id_localizacao_lote']);
+					if($this->db->update($data))
+					{
+						//dados do lote a ser transferido para a nova localidade
+						$data = array(
+							'id_produto_lote' => $lotesModel->getId(),
+							'id_unidade_medida_produto' => $lotesModel->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId(),
+							'localizacao' => localizacoes::PRATELEIRA,
+							'quantidade_localizacao' => $qtdLocalTransferencia,
+							'observacoes_localizacao_lote' => $lotesModel->getLocalizacao()[0]->getObservacoes()
+						);
+						return $this->atualizaLoteLocalizacao($data, $lotesModel->getId(), localizacoes::PRATELEIRA);
+					}
+
+				}else
+				{
+					return 'Quantidade para transferência insuficiênte';
+				}
 
 
-		// 	$this->db->clear();
-		// 	$this->db->setTabela('localizacao_lote');
+			}else
+			{
+				return 'Lote não encontrado';
+			}
 
 
-
-
-		// } catch (dbException $e) {
-		// 	return $e->getMessageError();
-		// }
+		} catch (dbException $e) {
+			$this->db->query('rollback');
+			return $e->getMessageError();
+		}
 
 	}
 
+
+	// private function verificaDataValidade($data_validade, $id_estoque)
+	// {
+	// 	if($data_validade_controlada)
+	// 	{
+
+	// 	}
+
+	// }
+
+	private function atualizaLoteLocalizacao($data, $id_produto_lote, $localizacao)
+	{
+		try {
+			$this->db->clear();
+			$this->db->setTabela('localizacao_lote');
+			$this->db->setCondicao("id_produto_lote = ? AND localizacao = ?");
+			$this->db->setParameter(1, $id_produto_lote);
+			$this->db->setParameter(2, $localizacao);
+			if($this->db->select())
+			{
+				$res = $this->db->result();
+				$data['quantidade_localizacao'] = $res['quantidade_localizacao']+$data['quantidade_localizacao'];
+				if($this->db->update($data))
+				{
+					$this->db->query('COMMIT');
+					return true;
+				}else
+				{
+					$this->db->query('rollback');
+					return false;
+				}
+			}else
+			{
+				$this->db->insert($data);
+				$this->db->query('COMMIT');
+			}
+		} catch (dbException $e) {
+			$this->db->query('rollback');
+			return $e->getMessageError();
+		}
+
+	}
 
 
 

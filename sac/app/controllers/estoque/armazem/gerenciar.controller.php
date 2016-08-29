@@ -28,6 +28,27 @@ class gerenciar extends Controller{
 		$this->load->view('includes/footer',$data);
 	}
 
+	public function entrada()
+	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
+
+		$data = array(
+			'titlePage' => 'Entrada no Armazém - Estoque'
+		);
+
+		$this->load->dao('produtos/produtosDao');
+		$produtosDao = new produtosDao();
+		$produtos = $produtosDao->listarAtivos();
+		$data['produtos'] = $produtos;
+		
+		$this->load->view('includes/header',$data);
+		$this->load->view('estoque/armazem/cadastro',$data);
+		$this->load->view('includes/footer',$data);
+	}
+
 	public function getjsonlote()
 	{
 		$this->load->dao('estoque/estoqueDao');
@@ -66,20 +87,16 @@ class gerenciar extends Controller{
 
 			//loop de listagem dos lotes
 			foreach ($estoqueProd->getLotes() as $lotes){
-				$valorUndEstoque = 0;
-				foreach ($lotes->getLocalizacao() as $localizacao){
-					$fatorUnidadeLote = $localizacao->getUnidadeMedidaEstoque()->getFator();
-					$qtdLoteLocal = $localizacao->getQuantidade(); //quantidade do lote por localização
-					$valorUndEstoque += (double)$qtdLoteLocal;
-				}
-		        $aux2 = array( 
+				
+				
+		        $aux2 = array(
 				        	'id' => $lotes->getId(),
 				        	'idProduto' => $estoqueProd->getId(),
 							'codigo' => $lotes->getCodigoLote(),
 							'codigogti' => ($lotes->getCodigoBarrasGti() != '') ? $lotes->getCodigoBarrasGti() : $estoqueProd->getProduto()->getCodigoBarra(),
 							'codigogst' => $lotes->getCodigoBarrasGst(),
 							'validade' => $dataformat->formatar($lotes->getDataValidade(),'data'),
-							'quantidade' => $valorUndEstoque. ' '.$lotes->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getUnidadeMedida()->getNome(),
+							'quantidade' => $lotes->getQuantidadeLotePorLocalizacao(). ' '.$lotes->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getUnidadeMedida()->getNome(),
 							'acoes' => "",
 							'idUnidadeMedidaPraVenda' => $estoqueProd->getUnidadeMedidaParaVenda()->getId(),
 							'nomeUnidadeMedida' => $estoqueProd->getUnidadeMedidaParaVenda()->getUnidadeMedida()->getNome(),
@@ -109,7 +126,7 @@ class gerenciar extends Controller{
 		$idlote = (int) $this->http->getRequest('idlote');
 		$idUnidadeMedidaVenda  = (int) $this->http->getRequest('idUnidadeMedidaVenda');
 		$quantidade = filter_var( $this->http->getRequest('quantidade'));
-
+		$observacoes = filter_var( $this->http->getRequest('observacoes'));
 		
 		$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
 		$unidadeMedidaEstoqueModel->setId($idUnidadeMedidaVenda);
@@ -118,14 +135,15 @@ class gerenciar extends Controller{
 		$localizacaoLoteModel = new localizacaoLoteModel();
 		$localizacaoLoteModel->setUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
 		$localizacaoLoteModel->setQuantidade($quantidade);
+		$localizacaoLoteModel->setObservacoes($observacoes);
 		$localizacaoLoteModel->emprateleirar();
 
 		$lotesModel = new lotesModel();
 		$lotesModel->setId($idlote);
 		$lotesModel->addLocalizacao($localizacaoLoteModel);
 
-		$estoqueDao = new esoqueDao();
-		$estoqueDao->emprateleirar($lotesModel);
+		$estoqueDao = new estoqueDao();
+		$this->http->response($estoqueDao->emprateleirar($lotesModel));
 
 	}
 

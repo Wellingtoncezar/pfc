@@ -79,4 +79,20 @@ class lotesModel{
 	{
 		return $this->localizacoes;
 	}
+
+	/**
+	 * retorna a quantidade relacionada ao lote, localização e unidade de medida do lote
+	 * @return double
+	 * */
+	public function getQuantidadeLotePorLocalizacao()
+	{
+		$valorUndEstoque = 0;
+		foreach ($this->localizacoes as $localizacao){
+			$fatorUnidadeLote = $localizacao->getUnidadeMedidaEstoque()->getFator();
+			$qtdLoteLocal = $localizacao->getQuantidade(); //quantidade do lote por localização
+
+			$valorUndEstoque += (double)$qtdLoteLocal / $fatorUnidadeLote;
+		}
+		return $valorUndEstoque;
+	}
 }

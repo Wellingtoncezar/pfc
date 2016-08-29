@@ -59,6 +59,12 @@ class estoqueModel{
 	{
 		return $this->quantidade_maxima;
 	}
+
+	/**
+	 * retorna a quantidade total do produto em estoque relacionada à unidade de medida 
+	 * que está sendo controlada
+	 * @return double
+	 * */
 	public function getQuantidadeTotal()
 	{	
 		$valorUndEstoque = 0;
@@ -74,7 +80,8 @@ class estoqueModel{
 				{
 					$fator = $this->getUnidadeMedidaParaVenda()->getFator();
 				}
-				$valorUndEstoque += ((double)$qtdLoteLocal * (double)$fatorUnidadeLote) / $fator;
+				// $valorUndEstoque += ((double)$qtdLoteLocal * (double)$fatorUnidadeLote) / $fator;
+				$valorUndEstoque += (double)$qtdLoteLocal / $fator;
 			}
 		}
 
@@ -83,6 +90,10 @@ class estoqueModel{
 		return $this->quantidade_total;
 	}
 
+	/**
+	 * retorna o objeto da unidade de medida relacionada ao controle de estoque (armazém)
+	 * @return object unidadeMedidaEstoque
+	 * */
 	public function getUnidadeMedidaParaEstoque()
 	{
 		$unidadeMedidaEstoque = null;
@@ -94,6 +105,11 @@ class estoqueModel{
 		return $unidadeMedidaEstoque;
 	}
 
+
+	/**
+	 * retorna o objeto da unidade de medida relacionada ao controle de prateleiras (venda)
+	 * @return object unidadeMedidaEstoque
+	 * */
 	public function getUnidadeMedidaParaVenda()
 	{
 		$unidadeMedidaVenda = null;
@@ -104,6 +120,11 @@ class estoqueModel{
 		}
 		return $unidadeMedidaVenda;
 	}
+
+
+
+
+
 
 	public function getLotes()
 	{
