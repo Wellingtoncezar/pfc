@@ -84,6 +84,8 @@ class gerenciar extends Controller{
 			'template' => new templateFactory()
 		);
 		//ID
+		if($this->load->url->getSegment(4) == false)
+			$this->http->redirect(URL.'error404');
 		$idUsuario = intval($this->load->url->getSegment(4));
 		
 		//USUARIO MODEL

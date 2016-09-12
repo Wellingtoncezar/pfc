@@ -92,15 +92,11 @@
 
         table.$('.btn_visualizar').on('click',function(){
             $('#modalProdutosRequisitados').modal('show');
-            
             $.post($(this).attr('href'), {}, function(data, textStatus, xhr) {
                 $('#modalProdutosRequisitados .modal-body').html(data);
             });
-
-
             return false;
         })
-
     })
 </script>
 

@@ -177,7 +177,7 @@ class requisicoesDao extends Dao{
 			$this->db->clear();
 			$cond = " AND id_requisicao_produto not in (".$produtosNaoExcluir.")";
 		}
-		echo $sql = "DELETE FROM requisicao_produto WHERE id_requisicao = '".$requisicao->getId()."'  $cond";
+		$sql = "DELETE FROM requisicao_produto WHERE id_requisicao = '".$requisicao->getId()."'  $cond";
 		
 		$this->db->clear();
 		$this->db->query($sql);

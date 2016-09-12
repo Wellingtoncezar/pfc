@@ -50,18 +50,14 @@ class _initialize extends Router{
 				$_controller->$action();
 			}else
 			{
-				$_message_error = "<p><strong>DESCULPE-NOS</strong></p>
-								<p>A página que você procura não foi encontrada.</p>
-								<p>Verifique o endereço digitado ou tente novamente mais tarde.</p>
-								";
-				require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.ERRORDIR.DIRECTORY_SEPARATOR.'error_404.php');
+				require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.CONTROLLERS.DIRECTORY_SEPARATOR.'error404.controller.php');
+				$errorController = new error404();
+				$errorController->index();
 			}
 		}else{
-
-			$_message_error = "<p><strong>DESCULPE-NOS</strong></p>
-								<p>A página que você procura não foi encontrada.</p>
-								<p>Verifique o endereço digitado ou tente novamente mais tarde.</p>";
-			require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.ERRORDIR.DIRECTORY_SEPARATOR.'error_404.php');
+			require_once(BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.CONTROLLERS.DIRECTORY_SEPARATOR.'error404.controller.php');
+			$errorController = new error404();
+			$errorController->index();
 		}
 	}
 }

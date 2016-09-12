@@ -99,27 +99,32 @@ class caixasDao extends Dao{
 
 	/**
 	 * Insere novos caixas
-	 * @return boolean, json
+	 * @return boolean
 	 */
  	public function inserir(caixasModel $caixa)
  	{
- 		
- 		$data = array(
-  			'codigo_checkout' => $caixa->getCodigo(),
- 			'ip_maquina' => $caixa->getIp(),
- 			'data_cadastro' => $caixa->getDataCadastro()
- 		);
+ 		try {
+	 		$data = array(
+	  			'codigo_checkout' => $caixa->getCodigo(),
+	 			'ip_maquina' => $caixa->getIp(),
+	 			'data_cadastro' => $caixa->getDataCadastro()
+	 		);
 
- 		$this->db->clear();
-		$this->db->setTabela('checkout');
-		if($this->db->insert($data))
-		{
-			return TRUE;
- 		}else
- 		{
- 			return $this->db->getError();
+	 		$this->db->clear();
+			$this->db->setTabela('checkout');
+			if($this->db->insert($data))
+			{
+				return TRUE;
+	 		}else
+	 		{
+	 			return $this->db->getError();
+	 		}
+ 		} catch (dbException $e) {
+ 			if($e->getDbCode() == '23000'){
+ 				return 'Esta máquina já está registrada no sistema';
+ 			}else
+	 			return $e->getMessageError();
  		}
- 		
  	}
 
 

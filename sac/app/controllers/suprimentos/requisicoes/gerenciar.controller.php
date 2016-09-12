@@ -118,14 +118,17 @@ class gerenciar extends Controller{
 	{
 		if(isset($_POST['idProduto']))
 		{
-			$idProduto = intval($_POST['idProduto']);
 			$this->load->model('produtos/produtosModel');
+			$this->load->dao('produtos/IConsultaProduto');
+			$this->load->dao('produtos/consultaPorId');
+			$this->load->dao('produtos/produtosDao');
+
+			$idProduto = intval($_POST['idProduto']);
 			$produtosModel = new produtosModel();
 			$produtosModel->setId($idProduto);
 
-			$this->load->dao('produtos/produtosDao');
 			$produtosDao = new produtosDao();
-			$produto = $produtosDao->consultar($produtosModel);
+			$produto = $produtosDao->consultar(new consultaPorId(), $produtosModel, Array(status::ATIVO));
 			
 			$imgProduct = ($produto->getFoto() != '') ? URL.'skin/uploads/produtos/p/'.$produto->getFoto() : URL.'skin/img/imagens/produtosemimagem.jpg';
 			$nomeUnidadeMedida = '';

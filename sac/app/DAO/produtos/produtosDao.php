@@ -124,65 +124,70 @@ class produtosDao extends Dao{
 
 	public function consultar(IConsultaProduto $consultaProduto, produtosModel $produto, $status)
 	{
+		try {
+			$result = $consultaProduto->consultar($this->db, $produto, $status);
+			if($result != null):
+				$produto = new produtosModel();
+				//CATEGORIA
+				$this->load->model('produtos/categoriasModel');
+				$categoriasModel= new categoriasModel();
+				$categoriasModel->setId($result['id_categoria']);
+				$categoriasModel->setNome( $result['nome_categoria'] );
+				$categoriasModel->setStatus(status::getAttribute($result['status_categoria']));
+				$categoriasModel->setDataCadastro($result['data_cadastro_categoria']);
 
-		$result = $consultaProduto->consultar($this->db, $produto, $status);
-		$produto = new produtosModel();
-		if($result != null):
-			//CATEGORIA
-			$this->load->model('produtos/categoriasModel');
-			$categoriasModel= new categoriasModel();
-			$categoriasModel->setId($result['id_categoria']);
-			$categoriasModel->setNome( $result['nome_categoria'] );
-			$categoriasModel->setStatus(status::getAttribute($result['status_categoria']));
-			$categoriasModel->setDataCadastro($result['data_cadastro_categoria']);
-
-			//MARCA
-            $this->load->model('produtos/marcasModel');
-            $marcasModel= new marcasModel();
-			$marcasModel->setId( $result['id_marca'] );
-			$marcasModel->setNome( $result['nome_marca'] );
-			$marcasModel->setStatus(status::getAttribute($result['status_marca']));
-			$marcasModel->setDataCadastro($result['data_cadastro_marca']);
-			
-			//PRODUTO
-			$produto->setId($result['id_produto']);
-			$produto->setFoto($result['foto_produto']);
-			$produto->setCodigoBarra($result['codigo_barra_gti']);
-			$produto->setNome($result['nome_produto']);
-			$produto->setMarca($marcasModel);
-			$produto->setCategoria($categoriasModel);
-			$produto->setDescricao($result['descricao_produto']);
-			$produto->setStatus(status::getAttribute($result['status_produto']));
-			$produto->setDataCadastro($result['data_cadastro_produto']);
+				//MARCA
+	            $this->load->model('produtos/marcasModel');
+	            $marcasModel= new marcasModel();
+				$marcasModel->setId( $result['id_marca'] );
+				$marcasModel->setNome( $result['nome_marca'] );
+				$marcasModel->setStatus(status::getAttribute($result['status_marca']));
+				$marcasModel->setDataCadastro($result['data_cadastro_marca']);
+				
+				//PRODUTO
+				$produto->setId($result['id_produto']);
+				$produto->setFoto($result['foto_produto']);
+				$produto->setCodigoBarra($result['codigo_barra_gti']);
+				$produto->setNome($result['nome_produto']);
+				$produto->setMarca($marcasModel);
+				$produto->setCategoria($categoriasModel);
+				$produto->setDescricao($result['descricao_produto']);
+				$produto->setStatus(status::getAttribute($result['status_produto']));
+				$produto->setDataCadastro($result['data_cadastro_produto']);
 
 
-			$this->db->clear();
-			$this->db->setTabela('unidade_medida as A, unidade_medida_produto AS B');
-			$this->db->setCondicao("B.id_produto = ? AND A.id_unidade_medida = B.id_unidade_medida");
-			$this->db->setParameter(1, $result['id_produto']);
-			if($this->db->select())
-			{
-				$this->load->model('produtos/unidadeMedidaModel');	
-				$this->load->model('produtos/unidadeMedidaEstoqueModel');	
-				//UNIDADE DE MEDIDA
-				$unidadeMedida = $this->db->resultAll();
-				foreach ($unidadeMedida as $unidade)
+				$this->db->clear();
+				$this->db->setTabela('unidade_medida as A, unidade_medida_produto AS B');
+				$this->db->setCondicao("B.id_produto = ? AND A.id_unidade_medida = B.id_unidade_medida");
+				$this->db->setParameter(1, $result['id_produto']);
+				if($this->db->select())
 				{
-					$unidadeMedidaModel = new unidadeMedidaModel();
-					$unidadeMedidaModel->setId($unidade['id_unidade_medida']);
-					$unidadeMedidaModel->setNome($unidade['nome_unidade_medida']);
-					$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
-					$unidadeMedidaEstoqueModel->setId($unidade['id_unidade_medida_produto']);
-					$unidadeMedidaEstoqueModel->setUnidadeMedida($unidadeMedidaModel);
-					$unidadeMedidaEstoqueModel->setParaVenda($unidade['para_venda']);
-					$unidadeMedidaEstoqueModel->setParaEstoque($unidade['para_estoque']);
-					$unidadeMedidaEstoqueModel->setFator($unidade['fator_unidade_medida']);
-					$unidadeMedidaEstoqueModel->setOrdem($unidade['ordem']);
-					$produto->addUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
+					$this->load->model('produtos/unidadeMedidaModel');	
+					$this->load->model('produtos/unidadeMedidaEstoqueModel');	
+					//UNIDADE DE MEDIDA
+					$unidadeMedida = $this->db->resultAll();
+					foreach ($unidadeMedida as $unidade)
+					{
+						$unidadeMedidaModel = new unidadeMedidaModel();
+						$unidadeMedidaModel->setId($unidade['id_unidade_medida']);
+						$unidadeMedidaModel->setNome($unidade['nome_unidade_medida']);
+						$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+						$unidadeMedidaEstoqueModel->setId($unidade['id_unidade_medida_produto']);
+						$unidadeMedidaEstoqueModel->setUnidadeMedida($unidadeMedidaModel);
+						$unidadeMedidaEstoqueModel->setParaVenda($unidade['para_venda']);
+						$unidadeMedidaEstoqueModel->setParaEstoque($unidade['para_estoque']);
+						$unidadeMedidaEstoqueModel->setFator($unidade['fator_unidade_medida']);
+						$unidadeMedidaEstoqueModel->setOrdem($unidade['ordem']);
+						$produto->addUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
+					}
 				}
-			}
-		endif;
-		return $produto;
+				return $produto;
+			else:
+				return NULL;
+			endif;
+		} catch (dbException $e) {
+			return $e->getMessageError();
+		}
 	}
 
 

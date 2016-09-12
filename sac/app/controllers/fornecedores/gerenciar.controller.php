@@ -76,6 +76,8 @@ class gerenciar extends Controller{
 			'template' => new templateFactory()
 		);
 		//ID
+		if($this->load->url->getSegment(3) == false)
+			$this->http->redirect(URL.'error404');
 		$idFornecedor = intval($this->load->url->getSegment(3));
 		
 		//FORNECEDORES MODEL
@@ -111,9 +113,9 @@ class gerenciar extends Controller{
 	{
 		if(!$this->load->checkPermissao->check(false,URL.'fornecedores/gerenciar/cadastrar'))
 		{
-			echo "Ação não permitida";
-			return false;
+			$this->http->response('Ação não permitida');
 		}
+		
 		$foto = isset($_FILES['foto']) ? $_FILES['foto'] : '';
 		$razaoSocial = isset($_POST['razao_social']) ? filter_var($_POST['razao_social']) : '';
 		$nomeFantasia = isset($_POST['nome_fantasia']) ? filter_var($_POST['nome_fantasia']) : '';

@@ -27,6 +27,11 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 			exit;
 		}
 		
+		public function redirect($pageRedirect)
+		{
+			header('Location:'. $pageRedirect);
+		}
+		
 		private function get_status_message(){
 			$status = array(
 						100 => 'Continue',  
@@ -128,5 +133,7 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 			else
 				return $this->_request;
 		}
+
+		
 	}
 ?>

@@ -83,6 +83,9 @@ class gerenciar extends Controller{
 			'cargos' => $cargos->listar()
 		);
 		//ID
+		if($this->load->url->getSegment(3) == false)
+			$this->http->redirect(URL.'error404');
+
 		$idFuncionario = intval($this->load->url->getSegment(3));
 		
 		//FUNCIONARIO MODEL

@@ -27,7 +27,12 @@ class gerenciar extends Controller{
 		$data = array(
 			'titlePage' => 'Caixa'
 		);
-		
+
+		$this->load->dao('produtos/produtosDao');
+		$produtosDao = new produtosDao();
+		$produtos = $produtosDao->listarAtivos();
+		$data['produtos'] = $produtos;
+
 		$this->load->view('includes/header',$data);
 		$this->load->view('caixa/checkout/home',$data);
 		$this->load->view('includes/footer',$data);
@@ -85,16 +90,68 @@ class gerenciar extends Controller{
 			$caixaAbertoModel = new caixaAbertoModel();
 			$caixaAbertoModel->setUsuario(unserialize($_SESSION['user']));
 			//$caixaAbertoModel->setIp$_COOKIE['IP']
-
-			$checkoutDao = new checkoutDao();
-
-
 			
-
-
+			$checkoutDao = new checkoutDao();
 		}
 	}
+
+
+
+	public function consultaProduto()
+	{
+		$this->load->model('produtos/produtosModel');
+		$this->load->dao('produtos/produtosDao');
+		$this->load->dao('produtos/IConsultaProduto');
+		$this->load->dao('produtos/consultaPorId');
+		$this->load->dao('produtos/consultaPorCodigoBarras');
+
+		$tipo = $this->http->getRequest('tipo');
+		$value = $this->http->getRequest('value');
+
+		// $tipo = 'porcodigo';
+		// $value = '7896006752837';
+
+		$status = Array(status::ATIVO);
+
+		$produtosModel = new produtosModel();
+		$produtos = new produtosDao();
+
+		$produto = new produtosModel();
+		if($tipo == 'pordescricao')
+		{
+			$idProduto = (int) $value;
+			$produtosModel->setId($idProduto);
+			$produto = $produtos->consultar(new consultaPorId(), $produtosModel, $status);
+		}else
+		if($tipo == 'porcodigo'){
+			$produtosModel->setCodigoBarra($value);
+			$produto = $produtos->consultar(new consultaPorCodigoBarras(), $produtosModel, $status);
+		}
+
+		if(!empty($produto))
+			$this->http->response($this->getJson($produto));
+		else
+			$this->http->response(false);
+	}
+
+
+	private function getJson(produtosModel $produto)
+	{
+		$auxJson = Array(
+			'id' => $produto->getId(),
+			'codigobarras' => $produto->getCodigoBarra(),
+			'nome' => $produto->getNome(),
+			'foto' => URL.'skin/uploads/produtos/p/'.$produto->getFoto(),
+			'valor' => ''
+		);
+		return json_encode($auxJson);
+	}
+
 	
+
+	
+
+
 }
 
 /**
