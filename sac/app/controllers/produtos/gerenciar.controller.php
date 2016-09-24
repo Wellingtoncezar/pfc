@@ -74,6 +74,39 @@ class gerenciar extends Controller{
 		$this->load->view('includes/footer',$data);
 	}
 
+
+	public function precos()
+	{
+		// $saveRouter = new saveRouter;
+		// $saveRouter->saveModule();
+		// $saveRouter->saveAction();
+		// $this->load->checkPermissao->check();
+
+		$data = array(
+			'titlePage' => 'Tabela de preços'
+		);
+
+		//marcas
+		// $this->load->dao('produtos/precosDao');
+		// $marcas = new marcasDao;
+		// $data['marcas']=$marcas->listar();
+
+		
+		$this->load->view('includes/header',$data);
+		$this->load->view('produtos/precos/home',$data);
+		$this->load->view('includes/footer',$data);
+	}
+
+	public function cadastrarprecos()
+	{
+		$data = array(
+			'titlePage' => 'Cadastrar preços'
+		);
+		$this->load->view('includes/header',$data);
+		$this->load->view('produtos/precos/cadastro',$data);
+		$this->load->view('includes/footer',$data);
+	}
+
 	public function editar()
 	{
 		$saveRouter = new saveRouter;

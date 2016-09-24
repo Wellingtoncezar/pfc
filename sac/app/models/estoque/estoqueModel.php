@@ -6,8 +6,7 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class estoqueModel{
 	private $id;
 	private $produto;
-	private $quantidade_minima;
-	private $quantidade_maxima;
+	private $nivelestoque;
 	private $quantidade_total;
 	private $lotes = Array();
 	
@@ -20,14 +19,12 @@ class estoqueModel{
 	{
 		$this->produto = $produto;
 	}
-	public function setQuantidadeMinima($quantidade_minima)
+
+	public function setNivelEstoque(nivelEstoqueModel $nivelestoque)
 	{
-		$this->quantidade_minima = $quantidade_minima;
+		$this->nivelestoque = $nivelestoque;
 	}
-	public function setQuantidadeMaxima($quantidade_maxima)
-	{
-		$this->quantidade_maxima = $quantidade_maxima;
-	}
+
 	public function setQuantidadeTotal($quantidade_total)
 	{
 		$this->quantidade_total = $quantidade_total;
@@ -51,14 +48,11 @@ class estoqueModel{
 	{
 		return $this->produto;
 	}
-	public function getQuantidadeMinima()
+	public function getNivelEstoque()
 	{
-		return $this->quantidade_minima;
+		return $this->nivelestoque;
 	}
-	public function getQuantidadeMaxima()
-	{
-		return $this->quantidade_maxima;
-	}
+
 
 	/**
 	 * retorna a quantidade total do produto em estoque relacionada à unidade de medida 

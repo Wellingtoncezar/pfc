@@ -10,6 +10,7 @@
 		
 		<div id="grid"></div>
 		<div id="details"></div>
+        <div id="limites"></div>
     </div>
 </div>
 
@@ -18,6 +19,7 @@
 <link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.default.min.css" />
 <script src="<?=URL?>skin/js/kendoui/js/kendo.all.min.js"></script>
 <script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
 
 
 <script type="text/x-kendo-template" id="template">
@@ -36,6 +38,42 @@
     	</form>
     </div>
 </script>
+
+
+
+<!--MODAL DE ALTERAÇÃO DE LIMITES DE ESTOQUE-->
+<div class="modal fade" id="modalAlterLim">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="" id="formLimites" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Alterar limites de estoque</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="idEstoque" value="">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Min.</span>
+                        <input type="text" class="form-control" name="qtdMin" value="" min="0">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Max.</span>
+                        <input type="text" class="form-control" name="qtdMax" value="" min="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success pull-rigth btnAlterLimites">Salvar</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
 
 
 <script>
@@ -71,7 +109,7 @@ $("#grid").kendoGrid({
         field: "nivel",
         title: "Nível",	
         width: "200px",
-        template: '<h4><span class="pull-left label-danger label">#: min #</span></h4>'
+        template: '<h4><a href="javascript:void(0)" class="alterMin"><span class="pull-left label-danger label">#: min #</span></a></h4>'
 				+'<h4><span class="pull-right label-success label">#: max #</span></h4>'
 				+'<div class="progress">'
 				  	+'<div class="progress-bar #: progressclass # progress-bar-striped active" role="progressbar" aria-valuenow="#: nivel #" aria-valuemin="0" aria-valuemax="100" style="width: #: nivel #%">'
@@ -83,7 +121,9 @@ $("#grid").kendoGrid({
     	filterable: false,
         field: "acoes",
         title: "Ações",
-        width: "100px"
+        width: "100px",
+        template: '<a href="javascript:void(0)" linkAlterarLimites="#:linkAlterarLimites#" min="#:min#" max="#:max#" id="#:id#" class="btn btn-default btnAlterLimites"><span class="glyphicons glyphicons-edit"></span></a>'
+
     }
   	],
     filterable: {
@@ -159,12 +199,47 @@ function showDetails(e) {
     wnd.center().open();
 }
 
+
+//Limites de estoque
+$(document).on('click', '.btnAlterLimites',function(){
+    var linkAlterarLimites = $(this).attr('linkAlterarLimites')
+    var id = $(this).attr('id');
+    var min = $(this).attr('min');
+    var max = $(this).attr('max');
+    $('#formLimites').attr('action', linkAlterarLimites);
+    $('#modalAlterLim input[name=qtdMin]').val(min);
+    $('#modalAlterLim input[name=qtdMax]').val(max);
+    $('#modalAlterLim input[name=idEstoque]').val(id);
+    $('#modalAlterLim').modal('show');
+
+
+    $('input[name=qtdMin]').maskMoney({
+        decimal:',',
+        thousands: ''
+    });
+    $('input[name=qtdMax]').maskMoney({
+        decimal:',',
+        thousands: ''
+    });
+})
+
+
+
+
 $(document).on('submit', '#formTransferir', function(event) {
-	event.preventDefault();
 	$('#formTransferir').uploadForm({
         'reload':false
     });
+    return false;
 });
+
+
+$(document).on('submit', '#formLimites', function(event) {
+    $('#formLimites').uploadForm({
+    });
+    return false;
+});
+    
 
 </script>
 

@@ -12,8 +12,8 @@ class estoqueDao extends Dao{
 	public function listar(iListagemEstoque $listaestoque)
 	{
 		try {
-				
 			$this->load->model('estoque/estoqueModel');
+			$this->load->model('estoque/nivelEstoqueModel');
 			$this->load->model('produtos/produtosModel');
 			$this->load->model('produtos/unidademedidaModel');
 			$this->load->model('produtos/unidadeMedidaEstoqueModel');
@@ -25,17 +25,23 @@ class estoqueDao extends Dao{
 			{
 				foreach ($result as $value)
 				{
-					$estoqueModel = new estoqueModel();
-					$estoqueModel->setId($value['id_estoque']);
-					$estoqueModel->setQuantidadeMinima($value['quantidade_minima']);
-					$estoqueModel->setQuantidadeMaxima($value['quantidade_maxima']);
-
+					//nivel estoque
+					$nivelEstoqueModel = new nivelEstoqueModel();
+					$nivelEstoqueModel->setQuantidadeMinima($value['quantidade_minima']);
+					$nivelEstoqueModel->setQuantidadeMaxima($value['quantidade_maxima']);
+					$nivelEstoqueModel->setLocalizacao(localizacoes::getAttribute($value['localizacao_estoque']));
+					
+					//produtos
 					$produtoModel = new produtosModel();
 					$produtoModel->setId($value['id_produto']);
 					$produtoModel->setFoto($value['foto_produto']);
 					$produtoModel->setCodigoBarra($value['codigo_barra_gti']);
 					$produtoModel->setNome($value['nome_produto']);
 
+					//estoque
+					$estoqueModel = new estoqueModel();
+					$estoqueModel->setId($value['id_estoque']);
+					$estoqueModel->setNivelEstoque($nivelEstoqueModel);
 					$estoqueModel->setProduto($produtoModel);
 
 					$this->db->clear();
@@ -48,11 +54,13 @@ class estoqueDao extends Dao{
 						$unidadeMedida = $this->db->resultAll();
 						foreach ($unidadeMedida as $unidade)
 						{
+							//unidade medida
 							$unidadeMedidaModel = new unidadeMedidaModel();
 							$unidadeMedidaModel->setId($unidade['id_unidade_medida']);
 							$unidadeMedidaModel->setNome($unidade['nome_unidade_medida']);
 							$unidadeMedidaModel->setAbreviacao($unidade['abreviacao_unidade_medida']);
 
+							//unidade medida estoque
 							$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
 							$unidadeMedidaEstoqueModel->setId($unidade['id_unidade_medida_produto']);
 							$unidadeMedidaEstoqueModel->setUnidadeMedida($unidadeMedidaModel);
@@ -274,6 +282,38 @@ class estoqueDao extends Dao{
 			return $e->getMessageError();
 		}
 
+	}
+
+	public function limitar(estoqueModel $estoqueModel)
+	{
+		try {
+			$this->db->clear();
+			$this->db->setTabela('localizacao_lote');
+			$this->db->setCondicao("id_produto_lote = ? AND localizacao = ?");
+			$this->db->setParameter(1, $id_produto_lote);
+			$this->db->setParameter(2, $localizacao);
+			if($this->db->select())
+			{
+				$res = $this->db->result();
+				$data['quantidade_localizacao'] = $res['quantidade_localizacao']+$data['quantidade_localizacao'];
+				if($this->db->update($data))
+				{
+					$this->db->query('COMMIT');
+					return true;
+				}else
+				{
+					$this->db->query('rollback');
+					return false;
+				}
+			}else
+			{
+				$this->db->insert($data);
+				$this->db->query('COMMIT');
+			}
+		} catch (dbException $e) {
+			$this->db->query('rollback');
+			return $e->getMessageError();
+		}
 	}
 
 

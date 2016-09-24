@@ -238,8 +238,6 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
 		    	event.preventDefault();
 		    	$('.box_panel_cropper',formImg).slideUp();
 		    	$('body').css('overflow','auto');
-
-
 		    });
 
 
@@ -299,264 +297,141 @@ Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'cropper'
     }
 })(jQuery);
 
-/*
-<div class="box_panel_cropper">
-                <div class="panel panel-default panel_cropper">
-                    <div class="panel-heading">Editar imagem</div>
-                    <div class="container panel-body">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <!-- <h3 class="page-header">Demo:</h3> -->
-                                <div class="img-container">
-                                    <img src="../assets/img/picture.jpg" alt="Picture">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <!-- <h3 class="page-header">Preview:</h3> -->
-                                <div class="docs-preview clearfix">
-                                    <div class="img-preview preview-lg"></div>
-                                    <div class="img-preview preview-md"></div>
-                                    <div class="img-preview preview-sm"></div>
-                                    <div class="img-preview preview-xs"></div>
-                                </div>
-
-                                <!-- <h3 class="page-header">Data:</h3> -->
-                                <div class="docs-data">
-                                    <div class="input-group">
-                                        <input class="form-control" id="dataX" type="text" placeholder="x" name="x1" style="display:none">
-                                    </div>    
-                                    <div class="input-group">
-                                        <input class="form-control" id="dataY" type="text" placeholder="y" name="y1" style="display:none">
-                                    </div>
-                                    <div class="input-group">
-                                        <input class="form-control" id="dataWidth" type="text" placeholder="width" name="w" style="display:none">
-                                    </div>
-                                    <div class="input-group">
-                                        <input class="form-control" id="dataHeight" type="text" placeholder="height" name="h" style="display:none">
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-9 docs-buttons">
-                                <!-- <h3 class="page-header">Toolbar:</h3> -->
-                                <div class="btn-group">
-                                    <button class="btn btn-primary" data-method="setDragMode" data-option="move" type="button" title="Move">
-                                        <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;setDragMode&quot;, &quot;move&quot;)">
-                                            <span class="glyphicon glyphicon-move"></span>
-                                        </span>
-                                    </button>
-                              
-                                    <button class="btn btn-primary" data-method="zoom" data-option="0.1" type="button" title="Zoom In">
-                                        <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, 0.1)">
-                                            <span class="glyphicon glyphicon-zoom-in"></span>
-                                        </span>
-                                    </button>
-                                    <button class="btn btn-primary" data-method="zoom" data-option="-0.1" type="button" title="Zoom Out">
-                                        <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, -0.1)">
-                                            <span class="glyphicon glyphicon-zoom-out"></span>
-                                        </span>
-                                    </button>
-                                </div>
-
-                                <!-- Show the cropped image in modal -->
-                                <div class="modal fade docs-cropped" id="getCroppedCanvasModal" aria-hidden="true" aria-labelledby="getCroppedCanvasTitle" role="dialog" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button class="close" data-dismiss="modal" type="button" aria-hidden="true">&times;</button>
-                                                <h4 class="modal-title" id="getCroppedCanvasTitle">Cropped</h4>
-                                            </div>
-                                            <div class="modal-body"></div>
-                                            <!-- 
-                                            <div class="modal-footer">
-                                                <button class="btn btn-primary" data-dismiss="modal" type="button">Close</button>
-                                            </div> 
-                                            -->
-                                        </div>
-                                    </div>
-                                </div><!-- /.modal -->
-                         
-                                <button class="btn btn-primary" data-method="getCropBoxData" data-option="" data-target="#putData" type="button">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;getCropBoxData&quot;)">
-                                        Get Crop Box Data
-                                    </span>
-                                </button>
-                                <button class="btn btn-primary" data-method="setCropBoxData" data-target="#putData" type="button">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;setCropBoxData&quot;, data)">
-                                        Set Crop Box Data
-                                    </span>
-                                </button>
-                                <input class="form-control" id="putData" type="text" placeholder="Get data to here or set data with this value" name="putData">
-                                
-                            </div><!-- /.docs-buttons -->
-
-                        </div>
-                    </div>
-
-                    <!-- Alert -->
-                    <div class="docs-alert"><span class="warning message"></span></div>
-                </div>
-            </div>
-
-
-
-*/
-
 
 /*
 @author wellington cezar
-Este plugin tem como dependência os plugin: 'ajaxForm', 'jquery ui' e 'Jcrop'.
+Plugin para upload de imagens, junto com crop
+Este plugin tem como dependÃªncia os plugin: 'ajaxForm', 'jquery ui' e 'Jcrop'.
 */
 
 (function($){
-    $.fn.uploadForm = function(options) {
+    $.fn.uploadForm = function(options, action) {
+    	var $jquery = this;
+
+
+    	var form;
         var configs = {
-			'width' : 50,
-			'height' : 50,
-			'cortar' : true,
-			'original' : true,
-			'sendInfo':'',
+        	'beforeSubmit' : function(formData, jqForm, options)
+			{ 
+			    return true;
+			},
+			'afterSubmit' : function (data, status, xhr, $form)  { 
+	   			$('input, select, textarea',form).css('box-shadow','none');
+			    $('.generalErrors .alert').html('');
+	   			try
+				{
+					$('#carregando').fadeOut();
+	       			if(data != true)
+	       				{
+	       					
+			       			$('#alertFormModal').modal('show');
+			       			//data = $.parseJSON(data);
+			       			$.each(data, function(index, value) {
+						        var value = ''+value;
+								var values = value.split(',');
+						        $.each(values, function(id, val) {
+						        	$('.generalErrors .alert').append('<p>'+val+'</p>');
+						        });
+						        $('[name='+index+']',form).css('box-shadow','0 0 1px 1px #F00');
+							});
+						}else
+						{
+							$("#img_previous",form).attr('src','');
+							if(settings.reload == true)
+	                    		location.reload();
+	                        if(settings.redirect != null)
+	                            location.href = settings.redirect
+	                        if(settings.resetform == true)
+	                            form.get(0).reset();
+							$('.generalErrors').removeClass('panel-danger').addClass('panel-success').html('<h4 class="panel-heading">Enviado com sucesso</h4>').css('background','#dff0d8');
+							$('#alertFormModal').modal('show');
+
+						}
+				}
+				catch(e)
+				{
+					console.log(e)
+					console.log(data)
+					//$('#carregando').fadeOut();
+				}
+				return true;
+			},
+			'dataType': 'json',
 			'redirect':null,
-			'resetform' : true,
+			'resetform' : false,
+			'clearForm' : false,
 			'reload' : false,
-			'parameters' : {}
+			'parameters' : {},
+			'autoSubmit' : true
         };
 
+        
+
+
+
+
+
         var settings = $.extend( {}, configs, options );
-        var form = $(this);
-        var animate = null;
 
+        var output={
+ 			
+            'init':function(){
+            	$jquery.each(function(){
+	            	form = $(this);
+			        var contentpanel = '<div class="modal fade" id="alertFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">'
+										  +'<div class="modal-dialog" role="document">'
+										    +'<div class="modal-content">'
+										      +'<div class="modal-header">'
+										        +'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+										        +'<h4 class="modal-title" id="myModalLabel">AtenÃ§Ã£o</h4>'
+										      +'</div>'
+										      +'<div class="modal-body">'
+										        	+'<div class="panel generalErrors panel-danger" style="text-align:left; background-color: #f2dede;">'
+										        		+'<h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4>'
+										        		+'<div class="alert alert-danger" role="alert">'
+										        		+'</div>'
+										        	+'</div>'
+										      +'</div>'
+										     +'<div class="modal-footer">'
+										        +'<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>'
+										      +'</div>'
+										    +'</div>'
+										  +'</div>'
+										+'</div>';
+			        $('body').append(contentpanel);
+					
+				})
+            },
+            'submitForm' :function(){
+            	// post-submit callback 
+			    form.ajaxSubmit({ 
+			        //target:        '#output1',   // target element(s) to be updated with server response 
+			        beforeSubmit:  settings.beforeSubmit,  // pre-submit callback 
+			        success:       settings.afterSubmit,  // post-submit callback 
+			 
+			        // other available options: 
+			        url:       form.attr('action'),         // override for form's 'action' attribute 
+			        //type:      form.attr('').type        // 'get' or 'post', override for form's 'method' attribute 
+			        dataType:  settings.dataType,        // 'xml', 'script', or 'json' (expected server response type) 
+			        clearForm: settings.clearForm,       // clear all form fields after successful submit 
+			        resetForm: settings.resetform,      // reset the form after successful submit 
+			 		data:  settings.parameters,
+			        // $.ajax options can be used here too, for example: 
+			        //timeout:   3000
+			        error : function(e){
+			        	//console.log(e.responseText);
+			        	$('#alertFormModal').modal('show');
+			        	$('.generalErrors .alert').html(e.responseText);
+			        	//$('#carregando').fadeOut();
+			        }
+			    });
+            }
+        };
 
-        //$('.generalErrors').remove();
-
-
-        var contentpanel = '<div class="modal fade" id="alertFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">'
-							  +'<div class="modal-dialog" role="document">'
-							    +'<div class="modal-content">'
-							      +'<div class="modal-header">'
-							        +'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-							        +'<h4 class="modal-title" id="myModalLabel">Atenção</h4>'
-							      +'</div>'
-							      +'<div class="modal-body">'
-							        	+'<div class="panel generalErrors panel-danger" style="text-align:left; background-color: #f2dede;">'
-							        		+'<h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4>'
-							        		+'<div class="alert alert-danger" role="alert">'
-							        		+'</div>'
-							        	+'</div>'
-							      +'</div>'
-							     +'<div class="modal-footer">'
-							        +'<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>'
-							      +'</div>'
-							    +'</div>'
-							  +'</div>'
-							+'</div>';
-
-
-        $('body').append(contentpanel);
-
-
-       	// pre-submit callback
-		function showRequest(formData, jqForm, options)
-		{ 
-
-			/*console.log('INICIO REQUEST')
-			console.log(formData)
-			console.log(jqForm)
-			console.log(options)
-			*/
-		    //$('#carregando').remove();
-	        //$('body').append('<div id="carregando">'
-								    //+'<div class="demo-wrapper html5-progress-bar">'
-								        //+'<div class="progress-bar-wrapper">'
-			//					        	+'<img src="'+URL+'img/loading.gif">'
-								            //+'<progress id="progressbar" value="0" max="100"></progress>'
-								            //+'<span class="progress-value">0%</span>'
-								        //+'</div>'
-								    //+'</div>'
-			//					+'</div>');
-		    //$('#carregando').fadeIn();
-		    return true;
-		} 
- 
-		// post-submit callback 
-		function showResponse(data, status, xhr, $form)  { 
-			/*console.log('INICIO RESPONSE')
-			console.log(status)
-			console.log(xhr)
-			console.log($form)
-			
-			console.log(data)
-			*/
-   			$('input, select, textarea',form).css('box-shadow','none');
-		    $('.generalErrors .alert').html('');
-   			try
-			{
-				$('#carregando').fadeOut();
-       			if(data != true)
-       				{
-       					
-		       			$('#alertFormModal').modal('show');
-		       			//data = $.parseJSON(data);
-		       			$.each(data, function(index, value) {
-					        var value = ''+value;
-							var values = value.split(',');
-					        $.each(values, function(id, val) {
-					        	$('.generalErrors .alert').append('<p>'+val+'</p>');
-					        });
-					        $('[name='+index+']',form).css('box-shadow','0 0 1px 1px #F00');
-						});
-		       			//var erroTop = ($('.generalErrors').offset().top)
-		       			//$('body,html').animate({scrollTop : erroTop},600);
-					}else
-					{
-						$("#img_previous",form).attr('src','');
-						if(settings.reload == true)
-                    		location.reload();
-                        if(settings.redirect != null)
-                            location.href = settings.redirect
-                        if(settings.resetform == true)
-                            form.get(0).reset();
-						$('.generalErrors').removeClass('panel-danger').addClass('panel-success').html('<h4 class="panel-heading">Enviado com sucesso</h4>').css('background','#dff0d8');
-						$('#alertFormModal').modal('show');
-						// var erroTop = ($('.generalErrors').offset().top)
-		    //    			$('body,html').animate({scrollTop : erroTop},600);
-					}
-			}
-			catch(e)
-			{
-				console.log(e)
-				console.log(data)
-				$('#alertFormModal').modal('show');
-	        	$('.generalErrors .alert').html(e.responseText);
-			}
-			return true;
-		} 
-       	//ajaxSubmitOptions
-	    var options = { 
-	        //target:        '#output1',   // target element(s) to be updated with server response 
-	        beforeSubmit:  showRequest,  // pre-submit callback 
-	        success:       showResponse,  // post-submit callback 
-	 
-	        // other available options: 
-	        url:       form.attr('action'),         // override for form's 'action' attribute 
-	        //type:      type        // 'get' or 'post', override for form's 'method' attribute 
-	        dataType:  'json',        // 'xml', 'script', or 'json' (expected server response type) 
-	        //clearForm: true        // clear all form fields after successful submit 
-	        //resetForm: true        // reset the form after successful submit 
-	 		data:  settings.parameters,
-	        // $.ajax options can be used here too, for example: 
-	        //timeout:   3000
-	        error : function(e){
-	        	//console.log(e.responseText);
-	        	$('#alertFormModal').modal('show');
-	        	$('.generalErrors .alert').html(e.responseText);
-	        	//$('#carregando').fadeOut();
-	        }
-	    }; 
-
-	    
-	    form.ajaxSubmit(options); 
+        output.init();
+        if(settings.autoSubmit == true)
+        	output.submitForm();
+        
+        return output;
     }; 
 })(jQuery);

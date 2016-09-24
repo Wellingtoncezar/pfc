@@ -75,10 +75,13 @@ class gerenciar extends Controller{
 						'produto'=> $estoqueProd->getProduto()->getNome(),
 						'foto'=> $foto,
 						'qtdtotal'=> $dataformat->formatar($estoqueProd->getQuantidadeTotal(),'decimal').' '.$estoqueProd->getUnidadeMedidaParaEstoque()->getUnidadeMedida()->getNome(),
-						'min'=> $dataformat->formatar($estoqueProd->getQuantidadeMinima(),'decimal'),
-						'max'=> $dataformat->formatar($estoqueProd->getQuantidadeMaxima(),'decimal'),
-						'nivel'=> (($estoqueProd->getQuantidadeTotal()- $estoqueProd->getQuantidadeMinima()) * 100) / ($estoqueProd->getQuantidadeMaxima() - $estoqueProd->getQuantidadeMinima()),
+						'min'=> $dataformat->formatar($estoqueProd->getNivelEstoque()->getQuantidadeMinima(),'decimal'),
+						'max'=> $dataformat->formatar($estoqueProd->getNivelEstoque()->getQuantidadeMaxima(),'decimal'),
+						'minUnformated'=> $estoqueProd->getNivelEstoque()->getQuantidadeMinima(),
+						'maxUnformated'=> $estoqueProd->getNivelEstoque()->getQuantidadeMaxima(),
+						'nivel'=> (($estoqueProd->getQuantidadeTotal()- $estoqueProd->getNivelEstoque()->getQuantidadeMinima()) * 100) / ($estoqueProd->getNivelEstoque()->getQuantidadeMaxima() - $estoqueProd->getNivelEstoque()->getQuantidadeMinima()),
 						'progressclass' => "progress-bar-success",
+						'linkAlterarLimites' => URL."estoque/armazem/gerenciar/limitar",
 						'acoes'=> "",
 				      	'lotes'=> array()
 				    );
@@ -147,6 +150,40 @@ class gerenciar extends Controller{
 
 	}
 
+	public function limitar()
+	{
+		$this->load->dao('estoque/estoqueDao');
+		$this->load->model('estoque/estoqueModel');
+		$this->load->library('dataformat');
+		$dataformat = new dataformat();
+		$idEstoque 	= (int) $this->http->getRequest('idEstoque');
+		$qtdMax 	= $dataformat->formatar($this->http->getRequest('qtdMax'), 'decimal', 'banco');
+		$qtdMin 	= $dataformat->formatar($this->http->getRequest('qtdMin'), 'decimal', 'banco');
+
+		//validação dos dados
+		$this->load->library('dataValidator', null, true);
+		$this->load->dataValidator->set('Quantidade mínima', $qtdMin, 'qtdMin')->is_required()->is_num();
+		$this->load->dataValidator->set('Quantidade máxima', $qtdMax, 'qtdMax')->is_required()->is_num();
+		if ($this->load->dataValidator->validate())
+		{
+			$estoqueModel = new estoqueModel();
+			$estoqueModel->setId($idEstoque);
+
+			$nivelEstoqueModel = new nivelEstoqueModel();
+			$nivelEstoqueModel->setQuantidadeMinima($value['quantidade_minima']);
+			$nivelEstoqueModel->setQuantidadeMaxima($value['quantidade_maxima']);
+			
+			
+			$estoqueModel->setNivelEstoque($nivelEstoqueModel);
+			
+			$estoqueDao = new estoqueDao();
+			$this->http->response($estoqueDao->limitar($estoqueModel));
+		}else
+	    {
+			$todos_erros = $this->load->dataValidator->get_errors();
+			$this->http->response(json_encode($todos_erros));
+	    }
+	}
 
 }
 
