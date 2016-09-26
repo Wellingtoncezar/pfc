@@ -16,6 +16,7 @@ class produtosModel{
 	private $unidadeMedidaVenda;
 	private $fatorUnidadeMedidaVenda;
 	private $status = status::ATIVO;
+	private $precos = array();
 	private $dataCadastro;
 	private $ultimaAtualizacao;
 	
@@ -93,6 +94,16 @@ class produtosModel{
 	{
 		$this->status = status::EXCLUIDO;
 	}
+
+	public function addPreco(precosModel $preco)
+	{
+		array_push($this->precos, $preco);
+	}
+	public function setPrecos($precos)
+	{
+		$this->precos = $precos;
+	}
+
 	public function setDataCadastro($dataCadastro)
 	{	
 		$this->dataCadastro = $dataCadastro;
@@ -156,6 +167,10 @@ class produtosModel{
 	public function getStatus()
 	{
 		return $this->status;
+	}
+	public function getPrecos()
+	{
+		return $this->precos;
 	}
 	public function getDataCadastro()
 	{	

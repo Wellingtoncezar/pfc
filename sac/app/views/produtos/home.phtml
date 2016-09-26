@@ -57,7 +57,7 @@
                             </td>
                             <td>'
                                 .$this->templateFactory->getButton('editar',array('href'=> URL.'produtos/gerenciar/editar/'.$prod->getId()), URL.'produtos/gerenciar/editar/')
-                                .$this->templateFactory->getButton('valores',array('href'=> URL.'produtos/precos/'.$prod->getId()), URL.'produtos/gerenciar/precos/')
+                                .$this->templateFactory->getButton('valores',array('href'=> URL.'produtos/gerenciar/precos/'.$prod->getId()), URL.'produtos/gerenciar/precos/')
                                 .$this->templateFactory->getButton('excluir', array('id'=> $prod->getId()), URL.'produtos/gerenciar/excluir/').
                             '</td>
                         </tr>';

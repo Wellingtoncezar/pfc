@@ -1,39 +1,45 @@
 <div class="container">
     <?php
-        $btnCadastrar = $this->templateFactory->getButton("cadastrar", array('href'=>URL.'produtos/gerenciar/cadastrarprecos'), URL.'produtos/gerenciar/cadastrarprecos');
-        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
+    	$btnVoltar = $this->templateFactory->getButton(
+											       		"voltar",
+											       		array( 'href'=>URL.'produtos/gerenciar/' )
+											       	);
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar", array('href'=>URL.'produtos/gerenciar/cadastrarprecos/'.$idProduto), URL.'produtos/gerenciar/cadastrarprecos');
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar.$btnVoltar));
     ?>
     <div class="page-header">
-      <h1>Tabela de preços</h1>
+      <h1>Tabela de preços <small><?=$produtoPreco->getNome()?></small></h1>
     </div>
     <div class="middle-content">
-        <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto;  width: 200px;" id="loadTable">
+        <img src="<?=URL?>img/loading3.gif" style="display: block;  margin: auto; width: 200px;" id="loadTable">
         <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
             <thead>
-                <tr>   
-                    <th width="100">Código</th>
-                    <th width="160">Nome</th>
+                <tr>
+                    <th width="100">#</th>
+                    <th width="160">Preço</th>
+                    <th width="160">Período</th>
                     <th width="180">Ações</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
-                    <th>Código</th>
-                    <th>Nome</th>
+                    <th>#</th>
+                    <th>Preço</th>
+                    <th>Período</th>
                     <th>Ações</th>
                 </tr>
             </tfoot>
             <tbody>
-            <?php
-            if(!empty($marcas)):
-                foreach ($marcas as $marc):
-            ?>
-                <tr id="<?=$marc->getId()?>">
-                    <td><?=$marc->getId()?></td>
-                    <td><?=$marc->getNome()?></td>
+
+            <?php if(!empty($produtoPreco)):?>
+            <?php foreach ($produtoPreco->getPrecos() as $preco): ?>
+                <tr id="<?=$preco->getId()?>">
+                    <td><?=$preco->getId()?> <?= ($preco->getPadrao())? '<span class="glyphicon glyphicon-ok"></span>' : ''?></td>
+                    <td><?=$dataFormat->formatar($preco->getPreco(), 'moeda')?></td>
+                    <td>De: <?=$dataFormat->formatar($preco->getDataInicio(),'data')?> Até: <?=$dataFormat->formatar($preco->getDataFim(),'data')?></td>
                     <td>
-                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/marcas/gerenciar/editar/<?=$marc->getId()?>" role="button" id-record="<?=$marc->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
-                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$marc->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span>Excluir</a>
+                        <a class="btn btn-primary btn_editar btn-sm" href="<?=URL?>produtos/marcas/gerenciar/editar/<?=$preco->getId()?>" role="button" id-record="<?=$preco->getId()?>" ><span class="glyphicon glyphicon-pencil"></span> Editar</a>
+                        <a class="btn btn-danger btn_excluir btn-sm" href="javascript:void(0)" role="button" id="<?=$preco->getId()?>" data-value="<?=status::EXCLUIDO?>" ><span class="glyphicon glyphicon-remove"></span>Excluir</a>
                     </td>
                 </tr>
             <?php

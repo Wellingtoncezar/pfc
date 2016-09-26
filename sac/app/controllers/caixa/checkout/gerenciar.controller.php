@@ -25,7 +25,8 @@ class gerenciar extends Controller{
 		$this->load->checkPermissao->check();
 
 		$data = array(
-			'titlePage' => 'Caixa'
+			'titlePage' => 'Caixa',
+			'usuario' => unserialize($_SESSION['user'])
 		);
 
 		$this->load->dao('produtos/produtosDao');
@@ -100,13 +101,17 @@ class gerenciar extends Controller{
 	public function consultaProduto()
 	{
 		$this->load->model('produtos/produtosModel');
+		$this->load->model('produtos/precosModel');
 		$this->load->dao('produtos/produtosDao');
 		$this->load->dao('produtos/IConsultaProduto');
-		$this->load->dao('produtos/consultaPorId');
+		$this->load->dao('produtos/consultaPorIdNaPrateleira');
 		$this->load->dao('produtos/consultaPorCodigoBarras');
+		$this->load->dao('produtos/precosDao');
 
 		$tipo = $this->http->getRequest('tipo');
 		$value = $this->http->getRequest('value');
+		$quantidade = $this->http->getRequest('quantidade');
+
 
 		// $tipo = 'porcodigo';
 		// $value = '7896006752837';
@@ -119,14 +124,21 @@ class gerenciar extends Controller{
 		$produto = new produtosModel();
 		if($tipo == 'pordescricao')
 		{
+			//em estoque
 			$idProduto = (int) $value;
 			$produtosModel->setId($idProduto);
-			$produto = $produtos->consultar(new consultaPorId(), $produtosModel, $status);
+			$produto = $produtos->consultar(new consultaPorIdNaPrateleira(), $produtosModel, $status);
 		}else
 		if($tipo == 'porcodigo'){
 			$produtosModel->setCodigoBarra($value);
 			$produto = $produtos->consultar(new consultaPorCodigoBarras(), $produtosModel, $status);
 		}
+
+		$precos = new precosDao();
+		$precosModel = $precos->consultarPrecoVenda($produto);
+
+		$produto->addPreco($precosModel);
+
 
 		if(!empty($produto))
 			$this->http->response($this->getJson($produto));
@@ -137,12 +149,15 @@ class gerenciar extends Controller{
 
 	private function getJson(produtosModel $produto)
 	{
+		$this->load->library('dataformat');
+		$dataformat = new dataformat();
 		$auxJson = Array(
 			'id' => $produto->getId(),
 			'codigobarras' => $produto->getCodigoBarra(),
 			'nome' => $produto->getNome(),
 			'foto' => URL.'skin/uploads/produtos/p/'.$produto->getFoto(),
-			'valor' => ''
+			'preco' => $produto->getPrecos()[0]->getPreco(),
+			'precoFormatado' => $dataformat->formatar($produto->getPrecos()[0]->getPreco(),'moeda')
 		);
 		return json_encode($auxJson);
 	}

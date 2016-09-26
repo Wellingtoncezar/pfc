@@ -74,39 +74,6 @@ class gerenciar extends Controller{
 		$this->load->view('includes/footer',$data);
 	}
 
-
-	public function precos()
-	{
-		// $saveRouter = new saveRouter;
-		// $saveRouter->saveModule();
-		// $saveRouter->saveAction();
-		// $this->load->checkPermissao->check();
-
-		$data = array(
-			'titlePage' => 'Tabela de preços'
-		);
-
-		//marcas
-		// $this->load->dao('produtos/precosDao');
-		// $marcas = new marcasDao;
-		// $data['marcas']=$marcas->listar();
-
-		
-		$this->load->view('includes/header',$data);
-		$this->load->view('produtos/precos/home',$data);
-		$this->load->view('includes/footer',$data);
-	}
-
-	public function cadastrarprecos()
-	{
-		$data = array(
-			'titlePage' => 'Cadastrar preços'
-		);
-		$this->load->view('includes/header',$data);
-		$this->load->view('produtos/precos/cadastro',$data);
-		$this->load->view('includes/footer',$data);
-	}
-
 	public function editar()
 	{
 		$saveRouter = new saveRouter;
@@ -153,6 +120,135 @@ class gerenciar extends Controller{
 		$this->load->view('produtos/editar',$data);
 		$this->load->view('includes/footer',$data);
 	}
+
+
+
+
+	public function precos()
+	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
+
+		$this->load->model('produtos/produtosModel');
+		$this->load->dao('produtos/produtosDao');
+		$this->load->dao('produtos/iConsultaProduto');
+		$this->load->dao('produtos/consultaPorId');
+		$this->load->dao('produtos/precosDao');
+
+		$idProduto = (int) $this->load->url->getSegment(3);
+		$data = array(
+			'titlePage' => 'Tabela de preços',
+			'idProduto' => $idProduto,
+			'dataFormat' => new dataFormat()
+		);
+		$produtosModel = new produtosModel();
+		$produtosModel->setId($idProduto);
+
+		//obtendo o produto
+		$produtos = new produtosDao();
+		$produtosModel = $produtos->consultar(new consultaPorId(), $produtosModel, Array(status::ATIVO, status::INATIVO));
+
+		//obtendo os preços do produto
+		$precos = new precosDao();
+
+		//setando os preços no produto
+		$produtosModel->setPrecos($precos->listar($produtosModel));
+		$data['produtoPreco'] = $produtosModel;
+		
+
+		$this->load->view('includes/header',$data);
+		$this->load->view('produtos/precos/home',$data);
+		$this->load->view('includes/footer',$data);
+	}
+
+	public function cadastrarprecos()
+	{
+		$saveRouter = new saveRouter;
+		$saveRouter->saveModule();
+		$saveRouter->saveAction();
+		$this->load->checkPermissao->check();
+
+		$idProduto = (int) $this->load->url->getSegment(3);
+		$data = array(
+			'titlePage' => 'Cadastrar preços',
+			'idProduto' => $idProduto
+		);
+
+
+		$this->load->view('includes/header',$data);
+		$this->load->view('produtos/precos/cadastro',$data);
+		$this->load->view('includes/footer',$data);
+	}
+
+	public function inserirPreco()
+	{
+		try {
+			if(!$this->load->checkPermissao->check(false,URL.'produtos/gerenciar/cadastrarprecos')){
+				$this->http->response("Ação não permitida");
+				return false;
+			}
+			//carregamento das classes
+			$this->load->library('dataFormat');
+			$this->load->library('dataValidator');
+			$this->load->model('produtos/produtosModel');
+			$this->load->model('produtos/precosModel');
+			$this->load->dao('produtos/precosDao');
+			$dataFormat = new dataFormat();
+
+			//obtenção dos dados
+			$idProduto 	= (int) $this->http->getRequest('idProduto');
+			$preco 		= (double) $dataFormat->formatar($this->http->getRequest('preco'),'decimal','banco');
+			$padrao 	= (Boolean) $this->http->getRequest('padrao');
+			$de 		= $dataFormat->formatar($this->http->getRequest('de'), 'data', 'banco');
+			$ate 		= $dataFormat->formatar($this->http->getRequest('ate'), 'data', 'banco');
+
+
+			//validação dos dados
+			$dataValidator = new dataValidator();
+			$dataValidator->set('Preço', $preco, 'preco')->is_required()->is_num();
+			if($padrao == false)
+			{
+				$dataValidator->set('De', $de, 'de')->is_required()->is_date('Y-m-d');
+				$dataValidator->set('Até', $ate, 'ate')->is_required()->is_date('Y-m-d');
+			}
+			
+			if ($dataValidator->validate())
+			{
+
+				//PRODUTOS
+				$produtosModel = new produtosModel();
+				$produtosModel->setId($idProduto);
+				
+				//PREÇOS MODEL
+				$precosModel = new precosModel();
+				$precosModel->setPreco($preco);
+				$precosModel->setDataInicio($de);
+				$precosModel->setDataFim($ate);
+				$precosModel->setPadrao($padrao);
+				$precosModel->setDataCadastro(date('Y-m-d'));
+
+				//PRECOS DAO
+				$precosDao = new precosDao();
+				$this->http->response($precosDao->inserir($produtosModel, $precosModel));
+			}else
+		    {
+				$todos_erros = $dataValidator->get_errors();
+				$this->http->response(json_encode($todos_erros));
+		    }
+
+		} catch (dbException $e) {
+			$this->http->response($e->getMessageError());
+		}
+	}
+
+
+
+
+
+
+	
 
 	public function inserir()
 	{

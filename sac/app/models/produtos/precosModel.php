@@ -8,9 +8,8 @@ class precosModel{
 	private $preco;
 	private $dataInicio;
 	private $dataFim;
-	private $dataCadastro;
 	private $padrao;
-	private $status;
+	private $dataCadastro;
 
  	//SETERS
  	public function setId($id)
@@ -29,9 +28,9 @@ class precosModel{
 	{
 		$this->dataFim = $dataFim;
 	}
-	public function setStatus($status)
+	public function setPadrao($padrao)
 	{
-		$this->status = $status;
+		$this->padrao = $padrao;
 	}
 	public function setDataCadastro($dataCadastro)
 	{
@@ -57,9 +56,9 @@ class precosModel{
 	{
 		return $this->dataFim;
 	}
-	public function getStatus()
+	public function getPadrao()
 	{
-		return $this->status;
+		return $this->padrao;
 	}
 	public function getDataCadastro()
 	{

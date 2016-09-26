@@ -1,49 +1,69 @@
 <div class="container">
     <?php
-       $btnVoltar = $this->templateFactory->getButton("voltar",array('href'=>URL.'produtos/gerenciar/precos'));
+       $btnVoltar = $this->templateFactory->getButton(
+											       		"voltar",
+											       		array( 'href'=>URL.'produtos/gerenciar/precos/'.$idProduto )
+											       	);
         echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnVoltar));    ?>
     <div class="page-header">
       <h1>Tabela de preços<small> Cadastro</small></h1>
     </div>
-    <form action="<?=URL?>produtos/marcas/gerenciar/inserir" method="post" id="form_marca">
+    <form action="<?=URL?>produtos/gerenciar/inserirPreco" method="post" id="formPreco">
         <div class="panel panel-default">
-            <div class="panel-heading">Dados Gerais</div>
+            <div class="panel-heading">Valores</div>
             <div class="panel-body">
 
-                <div class="form-group">
-                    <label>Definir como padrão</label>
-                    <input type="checkbox" name="preco" >
-                </div>
-               
-                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-12">
+                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-9">
                     <label>Preço</label>
                     <input type="text" class="form-control" placeholder="Preço" name="preco" >
                 </div>
+	
+                <div class="checkbox checkbox-primary col-xs-6 col-md-3 col-sm-3 col-lg-3">
+				    <input type="checkbox" id="checkbox1" name="padrao">
+				    <label for="checkbox1">
+				        Tornar padrão
+				    </label>
+				</div>
+               
+            </div>
+        </div>
 
+        <div class="panel panel-default painelPeriodo">
+            <div class="panel-heading">Período</div>
+            <div class="panel-body">
                 <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-12">
-                    <p>Período</p>
+                    
                     <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                    	<label>De: </label>
                         <input type="text" class="form-control" placeholder="De quando" name="de" >
                     </div>
+
                     <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                    	<label>Até: </label>
                         <input type="text" class="form-control" placeholder="Até quando" name="ate" >
                     </div>
                 </div>
-
-
-                <div class="btn-group pull-right" role="group">
-                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
-                </div>
             </div>
         </div>
+		<input type="hidden" name="idProduto" value="<?=$idProduto?>">
+		<div class="btn-group pull-right" role="group">
+            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
+        </div>
+
     </form>
 </div>
 
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
 <script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
-<script type="text/javascript" src="<?=URL?>skin/js/produtos/marcas/cadastrar.js"></script>
 
 <script>
 $(function(){
+	
+	$("input[name=preco]").maskMoney({symbol:'R$ ', decimal:",", thousands:""});
+	$('input[name=padrao]').change(function(event) {
+		$('.painelPeriodo').toggleClass('hide')
+		$('input[name=de],input[name=ate]').val('')
+	});
     $( "input[name=de]" ).datepicker({
         defaultDate: "+1w",
         dateFormat: 'dd/mm/yy',
@@ -51,6 +71,7 @@ $(function(){
         changeYear: true,
         yearRange: "-0:+1",
         numberOfMonths: 2,
+        minDate:0,
         onClose: function( selectedDate ) {
             $( "input[name=ate]" ).datepicker( "option", "minDate", selectedDate );
         }
@@ -65,6 +86,15 @@ $(function(){
         onClose: function( selectedDate ) {
             $( "input[name=de]" ).datepicker( "option", "maxDate", selectedDate );
         }
+    });
+
+
+    $('#formPreco').submit(function(event) {
+    	
+    	$('#formPreco').uploadForm({
+            'reload':true
+        });
+    	return false;
     });
 })
 </script>
