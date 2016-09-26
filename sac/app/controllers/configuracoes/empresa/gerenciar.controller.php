@@ -31,8 +31,10 @@ class gerenciar extends Controller{
 		);
 
 		$this->load->dao('configuracoes/empresaDao');
-		$emmpresa = new empresaDao();
-		$data['emmpresa'] = $emmpresa->listar();
+		$this->load->model('configuracoes/empresa/empresaModel');
+		$empresaDao = new empresaDao();
+		$empresa = new empresaModel();
+		$data['empresa'] = $empresaDao->consultar($empresa);
 		
 		$this->load->view('includes/header',$data);
 		$this->load->view('configuracoes/empresa/home',$data);

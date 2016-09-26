@@ -44,7 +44,7 @@ class empresaDao extends Dao{
 			return $empresa;
 		else:
 			
-			return $fornecedoresModel;
+			return $empresa;
 		endif;
 	}
 

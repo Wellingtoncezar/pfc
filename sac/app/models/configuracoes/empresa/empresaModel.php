@@ -3,7 +3,7 @@
 *@author Wellington cezar, Diego Hernandes
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
-class fornecedoresModel{
+class empresaModel{
 	private $id;
 	private $logo;
 	private $razao_social;
