@@ -141,7 +141,7 @@ class agendaDao extends Dao{
  		}
  		return $agendasList;
 	}
-	public function adiarCompromissos($agendaModel)
+	public function adiarCompromissos(agendaModel $agendaModel)
 	{
 		try {
 			$this->db->clear();
