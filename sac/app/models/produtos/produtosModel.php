@@ -16,6 +16,7 @@ class produtosModel{
 	private $unidadeMedidaVenda;
 	private $fatorUnidadeMedidaVenda;
 	private $status = status::ATIVO;
+	private $dataValidadeControlada = false;
 	private $precos = array();
 	private $dataCadastro;
 	private $ultimaAtualizacao;
@@ -75,8 +76,13 @@ class produtosModel{
 		$this->fatorUnidadeMedidaVenda = $fatorUnidadeMedidaVenda;
 	}
 
+	public function ativarControleValidade(){
+		$this->dataValidadeControlada = true;
+	}
 
-
+	public function desativarControleValidade(){
+		$this->dataValidadeControlada = false;
+	}
 
 	public function setStatus($status)
 	{
@@ -162,6 +168,10 @@ class produtosModel{
 	public function getFatorUnidadeMedidaVenda()
 	{
 		return $this->fatorUnidadeMedidaVenda;
+	}
+
+	public function getControleValidade(){
+		return $this->dataValidadeControlada;
 	}
 	
 	public function getStatus()

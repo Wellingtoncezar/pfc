@@ -6,14 +6,82 @@
     <div class="page-header">
       <h1>Estoque<small> Entrada de mercadorias</small></h1>
     </div>
-    <form action="<?=URL?>estoque/lotes/gerenciar/inserir" method="post" id="form_requisicao">
+    <form action="<?=URL?>estoque/gerenciar/inserir" method="post" id="form_estoque">
         <div class="panel panel-default">
-            <div class="panel-heading">Dados Gerais</div>
+            <div class="panel-heading">
+            	<span>Dados Gerais</span>
+			  	<button type="button" class="pull-right btn btn-default" data-toggle="modal" data-target="#modalPesquisaProduto">Pesquisar produto</button>
+            </div>
             <div class="panel-body">
             	<div class="form-group col-xs-12 col-md-12 col-sm-12 col-lg-12">
-					<div class="btn-group" role="group">
-					  	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalPesquisaProduto">Pesquisar produto</button>
+					
+					<div class="dadosProdutoEntrada">
+						<div class="col-xs-12 col-md-12 col-sm-3 col-lg-3">
+						    <a href="#" class="thumbnail">
+						      	<img src="<?=URL?>skin/img/imagens/benchmarking.png" id="foto_produto">
+						    </a>
+						</div>
+						<div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
+							<div class="row">
+								<div class="col-xs-12 col-md-12 col-sm-12 col-lg-3">
+									<label>Código de barras</label>
+									<div class="form-control" id="codigobarras">Código de barra</div>
+								</div>
+								<div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
+									<label>Nome do produto</label>
+									<div class="form-control" id="nome_produto">nome do produto</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
+							<input type="hidden" value="" id="id_produto" name="id_produto">
+							<div class="row">
+								<div class="col-xs-12 col-md-12 col-sm-6 col-lg-6">
+									<div class="form-group">
+									    <label for="exampleInputEmail1">Código lote</label>
+									    <input type="text" class="form-control" id="codigoLote" placeholder="Código do lote" name="codigoLote">
+									</div>
+								</div>
+								<div class="col-xs-12 col-md-12 col-sm-6 col-lg-6">
+									<div class="form-group">
+									    <label for="exampleInputEmail1">Cod. barras GTI </label>
+									    <input type="text" class="form-control" id="codBarrasGti" name="codBarrasGti" maxlength="13" placeholder="Cod. barras GTI">
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+							    <label for="exampleInputEmail1">Cod. barras GST </label>
+							    <input type="text" class="form-control" id="codBarrasGst" name="codBarrasGst" placeholder="Cod. barras GST">
+							</div>
+
+							<div class="form-group groupDataValidade">
+							    <label for="exampleInputEmail1">Data de validade</label>
+							    <input type="text" class="form-control" id="dataValidade" name="dataValidade" min= placeholder="Data de validade">
+							</div>
+
+							<div class="form-group">
+							    <label for="exampleInputEmail1">Quantidade</label>
+							    <div class="row">
+								    <div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
+								    	<input type="text" class="form-control" id="quantidade" name="quantidade" placeholder="Quantidade">
+								    </div>
+								    <div class="col-xs-12 col-md-12 col-sm-12 col-lg-3">
+									    <select class="form-control" id="unidadeMedidaEstoque" name="unidadeMedidaEstoque">
+									    </select>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+							    <label for="exampleInputEmail1">Observações</label>
+							    <textarea class="form-control" id="observacoes" name="observacoes" placeholder="Observações"></textarea>
+							</div>
+							
+						</div>
 					</div>
+
+
 				</div>
 
 				<!-- Modal -->
@@ -57,8 +125,6 @@
 									</div>
 
 								</div>
-
-
 
 				      		</div>
 				      		<div class="modal-footer">
@@ -130,11 +196,11 @@
                 <div class="listProdutos row">
                     
                 </div>
+                */
+                ?>
                 <div class="btn-group pull-right" role="group">
                     <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
                 </div>
-                */
-                ?>
             </div>
         </div>
     </form>
@@ -144,7 +210,7 @@
 
 
 
-
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
 <script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
 <!-- <script type="text/javascript" src="<?=URL?>skin/js/suprimentos/requisicoes/cadastrar.js"></script> -->
 <script>
@@ -161,6 +227,14 @@ $(function(){
 	  	}
 	})
 
+	//var date = new Date();
+	
+	//var currentDate = date.getFullYear()+'/'+date.getMonth()+'/'+date.getDate();
+	//var currentDate = date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear();
+
+	//console.log(currentDate)
+	$("input[name=quantidade]").wvmask('numero')
+	$('input[name=dataValidade]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true, yearRange: "-0:+10"});
 	$('.btnAddProduto').on('click', function(event) {
 		event.preventDefault();
 		var value = '';
@@ -174,22 +248,48 @@ $(function(){
 			tipo = 'pordescricao';
 			value = $('select[name=listaproduto]').val()
 		}
-		
+
 		$.ajax({
 			url: url+'estoque/gerenciar/pesquisarproduto',
 			type: 'POST',
+			dataType:'json',
 			data: {tipo: tipo, value:value},
 		})
 		.done(function(data) {
-			console.log(data);
+			//preenchimento dos campos
+			if(data.foto_produto != '')
+				$('#foto_produto').attr('src',data.foto_produto);
+			$('#codigobarras').html(data.codigo_barras);
+			$('#nome_produto').html(data.nome_produto);
+			$('#id_produto').val(data.id_produto);
+
+			$('#unidadeMedidaEstoque').html('<option value="" selected="selected" disabled="disabled">Selecione</option>')
+			$.each(data.unidadeMedidaEstoque,function(index, val){
+				console.log(val)
+				$('#unidadeMedidaEstoque').append('<option value="'+val.id_unidade_medida_estoque+'">'+val.nome_unidade_medida+'</option>')
+			})
+
+			console.log(data.validadeControlada);
+			if(data.validadeControlada){
+				$('#dataValidade').removeClass('hide');
+			}else{
+				$('.groupDataValidade').addClass('hide');
+				$('#dataValidade').val('');
+			}
+
+
 		})
-		.fail(function() {
+		.fail(function(data) {
 			console.log("error");
+			console.log(data)
 		})
 		
-
-
-
 	});
+
+
+	$('#form_estoque').on('submit', function(){
+		console.log('passou')
+		return false;
+	})
 })
 </script>

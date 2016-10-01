@@ -150,6 +150,9 @@ class gerenciar extends Controller{
 
 	}
 
+	/**
+	* Define o limite máximo e mínimo do estoque
+	*/
 	public function limitar()
 	{
 		$this->load->dao('estoque/estoqueDao');

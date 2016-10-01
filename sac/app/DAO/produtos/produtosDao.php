@@ -154,7 +154,10 @@ class produtosDao extends Dao{
 				$produto->setDescricao($result['descricao_produto']);
 				$produto->setStatus(status::getAttribute($result['status_produto']));
 				$produto->setDataCadastro($result['data_cadastro_produto']);
-
+				if((boolean)$result['data_validade_controlada'])
+					$produto->ativarControleValidade();
+				else
+					$produto->desativarControleValidade();
 
 				$this->db->clear();
 				$this->db->setTabela('unidade_medida as A, unidade_medida_produto AS B');

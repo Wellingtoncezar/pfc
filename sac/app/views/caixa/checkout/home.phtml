@@ -62,6 +62,7 @@
 								    	<div class="form-group col-xs-12 col-md-12 col-sm-12 col-lg-12">
 						                    <label>Produtos</label>
 						                    <select name="listaproduto" class="form-control">
+						                    	<option value="" selected="selected" disabled="disabled"></option>
 						                        <?php if(!empty($produtos)):?>
 						                        <?php foreach ($produtos as $produto):?>
 						                        <option value="<?=$produto->getId()?>"><?=$produto->getNome()?></option>
