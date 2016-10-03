@@ -418,11 +418,27 @@ Este plugin tem como dependÃªncia os plugin: 'ajaxForm', 'jquery ui' e 'Jcrop'
 			 		data:  settings.parameters,
 			        // $.ajax options can be used here too, for example: 
 			        //timeout:   3000
-			        error : function(e){
+			        error : function(e,st){
 			        	//console.log(e.responseText);
-			        	$('#alertFormModal').modal('show');
-			        	$('.generalErrors .alert').html(e.responseText);
-			        	//$('#carregando').fadeOut();
+			        	if(e.status == 400)
+			        	{
+		        			data = jQuery.parseJSON(e.responseText);
+				        	$('#alertFormModal').modal('show');
+				        	$('.generalErrors .alert').html('');
+				       			//data = $.parseJSON(data);
+			       			$.each(data, function(index, value) {
+						        var value = ''+value;
+								var values = value.split(',');
+						        $.each(values, function(id, val) {
+						        	$('.generalErrors .alert').append('<p>'+val+'</p>');
+						        });
+						        $('[name='+index+']',form).css('box-shadow','0 0 1px 1px #F00');
+							});
+			        	}else
+			        	{
+			        		$('#alertFormModal').modal('show');
+			        		$('.generalErrors .alert').html(e.responseText);
+			        	}
 			        }
 			    });
             }

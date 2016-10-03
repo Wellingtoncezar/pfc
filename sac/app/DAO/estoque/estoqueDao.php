@@ -36,7 +36,7 @@ class estoqueDao extends Dao{
 					$produtoModel->setId($value['id_produto']);
 					$produtoModel->setFoto($value['foto_produto']);
 					$produtoModel->setCodigoBarra($value['codigo_barra_gti']);
-					$produtoModel->setNome($value['nome_produto']);
+					$produtoModel->setNome(html_entity_decode($value['nome_produto']));
 
 					//estoque
 					$estoqueModel = new estoqueModel();
@@ -269,6 +269,7 @@ class estoqueDao extends Dao{
 					return true;
 				}else
 				{
+
 					$this->db->query('rollback');
 					return false;
 				}
@@ -284,8 +285,12 @@ class estoqueDao extends Dao{
 
 	}
 
+	/**
+	 * Define o limite do lote no estoque de acordo com a localização
+	 * */
 	public function limitar(estoqueModel $estoqueModel)
 	{
+		/*
 		try {
 			$this->db->clear();
 			$this->db->setTabela('localizacao_lote');
@@ -314,8 +319,161 @@ class estoqueDao extends Dao{
 			$this->db->query('rollback');
 			return $e->getMessageError();
 		}
+		*/
 	}
 
+	public function armazenarLote(estoqueModel $estoqueModel)
+	{
+		try {
+			$this->db->clear();
+			$this->db->query('BEGIN');
+			$estoque = $this->atualizaEstoque($estoqueModel);
+			// echo 'passou';
+			// echo $estoque->getId();
+			// exit;
+			$data = array(
+				'id_estoque' => $estoque->getId(),
+				'codigo_lote' => $estoque->getLotes()[0]->getCodigoLote(),
+				'codigo_barras_gti' => $estoque->getLotes()[0]->getCodigoBarrasGti(),
+				'codigo_barras_gst' => $estoque->getLotes()[0]->getCodigoBarrasGst(),
+				'data_validade' => $estoque->getLotes()[0]->getDataValidade()
+			);	
+			
+			$this->db->clear();
+			$this->db->setTabela('produto_lote');
+			if($this->db->insert($data))
+			{
+				$id_lote = $this->db->getUltimoId();
+				//dados do lote a ser transferido para a nova localidade
+				$fator_unidade_medida = $this->getFatorUnidadeEstoque($estoque);
+
+				//Se a unidade de venda for diferente à unidade que está querendo converter 
+				if($estoque->getUnidadeMedidaParaVenda()->getId() != $estoque->getLotes()[0]->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId()){
+					$qtd = ($estoque->getLotes()[0]->getLocalizacao()[0]->getQuantidade() * $fator_unidade_medida) / 1;
+				}else
+					$qtd = ($estoque->getLotes()[0]->getLocalizacao()[0]->getQuantidade() * 1) / $fator_unidade_medida;
+
+				$data = array(
+					'id_produto_lote' => $id_lote,
+					'id_unidade_medida_produto' => $estoque->getLotes()[0]->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId(),
+					'localizacao' => $estoque->getLotes()[0]->getLocalizacao()[0]->getLocalizacao(),
+					'quantidade_localizacao' => $qtd,
+					'observacoes_localizacao_lote' => $estoque->getLotes()[0]->getLocalizacao()[0]->getObservacoes()
+				);
+				$this->atualizaLoteLocalizacao($data, $id_lote, $estoque->getLotes()[0]->getLocalizacao()[0]->getLocalizacao());
+				$this->db->query('COMMIT');
+				echo 'passou';
+			}else{
+				$this->db->query('ROLLBACK');
+				echo 'erro ao cadastrar';
+			}
+
+			// 	$res = $this->db->result();
+			// 	$data['quantidade_localizacao'] = $res['quantidade_localizacao']+$data['quantidade_localizacao'];
+			// 	if($this->db->update($data))
+			// 	{
+			// 		$this->db->query('COMMIT');
+			// 		return true;
+			// 	}else
+			// 	{
+			// 		$this->db->query('rollback');
+			// 		return false;
+			// 	}
+			// }else
+			// {
+			// 	$this->db->insert($data);
+			// 	$this->db->query('COMMIT');
+			// }
+		} catch (dbException $e) {
+			$this->db->query('ROLLBACK');
+			return $e->getMessageError();
+		}
+	}
+
+	private function getFatorUnidadeEstoque(estoqueModel $estoque)
+	{
+		try{
+			$this->db->clear();
+			$this->db->setTabela('unidade_medida_produto');
+			$this->db->setCondicao("id_unidade_medida_produto = ?");
+			$this->db->setParameter(1, $estoque->getLotes()[0]->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId());
+			if($this->db->select())
+			{
+				$res = $this->db->result();
+				return $res['fator_unidade_medida'];
+
+			}
+		} catch (dbException $e) {
+			$this->db->query('ROLLBACK');
+			return $e->getMessageError();
+		}
+	}
+	/**
+	 * Obtem o id do estoque
+	 * */
+	private function atualizaEstoque(estoqueModel $estoque)
+	{
+		try {
+			$this->db->clear();
+			$this->db->setTabela('estoque');
+			$this->db->setCondicao("id_produto = ?");
+			$this->db->setParameter(1, $estoque->getProduto()->getId());
+			if($this->db->select())
+			{
+				$res = $this->db->result();
+				$estoque->setId($res['id_estoque']);
+
+			}else{
+				$data = array(
+					'id_produto' => $estoque->getProduto()->getId()
+				);
+				$this->db-> clear();
+				$this->db->setTabela('estoque');
+				if($this->db->insert($data))
+				{
+					$estoque->setId($this->db->getUltimoId());
+					$this->atualizaNivelEstoque($estoque);
+				}else
+				{
+					$this->db->query('ROLLBACK');
+				}
+			}
+			
+			return $estoque;
+		} catch (dbException $e) {
+			$this->db->query('ROLLBACK');
+			return $e->getMessageError();
+		}
+	}
+
+	private function atualizaNivelEstoque(estoqueModel $estoque)
+	{
+		try {
+			$this->db->clear();
+			$this->db->setTabela('nivel_estoque');
+			$this->db->setCondicao("id_estoque = ? AND localizacao_estoque = ?");
+			$this->db->setParameter(1, $estoque->getId());
+			$this->db->setParameter(2, $estoque->getLotes()[0]->getLocalizacao()[0]->getLocalizacao());
+			if($this->db->select())
+			{
+				//$res = $this->db->result();
+				//$estoque->setId($res['id_estoque']);
+			}else
+			{
+				$data = array(
+					'id_estoque' => $estoque->getId(),
+					'localizacao_estoque' => $estoque->getLotes()[0]->getLocalizacao()[0]->getLocalizacao()
+				);
+				$this->db-> clear();
+				$this->db->setTabela('nivel_estoque');
+				$this->db->insert($data);
+			}
+		} catch (dbException $e) {
+
+			$this->db->query('ROLLBACK');
+			return $e->getMessageError();
+		}
+	}
 
 
 }

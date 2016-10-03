@@ -56,6 +56,7 @@
 							</div>
 
 							<div class="form-group groupDataValidade">
+								<input type="checkbox" name="dataValidadeControlada" class="hide">
 							    <label for="exampleInputEmail1">Data de validade</label>
 							    <input type="text" class="form-control" id="dataValidade" name="dataValidade" min= placeholder="Data de validade">
 							</div>
@@ -234,7 +235,7 @@ $(function(){
 
 	//console.log(currentDate)
 	$("input[name=quantidade]").wvmask('numero')
-	$('input[name=dataValidade]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true, yearRange: "-0:+10"});
+	$('input[name=dataValidade]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true, yearRange: "-0:+10", minDate: 0});
 	$('.btnAddProduto').on('click', function(event) {
 		event.preventDefault();
 		var value = '';
@@ -271,9 +272,12 @@ $(function(){
 
 			console.log(data.validadeControlada);
 			if(data.validadeControlada){
-				$('#dataValidade').removeClass('hide');
+				console.log('passou')
+				$('.groupDataValidade').removeClass('hide');
+				$('input[name=dataValidadeControlada]').prop('checked',true);
 			}else{
 				$('.groupDataValidade').addClass('hide');
+				$('input[name=dataValidadeControlada]').prop('checked',false);
 				$('#dataValidade').val('');
 			}
 
@@ -288,7 +292,9 @@ $(function(){
 
 
 	$('#form_estoque').on('submit', function(){
-		console.log('passou')
+		$('#form_estoque').uploadForm({
+            'reload':true
+        });
 		return false;
 	})
 })

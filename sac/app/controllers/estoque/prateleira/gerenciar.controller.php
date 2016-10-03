@@ -60,9 +60,9 @@ class gerenciar extends Controller{
 						'produto'=> $estoqueProd->getProduto()->getNome(),
 						'foto'=> $foto,
 						'qtdtotal'=> $dataformat->formatar($estoqueProd->getQuantidadeTotal(),'decimal').' '.$estoqueProd->getUnidadeMedidaParaVenda()->getUnidadeMedida()->getNome(),
-						'min'=> $dataformat->formatar($estoqueProd->getQuantidadeMinima(),'decimal'),
-						'max'=> $dataformat->formatar($estoqueProd->getQuantidadeMaxima(),'decimal'),
-						'nivel'=> (($estoqueProd->getQuantidadeTotal()- $estoqueProd->getQuantidadeMinima()) * 100) / ($estoqueProd->getQuantidadeMaxima() - $estoqueProd->getQuantidadeMinima()),
+						'min'=> $dataformat->formatar($estoqueProd->getNivelEstoque()->getQuantidadeMinima(),'decimal'),
+						'max'=> $dataformat->formatar($estoqueProd->getNivelEstoque()->getQuantidadeMaxima(),'decimal'),
+						'nivel'=> (($estoqueProd->getQuantidadeTotal()- $estoqueProd->getNivelEstoque()->getQuantidadeMinima()) * 100) / ($estoqueProd->getNivelEstoque()->getQuantidadeMaxima() - $estoqueProd->getNivelEstoque()->getQuantidadeMinima()),
 						'progressclass' => "progress-bar-success",
 						'acoes'=> "",
 				      	'lotes'=> array()

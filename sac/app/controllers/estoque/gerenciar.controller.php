@@ -93,29 +93,89 @@ class gerenciar extends Controller{
 			$this->http->response("Ação não permitida");
 			return false;
 		}
-		//validação dos dados
-		$this->load->library('dataValidator');
+		
+		$this->load->model('produtos/produtosModel');
+		$this->load->model('produtos/unidadeMedidaEstoqueModel');
+		$this->load->model('produtos/unidadeMedidaModel');
+		$this->load->model('estoque/estoqueModel');
+		$this->load->model('estoque/localizacaoLoteModel');
+		$this->load->model('estoque/lotesModel');
+		$this->load->dao('produtos/produtosDao');
+		$this->load->dao('produtos/iConsultaProduto');
+		$this->load->dao('produtos/consultaPorId');
+		$this->load->dao('estoque/estoqueDao');
 
-		$id_produto 			= $this->http->getRequest('id_produto');
+		$this->load->library('dataValidator');
+		$this->load->library('dataformat');
+
+		$dataformat = new dataformat();
+
+		$id_produto 			= (int)$this->http->getRequest('id_produto');
 		$codigoLote 			= $this->http->getRequest('codigoLote');
 		$codBarrasGti 			= $this->http->getRequest('codBarrasGti');
 		$codBarrasGst 			= $this->http->getRequest('codBarrasGst');
-		$dataValidade 			= $this->http->getRequest('dataValidade');
-		$quantidade 			= $this->http->getRequest('quantidade');
-		$unidadeMedidaEstoque 	= $this->http->getRequest('unidadeMedidaEstoque');
+		$dataValidadeControlada = (boolean)$this->http->getRequest('dataValidadeControlada');
+		$dataValidade 			= $dataformat->formatar($this->http->getRequest('dataValidade'),'data', 'banco');
+		$quantidade 			= $dataformat->formatar($this->http->getRequest('quantidade'),'decimal', 'banco');
+		$unidadeMedidaEstoque 	= (int)$this->http->getRequest('unidadeMedidaEstoque');
 		$observacoes 			= $this->http->getRequest('observacoes');
+
 
 		$dataValidator = new dataValidator();
 		$dataValidator->set('Produto', $id_produto, 'id_produto')->is_required();
 		$dataValidator->set('Código do lote', $codigoLote, 'codigoLote')->is_required();
-		$dataValidator->set('Data de nascimento', $dataNascimento, 'dataNascimento')->is_required()->is_date('d/m/Y');
+		if($dataValidadeControlada == true)
+			$dataValidator->set('Data de validade', $dataValidade, 'dataValidade')->is_required()->is_date('Y-m-d');
 		$dataValidator->set('Quantidade', $quantidade, 'quantidade')->is_required()->min_value(0);
+		$dataValidator->set('Unidade de medida', $unidadeMedidaEstoque, 'unidadeMedidaEstoque')->is_required()->min_value(0);
+		
+		if ($dataValidator->validate())
+		{
+			//PRODUTO MODEL
+			$produtosModel = new produtosModel();
+			$produtosModel->setId($id_produto);
+
+
+			$status = Array(
+				status::ATIVO,
+				status::INATIVO
+			);
+
+			$produtos = new produtosDao();
+			$produtosModel = $produtos->consultar(new consultaPorId(), $produtosModel, $status);
+
+
+			//UNIDADE MEDIDA ESTOQUE MODEL
+			$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+			$unidadeMedidaEstoqueModel->setId($unidadeMedidaEstoque);
+			
+			//LOCALIZACAO LOTE MODEL
+			$localizacaoLoteModel = new localizacaoLoteModel();
+			$localizacaoLoteModel->setUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
+			$localizacaoLoteModel->setQuantidade($quantidade);
+			$localizacaoLoteModel->setObservacoes($observacoes);
+			$localizacaoLoteModel->armazenar();
+
+			//LOTE MODEL
+			$lotesModel = new lotesModel();
+			$lotesModel->setCodigoLote($codigoLote);
+			$lotesModel->setCodigoBarrasGti($codBarrasGti);
+			$lotesModel->setCodigoBarrasGst($codBarrasGst);
+			$lotesModel->setDataValidade($dataValidade);
+			$lotesModel->addLocalizacao($localizacaoLoteModel);
+
+			//ESTOQUE MODEL
+			$estoqueModel = new estoqueModel();
+			$estoqueModel->setProduto($produtosModel);
+			$estoqueModel->addLote($lotesModel);
+
+			//ESTOQUE DAO
+			$estoqueDao = new estoqueDao();
+			$estoqueDao->armazenarLote($estoqueModel);
+
+		}else
+	    {
+			$this->http->response(json_encode($dataValidator->get_errors()),'400');
+	    }
 	}
 }
-
-/**
-*
-*class: home
-*
-*location : controllers/home.controller.php
-*/

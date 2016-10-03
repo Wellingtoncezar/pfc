@@ -50,11 +50,11 @@ class db{
 	/**
 	 * close the statement cursor
 	 * */
-	public function __destruct()
-	{
-		if($this->statement != NULL)
-			$this->statement->closeCursor();
-	}
+	// public function __destruct()
+	// {
+	// 	if($this->statement != NULL)
+	// 		$this->statement->closeCursor();
+	// }
 	
 
 
