@@ -27,12 +27,20 @@ class empresaDao extends Dao{
 		if($this->db->rowCount() > 0):
 			$result = $this->db->result();
 
-			$empresa->setLogo($result['logo_empresa']);
+			$empresa->setLogo($result['foto_empresa']);
 			$empresa->setRazaoSocial($result['razao_social_empresa']);
 			$empresa->setNomeFantasia($result['nome_fantasia_empresa']);
 			$empresa->setCnpj($result['cnpj_empresa']);
 			$empresa->setProprietario($result['pessoa_empresa']);
 			$empresa->setSite($result['site_empresa']);
+			$empresa->setObservacoes($result['observacoes_empresa']);
+			$empresa->setNomeContato($result['nome_contato_empresa']);
+			$empresa->setEndereco($endereco);
+			$empresa->setTelefones($telefonesList);
+			$empresa->setEmails($emailsList);
+			$empresa->setDataVisita($result['data_visita_empresa']);
+			$empresa->setRetorno($result['retorno_empresa']);
+			$empresa->setStatus(status::getAttribute($result['status_empresa']));
 			return $empresa;
 		else:
 			
@@ -43,30 +51,51 @@ class empresaDao extends Dao{
 
 
 	/**
-	 * Insere nova empresa
+	 * Insere novos fornecedores
 	 * @return boolean, json
 	 */
  	public function inserir(fornecedoresModel $fornecedores)
- {
- 		$data = array(
- 			'id_empresa' => $agenda->getFornecedor()->getId(),
- 			'razao_social_empresa' => $agenda->getTitulo(),
- 			'observacoes_agenda' => $agenda->getObservacoes(),
- 			'data_agenda' => $agenda->getData(),
- 			'data_cadastro_agenda' => $agenda->getDataCadastro()
+ 	{
+		$data = array(
+ 			'foto_fornecedor' => $fornecedores->getFoto(),
+ 			'razao_social_fornecedor' => $fornecedores->getRazaoSocial(),
+ 			'nome_fantasia_fornecedor' => $fornecedores->getNomeFantasia(),
+ 			'cnpj_fornecedor' => $fornecedores->getCnpj(),
+ 			'cpf_fornecedor' => $fornecedores->getCpf(),
+ 			'pessoa_fornecedor' => $fornecedores->getPessoa(),
+ 			'site_fornecedor' => $fornecedores->getSite(),
+ 			'observacoes_fornecedor' => $fornecedores->getObservacoes(),
+ 			'nome_contato_fornecedor' => $fornecedores->getNomeContato(),
+ 			'status_fornecedor' => $fornecedores->getStatus(),
+ 			'data_cadastro_fornecedor' => $fornecedores->getDataCadastro()
  		);
 
 
  		$this->db->clear();
-		$this->db->setTabela('fornecedores_agenda');
-		$this->db->insert($data);
-		if($this->db->rowCount() > 0)
-		{
-			return true;
- 		}else
- 		{
- 			return json_encode(array('erro'=>'Erro ao inserir registro'));
- 		}
+		$this->db->setTabela('fornecedores');
+		try {
+			if($this->db->insert($data))
+			{
+				$fornecedores->setId($this->db->getUltimoId()); //RETORNA O ID INSERIDO
+				$this->atualizaEndereco($fornecedores);
+				//TELEFONES
+				if(!empty($fornecedores->getTelefones()))
+				 	$this->atualizaTelefones($fornecedores);
+
+				//EMAILS
+				if(!empty($fornecedores->getEmail()))
+				 	$this->atualizaEmails($fornecedores);
+				//echo 'inserido';
+				return true;
+	 		}else
+	 		{
+	 			return $this->db->getError();
+	 		}
+		} catch (dbException $e) {
+			return $e->getMessageError();
+		}
+
+
 	}
 
 	/**
