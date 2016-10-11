@@ -39,7 +39,7 @@
 
                     <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
                         <label>Proprietário</label>
-                        <input type="text" class="form-control" placeholder="Proprietário" aria-describedby="basic-addon1" name="cpf">
+                        <input type="text" class="form-control" placeholder="Proprietário" aria-describedby="basic-addon1" name="proprietario">
                     </div>
 
                     
@@ -47,6 +47,9 @@
                         <label>Site</label>
                         <input type="text" class="form-control" placeholder="Site" name="site">
                     </div>
+                     <div class="btn-group pull-right" role="group">
+                             <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
+                     </div>
 
                    
                 </div>
@@ -61,7 +64,6 @@
 <link href="<?=URL?>skin/js/croper/main.css" rel="stylesheet">
 <script src="<?=URL?>skin/js/croper/cropper.min.js"></script>
 <script type="text/javascript" src="<?=URL?>skin/js/jquery.maskedinput.min.js"></script>
-<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
 <script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
 <script type="text/javascript">
     
@@ -71,19 +73,8 @@
     $('input[name=retorno]').wvmask('numero')
     $('input[name=cep]').wvmask('cep')
     $('input[name=numero]').wvmask('numero')
-    $('input[name=cpf]').mask('999.999.999-99');
-
     $('input[name=cnpj]').mask('99.999.999/9999-99');
     $('#form_fornecedores').validaCep();
-    //mascara para telefones de 8 e 9 dígitos
-    var maskBehavior = function (val) {
-        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
-    },
-    options = {onKeyPress: function(val, e, field, options) {
-        field.mask(maskBehavior.apply({}, arguments), options);
-        }
-    };
-    $('input[name=telefone]').mask(maskBehavior, options);
 
 
     //UPLOAD DA IMAGEM
