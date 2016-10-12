@@ -59,11 +59,14 @@ class gerenciar extends Controller{
 				    	'codigobarras' => $estoqueProd->getProduto()->getCodigoBarra(),
 						'produto'=> $estoqueProd->getProduto()->getNome(),
 						'foto'=> $foto,
-						'qtdtotal'=> $dataformat->formatar($estoqueProd->getQuantidadeTotal(),'decimal').' '.$estoqueProd->getUnidadeMedidaParaVenda()->getUnidadeMedida()->getNome(),
+						'qtdtotal'=> $dataformat->formatar($estoqueProd->getQuantidadeTotal(),'decimal').' '.$estoqueProd->getUnidadeMedidaParaEstoque()->getUnidadeMedida()->getNome(),
 						'min'=> $dataformat->formatar($estoqueProd->getNivelEstoque()->getQuantidadeMinima(),'decimal'),
 						'max'=> $dataformat->formatar($estoqueProd->getNivelEstoque()->getQuantidadeMaxima(),'decimal'),
-						'nivel'=> (($estoqueProd->getQuantidadeTotal()- $estoqueProd->getNivelEstoque()->getQuantidadeMinima()) * 100) / ($estoqueProd->getNivelEstoque()->getQuantidadeMaxima() - $estoqueProd->getNivelEstoque()->getQuantidadeMinima()),
+						'minUnformated'=> $estoqueProd->getNivelEstoque()->getQuantidadeMinima(),
+						'maxUnformated'=> $estoqueProd->getNivelEstoque()->getQuantidadeMaxima(),
+						'nivel'=> $estoqueProd->getQuantidadeTotal(),//(($estoqueProd->getQuantidadeTotal()- $estoqueProd->getNivelEstoque()->getQuantidadeMinima()) * 100) / ($estoqueProd->getNivelEstoque()->getQuantidadeMaxima() - $estoqueProd->getNivelEstoque()->getQuantidadeMinima()),
 						'progressclass' => "progress-bar-success",
+						'linkAlterarLimites' => URL."estoque/armazem/gerenciar/limitar",
 						'acoes'=> "",
 				      	'lotes'=> array()
 				    );
@@ -75,6 +78,7 @@ class gerenciar extends Controller{
 				
 				
 		        $aux2 = array(
+		        			'idEstoque' => $estoqueProd->getId(),
 				        	'id' => $lotes->getId(),
 				        	'idProduto' => $estoqueProd->getId(),
 							'codigo' => $lotes->getCodigoLote(),
@@ -82,11 +86,14 @@ class gerenciar extends Controller{
 							'codigogst' => $lotes->getCodigoBarrasGst(),
 							'validade' => $dataformat->formatar($lotes->getDataValidade(),'data'),
 							'quantidade' => $lotes->getQuantidadeLotePorLocalizacao(). ' '.$lotes->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getUnidadeMedida()->getNome(),
+							'qtdConvertido' => $lotes->getQuantidadeLotePorLocalizacao(),
+							'nomeUnidadeConvertido' => $lotes->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getUnidadeMedida()->getNome(),
+							'qtdNaoConvertido' => $lotes->getQuantidadeLotePorLocalizacao(false),
 							'acoes' => "",
 							'idUnidadeMedidaPraVenda' => $estoqueProd->getUnidadeMedidaParaVenda()->getId(),
 							'nomeUnidadeMedida' => $estoqueProd->getUnidadeMedidaParaVenda()->getUnidadeMedida()->getNome(),
-							'linkemprateleirar' => URL."estoque/armazem/gerenciar/emprateleirar",
-							'linkdescartar' => URL."estoque/armazem/gerenciar/descartar"
+							'linkarmazenar' => URL."estoque/prateleira/gerenciar/armazenar",
+							'linkdescartar' => URL."estoque/prateleira/gerenciar/descartar"
 				    	);
 
 				array_push($aux['lotes'], $aux2);
@@ -100,36 +107,63 @@ class gerenciar extends Controller{
 
 
 	//trasferencia de lotes para a prateleira
-	public function emprateleirar()
+	public function armazenar()
 	{
-		$this->load->dao('estoque/estoqueDao');
+		$this->load->model('estoque/estoqueModel');
 		$this->load->model('estoque/lotesModel');
 		$this->load->model('estoque/localizacaoLoteModel');
 		$this->load->model('produtos/unidadeMedidaEstoqueModel');
+		$this->load->dao('estoque/estoqueDao');
+		$this->load->library('dataValidator');
+
+		$idEstoque				= (int) $this->http->getRequest('idEstoque');
+		$idlote 				= (int) $this->http->getRequest('idlote');
+		$idUnidadeMedidaVenda  	= (int) $this->http->getRequest('idUnidadeMedidaVenda');
+		$quantidade 			= (double) $this->http->getRequest('quantidade');
+		$observacoes 			= $this->http->getRequest('observacoes');
 		
+		//validação dos dados
+		$dataValidator= new dataValidator();
+		$dataValidator->set('Quantidade', $quantidade, 'quantidade')->is_required()->is_num();
+		if ($dataValidator->validate())
+		{
+			//UNIDADE MEDIDA ESTOQUE MODEL
+			$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+			$unidadeMedidaEstoqueModel->setId($idUnidadeMedidaVenda);
 
-		$idlote = (int) $this->http->getRequest('idlote');
-		$idUnidadeMedidaVenda  = (int) $this->http->getRequest('idUnidadeMedidaVenda');
-		$quantidade = filter_var( $this->http->getRequest('quantidade'));
-		$observacoes = filter_var( $this->http->getRequest('observacoes'));
-		
-		$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
-		$unidadeMedidaEstoqueModel->setId($idUnidadeMedidaVenda);
+			//LOCALIZACAO LOTE MODEL
+			$localizacaoLoteModel = new localizacaoLoteModel();
+			$localizacaoLoteModel->setUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
+			$localizacaoLoteModel->setQuantidade($quantidade);
+			$localizacaoLoteModel->setObservacoes($observacoes);
+			$localizacaoLoteModel->armazenar();
 
+			//LOTES MODEL
+			$lotesModel = new lotesModel();
+			$lotesModel->setId($idlote);
+			$lotesModel->addLocalizacao($localizacaoLoteModel);
 
-		$localizacaoLoteModel = new localizacaoLoteModel();
-		$localizacaoLoteModel->setUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
-		$localizacaoLoteModel->setQuantidade($quantidade);
-		$localizacaoLoteModel->setObservacoes($observacoes);
-		$localizacaoLoteModel->emprateleirar();
+			//ESTOQUE MODEL
+			$estoqueModel = new estoqueModel();
+			$estoqueModel->setId($idEstoque);
+			$estoqueModel->addLote($lotesModel);
 
-		$lotesModel = new lotesModel();
-		$lotesModel->setId($idlote);
-		$lotesModel->addLocalizacao($localizacaoLoteModel);
-
-		$estoqueDao = new estoqueDao();
-		$this->http->response($estoqueDao->emprateleirar($lotesModel));
-
+			//ESTOQUE DAO
+			$estoqueDao = new estoqueDao();	
+			
+			if(!$estoqueDao->verificaQuantidadeTransferencia($estoqueModel, localizacoes::PRATELEIRA)){
+				$mensagem = "Quantidade insuficiente para realizar a transferência";
+				$this->http->response($mensagem);
+			}else{
+				$this->http->response($estoqueDao->transferir($estoqueModel, localizacoes::PRATELEIRA));
+			}
+			
+				
+		}else
+	    {
+			$todos_erros = $dataValidator->get_errors();
+			$this->http->response(json_encode($todos_erros));
+	    }
 	}
 
 }

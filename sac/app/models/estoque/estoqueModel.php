@@ -69,13 +69,26 @@ class estoqueModel{
 				if(localizacoes::ARMAZEM == $localizacao->getLocalizacao())
 				{
 					$fator = $this->getUnidadeMedidaParaEstoque()->getFator();
+					if($this->getUnidadeMedidaParaEstoque()->getId() != $localizacao->getUnidadeMedidaEstoque()->getId()){
+						$qtd = ($qtdLoteLocal * $localizacao->getUnidadeMedidaEstoque()->getFator()) / $fator;
+					}else
+						$qtd = ($qtdLoteLocal * $fator) / $localizacao->getUnidadeMedidaEstoque()->getFator();
+					
 				}else
 				if(localizacoes::PRATELEIRA == $localizacao->getLocalizacao())
 				{
 					$fator = $this->getUnidadeMedidaParaVenda()->getFator();
+
+					if($this->getUnidadeMedidaParaEstoque()->getId() != $localizacao->getUnidadeMedidaEstoque()->getId()){
+						$qtd = ($qtdLoteLocal * $localizacao->getUnidadeMedidaEstoque()->getFator()) / $fator;
+					}else
+						$qtd = ($qtdLoteLocal * $fator) / $localizacao->getUnidadeMedidaEstoque()->getFator();
+
 				}
+
+
 				// $valorUndEstoque += ((double)$qtdLoteLocal * (double)$fatorUnidadeLote) / $fator;
-				$valorUndEstoque += (double)$qtdLoteLocal / $fator;
+				$valorUndEstoque += $qtd;//(double)$qtdLoteLocal / $fator;
 			}
 		}
 

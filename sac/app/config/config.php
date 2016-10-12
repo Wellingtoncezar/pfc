@@ -20,7 +20,7 @@ $_config['default_controller'] 	= "gerenciar";
 $_config['errordir'] 			= 'errors';
 
 //show message error
-$_config['SHOWDBERROR'] 		= false;
+$_config['SHOWDBERROR'] 		= true;
 
 
 //url

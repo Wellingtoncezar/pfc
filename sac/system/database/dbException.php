@@ -110,7 +110,7 @@ class dbException extends PDOException{
 
 	private function withoutPermission($matches)
 	{
-		return "Você não tem permissão para executar esta ação".$this->db_error;
+		return "Você não tem permissão para executar esta ação ".$this->db_error;
 	}
 
 	

@@ -1,6 +1,6 @@
 <div class="container">
     <?php
-        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'suprimentos/requisicoes/gerenciar/cadastrar'), URL.'suprimentos/requisicoes/gerenciar/cadastrar');
+        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'estoque/armazem/gerenciar/entrada', 'title'=>'Entrada'), URL.'estoque/armazem/gerenciar/entrada');
         echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
     ?>
     <div class="page-header">
@@ -10,6 +10,8 @@
 		
 		<div id="grid"></div>
 		<div id="details"></div>
+		<div id="descartar"></div>
+        <div id="limites"></div>
     </div>
 </div>
 
@@ -18,13 +20,15 @@
 <link rel="stylesheet" href="<?=URL?>skin/js/kendoui/css/kendo.default.min.css" />
 <script src="<?=URL?>skin/js/kendoui/js/kendo.all.min.js"></script>
 <script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
 
 
 <script type="text/x-kendo-template" id="template">
     <div id="details-container">
-    	<form action="#=linkemprateleirar#" id="formTransferir" method="post">
-    		<input type="text" name="idlote" value="#= id #">
-	        <input type="text" name="idUnidadeMedidaVenda" value="#= idUnidadeMedidaPraVenda #">
+    	<form action="#=linkarmazenar#" id="formTransferir" method="post">
+    		<input type="hidden" name="idEstoque" value="#= idEstoque #">
+    		<input type="hidden" name="idlote" value="#= id #">
+	        <input type="hidden" name="idUnidadeMedidaVenda" value="#= idUnidadeMedidaPraVenda #">
 	        <div class="input-group">
 			  	<input type="number" class="form-control" name="quantidade" value="0" min="0">
 			  	<span class="input-group-addon" id="basic-addon1">#=nomeUnidadeMedida#</span>
@@ -36,6 +40,62 @@
     	</form>
     </div>
 </script>
+
+
+<script type="text/x-kendo-descartar" id="descartar">
+    <div id="details-container">
+    	<form action="#=linkdescartar#" id="formDescartar" method="post">
+    		<input type="hidden" name="idEstoque" value="#= idEstoque #">
+    		<input type="hidden" name="idlote" value="#= id #">
+	        <input type="hidden" name="idUnidadeMedidaVenda" value="#= idUnidadeMedidaPraVenda #">
+	        <div class="input-group">
+			  	<input type="number" class="form-control" name="quantidade" value="0" min="0">
+			  	<span class="input-group-addon" id="basic-addon1">#=nomeUnidadeMedida#</span>
+			</div>
+			<div class="input-group">
+			  	<textarea class="form-control" name="observacoes" placeholder="Observações"></textarea>
+			</div>
+			<button type="submit" class="btn btn-success pull-rigth btnTrasferir">Transferir</button>
+    	</form>
+    </div>
+</script>
+
+<style>
+     #gauge {
+        height: 300px;
+        display: inline-block;
+        *display: inline;
+        zoom: 1;
+    }
+</style>
+
+<!--MODAL DE ALTERAÇÃO DE LIMITES DE ESTOQUE-->
+<div class="modal fade" id="modalAlterLim">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="" id="formLimites" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Alterar limites de estoque</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="idEstoque" value="">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Min.</span>
+                        <input type="text" class="form-control" name="qtdMin" value="" min="0">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">Max.</span>
+                        <input type="text" class="form-control" name="qtdMax" value="" min="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success pull-rigth btnAlterLimites">Salvar</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 
 <script>
@@ -71,19 +131,15 @@ $("#grid").kendoGrid({
         field: "nivel",
         title: "Nível",	
         width: "200px",
-        template: '<h4><span class="pull-left label-danger label">#: min #</span></h4>'
-				+'<h4><span class="pull-right label-success label">#: max #</span></h4>'
-				+'<div class="progress">'
-				  	+'<div class="progress-bar #: progressclass # progress-bar-striped active" role="progressbar" aria-valuenow="#: nivel #" aria-valuemin="0" aria-valuemax="100" style="width: #: nivel #%">'
-				    	+'<span class="sr-only">#: nivel #% Complete</span>'
-				 	+'</div>'
-				+'</div>'
+        template: "<div class='gauge'></div>"
     },
     {
     	filterable: false,
         field: "acoes",
         title: "Ações",
-        width: "100px"
+        width: "100px",
+        template: '<a href="javascript:void(0)" linkAlterarLimites="#:linkAlterarLimites#" min="#:min#" max="#:max#" id="#:id#" class="btn btn-default btnAlterLimites"><span class="glyphicons glyphicons-edit"></span></a>'
+
     }
   	],
     filterable: {
@@ -111,33 +167,130 @@ $("#grid").kendoGrid({
 		}
 	},
 	pageable: {
-	    pageSize: 8,
+	    pageSize: 10,
 	    refresh: true
 	},
   	detailTemplate: 'Lotes: <div class="grid"></div>',
   	detailInit: function(e) {
 	    e.detailRow.find(".grid").kendoGrid({
-	      	dataSource: e.data.lotes,
+	      	dataSource: {
+                data: e.data.lotes,
+                pageSize: 10
+            },
+	      	pageable: true,
 	      	columns: [
-	      		{ field: "id", title:"ID", width: "50px"},
+	      		{ field: "id", title:"ID", width: "60px"},
 	      		{ field: "codigo", title:"Código", width: "150px" },
 	      		{ field: "codigogti", title:"Cód. barras gti", width: "150px" },
 	      		{ field: "codigogst", title:"Cód. barras gst", width: "150px" },
 	      		{ field: "validade", title:"Validade", width: "150px" },
-	      		{ field: "quantidade", title:"Quantidade", width: "200px" },
+	      		{ field: "quantidade", title:"Quantidade", width: "200px", template: "<div class='chart'></div>" },
 	      		{ 
-	      			command: { 
+	      			command: [{ 
 		      			text: "",
 		      			name: "details",
 		      			template: '<a href="" data-command="popup" class="k-button k-button-icontext k-grid-details"><span class="glyphicon glyphicon-transfer"></span></a>',
 		      			click: showDetails 
-	      			}, 
+	      			},{ 
+		      			text: "",
+		      			name: "descartar",
+		      			template: '<a href="" data-command="popup" class="k-button k-button-icontext k-grid-descartar"><span class="glyphicons glyphicons-remove"></span></a>',
+		      			click: descartar 
+	      			}
+	      			], 
 	      			title: " ", 
 	      			width: "180px" 
 	      		}
-	        ]
+	        ],
+	        dataBound: function(){
+				var grid = this;
+		    
+				grid.tbody.find("tr[role='row']").each(function(){
+					var model = grid.dataItem(this);
+
+						$(this).find(".chart").kendoChart({
+			                // title: {
+			                //     text: "Site Visitors Stats \n /thousands/"
+			                // },
+			                chartArea: {
+							    height: 80
+							},
+			                legend: {
+			                    visible: false
+			                },
+			                seriesDefaults: {
+			                    type: "bar"
+			                },
+			                series: [{
+			                    name: model.nomeUnidadeConvertido,
+			                    data: [model.qtdConvertido]
+			                }],
+			                valueAxis: {
+			                    //	max: 10,
+			                    line: {
+			                        visible: false
+			                    },
+			                    minorGridLines: {
+			                        visible: true
+			                    },
+			                    labels: {
+			                        rotation: "auto"
+			                    }
+			                },
+			                categoryAxis: {
+			                    categories: [model.nomeUnidadeConvertido],
+			                    majorGridLines: {
+			                        visible: false
+			                    }
+			                },
+			                tooltip: {
+			                    visible: true,
+			                    template: model.quantidade
+			                }
+			            });
+
+					})
+			  	}
+
 	    });
+	},
+	dataBound: function(){
+		var grid = this;
+    
+		grid.tbody.find("tr[role='row']").each(function(){
+			var model = grid.dataItem(this);
+			//alert(model.nivel)
+		    $(this).find(".gauge").kendoLinearGauge({
+                pointer: {
+                    value: model.nivel,
+                  shape: "arrow"
+                },
+                scale: {
+                    
+                    min: 0,
+                    max: (model.maxUnformated > model.nivel) ? model.maxUnformated : model.nivel,
+                    vertical: false,
+                    ranges: [
+                        {
+                            from: 0,
+                            to: model.minUnformated,
+                            color: "#c20000"
+                        }, {
+                            from: model.minUnformated,
+                            to: model.maxUnformated,
+                            color: "#2798df"
+                        }, {
+                            from: model.maxUnformated,
+                            to: (model.maxUnformated > model.nivel) ? model.maxUnformated : model.nivel,
+                            color: "#ffc700"
+                        }
+                    ]
+                }
+            });
+
+		})
   	}
+
 
 });
 
@@ -150,8 +303,8 @@ wnd = $("#details")
     width: 400
 }).data("kendoWindow");
 
-detailsTemplate = kendo.template($("#template").html());
 function showDetails(e) {
+	detailsTemplate = kendo.template($("#template").html());
     e.preventDefault();
 
     var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
@@ -159,13 +312,112 @@ function showDetails(e) {
     wnd.center().open();
 }
 
-$(document).on('submit', '#formTransferir', function(event) {
-	event.preventDefault();
-	$('#formTransferir').uploadForm({
-        'reload':false
+
+wndesc = $("#descartar")
+.kendoWindow({
+    title: "Descartar Lote",
+    modal: true,
+    visible: false,
+    resizable: false,
+    width: 400
+}).data("kendoWindow");
+
+function descartar(e) {
+	detailsTemplate = kendo.template($("#descartar").html());
+    e.preventDefault();
+
+    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+    wndesc.content(detailsTemplate(dataItem));
+    wndesc.center().open();
+}
+
+
+//Limites de estoque
+$(document).on('click', '.btnAlterLimites',function(){
+    var linkAlterarLimites = $(this).attr('linkAlterarLimites')
+    var id = $(this).attr('id');
+    var min = $(this).attr('min');
+    var max = $(this).attr('max');
+    $('#formLimites').attr('action', linkAlterarLimites);
+    $('#modalAlterLim input[name=qtdMin]').val(min);
+    $('#modalAlterLim input[name=qtdMax]').val(max);
+    $('#modalAlterLim input[name=idEstoque]').val(id);
+    $('#modalAlterLim').modal('show');
+
+
+    $('input[name=qtdMin]').maskMoney({
+        decimal:',',
+        thousands: ''
     });
+    $('input[name=qtdMax]').maskMoney({
+        decimal:',',
+        thousands: ''
+    });
+})
+
+
+
+//FORM TRANSFERIR
+$(document).on('submit', '#formTransferir', function(event) {
+	$('.generalErrors .alert').html('')
+	$('#formTransferir').uploadForm({
+        'reload':false,
+        afterSubmit: function(data){
+        	if(data != true)
+        	{
+
+	        	$('#alertFormModal').modal('show');
+	   			//data = $.parseJSON(data);
+	   			$.each(data, function(index, value) {
+			        var value = ''+value;
+					var values = value.split(',');
+			        $.each(values, function(id, val) {
+			        	$('.generalErrors .alert').append('<p>'+val+'</p>');
+			        });
+			        $('[name='+index+']',form).css('box-shadow','0 0 1px 1px #F00');
+				});
+        	}else{
+        		location.reload()
+        	}
+        }
+
+    });
+    return false;
 });
 
+//FORM DESCARTAR
+$(document).on('submit', '#formDescartar', function(event) {
+	$('.generalErrors .alert').html('')
+	$('#formDescartar').uploadForm({
+        'reload':false,
+        afterSubmit: function(data){
+        	if(data != true)
+        	{
+
+	        	$('#alertFormModal').modal('show');
+	   			//data = $.parseJSON(data);
+	   			$.each(data, function(index, value) {
+			        var value = ''+value;
+					var values = value.split(',');
+			        $.each(values, function(id, val) {
+			        	$('.generalErrors .alert').append('<p>'+val+'</p>');
+			        });
+			        $('[name='+index+']',form).css('box-shadow','0 0 1px 1px #F00');
+				});
+        	}else{
+        		location.reload()
+        	}
+        }
+
+    });
+    return false;
+});
+
+$(document).on('submit', '#formLimites', function(event) {
+    $('#formLimites').uploadForm({
+    });
+    return false;
+});
 </script>
 
 

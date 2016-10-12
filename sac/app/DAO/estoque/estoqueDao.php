@@ -162,75 +162,61 @@ class estoqueDao extends Dao{
 	}
 
 
-	public function emprateleirar(lotesModel $lotesModel)
+
+
+
+
+
+	public function transferir(estoqueModel $estoque, $atualLocalizacao)
 	{
 		try {
+			$lotesModel = new lotesModel();
+			$lotesModel = $estoque->getLotes()[0];
+
 			$this->db->clear();
 			$this->db->query('BEGIN');
-
-			$this->db->setTabela('localizacao_lote, produto_lote, estoque, produtos, unidade_medida_produto');
-			$this->db->setCondicao("
-						produto_lote.id_produto_lote = ?
-						AND produto_lote.id_produto_lote = localizacao_lote.id_produto_lote 
-						AND localizacao_lote.localizacao = ?
-						AND produto_lote.id_estoque = estoque.id_estoque
-						AND estoque.id_produto = produtos.id_produto
-						AND unidade_medida_produto.id_produto = produtos.id_produto
-						AND unidade_medida_produto.para_venda = ?
+			$this->db->setTabela('localizacao_lote, unidade_medida_produto');
+			$this->db->setCondicao("localizacao_lote.localizacao = ?
+									AND localizacao_lote.id_produto_lote = ?
+							        AND localizacao_lote.id_unidade_medida_produto = unidade_medida_produto.id_unidade_medida_produto
 						");
-			$this->db->setParameter(1, $lotesModel->getId());
-			$this->db->setParameter(2, localizacoes::ARMAZEM);
-			$this->db->setParameter(3, true);
+			$this->db->setParameter(1, $atualLocalizacao);
+			$this->db->setParameter(2, $lotesModel->getId());
 			if($this->db->select())
 			{
 				$lote = $this->db->result();
+
+				$this->atualizaNivelEstoque($estoque);
 
 				//obtençao da quantidade que será transferida à prateleira, 
 				//A quantidade está relacionada com a unidade de venda
 				$qtdLocalTransferencia = $lotesModel->getLocalizacao()[0]->getQuantidade();
 
-				//converção da unidade de venda para a menor unidade de medida cadastrada
-				$qtdLocalTransferencia = $qtdLocalTransferencia * $lote['fator_unidade_medida'];
+				//converção da unidade de venda para a unidade de medida cadastrada
+				$qtdLocalTransferencia = $qtdLocalTransferencia / $lote['fator_unidade_medida'];
 
-				//verificando se a quantidade a ser transferido é suficiênte para realizá-lo
-				if($qtdLocalTransferencia <= $lote['quantidade_localizacao'])
+				//dados do lote coletado para transferência
+				$data = array(
+					'quantidade_localizacao' => ($lote['quantidade_localizacao'] - $qtdLocalTransferencia)
+				);
+
+				$this->db->clear();
+				$this->db->setTabela('localizacao_lote');
+				$this->db->setCondicao("id_localizacao_lote = ?");
+				$this->db->setParameter(1, $lote['id_localizacao_lote']);
+				if($this->db->update($data))
 				{
-					//return 'quantidade suficiente';
-					// //verificando se 
-					// if($lote['data_validade_controlada'])
-					// 	$this->verificaDataValidade($lote['data_validade_controlada'], $lote['data_validade'], $lote['id_estoque'] );
-
-					//dados do lote coletado para transferência
+					//dados do lote a ser transferido para a nova localidade
 					$data = array(
-						'quantidade_localizacao' => ($lote['quantidade_localizacao'] - $qtdLocalTransferencia)
+						'id_produto_lote' => $lotesModel->getId(),
+						'id_unidade_medida_produto' => $lotesModel->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId(),
+						'localizacao' => $lotesModel->getLocalizacao()[0]->getLocalizacao(),
+						'quantidade_localizacao' => $lotesModel->getLocalizacao()[0]->getQuantidade(),
+						'observacoes_localizacao_lote' => $lotesModel->getLocalizacao()[0]->getObservacoes()
 					);
 
-					$this->db->clear();
-					$this->db->setTabela('localizacao_lote');
-					$this->db->setCondicao("id_localizacao_lote = ?");
-					$this->db->setParameter(1, $lote['id_localizacao_lote']);
-					if($this->db->update($data))
-					{
-						//dados do lote a ser transferido para a nova localidade
-						$data = array(
-							'id_produto_lote' => $lotesModel->getId(),
-							'id_unidade_medida_produto' => $lotesModel->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId(),
-							'localizacao' => localizacoes::PRATELEIRA,
-							'quantidade_localizacao' => $qtdLocalTransferencia,
-							'observacoes_localizacao_lote' => $lotesModel->getLocalizacao()[0]->getObservacoes()
-						);
-						return $this->atualizaLoteLocalizacao($data, $lotesModel->getId(), localizacoes::PRATELEIRA);
-					}
-
-				}else
-				{
-					return 'Quantidade para transferência insuficiênte';
+					return $this->atualizaLoteLocalizacao($data, $lotesModel->getId(), $lotesModel->getLocalizacao()[0]->getLocalizacao(), $lotesModel->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId());
 				}
-
-
-			}else
-			{
-				return 'Lote não encontrado';
 			}
 
 
@@ -238,27 +224,112 @@ class estoqueDao extends Dao{
 			$this->db->query('rollback');
 			return $e->getMessageError();
 		}
-
 	}
 
 
-	// private function verificaDataValidade($data_validade, $id_estoque)
-	// {
-	// 	if($data_validade_controlada)
-	// 	{
 
-	// 	}
 
-	// }
 
-	private function atualizaLoteLocalizacao($data, $id_produto_lote, $localizacao)
+
+	/**
+	 * Verifica se a quantidade é suficiente para a transferência de localizações
+	 * @return boolean
+	 * */
+	public function verificaQuantidadeTransferencia(estoqueModel $estoque, $localizacao)
+	{
+		try{
+			$lotesModel = new lotesModel();
+			$lotesModel = $estoque->getLotes()[0];
+
+			$this->db->clear();
+			$this->db->query('BEGIN');
+			$this->db->setTabela('localizacao_lote, unidade_medida_produto');
+			$this->db->setCondicao("localizacao_lote.localizacao = ?
+									AND localizacao_lote.id_produto_lote = ?
+							        AND localizacao_lote.id_unidade_medida_produto = unidade_medida_produto.id_unidade_medida_produto
+						");
+			$this->db->setParameter(1, $localizacao);
+			$this->db->setParameter(2, $lotesModel->getId());
+			//$this->db->setParameter(3, $lotesModel->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId());
+			if($this->db->select())
+			{
+				$this->db->getSql();
+				$lote = $this->db->result();
+				//obtençao da quantidade que será transferida à prateleira, 
+				//A quantidade está relacionada com a unidade de venda
+				$qtdLocalTransferencia = $lotesModel->getLocalizacao()[0]->getQuantidade();
+
+				//converção da unidade de venda para a menor unidade de medida cadastrada
+				$qtdLocalTransferencia = $qtdLocalTransferencia / $lote['fator_unidade_medida'];
+
+				//verificando se a quantidade a ser transferido é suficiênte para realizá-lo
+				if($qtdLocalTransferencia <= $lote['quantidade_localizacao'])
+					return true;
+				else
+					return false;
+			}
+			return false;
+			
+
+		} catch (dbException $e) {
+			$this->db->query('rollback');
+			return $e->getMessageError();
+		}
+	}
+
+	/**
+	 * @param boolean, date, int
+	 * Verifica se existe um lote com data de validade perto de vencer e o retorna
+	 * */	
+	public function verificaDataValidade(estoqueModel $estoque)
+	{
+		try{
+			$this->load->model('estoque/lotesModel');
+
+			$this->db->clear();
+			$sql = "SELECT * 
+					FROM produto_lote, estoque, produtos, localizacao_lote
+					WHERE produto_lote.id_estoque = ?	
+					AND produto_lote.data_validade < (SELECT PRODLOTE.data_validade 
+														FROM produto_lote as PRODLOTE 
+														WHERE PRODLOTE.id_produto_lote = ?) 
+					AND produto_lote.id_estoque = estoque.id_estoque 
+					AND produto_lote.id_produto_lote = localizacao_lote.id_produto_lote
+					AND localizacao_lote.localizacao = ?
+					AND produtos.id_produto = estoque.id_produto
+					AND produtos.data_validade_controlada = 1
+					";
+
+			$this->db->setParameter(1, $estoque->getId());
+			$this->db->setParameter(2, $estoque->getLotes()[0]->getId() );
+			$this->db->setParameter(3, localizacoes::ARMAZEM);
+			if($this->db->query($sql))
+			{
+				$lote = $this->db->result();
+				$lotesModel = new lotesModel();
+				$lotesModel->setId((int)$lote['id_produto_lote']);
+				$lotesModel->setCodigoLote($lote['codigo_lote']);
+				$lotesModel->setDataValidade($lote['data_validade']);
+				return $lotesModel;
+			}
+
+		} catch (dbException $e) {
+			$this->db->query('rollback');
+			return $e->getMessageError();
+		}
+	}
+
+
+
+	private function atualizaLoteLocalizacao($data, $id_produto_lote, $localizacao, $idUnidadeMedidaProduto)
 	{
 		try {
 			$this->db->clear();
 			$this->db->setTabela('localizacao_lote');
-			$this->db->setCondicao("id_produto_lote = ? AND localizacao = ?");
+			$this->db->setCondicao("id_produto_lote = ? AND localizacao = ? AND id_unidade_medida_produto = ?");
 			$this->db->setParameter(1, $id_produto_lote);
 			$this->db->setParameter(2, $localizacao);
+			$this->db->setParameter(3, $idUnidadeMedidaProduto);
 			if($this->db->select())
 			{
 				$res = $this->db->result();
@@ -328,9 +399,7 @@ class estoqueDao extends Dao{
 			$this->db->clear();
 			$this->db->query('BEGIN');
 			$estoque = $this->atualizaEstoque($estoqueModel);
-			// echo 'passou';
-			// echo $estoque->getId();
-			// exit;
+
 			$data = array(
 				'id_estoque' => $estoque->getId(),
 				'codigo_lote' => $estoque->getLotes()[0]->getCodigoLote(),
@@ -341,49 +410,42 @@ class estoqueDao extends Dao{
 			
 			$this->db->clear();
 			$this->db->setTabela('produto_lote');
-			if($this->db->insert($data))
+			$this->db->setCondicao("id_estoque = ? AND codigo_lote = ?");
+			$this->db->setParameter(1, $estoque->getId());
+			$this->db->setParameter(2, $estoque->getLotes()[0]->getCodigoLote());
+			
+			if($this->db->select()){
+				$res = $this->db->result();
+				$id_lote = $res['id_produto_lote'];
+				$this->db->update($data);
+			}else
 			{
+				$this->db->clear();
+				$this->db->setTabela('produto_lote');
+				$this->db->insert($data);
 				$id_lote = $this->db->getUltimoId();
-				//dados do lote a ser transferido para a nova localidade
-				$fator_unidade_medida = $this->getFatorUnidadeEstoque($estoque);
-
-				//Se a unidade de venda for diferente à unidade que está querendo converter 
-				if($estoque->getUnidadeMedidaParaVenda()->getId() != $estoque->getLotes()[0]->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId()){
-					$qtd = ($estoque->getLotes()[0]->getLocalizacao()[0]->getQuantidade() * $fator_unidade_medida) / 1;
-				}else
-					$qtd = ($estoque->getLotes()[0]->getLocalizacao()[0]->getQuantidade() * 1) / $fator_unidade_medida;
-
-				$data = array(
-					'id_produto_lote' => $id_lote,
-					'id_unidade_medida_produto' => $estoque->getLotes()[0]->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId(),
-					'localizacao' => $estoque->getLotes()[0]->getLocalizacao()[0]->getLocalizacao(),
-					'quantidade_localizacao' => $qtd,
-					'observacoes_localizacao_lote' => $estoque->getLotes()[0]->getLocalizacao()[0]->getObservacoes()
-				);
-				$this->atualizaLoteLocalizacao($data, $id_lote, $estoque->getLotes()[0]->getLocalizacao()[0]->getLocalizacao());
-				$this->db->query('COMMIT');
-				echo 'passou';
-			}else{
-				$this->db->query('ROLLBACK');
-				echo 'erro ao cadastrar';
 			}
 
-			// 	$res = $this->db->result();
-			// 	$data['quantidade_localizacao'] = $res['quantidade_localizacao']+$data['quantidade_localizacao'];
-			// 	if($this->db->update($data))
-			// 	{
-			// 		$this->db->query('COMMIT');
-			// 		return true;
-			// 	}else
-			// 	{
-			// 		$this->db->query('rollback');
-			// 		return false;
-			// 	}
+			//dados do lote a ser transferido para a nova localidade
+			// $fator_unidade_medida = $this->getFatorUnidadeEstoque($estoque);
+
+			//Se a unidade de venda for diferente à unidade que está querendo converter 
+			// if($estoque->getUnidadeMedidaParaVenda()->getId() != $estoque->getLotes()[0]->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId()){
+			// 	$qtd = ($estoque->getLotes()[0]->getLocalizacao()[0]->getQuantidade() * 1) / $fator_unidade_medida;
 			// }else
-			// {
-			// 	$this->db->insert($data);
-			// 	$this->db->query('COMMIT');
-			// }
+			// 	$qtd = ($estoque->getLotes()[0]->getLocalizacao()[0]->getQuantidade() * $fator_unidade_medida) / 1;
+
+			$data = array(
+				'id_produto_lote' => $id_lote,
+				'id_unidade_medida_produto' => $estoque->getLotes()[0]->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId(),
+				'localizacao' => $estoque->getLotes()[0]->getLocalizacao()[0]->getLocalizacao(),
+				'quantidade_localizacao' => $estoque->getLotes()[0]->getLocalizacao()[0]->getQuantidade(),
+				'observacoes_localizacao_lote' => $estoque->getLotes()[0]->getLocalizacao()[0]->getObservacoes()
+			);
+			$this->atualizaLoteLocalizacao($data, $id_lote, $estoque->getLotes()[0]->getLocalizacao()[0]->getLocalizacao(), $estoque->getLotes()[0]->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId());
+			$this->db->query('COMMIT');
+			return true;
+
 		} catch (dbException $e) {
 			$this->db->query('ROLLBACK');
 			return $e->getMessageError();
@@ -421,7 +483,7 @@ class estoqueDao extends Dao{
 			if($this->db->select())
 			{
 				$res = $this->db->result();
-				$estoque->setId($res['id_estoque']);
+				$estoque->setId((int)$res['id_estoque']);
 
 			}else{
 				$data = array(
@@ -429,16 +491,10 @@ class estoqueDao extends Dao{
 				);
 				$this->db-> clear();
 				$this->db->setTabela('estoque');
-				if($this->db->insert($data))
-				{
-					$estoque->setId($this->db->getUltimoId());
-					$this->atualizaNivelEstoque($estoque);
-				}else
-				{
-					$this->db->query('ROLLBACK');
-				}
+				$this->db->insert($data);
+				$estoque->setId((int)$this->db->getUltimoId());
 			}
-			
+			$this->atualizaNivelEstoque($estoque);
 			return $estoque;
 		} catch (dbException $e) {
 			$this->db->query('ROLLBACK');
@@ -446,19 +502,17 @@ class estoqueDao extends Dao{
 		}
 	}
 
+	//ATUALIZAÇÃO 
 	private function atualizaNivelEstoque(estoqueModel $estoque)
 	{
+
 		try {
 			$this->db->clear();
 			$this->db->setTabela('nivel_estoque');
 			$this->db->setCondicao("id_estoque = ? AND localizacao_estoque = ?");
 			$this->db->setParameter(1, $estoque->getId());
 			$this->db->setParameter(2, $estoque->getLotes()[0]->getLocalizacao()[0]->getLocalizacao());
-			if($this->db->select())
-			{
-				//$res = $this->db->result();
-				//$estoque->setId($res['id_estoque']);
-			}else
+			if(!$this->db->select())
 			{
 				$data = array(
 					'id_estoque' => $estoque->getId(),
@@ -467,9 +521,9 @@ class estoqueDao extends Dao{
 				$this->db-> clear();
 				$this->db->setTabela('nivel_estoque');
 				$this->db->insert($data);
+
 			}
 		} catch (dbException $e) {
-
 			$this->db->query('ROLLBACK');
 			return $e->getMessageError();
 		}

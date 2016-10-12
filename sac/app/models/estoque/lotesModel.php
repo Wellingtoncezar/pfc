@@ -81,17 +81,20 @@ class lotesModel{
 	}
 
 	/**
-	 * retorna a quantidade relacionada ao lote, localização e unidade de medida do lote
+	 * retorna a quantidade relacionada ao lote, localização e unidade de medida do lote por padrão
+	 * caso o parametro converter for passado como false, retornará o valor real de estoque na unidade de venda e não na unidade do lote
 	 * @return double
 	 * */
-	public function getQuantidadeLotePorLocalizacao()
+	public function getQuantidadeLotePorLocalizacao($converter = true)
 	{
 		$valorUndEstoque = 0;
 		foreach ($this->localizacoes as $localizacao){
 			$fatorUnidadeLote = $localizacao->getUnidadeMedidaEstoque()->getFator();
 			$qtdLoteLocal = $localizacao->getQuantidade(); //quantidade do lote por localização
-
-			$valorUndEstoque += (double)$qtdLoteLocal / $fatorUnidadeLote;
+			// if($converter)
+			// 	$valorUndEstoque += (double)$qtdLoteLocal / $fatorUnidadeLote;
+			// else
+				$valorUndEstoque += (double)$qtdLoteLocal;
 		}
 		return $valorUndEstoque;
 	}

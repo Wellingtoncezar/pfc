@@ -86,7 +86,7 @@ class gerenciar extends Controller{
 
 
 	}
-
+	
 	public function inserir(){
 		if(!$this->load->checkPermissao->check(false,URL.'estoque/gerenciar/'))
 		{
@@ -109,7 +109,7 @@ class gerenciar extends Controller{
 		$this->load->library('dataformat');
 
 		$dataformat = new dataformat();
-
+		//Obtendo os valores
 		$id_produto 			= (int)$this->http->getRequest('id_produto');
 		$codigoLote 			= $this->http->getRequest('codigoLote');
 		$codBarrasGti 			= $this->http->getRequest('codBarrasGti');
@@ -120,7 +120,7 @@ class gerenciar extends Controller{
 		$unidadeMedidaEstoque 	= (int)$this->http->getRequest('unidadeMedidaEstoque');
 		$observacoes 			= $this->http->getRequest('observacoes');
 
-
+		//Validando os valores de entrada
 		$dataValidator = new dataValidator();
 		$dataValidator->set('Produto', $id_produto, 'id_produto')->is_required();
 		$dataValidator->set('Código do lote', $codigoLote, 'codigoLote')->is_required();
@@ -171,7 +171,7 @@ class gerenciar extends Controller{
 
 			//ESTOQUE DAO
 			$estoqueDao = new estoqueDao();
-			$estoqueDao->armazenarLote($estoqueModel);
+			$this->http->response($estoqueDao->armazenarLote($estoqueModel));
 
 		}else
 	    {
