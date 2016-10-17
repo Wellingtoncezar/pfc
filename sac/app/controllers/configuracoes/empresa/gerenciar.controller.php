@@ -53,7 +53,7 @@ class gerenciar extends Controller{
 		$saveRouter->saveAction();
 		$this->load->checkPermissao->check();
 		$data = array(
-			'titlePage' => 'Cadastrar fornecedores',
+			'titlePage' => 'Cadastrar empresa',
 			'template' => new templateFactory()
 		);
 		
