@@ -23,7 +23,7 @@
                                     <?php
                                         $ATIVO = '';
                                         $INATIVO = '';
-                                        $status = $mod->getStatusSelecao();
+                                        $status = $mod->getStatus_selecao();
                                         $$status = 'selected';
                                         //$$mod->getStatusSelecao() = 'selected';
                                     ?>
@@ -59,7 +59,7 @@
                                             <?php
                                                 $ATIVO = '';
                                                 $INATIVO = '';
-                                                $status = $modPag->getStatusSelecao();
+                                                $status = $modPag->getStatus_selecao();
                                                 $$status = 'selected';
                                             ?>
                                             <span class="input-group-addon">
@@ -88,7 +88,7 @@
                                                     <?php
                                                         $ATIVO = '';
                                                         $INATIVO = '';
-                                                        $status = $modPagAct->getStatusSelecao();
+                                                        $status = $modPagAct->getStatus_selecao();
                                                         $$status = 'selected';
                                                     ?>
                                                     <span class="input-group-addon">
@@ -126,12 +126,12 @@
 
 
                             <?php
-                            if(!empty($mod->getSubmodulos())):
+                            if(!empty($mod->getModulos())):
                                 
                             ?>
                             <ul>
                                 <?php
-                                foreach ($mod->getSubmodulos() as $keyModSubmod => $modSubmod):
+                                foreach ($mod->getModulos() as $keyModSubmod => $modSubmod):
                                     
                                     
                                 ?>
@@ -144,7 +144,7 @@
                                             <?php
                                                 $ATIVO = '';
                                                 $INATIVO = '';
-                                                $status = $modSubmod->getStatusSelecao(); 
+                                                $status = $modSubmod->getStatus_selecao(); 
                                                 $$status = 'selected';
                                             ?>
                                             <span class="input-group-addon">
@@ -173,7 +173,7 @@
                                                     <?php
                                                         $ATIVO = '';
                                                         $INATIVO = '';
-                                                        $status = $modSubmodPag->getStatusSelecao();
+                                                        $status = $modSubmodPag->getStatus_selecao();
                                                         $$status = 'selected';
                                                     ?>
                                                     <span class="input-group-addon">
@@ -203,7 +203,7 @@
                                                             <?php
                                                                 $ATIVO = '';
                                                                 $INATIVO = '';
-                                                                $status = $modSubmodPagAct->getStatusSelecao();
+                                                                $status = $modSubmodPagAct->getStatus_selecao();
                                                                 $$status = 'selected';
                                                             ?>
                                                             <span class="input-group-addon">

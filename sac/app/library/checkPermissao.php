@@ -12,34 +12,39 @@ class checkPermissao extends Library{
 		
 	}
 
-	private function checkpermissao($value)
+	private function searchInObject($object, $slug)
 	{
-		// echo '<pre>';
-		// echo '<h2>'.$value.'</h2>';
-		// print_r($this->lastArray);
-		// echo '</pre>';
-		//VERIFICA EXISTE O ÍNDICE de "$VALUE" NO ULTIMO ARRAY PERCORRIDO
-		if(array_key_exists($value, $this->lastArray))
+		foreach ($object as $key => $value) 
 		{
-			$this->latType = "modulo";
-			$this->lastArray = $this->lastArray[$value];
-			return true;
-		}elseif(isset($this->lastArray['submodulos']) && array_key_exists($value, $this->lastArray['submodulos']))//SE FOR PARA SUBMODULOS
-		{	
-			$this->latType = "submodulo";
-			$this->lastArray = $this->lastArray['submodulos'][$value];
-			return true;
-		}elseif(isset($this->lastArray['paginas']) && array_key_exists($value, $this->lastArray['paginas']))//SE FOR PARA PÁGINAS (CONTROLLERS)
-		{
-			$this->latType = "pagina";
-			$this->lastArray = $this->lastArray['paginas'][$value];
-			return true;
-		}else
-		{
-			$this->lastArray = Array();
-			return false;
+			if($value->getUrl() == $slug && $value->getAcesso() == true)
+			{
+				$this->lastArray = $value;
+				return true;
+			}
 			
 		}
+		return false;
+	}
+
+	private function checkpermissao($slug)
+	{
+		 
+		if($this->searchInObject($this->lastArray, $slug))
+			return true;
+
+		if(method_exists($this->lastArray, 'getModulos'))
+			if($this->searchInObject($this->lastArray->getModulos(), $slug))
+				return true;
+
+		if(method_exists($this->lastArray, 'getPaginas'))
+			if($this->searchInObject($this->lastArray->getPaginas(), $slug))
+				return true;
+				
+		if(method_exists($this->lastArray, 'getActions'))
+			if($this->searchInObject($this->lastArray->getActions(), $slug))
+				return true;
+
+		return false;
 	}
 
 	/**
@@ -59,51 +64,52 @@ class checkPermissao extends Library{
 			return false;
 		}
 
-		if(unserialize($_SESSION['user'])->getNivelAcesso()->getPermissoes() != '*'){
+		if(unserialize($_SESSION['user'])->getNivelAcesso()->gettipoPermissao() != tipopermissao::ADMINISTRADOR){
 			$this->permissoes = unserialize($_SESSION['user'])->getNivelAcesso()->getPermissoes();
-			$this->permissoes = json_decode(html_entity_decode($this->permissoes),true);
 			$this->lastArray = $this->permissoes;	
 		}
 		else
 			return true;
 
+
 		$this->load->url = new url($url);
 		$retorno = false;
 		//se for diferente de administrador
 
-			//se for diferente da tela inicial 
-			if(!empty($this->load->url->getUrl())){
-				//percorre todos os segmentos da url par verificação da permissão
-				foreach ($this->load->url->getUrl() as $key => $value) 
-				{
-					if(!is_array($this->lastArray) || empty($this->lastArray))
-						break;
-					//verifica a permissão e define o retorno
-					if($this->checkpermissao($value))
-						$retorno = true;
-					else{
-						$retorno = false;
-						break;
-					}
+		//se for diferente da tela inicial 
+		if(!empty($this->load->url->getUrl())){
+			//percorre todos os segmentos da url par verificação da permissão
+
+			foreach ($this->load->url->getUrl() as $key => $value) 
+			{
+				if(empty($this->lastArray)){
+					break;
 				}
-			}else{
-				$retorno = true;
+				//verifica a permissão e define o retorno
+				if($this->checkpermissao($value))
+					$retorno = true;
+				else{
+					$retorno = false;
+					break;
+				}
 			}
+		}else{
+			$retorno = true;
+		}
 
-			//se o retorno for false
-			if($retorno == false)
-			{	
-				// e o redirecionamento for true, faz o redirecionamento e para tudo o que for executado depois do redirecionamento
-				if($redirect == true){
-					header('Location:'.URL.'acesso_negado');
-					exit;
-				}else{
-					return false;
-				}
-			}else
-				return true;
-
-			
+		// //se o retorno for false
+		if($retorno == false)
+		{	
+			// e o redirecionamento for true, faz o redirecionamento e para tudo o que for executado depois do redirecionamento
+			if($redirect == true){
+				header('Location:'.URL.'acesso_negado');
+				exit;
+			}else{
+				return false;
+			}
+		}else
+			return true;
+		
 	}
 
 }

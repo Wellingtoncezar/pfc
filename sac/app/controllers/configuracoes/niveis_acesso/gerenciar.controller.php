@@ -45,6 +45,10 @@ class gerenciar extends Controller{
 	*/
 	public function editar()
 	{
+		$this->load->dao('configuracoes/modulosDao');
+		$this->load->model('configuracoes/niveis_acesso/niveisAcessoModel');
+		$this->load->dao('configuracoes/niveisAcessoDao');
+
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
@@ -52,21 +56,18 @@ class gerenciar extends Controller{
 		$data = array(
 			'titulo' => 'Editar Grupo de Permissões para Usuários',
 		);
+		$url = new url();
+		$id = intval($url->getSegment(4));
 
 
 
 		//modulos
-		$this->load->dao('configuracoes/modulosDao');
+		$niveisAcessoModel = new niveisAcessoModel();
+		$niveisAcessoModel->setId($id);
 		$modulosDao = new modulosDao();
-		//$modulos->setStatus('"Ativo"');
-		//$modulos->setStatusSelecao('"Ativo"');
-		$data['modulos'] = $modulosDao->listar(0);
-
-		$url = new url();
-		$id = intval($url->getSegment(4));
-		$this->load->dao('configuracoes/niveisAcessoDao');
+		
 		$niveis = new niveisAcessoDao();
-		$niveis = $niveis->getNivelAcesso($id);
+		$niveis = $niveis->getNivelAcesso($niveisAcessoModel, $modulosDao->listar(0));
 		$data['nivel'] = $niveis;
 
 
@@ -85,36 +86,111 @@ class gerenciar extends Controller{
 	*/
 	public function atualizar()
 	{
-		$id = isset($_POST['id']) ? filter_var(trim($_POST['id'])) : '';
-		$administrador = isset($_POST['administrador']) ? filter_var(trim($_POST['administrador'])) : '';
-		$permissoes = (isset($_POST['permissoes']) AND $_POST['permissoes'] != '{}') ? $_POST['permissoes'] : '';
+		$this->load->model('configuracoes/niveis_acesso/niveisAcessoModel');
+		$this->load->model('configuracoes/modulos/modulosModel');
+		$this->load->model('configuracoes/modulos/paginasModel');
+		$this->load->model('configuracoes/modulos/actionsModel');
+
+
+		$id = $this->http->getRequest('id');
+		$administrador = $this->http->getRequest('administrador');
+		$permissoes = $this->http->getRequest('permissoes');
 
 		$validate = new DataValidator();
 		$validate->set('Permissões', $permissoes, 'permissoes')->is_required();
-
 		
 		if ($validate->validate())
 		{
-			$this->load->model('configuracoes/niveis_acesso/niveisAcessoModel');
+			$_permissoes = json_decode($permissoes,true);
 			$niveisAcesso = new niveisAcessoModel();
 			$niveisAcesso->setId($id);
-			if(!empty($administrador))
-				$niveisAcesso->setPermissoes($administrador);	
-			else
-				$niveisAcesso->setPermissoes($permissoes);
+
+			if(is_null($administrador))
+			{
+				$niveisAcesso = $this->getPermissoes($_permissoes, $niveisAcesso);
+			}
+
 
 			$this->load->dao('configuracoes/niveisAcessoDao');
 			$niveisAcessoDao = new niveisAcessoDao();
-			echo $niveisAcessoDao->atualizar($niveisAcesso);
+			$this->http->response($niveisAcessoDao->atualizar($niveisAcesso));
 		}else
 	    {
 			$todos_erros = $validate->get_errors();
 			echo json_encode($todos_erros);
 	    }
-
-		
-		
 	}
+
+
+
+	private function getPermissoes($_permissoes, niveisAcessoModel $niveisAcessoModel)
+	{
+		$this->load->model('configuracoes/modulos/modulosModel');
+		$this->load->model('configuracoes/modulos/paginasModel');
+		$this->load->model('configuracoes/modulos/actionsModel');
+		$this->load->model('configuracoes/niveis_acesso/permissoesAcessoModel');
+
+		//$permissoesAcessoModel = new permissoesAcessoModel();
+		//obtendo modulos
+		// echo '<pre>';
+		// print_r($_permissoes);
+		// echo '</pre>';
+		foreach($_permissoes as $idMod => $modulo)
+		{
+			$modulosModel = new modulosModel();
+			$modulosModel->setId($idMod);
+			//obtendo submodulos
+			foreach ($modulo['submodulos'] as $idSubMod => $subModulo) 
+			{
+				$submodulosModel = new modulosModel();
+				$submodulosModel->setId($idSubMod);
+				//obtendo paginas
+				foreach ($subModulo as $idPagina => $paginas) 
+				{
+					$paginasModel = new paginasModel();
+					$paginasModel->setId($idPagina);
+					//obtendo actions
+					foreach ($paginas as $idAction => $actions) 
+					{
+						$actionsModel = new actionsModel();
+						$actionsModel->setId($idAction);
+
+						$paginasModel->addAction($actionsModel);
+					}
+
+					$submodulosModel->addPagina($paginasModel);
+				}
+
+				$modulosModel->addModulo($submodulosModel);
+			}
+			//Obtendo paginas
+			foreach ($modulo['paginas'] as $idPagina => $paginas) 
+			{
+				$paginasModel = new paginasModel();
+				$paginasModel->setId($idPagina);
+				//Obtendo actions
+				foreach ($paginas as $idAction => $actions) 
+				{
+					$actionsModel = new actionsModel();
+					$actionsModel->setId($idAction);
+
+					$paginasModel->addAction($actionsModel);
+				}
+
+				$modulosModel->addPagina($paginasModel);
+			}
+
+			
+			$niveisAcessoModel->addPermissoes($modulosModel);
+		}
+		// echo '<pre>';
+		// print_r($niveisAcessoModel);
+		// echo '</pre>';
+		return $niveisAcessoModel;
+
+
+	}
+	
 
 
 

@@ -24,8 +24,6 @@ class loginDao extends Dao{
 		$this->db->setCondicao('A.login_usuario = "'.$usuariosModel->getLogin().'" AND A.status_usuario = "'.status::ATIVO.'"  AND B.status_funcionario = "'.status::ATIVO.'" AND A.id_nivel_acesso = C.id_nivel_acesso AND A.id_funcionario = B.id_funcionario');
 		
 
-		
-
 		if($this->db->select())
 		{
 			$res = $this->db->result();
@@ -44,8 +42,8 @@ class loginDao extends Dao{
 				//nivel de acesso
 				$nivelAcesso = new niveisAcessoModel();
 				$nivelAcesso->setId($res['id_nivel_acesso']);
-				$nivelAcesso->setNome($res['nome_nivel_acesso']);
-				$nivelAcesso->setPermissoes($res['permissoes']);
+
+				// $nivelAcesso->setPermissoes($res['permissoes']);
 				$nivelAcesso->setIndice($res['index_access_db_name']);
 
 
@@ -57,11 +55,11 @@ class loginDao extends Dao{
 				$usuariosModel->setHash($this->updateHashAcesso($usuariosModel));
 				return $usuariosModel;
 			}else{
-				return false;
+				return null;
 			}
 		}else
 		{
-			return false;
+			return null;
 		}
 	}
 

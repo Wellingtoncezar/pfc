@@ -9,101 +9,123 @@
       <h1>Usuários</h1>
     </div>
     <div class="middle-content">
-            <?php
-            $thead = '  <tr>
-            				<th width="20">ID</th>
-                            <th width="100">Nível</th>
-                            <th width="160">Funcionário</th>
-                            <th width="160">Email</th>
-                            <th width="160">Login</th>
-                            <th width="100">Status (Ativo/Inativo)</th>
-                            <th width="180">Ações</th>
-                        </tr>';
-            $tfoot = '  <tr>
-            				<th>ID</th>
-                            <th>Nível</th>
-                            <th>Funcionario</th>
-                            <th>Email</th>
-                            <th>Login</th>
-                            <th>Status(Ativo/Inativo)</th>
-                            <th>Ações</th>
-                        </tr>';  
-            if(!empty($usuarios)):
-                $tbody = '';
-                foreach ($usuarios as $usu):
-
-                    $ativo = ($usu->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
-                    $inativo = ($usu->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
-
-            $tbody .='  <tr id="'.$usu->getId().'">
-            				<td>'.$usu->getId().'</td>
-                            <td>'.$usu->getNivelAcesso()->getNome().'</td>
-                            <td>'.$usu->getFuncionario()->getNome().' '.$usu->getFuncionario()->getSobrenome().'</td>
-                            <td>'.$usu->getEmail().'</td>
-                            <td>'.$usu->getLogin().'</td>
-                            <td>';
-                            if($usu->getNivelAcesso()->getPermissoes() != '*'):
-
-            $tbody .='  		<select name="status" id="'.$usu->getId().'" class="statusSelect">
-                                    <option value="'.status::ATIVO.'" class="active" '.$ativo.'>Ativo</option>
-                                    <option value="'.status::INATIVO.'" class="inactive" '.$inativo.'>Inativo</option>
-                                </select>';
-
-                            endif;
-            $tbody .='  	</td>
-                            <td>'.$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/usuarios/gerenciar/editar/'.$usu->getId()));
-                           	if($usu->getNivelAcesso()->getPermissoes() != '*'):
-            $tbody .= 			$this->templateFactory->getButton('excluir', array('id'=> $usu->getId()));
-                            endif;
-            $tbody .= 		'</td>
-                        </tr>';
-                endforeach;
-                echo $template->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
-            else:
-                echo '<h2>Não há registros cadastrados</h2>';
-            endif;
-            ?>
-
+		<table id="grid" class="table">
+                <thead>
+                    <tr>
+                    	<th data-field="id" >#</th>
+                        <th data-field="nivel">Nível</th>
+                        <th data-field="funcionario">Funcionário</th>
+                        <th data-field="email">Email</th>
+                        <th data-field="login" >Login</th>
+                        <th data-filterable="false" data-field="status">Status (Ativo/Inativo)</th>
+                        <th data-filterable="false" data-field="acoes">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                if(!empty($usuarios)):
+	                foreach ($usuarios as $usu):
+	                    $ativo = ($usu->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
+	                    $inativo = ($usu->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
+	            ?>
+                    <tr id="<?=$usu->getId()?>">
+                        <td><?=$usu->getId()?></td>
+                        <td><?=$usu->getNivelAcesso()->getNome()?></td>
+                        <td><?=$usu->getFuncionario()->getNome().' '.$usu->getFuncionario()->getSobrenome()?></td>
+                        <td><?=$usu->getEmail()?></td>
+                        <td><?=$usu->getLogin()?></td>
+                        <td>
+                        <?php if($usu->getNivelAcesso()->getTipoPermissao() == tipopermissao::USUARIO):?>
+        			  		<select name="status" id="<?=$usu->getId()?>" class="statusSelect">
+                                <option value="<?=status::ATIVO?>" class="active" <?=$ativo?>>Ativo</option>
+                                <option value="<?=status::INATIVO?>" class="inactive" <?=$inativo?>>Inativo</option>
+                            </select>
+                        <?php endif;?>
+        				</td>
+                        <td>
+                        	<?=$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/usuarios/gerenciar/editar/'.$usu->getId()))?>
+                       		<?php if($usu->getNivelAcesso()->getTipoPermissao() == tipopermissao::USUARIO):?>
+        					<?=$this->templateFactory->getButton('excluir', array('id'=> $usu->getId()));?>
+                        	<?php endif;?>
+        				</td>
+                    </tr>
+                <?php endforeach;?>
+                <?php endif;?>
+                </tbody>
+            </table>
     </div>
-
 </div>
 
 <script type="text/javascript">
     $(function(){
-        //DATATABLE
-        var table = $('.dataTable').DataTable({
-            order: [0,'asc']
-        });
+    	$(document).ready(function() {
+            $("#grid").kendoGrid({
+                height: 500,
+                sortable: true,
+                pageable: {
+				    pageSize: 10,
+				    refresh: false
+				},
+                filterable: {
+			        extra: false,
+			        operators: {
+			            string: {
+			                startswith: "Começa com",
+			                eq: "É igual a",
+			                neq: "Não é igual a",
+			                contains: "Contém"
+			            }
+			        },
+			        messages: {
+				      filter: "Filtrar",
+				      clear: "Limpar",
+				      info: "Exibir itens com valores que: "
+				    }
+			    },
+			    dataBound: function(){
+					var grid = this;
+			    
+					grid.tbody.find("tr[role='row']").each(function(){
+						var model = grid.dataItem(this);
 
-        //STATUS
-        table.$('select[name=status]').on('change',function(){
-            var id = $(this).attr('id');
-            var status = $(this).val();
-            $.post(url+'funcionarios/usuarios/gerenciar/atualizarStatus',{id:id,status:status},function(data){
-                console.log(data)
-                if(data == true)
-                    messageDialog('Status atualizado','success',false,null);
-                else
-                    messageDialog('Erro ao atualizar','warning',false,null);
+						$(this).find('select[name=status]').on('change',function(){
+				            var id = $(this).attr('id');
+				            var status = $(this).val();
+				            $.post(url+'funcionarios/usuarios/gerenciar/atualizarStatus',{id:id,status:status},function(data){
+				                console.log(data)
+				                if(data == true)
+				                    messageDialog('Status atualizado','success',false,null);
+				                else
+				                    messageDialog('Erro ao atualizar','warning',false,null);
+				            });
+				        });
+
+
+				        //EXCLUIR
+				        $(this).find('.btn_excluir').on('click',function(){
+				            var id = $(this).attr('id');
+				            var status = $(this).data('value');
+				            var modalDelete = $('#modalDelete').modal('show')
+				            $('.btn_ok','#modalDelete').on('click', function(event) {
+				                $.post(url+'funcionarios/usuarios/gerenciar/excluir',{id:id,status:status},function(data){
+				                    console.log(data)
+				                    if(data == true){
+				                        $('#modalDelete').modal('hide');
+				                        $('tr#'+id).hide();
+				                    }
+				                });
+				            });
+				        });
+
+					});
+				}
             });
-
         });
 
-        //EXCLUIR
-        table.$('.btn_excluir').on('click',function(){
-            var id = $(this).attr('id');
-            var status = $(this).data('value');
-            var modalDelete = $('#modalDelete').modal('show')
-            $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'funcionarios/usuarios/gerenciar/excluir',{id:id,status:status},function(data){
-                    console.log(data)
-                    if(data == true){
-                        $('#modalDelete').modal('hide');
-                        $('tr#'+id).hide();
-                    }
-                });
-            });
-        });
+
+        
+
+        
 
 
     })

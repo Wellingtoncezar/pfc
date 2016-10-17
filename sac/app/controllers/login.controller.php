@@ -79,15 +79,21 @@ class login extends Controller{
 	{
 		
 		$this->load->model('funcionarios/usuariosModel');
+		$this->load->dao('configuracoes/niveisAcessoDao');
+		$this->load->dao('configuracoes/modulosDao');
+		$this->load->dao('configuracoes/modulos/modulosModel');
 		$usuariosModel = new usuariosModel();
 		$usuariosModel->setLogin($login);
 		$usuariosModel->setSenha($senha);
 
 		$this->load->dao('loginDao');
 		$loginDao = new loginDao();
-		$result = $loginDao->validLogin($usuariosModel);
+		$usuariosModel = $loginDao->validLogin($usuariosModel);
 
-		if($result == false){
+
+
+
+		if($usuariosModel == null){
 			$_SESSION['ntentativaLogin']++;
 			$error = array(
 				'error'=>'Login incorreto',
@@ -96,7 +102,13 @@ class login extends Controller{
 			return json_encode($error);
 		}else
 		{
-			$_SESSION['user'] = serialize($result);
+			$modulosDao = new modulosDao();
+			$modulosModel = $modulosDao->listar();
+
+			$niveisAcessoDao = new niveisAcessoDao();
+			$usuariosModel->setNivelAcesso($niveisAcessoDao->getNivelAcesso($usuariosModel->getNivelAcesso(), $modulosModel));
+
+			$_SESSION['user'] = serialize($usuariosModel);
 			return true;
 		}
 	}

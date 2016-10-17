@@ -72,16 +72,16 @@ class funcionariosDao extends Dao{
 	public function isFuncionarioAdministrador(funcionariosModel $funcionario)
 	{
 		//checagem de funcionário administrador
-		$sql="select * from sys_usuarios as a 
-				inner join nivel_acesso as b on a.id_nivel_acesso = b.id_nivel_acesso
-		    	where a.id_funcionario = ? and b.permissoes = '*'";
-		$this->db->clear();  
-		$this->db->setParameter(1, $funcionario->getId());
-		if($this->db->query($sql))
-		{
-			return true;
-		}else
-			return false;
+		// $sql="select * from sys_usuarios as a 
+		// 		inner join nivel_acesso as b on a.id_nivel_acesso = b.id_nivel_acesso
+		//     	where a.id_funcionario = ? and b.permissoes = '*'";
+		// $this->db->clear();  
+		// $this->db->setParameter(1, $funcionario->getId());
+		// if($this->db->query($sql))
+		// {
+		// 	return true;
+		// }else
+		// 	return false;
 	}
 
 

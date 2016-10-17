@@ -20,6 +20,11 @@ class gerenciar extends Controller{
 	 */
 	public function index()
 	{	
+		$this->load->dao('funcionarios/usuariosDao');
+		$this->load->dao('configuracoes/niveisAcessoDao');
+		$this->load->dao('configuracoes/modulosDao');
+		$this->load->dao('configuracoes/modulos/modulosModel');
+
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
 		$saveRouter->saveAction();
@@ -31,9 +36,23 @@ class gerenciar extends Controller{
 
 		);
 
-		$this->load->dao('funcionarios/usuariosDao');
 		$usuarios = new usuariosDao();
-		$data['usuarios'] = $usuarios->listar();
+		$usuariosModel = $usuarios->listar();
+
+		foreach ($usuariosModel as $user){
+
+			$modulosDao = new modulosDao();
+			$modulosModel = $modulosDao->listar();
+
+			$niveisAcessoDao = new niveisAcessoDao();
+			$user->setNivelAcesso($niveisAcessoDao->getNivelAcesso($user->getNivelAcesso(), $modulosModel));
+		}
+
+		// print_r(expression)
+		$data['usuarios'] = $usuariosModel;
+
+
+
 
 		$this->load->view('includes/header',$data);
 		$this->load->view('funcionarios/usuarios/home',$data);

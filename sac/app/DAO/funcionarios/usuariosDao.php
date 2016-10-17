@@ -36,8 +36,7 @@ class usuariosDao extends Dao{
 				$funcionariosModel = new funcionariosModel();
 				$usuariosModel->setId($value['id_usuario']);
 				$nivelAcessoModel->setId($value['id_nivel_acesso']);
-				$nivelAcessoModel->setNome($value['nome_nivel_acesso']);
-				$nivelAcessoModel->setPermissoes($value['permissoes']);
+
 				$funcionariosModel->setId($value['id_funcionario']);
 				$funcionariosModel->setNome($value['nome_funcionario']);
 				$funcionariosModel->setSobrenome($value['sobrenome_funcionario']);

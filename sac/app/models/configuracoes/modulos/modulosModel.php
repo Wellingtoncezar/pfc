@@ -1,146 +1,200 @@
 <?php
 /**
+ * Entidade de manipulação da tabela sys_modulos
 *@author Wellington cezar - wellington-cezar@hotmail.com
+* @table=sys_modulos
 */
 if(!defined('URL')) die('Acesso negado');
 class modulosModel{
+	/**
+	 * @id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer", name="id_modulo")
+     * @var int
+     */
 	private $id;
+	/**
+	 * @url
+     * @Column(type="string", name="url_modulo")
+     * @var string
+     */
 	private $url;
+	/**
+	 * @nome
+     * @Column(type="string", name="nome_modulo")
+     * @var string
+     */
 	private $nome;
+	/**
+	 * @posicao
+     * @Column(type="integer", name="posicao_modulo")
+     * @var int
+     */
 	private $posicao;
+	/**
+	 * @status
+     * @Column(type="enum('ATIVO', 'INATIVO', 'EXCLUIDO')", name="status_modulo")
+     * @var status
+     */
 	private $status;
-	private $statusSelecao;
-	private $idModuloPai;
-	private $fotoModulo;
-	private $dataCriacao;
-	private $submodulos = Array();
+
+	/**
+	 * @status_selecao
+     * @Column(type="enum('ATIVO', 'INATIVO', 'EXCLUIDO')", name="status_selecao_modulo")
+     * @var status
+     */
+	private $status_selecao;
+
+	/**
+	 * @modulos
+     * @OneToMany(targetEntity="modulosModel")
+     * @var modulosModel[]
+     **/
+	private $modulos = Array();
+	/**
+	 * @paginas
+     * @OneToMany(targetEntity="paginasModel")
+     * @var paginasModel[]
+     **/
 	private $paginas = Array();
-	private $tipo;
-	private $campo;
-	private $valor;
+	/**
+	 * @icone
+     * @Column(type="string", name="icone_modulo")
+     * @var string
+     */
+	private $icone;
+	/**
+	 * @dataCriacao
+     * @Column(type="datetime", name="data_criacao_modulo")
+     * @var datetime
+     */
+	private $dataCriacao;
 
-	public function setId($id)
-	{
-		$this->id = $id;
-	}
-	public function setUrl($url)
-	{
-		$this->url = $url;
-	}
-	public function setNome($nome)
-	{
-		$this->nome = $nome;
-	}
-	public function setPosicao($posicao)
-	{
-		$this->posicao = $posicao;
-	}
-	public function setStatus($status)
-	{
-		$this->status = $status;
-	}
-	public function setStatusSelecao($statusSelecao)
-	{
-		$this->statusSelecao = $statusSelecao;
-	}
-	public function setIdModuloPai($idModuloPai)
-	{
-		$this->idModuloPai = $idModuloPai;
-	}
-	public function setFotoModulo($fotoModulo)
-	{
-		$this->fotoModulo = $fotoModulo;
-	}
-	public function setDataCriacao($dataCriacao)
-	{
-		$this->dataCriacao = $dataCriacao;
-	}
-	public function setSubModulos(modulosModel $submodulos, $tipo = 'id')
-	{
-		if($tipo == 'id')
-			$this->submodulos[$submodulos->getId()] = $submodulos;
-		else
-			$this->submodulos[$submodulos->$tipo()] = $submodulos;
-	}
-	public function setPaginas(paginasModel $paginas, $tipo = 'id')
-	{	
-		if($tipo == 'id')
-			$this->paginas[$paginas->getId()] = $paginas;
-		else
-			$this->paginas[$paginas->$tipo()] = $paginas;
-	}
-
-	public function setTipo($tipo){
-		$this->tipo = $tipo;
-	}
-	public function setCampo($campo){
-		$this->campo = $campo;
-	}
-	public function setValor($valor){
-		$this->valor = $valor;
-	}
+	/**
+	 * @acesso
+     * @var boolean
+     */
+	private $acesso = false;
 
 
-
-
-	public function getId()
-	{
+	public function getId(){
 		return $this->id;
 	}
-	public function getUrl()
-	{
-		return $this->url;
-	}
-	public function getNome()
-	{
-		return $this->nome;
-	}
-	public function getPosicao()
-	{
-		return $this->posicao;
-	}
-	public function getStatus()
-	{
-		return $this->status;
-	}
-	public function getStatusSelecao()
-	{
-		return $this->statusSelecao;
-	}
-	public function getIdModuloPai()
-	{
-		return $this->idModuloPai;
-	}
-	public function getFotoModulo()
-	{
-		return $this->fotoModulo;
-	}
-	public function getDataCriacao()
-	{
-		return $this->dataCriacao;
-	}
-	public function getSubModulos($id = null)
-	{
-		if($id != null)
-			return $this->submodulos[$id];
-		else
-			return $this->submodulos;
-	}
-	public function getPaginas($id = null)
-	{
-		if($id != null)
-			return $this->paginas[$id];
-		else
-			return $this->paginas;
+
+	public function setId($id){
+		$this->id = $id;
 	}
 
-	public function getTipo(){
-		return $this->tipo;
+	public function getUrl(){
+		return $this->url;
 	}
-	public function getCampo(){
-		return $this->campo;
+
+	public function setUrl($url){
+		$this->url = $url;
 	}
-	public function getValor(){
-		return $this->valor;
+
+	public function getNome(){
+		return $this->nome;
+	}
+
+	public function setNome($nome){
+		$this->nome = $nome;
+	}
+
+	public function getPosicao(){
+		return $this->posicao;
+	}
+
+	public function setPosicao($posicao){
+		$this->posicao = $posicao;
+	}
+
+	public function getStatus(){
+		return $this->status;
+	}
+
+	public function setStatus($status){
+		$this->status = $status;
+	}
+	public function getStatus_selecao(){
+		return $this->status_selecao;
+	}
+
+	public function setStatus_selecao($status_selecao){
+		$this->status_selecao = $status_selecao;
+	}
+
+	public function ativar()
+	{
+		$this->status = status::ATIVO;
+	}
+	public function inativar()
+	{
+		$this->status = status::INATIVO;
+	}
+	public function excluir()
+	{
+		$this->status = status::EXCLUIDO;
+	}
+
+	public function setAcesso($acesso)
+	{
+		$this->acesso = $acesso;
+	}
+
+	public function ativarSelecao()
+	{
+		$this->status_selecao = status::ATIVO;
+	}
+	public function inativarSelecao()
+	{
+		$this->status_selecao = status::INATIVO;
+	}
+
+
+
+	public function getModulo(){
+		return $this->modulo;
+	}
+
+	public function setModulo($modulo){
+		$this->modulo = $modulo;
+	}
+
+	public function addModulo(modulosModel $modulos){
+		array_push($this->modulos, $modulos);
+	}
+	public function getModulos(){
+		return $this->modulos;
+	}
+	public function setPaginas($paginas){
+		$this->paginas = $paginas;
+	}
+	public function getPaginas(){
+		return $this->paginas;
+	}
+
+	public function addPagina(paginasModel $paginas){
+		array_push($this->paginas, $paginas);
+	}
+
+	public function getIcone(){
+		return $this->icone;
+	}
+
+	public function setIcone($icone){
+		$this->icone = $icone;
+	}
+
+	public function getDataCriacao(){
+		return $this->dataCriacao;
+	}
+
+	public function setDataCriacao($dataCriacao){
+		$this->dataCriacao = $dataCriacao;
+	}
+	public function getAcesso()
+	{
+		return $this->acesso;
 	}
 }

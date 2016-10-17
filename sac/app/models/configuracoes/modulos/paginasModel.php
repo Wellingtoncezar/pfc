@@ -1,18 +1,67 @@
 <?php
 /**
+ * Entidade de manipulação da tabela sys_paginas
 *@author Wellington cezar - wellington-cezar@hotmail.com
+* @table = sys_paginas
 */
 if(!defined('URL')) die('Acesso negado');
 class paginasModel{
+	/**
+	 * @id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer", name="id_pagina")
+     * @var int
+     */
 	private $id;
+	/**
+	 * @url
+     * @Column(type="string", name="url_pagina")
+     * @var string
+     */
 	private $url;
+	/**
+	 * @nome
+     * @Column(type="string", name="nome_pagina")
+     * @var string
+     */
 	private $nome;
+	/**
+	 * @posicao
+     * @Column(type="integer", name="posicao_pagina")
+     * @var int
+     */
 	private $posicao;
+	/**
+	 * @status
+     * @Column(type="enum('ATIVO', 'INATIVO', 'EXCLUIDO')", name="status_pagina")
+     * @var status
+     */
 	private $status;
-	private $statusSelecao;
-	private $idModulo;
+	/**
+	 * @status_selecao
+     * @Column(type="enum('ATIVO', 'INATIVO', 'EXCLUIDO')", name="status_selecao_pagina")
+     * @var status
+     */
+	private $status_selecao;
+	/**
+	 * @dataCriacao
+     * @Column(type="datetime", name="data_criacao_pagina")
+     * @var datetime
+     */
 	private $dataCriacao;
+	/**
+	 * @actions
+     * @OneToMany(targetEntity="actinsModel")
+     * @var actionsModel[]
+     **/
 	private $actions = Array();
+
+	/**
+	 * @acesso
+     * @var boolean
+     */
+	private $acesso = false;
+
 
 	public function setId($id)
 	{
@@ -34,13 +83,9 @@ class paginasModel{
 	{
 		$this->status = $status;
 	}
-	public function setStatusSelecao($statusSelecao)
+	public function setStatus_selecao($status_selecao)
 	{
-		$this->statusSelecao = $statusSelecao;
-	}
-	public function setIdModuloPai($idModuloPai)
-	{
-		$this->idModuloPai = $idModuloPai;
+		$this->status_selecao = $status_selecao;
 	}
 
 	public function setDataCriacao($dataCriacao)
@@ -48,9 +93,41 @@ class paginasModel{
 		$this->dataCriacao = $dataCriacao;
 	}
 
-	public function setActions(actionsModel $actions)
+	public function setActions($actions)
 	{
-		$this->actions[$actions->getId()] = $actions;
+		$this->actions = $actions;
+	}
+
+	public function addAction(actionsModel $actions)
+	{
+		array_push($this->actions, $actions);
+	}
+
+	public function setAcesso($acesso)
+	{
+		$this->acesso = $acesso;
+	}
+
+	public function ativar()
+	{
+		$this->status = status::ATIVO;
+	}
+	public function inativar()
+	{
+		$this->status = status::INATIVO;
+	}
+	public function excluir()
+	{
+		$this->status = status::EXCLUIDO;
+	}
+
+	public function ativarSelecao()
+	{
+		$this->status_selecao = status::ATIVO;
+	}
+	public function inativarSelecao()
+	{
+		$this->status_selecao = status::INATIVO;
 	}
 
 
@@ -75,13 +152,9 @@ class paginasModel{
 	{
 		return $this->status;
 	}
-	public function getStatusSelecao()
+	public function getStatus_selecao()
 	{
-		return $this->statusSelecao;
-	}
-	public function getIdModuloPai()
-	{
-		return $this->idModuloPai;
+		return $this->status_selecao;
 	}
 
 	public function getDataCriacao()
@@ -89,11 +162,13 @@ class paginasModel{
 		return $this->dataCriacao;
 	}
 
-	public function getActions($id = null)
+	public function getActions()
 	{
-		if($id != null)
-			return $this->actions[$id];
-		else
-			return $this->actions;
+		return $this->actions;
+	}
+
+	public function getAcesso()
+	{
+		return $this->acesso;
 	}
 }

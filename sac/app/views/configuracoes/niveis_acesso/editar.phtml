@@ -1,23 +1,14 @@
-<div class="container">
+	<div class="container">
     <?php
 
-    $permissoesAcesso['modulos'] = array('caixa', 'funcionarios');
-    $permissoesAcesso['paginasModulos'] = array(
-        'caixa' => array('gerenciar')
-    );
+    // if($nivel->getPermissoes() == '*' || $nivel->getPermissoes() == null)
+    //     $permissao = array();
+    // else
+    //     $permissao = json_decode(($nivel->getPermissoes()->getP),true);
 
-
-
-
-
-
-
-    if($nivel->getPermissoes() == '*' || $nivel->getPermissoes() == null)
-        $permissao = array();
-    else
-        $permissao = json_decode(html_entity_decode($nivel->getPermissoes()),true);
+    $permissao = $nivel->getPermissoes();
     // echo '<pre>';
-    // print_r($modulos);
+    // print_r($permissao);
     // echo '</pre>';
     ?>
     <div class="page-header">
@@ -36,14 +27,13 @@
             </div>
             <div class="tree" style="padding-top: 14px;padding-right: 14px;">
             <?php
-            if($modulos != false):
+            if(!empty($nivel->getPermissoes())):
             ?>
                 <ul>
                 <?php
-                foreach ($modulos as $keyMod => $mod):
-
+                foreach ($nivel->getPermissoes() as $keyMod => $mod):
                     $checked = '';
-                    if($nivel->getPermissoes() == '*' || array_key_exists($mod->getUrl(), $permissao))
+                    if($mod->getAcesso())
                         $checked = 'checked="checked"';
                 ?>
                     <li><!--modulo-->
@@ -62,8 +52,8 @@
                             <?php
                             foreach ($mod->getPaginas() as $keyModPag => $modPag):
                                 $checked = '';
-                                if($nivel->getPermissoes() == '*' || (isset($permissao[$mod->getUrl()])) )
-                                    $checked = 'checked="checked"';
+                                if($modPag->getAcesso())
+                        			$checked = 'checked="checked"';
                             ?>
                             <li>
                                 <div class="form-group has-feedback">
@@ -82,8 +72,8 @@
 
                                     foreach ($modPag->getActions() as $keyModPagAct => $modPagAct):
                                         $checked = '';
-                                        if($nivel->getPermissoes() == '*' || (isset($permissao[$mod->getUrl()]['paginas'][$modPag->getUrl()][$modPagAct->getUrl()])) )
-                                            $checked = 'checked="checked"';
+                                        if($modPagAct->getAcesso())
+                        					$checked = 'checked="checked"';
                                     ?>
                                     <li>
                                         <div class="form-group has-feedback">
@@ -118,16 +108,15 @@
 
 
                         <?php
-                        if(!empty($mod->getSubModulos())):
+                        if(!empty($mod->getModulos())):
                             
                         ?>
                         <ul>
                             <?php
-                            foreach ($mod->getSubModulos() as $keyModSubmod => $modSubmod):
+                            foreach ($mod->getModulos() as $keyModSubmod => $modSubmod):
                                 $checked = '';
-                                if($nivel->getPermissoes() == '*' || (isset($permissao[$mod->getUrl()]['submodulos'][$modSubmod->getUrl()])) )
-                                    $checked = 'checked="checked"';
-                                
+                                if($modSubmod->getAcesso())
+                        			$checked = 'checked="checked"';
                             ?>
                             <li>
                                 <div class="form-group">
@@ -145,8 +134,8 @@
                                     <?php
                                     foreach ($modSubmod->getPaginas() as $keyModSubmodPag => $modSubmodPag):
                                         $checked = '';
-                                        if($nivel->getPermissoes() == '*' || (isset($permissao[$mod->getUrl()]['submodulos'][$modSubmod->getUrl()][$modSubmodPag->getUrl()])) )
-                                            $checked = 'checked="checked"';
+                                        if($modSubmodPag->getAcesso())
+                        					$checked = 'checked="checked"';
                                     ?>
                                     <li>
                                         <div class="form-group has-feedback">
@@ -165,8 +154,8 @@
                                             <?php
                                             foreach ($modSubmodPag->getActions() as $keyModSubmodPagAct => $modSubmodPagAct):
                                                 $checked = '';
-                                                if($nivel->getPermissoes() == '*' || (isset($permissao[$mod->getUrl()]['submodulos'][$modSubmod->getUrl()][$modSubmodPag->getUrl()][$modSubmodPagAct->getURL()])) )
-                                                    $checked = 'checked="checked"';
+                                                if($modSubmodPagAct->getAcesso())
+                        							$checked = 'checked="checked"';
                                             ?>
                                             <li>
                                                 <div class="form-group has-feedback">
@@ -252,30 +241,34 @@ $(function() {
                                 //pegando as actions
                                 $('>ul>li',this).each(function(){
                                     if($('input[type=checkbox]:checked',this).is(':checked')){
-                                        aux3[$('input[type=checkbox]:checked',this).attr('url')] = ''
+                                        aux3[$('input[type=checkbox]:checked',this).attr('id')] = ''
                                     }
                                 });
-                                aux2[$('input[type=checkbox]:checked',this).attr('url')] = aux3;
+                                aux2[$('input[type=checkbox]:checked',this).attr('id')] = aux3;
                             }
                         });
-                        auxMod[$('input[type=checkbox]:checked',this).attr('url')] = aux2;
+                        auxMod[$('input[type=checkbox]:checked',this).attr('id')] = aux2;
                     }else
+                    if($('input[type=checkbox]:checked',this).is(':checked') && $('input[type=checkbox]:checked',this).attr('tipo') == 'pagina')
                     {
                         var auxAction = Object();
                         //pegando as actions
                         $('>ul>li',this).each(function(){
                             if($('input[type=checkbox]:checked',this).is(':checked')){
-                                auxAction[$('input[type=checkbox]:checked',this).attr('url')] = ''
+                                auxAction[$('input[type=checkbox]:checked',this).attr('id')] = '';
                             }
                         });
-                        auxPag[$('input[type=checkbox]:checked',this).attr('url')] = auxAction
+                        auxPag[$('input[type=checkbox]:checked',this).attr('id')] = auxAction
+
                     }
                 });
 
-                modulos[$('input[type=checkbox]:checked',this).attr('url')] = {
+                modulos[$('input[type=checkbox]:checked',this).attr('id')] = {
                                                                                 'submodulos' : auxMod,
                                                                                 'paginas' : auxPag
                                                                                 };
+
+                console.log(modulos)
             }
         });
 
