@@ -164,6 +164,11 @@ class gerenciar extends Controller{
 
 	
 
+
+	public function addProdutoListaVenda()
+	{
+		echo 'produto listado';
+	}
 	
 
 

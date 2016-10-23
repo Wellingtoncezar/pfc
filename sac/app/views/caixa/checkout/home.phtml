@@ -110,7 +110,7 @@
 									</div>
 
 									<div class="btn-group pull-right">
-									  	<button type="button" class="btn btn-success">Listar</button>
+									  	<button type="button" class="btn btn-success btnListar">Listar</button>
 									</div>
 								</div>
 							</section>
@@ -475,6 +475,27 @@ $(function(){
 		calcSubtotalProduto($('input[name=quantidade]').val(), $(this).val())
 	});
 	
+
+	$(document).on('click','.btnListar', function(){
+		var quantidade = $('input[name=quantidade]').val()
+		var idproduto = $('select[name=listaproduto]').val();
+
+		$.ajax({
+			url: url+'caixa/checkout/gerenciar/addProdutoListaVenda',
+			type: 'POST',
+			dataType: 'json',
+			data: {quantidade: quantidade, idproduto:idproduto},
+		})
+		.done(function(data) {
+			console.log(data);
+			
+		})
+		.fail(function(data) {
+			console.log("error");
+			console.log(data)
+		})
+
+	})
 
 })
 </script>

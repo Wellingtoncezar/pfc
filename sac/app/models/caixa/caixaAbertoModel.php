@@ -9,7 +9,9 @@ class caixaAbertoModel{
 	private $saldoInicial;
 	private $saldoFinal;
 	private $dataAbertura;
+	private $dataFechamento;
 	private $ultimaAtualizacao;
+	private $vendas = Array();
 	
  	//SETERS
  	public function setId($id)
@@ -41,7 +43,14 @@ class caixaAbertoModel{
  	{
  		$this->ultimaAtualizacao = $ultimaAtualizacao;
  	}
-
+ 	public function setVendas($vendas)
+ 	{
+ 		$this->vendas = $vendas;
+ 	}
+ 	public function addVenda(vendasModel $venda)
+ 	{
+ 		array_push($this->vendas, $venda);
+ 	}
 
 
  	//GET
@@ -74,7 +83,10 @@ class caixaAbertoModel{
  	{
  		return $this->ultimaAtualizacao;
  	}
- 	
- 	
+
+ 	public function getVendas()
+ 	{
+ 		return $this->vendas;
+ 	}
  	
 }
