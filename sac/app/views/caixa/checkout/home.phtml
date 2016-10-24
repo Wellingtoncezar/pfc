@@ -1,8 +1,32 @@
 <div class="container">
 	
-	<div id="fullscreen" class="fullscreenCheckout">
+	<div id="fullscreen" class="fullscreenCheckout hide">
 		
-		<div class="container-fluid">
+		<section id="telaAbrirCaixa" class="hide">
+			<div class="containercheckoutAbrirCaixa">
+				<figure class="center-block figureLogo thumbnail">
+		      		<img src="<?=URL?>skin/img/imagens/logosupermercado.png" alt="">
+				</figure>
+				<div class="containerHora">
+					<output id="hora"></output>				
+				</div>	
+				<div class="containerData">
+					<output id="data"></output>
+				</div>
+				<form class="form" action="<?=URL?>caixa/checkout/gerenciar/abrircaixa" id="form_abrirCaixa">
+					<div class="form-group">
+					    <label>Saldo Inicial em caixa</label>
+					    <input type="text" class="form-control" placeholder="Saldo" name="saldoinicial">
+					</div>
+					<button type="submit" class="btn btn-primary pull-right">Abrir caixa</button>
+				</form>
+			</div>
+		</section>
+
+
+
+
+		<section class="container-fluid hide" id="telaVenda">
 		    <div class="row telaVenda">
 		        <div class="col-sm-3 col-md-2 sidebarcheckout">
 		          	<figure class="center-block figureLogo thumbnail">
@@ -122,13 +146,13 @@
 		          	<h1 class="page-header">LISTA DA COMPRA</h1>
 					<div class="row">
 					  	<div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
-						  	<table class="table table-striped" cellspacing="0">
+						  	<table class="table table-striped" cellspacing="0" id="listcarrinho">
 							    <thead>
 							        <tr>
 							        	<th>#</th>
 							        	<th>Item</th>
 							        	<th>QTDE.</th>
-							        	<th>R$</th>
+							        	<th>R$ (Unid.)</th>
 							        </tr>
 							    </thead>
 							    <tbody>
@@ -141,22 +165,18 @@
 							    </tbody>
 							</table>
 						</div>
+					</div>
+					<div class="row">
+						<h1>Subtotal</h1>
 
 					</div>
 		          
 		        </div>
 		    </div>
-	    </div>
-
-
-
-
-
-
-
+	    </section>
 	</div>
 
-	<div id="telaPrincipal" class="hide">
+	<div id="telaPrincipal" class="">
 		<div class="containercheckoutInicio">
 			<figure class="center-block figureLogo thumbnail">
 	      		<img src="<?=URL?>skin/img/imagens/logosupermercado.png" alt="">
@@ -172,35 +192,20 @@
 		</div>
 	</div>
 
-	<div id="telaAbrirCaixa" class="hide">
-		<div class="containercheckoutAbrirCaixa">
-			<figure class="center-block figureLogo thumbnail">
-	      		<img src="<?=URL?>skin/img/imagens/logosupermercado.png" alt="">
-			</figure>
-			<div class="containerHora">
-				<output id="hora"></output>				
-			</div>	
-			<div class="containerData">
-				<output id="data"></output>
-			</div>
-			<form class="form" action="<?=URL?>caixa/checkout/gerenciar/abrircaixa">
-				<div class="form-group">
-				    <label>Saldo Inicial em caixa</label>
-				    <input type="number" class="form-control" placeholder="Saldo">
-				</div>
-				<button type="submit" class="btn btn-primary pull-right">Abrir caixa</button>
-			</form>
-		</div>
-	</div>
+
+	
 
 
 </div>
 <script type="text/javascript" src="<?=URL?>skin/js/jquery.maskMoney.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
 <script type="text/javascript" src="<?=URL?>skin/js/fullscreen/jquery.fullscreen.min.js"></script>
 <script type="text/javascript">
 	$(function() {
 		
-		$("input[name=quantidade]").maskMoney({decimal:",",thousands:""});
+		// $("input[name=quantidade]").maskMoney({decimal:",",thousands:""});
+		$('input[name=saldoinicial], input[name=quantidade]').wvmask('numero');
+
 		var isRegisteredMachine = false;
 		$.post(url+'caixa/checkout/gerenciar/checkmachine', {}, function(data) {
 			if(data == true){
@@ -213,7 +218,35 @@
 			}
 		});
 
-		//
+		$('#form_abrirCaixa').on('submit', function(event) {
+			event.preventDefault();
+			$.ajax({
+				url: $(this).attr('action'),
+				type: 'POST',
+				//dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
+				data: $(this).serialize(),
+			})
+			.done(function(data) {
+				console.log(data)
+				$('#telaAbrirCaixa').addClass('hide')
+				$('#telaVenda').removeClass('hide')
+			})
+			.fail(function(data) {
+				$.notify({
+                	icon: 'glyphicons glyphicons-alert',
+					message: data.responseText,
+				},{
+					type: "warning",
+					placement: {
+						from: "top",
+						align: "right"
+					}
+				});
+			})
+			
+	        return false;
+		});
+		
 
 
 		// check native support
@@ -222,10 +255,23 @@
 		// open in fullscreen
 		$(document).on('click', '.openfullscreen', function() {
 			if(isRegisteredMachine === true){
-				$('#fullscreen').fullscreen();
-				//$('#fullscreen').html($('#telaAbrirCaixa').clone().removeClass('hide'))
+				$('.fullscreenCheckout').removeClass('hide').addClass('active')
+				$('#telaPrincipal').addClass('hide')
+				$('#telaAbrirCaixa').removeClass('hide')
+				// $('#fullscreen').fullscreen();
+				$('body').fullscreen();
+				console.log('passou')
 			}else
-				messageDialog(isRegisteredMachine,'warning',true,null);
+				$.notify({
+                	icon: 'glyphicons glyphicons-alert',
+					message: isRegisteredMachine,
+				},{
+					type: "warning",
+					placement: {
+						from: "top",
+						align: "right"
+					}
+				});
 			return false;
 		});
 
@@ -488,14 +534,42 @@ $(function(){
 		})
 		.done(function(data) {
 			console.log(data);
-			
+			listarProdutosCarrinho();
+		})
+		.fail(function(data) {
+			console.log("error");
+			console.log(data)
+		});
+
+	});
+
+	function listarProdutosCarrinho()
+	{
+		$('#listcarrinho tbody').html('');
+		$.ajax({
+			url: url+'caixa/checkout/gerenciar/listarCarrinho',
+			type: 'POST',
+			dataType: 'json',
+			data: {},
+		})
+		.done(function(data) {
+			console.log(data)
+			$.each(data, function(index, val) {
+				var row = 	'<tr>'
+					        	+'<td>'+index+'</td>'
+					        	+'<td>'+val.item+'</td>'
+					        	+'<td>'+val.qtd+'</td>'
+					        	+'<td>'+val.preco+'</td>'
+					        +'</tr>';
+				$('#listcarrinho tbody').append(row);	        
+			});
 		})
 		.fail(function(data) {
 			console.log("error");
 			console.log(data)
 		})
+	}
 
-	})
 
 })
 </script>

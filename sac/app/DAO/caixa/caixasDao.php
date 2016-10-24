@@ -24,7 +24,7 @@ class caixasDao extends Dao{
 		$caixa = Array();
 
 		$this->db->clear();
-		$this->db->setTabela('checkout');
+		$this->db->setTabela('caixas');
 		$this->db->select();
 		if($this->db->rowCount() > 0):
 			$result = $this->db->resultAll();
@@ -32,12 +32,12 @@ class caixasDao extends Dao{
 			{
 				$caixasModel = new caixasModel();
 				$this->db->clear();
-				$this->db->setParameter(1, $value['id_checkout']);
+				$this->db->setParameter(1, $value['id_caixa']);
 				if($this->db->query("select abertura_caixa.*, funcionarios.nome_funcionario, funcionarios.sobrenome_funcionario from abertura_caixa 
-						inner join checkout on abertura_caixa.id_checkout = checkout.id_checkout 
+						inner join caixas on abertura_caixa.id_caixa = caixas.id_caixa 
 						inner join sys_usuarios on abertura_caixa.id_usuario = sys_usuarios.id_usuario 
 						inner join funcionarios on funcionarios.id_funcionario = sys_usuarios.id_funcionario
-					 where checkout.id_checkout= ?"))
+					 where caixas.id_caixa= ?"))
 				{
 					$result = $this->db->result();
 					$caixaAberto = new caixaAbertoModel();
@@ -53,13 +53,13 @@ class caixasDao extends Dao{
 					$usuario->setId($result['id_usuario']);
 					$usuario->setFuncionario($funcionarios);
 					$caixaAberto->setUsuario($usuario);
-					$caixasModel->addListOpenBox($caixaAberto);
+					$caixasModel->addCaixaAberto($caixaAberto);
 				}
 
 
 				
-				$caixasModel->setId($value['id_checkout']);
-				$caixasModel->setCodigo($value['codigo_checkout']);
+				$caixasModel->setId($value['id_caixa']);
+				$caixasModel->setCodigo($value['codigo_caixa']);
 				$caixasModel->setIp($value['ip_maquina']);
 				array_push($caixa, $caixasModel);
 				unset($caixasModel);
@@ -69,30 +69,44 @@ class caixasDao extends Dao{
 		return $this->getJsoncaixa($caixa);
 	}
 
+	/**
+	 * verifica se o ip da máquina atual é um ip válido para abertura de caixa
+	 * */
+	public function checkmachine(caixasModel $caixasModel)
+	{
+		try {
+
+			$this->db->clear();
+			$this->db->setTabela('caixas');
+			$this->db->setCondicao("ip_maquina = ?");
+			$this->db->setParameter(1, $caixasModel->getIp());
+			if($this->db->select())
+			{
+				return true;
+			}else
+				return false;
+		} catch (dbException $e) {
+			return $e->getMessageError();
+		}
+	}
+
 
 	/**
 	 * Retorna a consulta de um caixa pelo id
 	 * @return object [caixasModel]
 	 */
-	public function consultar(caixasModel $caixa)
+	public function consultar(IConsultaCaixa $consultaCaixa, caixasModel $caixa)
 	{
-
-		$this->db->clear();
-		$this->db->setTabela('checkout');
-		$this->db->setCondicao("id_checkout = '".$caixa->getId()."'");
-		$this->db->select();
-
-		//CAIXAS
-		if($this->db->rowCount() > 0):
-			$result = $this->db->result();
-
-			$caixa->setCodigo($result['codigo_checkout']);
+		
+		$result = $consultaCaixa->consultar($this->db, $caixa);
+		if($result != null){
+			$caixa->setId($result['id_caixa']);
+			$caixa->setCodigo($result['codigo_caixa']);
 			$caixa->setIp($result['ip_maquina']);
-			
+			$caixa->setDataCadastro($result['data_cadastro']);
 			return $caixa;
-		else:
-			return $caixa;
-		endif;
+		}else
+			return null;
 	}
 
 
@@ -103,28 +117,22 @@ class caixasDao extends Dao{
 	 */
  	public function inserir(caixasModel $caixa)
  	{
- 		try {
-	 		$data = array(
-	  			'codigo_checkout' => $caixa->getCodigo(),
-	 			'ip_maquina' => $caixa->getIp(),
-	 			'data_cadastro' => $caixa->getDataCadastro()
-	 		);
+ 		$data = array(
+  			'codigo_caixa' => $caixa->getCodigo(),
+ 			'ip_maquina' => $caixa->getIp(),
+ 			'data_cadastro' => $caixa->getDataCadastro()
+ 		);
 
-	 		$this->db->clear();
-			$this->db->setTabela('checkout');
-			if($this->db->insert($data))
-			{
-				return TRUE;
-	 		}else
-	 		{
-	 			return $this->db->getError();
-	 		}
- 		} catch (dbException $e) {
- 			if($e->getDbCode() == '23000'){
- 				return 'Esta máquina já está registrada no sistema';
- 			}else
-	 			return $e->getMessageError();
+ 		$this->db->clear();
+		$this->db->setTabela('caixas');
+		if($this->db->insert($data))
+		{
+			return TRUE;
+ 		}else
+ 		{
+ 			return FALSE;
  		}
+ 		
  	}
 
 
@@ -137,13 +145,13 @@ class caixasDao extends Dao{
 
  		$data = array(
  
- 			'codigo_checkout' => $caixa->getCodigo(),
+ 			'codigo_caixa' => $caixa->getCodigo(),
  			'ip_maquina' => $caixa->getIp()
  		);
 
  		$this->db->clear();
-		$this->db->setTabela('checkout');
-		$this->db->setCondicao ("id_checkout = '".$caixa->getId()."'");
+		$this->db->setTabela('caixas');
+		$this->db->setCondicao ("id_caixa = '".$caixa->getId()."'");
 		if($this->db->update($data))
 		{
 			return true;
@@ -169,7 +177,7 @@ class caixasDao extends Dao{
 						'abertos'=> array()
 				    );
 			$arrAberturaCaixa = array();
-			foreach ($cx->getListOpenBox() as $OpenBox){
+			foreach ($cx->getCaixaAberto() as $OpenBox){
 				$valorUndEstoque = 0;
 		        $aux2 = array( 
 				        	'id' => $OpenBox->getId(),
@@ -187,6 +195,34 @@ class caixasDao extends Dao{
         endforeach;
 
         return json_encode($_arCaixa);
+	}
+
+
+
+	public function abrirCaixa(caixasModel $caixa)
+	{
+		foreach ($caixa->getCaixaAberto() as $caixaAberto) 
+		{
+			$data = array(
+				'id_caixa' => $caixa->getId(),
+				'id_usuario' => $caixaAberto->getUsuario()->getId(),
+				'saldo_inicial' => $caixaAberto->getSaldoInicial(),
+				'data_abertura_caixa' => $caixaAberto->getDataAbertura()	
+			);
+
+			$this->db->clear();
+			$this->db->setTabela('abertura_caixa');
+			$this->db->setCondicao('id_caixa = ? AND data_fechamento_caixa = "0000-00-00 00:00:00"');
+			$this->db->setParameter(1, $caixa->getId());
+			if($this->db->select())
+			{
+				return false;
+
+			}else
+				$this->db->insert($data);
+		}
+		return true;
+
 	}
 
 }

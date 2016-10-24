@@ -75,6 +75,11 @@ class precosDao extends Dao{
 		// return $precos;
 	}
 
+	/**
+	 * consulta o preço de venda
+	 * Caso esteja em um período, retornará o ultimo preço no período cadastrado
+	 * senão retornará o preço definido como padrão
+	 * */
 	public function consultarPrecoVenda(produtosModel $produto)
 	{
 		try{

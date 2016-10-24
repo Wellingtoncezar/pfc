@@ -159,31 +159,7 @@ class produtosDao extends Dao{
 				else
 					$produto->desativarControleValidade();
 
-				$this->db->clear();
-				$this->db->setTabela('unidade_medida as A, unidade_medida_produto AS B');
-				$this->db->setCondicao("B.id_produto = ? AND A.id_unidade_medida = B.id_unidade_medida");
-				$this->db->setParameter(1, $result['id_produto']);
-				if($this->db->select())
-				{
-					$this->load->model('produtos/unidadeMedidaModel');	
-					$this->load->model('produtos/unidadeMedidaEstoqueModel');	
-					//UNIDADE DE MEDIDA
-					$unidadeMedida = $this->db->resultAll();
-					foreach ($unidadeMedida as $unidade)
-					{
-						$unidadeMedidaModel = new unidadeMedidaModel();
-						$unidadeMedidaModel->setId($unidade['id_unidade_medida']);
-						$unidadeMedidaModel->setNome($unidade['nome_unidade_medida']);
-						$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
-						$unidadeMedidaEstoqueModel->setId($unidade['id_unidade_medida_produto']);
-						$unidadeMedidaEstoqueModel->setUnidadeMedida($unidadeMedidaModel);
-						$unidadeMedidaEstoqueModel->setParaVenda($unidade['para_venda']);
-						$unidadeMedidaEstoqueModel->setParaEstoque($unidade['para_estoque']);
-						$unidadeMedidaEstoqueModel->setFator($unidade['fator_unidade_medida']);
-						$unidadeMedidaEstoqueModel->setOrdem($unidade['ordem']);
-						$produto->addUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
-					}
-				}
+				$this->consultaUnidadesMedida($produto);
 				return $produto;
 			else:
 				return NULL;
@@ -193,6 +169,37 @@ class produtosDao extends Dao{
 		}
 	}
 
+
+	private function consultaUnidadesMedida(produtosModel $produto)
+	{
+		$this->db->clear();
+		$this->db->setTabela('unidade_medida as A, unidade_medida_produto AS B');
+		$this->db->setCondicao("B.id_produto = ? AND A.id_unidade_medida = B.id_unidade_medida");
+		$this->db->setParameter(1, $produto->getId());
+		if($this->db->select())
+		{
+			$this->load->model('produtos/unidadeMedidaModel');	
+			$this->load->model('produtos/unidadeMedidaEstoqueModel');	
+			//UNIDADE DE MEDIDA
+			$unidadeMedida = $this->db->resultAll();
+			foreach ($unidadeMedida as $unidade)
+			{
+				$unidadeMedidaModel = new unidadeMedidaModel();
+				$unidadeMedidaModel->setId($unidade['id_unidade_medida']);
+				$unidadeMedidaModel->setNome($unidade['nome_unidade_medida']);
+				$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+				$unidadeMedidaEstoqueModel->setId($unidade['id_unidade_medida_produto']);
+				$unidadeMedidaEstoqueModel->setUnidadeMedida($unidadeMedidaModel);
+				$unidadeMedidaEstoqueModel->setParaVenda($unidade['para_venda']);
+				$unidadeMedidaEstoqueModel->setParaEstoque($unidade['para_estoque']);
+				$unidadeMedidaEstoqueModel->setFator($unidade['fator_unidade_medida']);
+				$unidadeMedidaEstoqueModel->setOrdem($unidade['ordem']);
+				$produto->addUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
+			}
+		}
+	}
+
+	
 
 
 	/**

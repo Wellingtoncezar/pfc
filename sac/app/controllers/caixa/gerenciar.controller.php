@@ -66,8 +66,7 @@ class gerenciar extends Controller{
 		$this->load->checkPermissao->check();
 
 		$data = array(
-			'titlePage' => 'Editar caixa',
-			'template' => new templateFactory()
+			'titlePage' => 'Editar caixa'
 		);
 		//ID
 		$idCaixas = intval($this->load->url->getSegment(3));
@@ -79,9 +78,12 @@ class gerenciar extends Controller{
 
 		//caixa DAO
 		$this->load->dao('caixa/caixasDao');
+		$this->load->dao('caixa/iConsultaCaixa');
+		$this->load->dao('caixa/consultaPorId');
 		$caixasDao = new caixasDao();
-		$data['caixa'] = $caixasDao->consultar($caixasModel);
-		
+		$data['caixa'] = $caixasDao->consultar(new consultaPorId(), $caixasModel);
+		if($data['caixa'] == null)
+			$this->http->redirect(URL.'error404');
 		//DATAFORMAT
 		$this->load->library('dataFormat', null, true);
 		$data['dataFormat'] = $this->load->dataFormat;
@@ -100,39 +102,46 @@ class gerenciar extends Controller{
 	 */
 	public function inserir()
 	{
-		
-		$codigo = isset($_POST['codigo']) ? filter_var($_POST['codigo']) : '';
-		$ip = $this->getIp();
-	
+		try{
 
-		//validação dos dados
-		$this->load->library('dataValidator', null, true);
+			$codigo = isset($_POST['codigo']) ? filter_var($_POST['codigo']) : '';
+			$ip = $this->getIp();
 		
-		$this->load->dataValidator->set('Codigo', $codigo, 'codigo')->is_required()->min_length(2);
-		$this->load->dataValidator->set('Ip', $ip, 'ip')->is_required();
 
-		
-		if ($this->load->dataValidator->validate())
-		{
-		
-			//CAIXAS
-			$this->load->model('caixa/caixasModel');
-			$caixasModel = new caixasModel();
+			//validação dos dados
+			$this->load->library('dataValidator', null, true);
 			
-			$caixasModel->setCodigo($codigo);
-			$caixasModel->setIp($ip);
-			$caixasModel->setDataCadastro(date('Y-m-d h:i:s'));
+			$this->load->dataValidator->set('Codigo', $codigo, 'codigo')->is_required()->min_length(2);
+			$this->load->dataValidator->set('Ip', $ip, 'ip')->is_required();
+
+			
+			if ($this->load->dataValidator->validate())
+			{
+			
+				//CAIXAS
+				$this->load->model('caixa/caixasModel');
+				$caixasModel = new caixasModel();
+				
+				$caixasModel->setCodigo($codigo);
+				$caixasModel->setIp($ip);
+				$caixasModel->setDataCadastro(date('Y-m-d h:i:s'));
 
 
-			//caixas DAO
-			$this->load->dao('caixa/caixasDao');
-			$caixasDao = new caixasDao();
-			echo $caixasDao->inserir($caixasModel);
-		}else
-	    {
-			$todos_erros = $this->load->dataValidator->get_errors();
-			echo json_encode($todos_erros);
-	    }
+				//caixas DAO
+				$this->load->dao('caixa/caixasDao');
+				$caixasDao = new caixasDao();
+				$this->http->response($caixasDao->inserir($caixasModel));
+			}else
+		    {
+				$todos_erros = $this->load->dataValidator->get_errors();
+				$this->http->response(json_encode($todos_erros));
+		    }
+		} catch (dbException $e) {
+ 			if($e->getDbCode() == '23000'){
+ 				$this->http->response('Esta máquina já está registrada no sistema');
+ 			}else
+	 			$this->http->response($e->getMessageError());
+ 		}
 
 	}
 

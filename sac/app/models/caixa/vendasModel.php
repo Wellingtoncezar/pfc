@@ -7,7 +7,7 @@ class vendasModel{
 	private $id;
 	private $dataVenda;
 	private $horaVenda;
-	private $produtosVendido;
+	private $produtosVendido = Array();
 	
  	//SETERS
  	public function setId($id)
@@ -47,7 +47,7 @@ class vendasModel{
  	{
  		return $this->horaVenda;
  	}
- 	public function getProdutoVendido()
+ 	public function getProdutosVendidos()
  	{
  		return $this->produtosVendido;
  	}

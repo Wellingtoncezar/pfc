@@ -304,150 +304,148 @@ Plugin para upload de imagens, junto com crop
 Este plugin tem como dependÃªncia os plugin: 'ajaxForm', 'jquery ui' e 'Jcrop'.
 */
 
-(function($){
+(function($) {
     $.fn.uploadForm = function(options, action) {
-    	var $jquery = this;
-
-
-    	var form;
+        var $jquery = this;
+        var form;
         var configs = {
-        	'beforeSubmit' : function(formData, jqForm, options)
-			{ 
-			    return true;
-			},
-			'afterSubmit' : function (data, status, xhr, $form)  { 
-	   			$('input, select, textarea',form).css('box-shadow','none');
-			    $('.generalErrors .alert').html('');
-	   			try
-				{
-					$('#carregando').fadeOut();
-	       			if(data != true)
-	       				{
-	       					
-			       			$('#alertFormModal').modal('show');
-			       			//data = $.parseJSON(data);
-			       			$.each(data, function(index, value) {
-						        var value = ''+value;
-								var values = value.split(',');
-						        $.each(values, function(id, val) {
-						        	$('.generalErrors .alert').append('<p>'+val+'</p>');
-						        });
-						        $('[name='+index+']',form).css('box-shadow','0 0 1px 1px #F00');
-							});
-						}else
-						{
-							$("#img_previous",form).attr('src','');
-							if(settings.reload == true)
-	                    		location.reload();
-	                        if(settings.redirect != null)
-	                            location.href = settings.redirect
-	                        if(settings.resetform == true)
-	                            form.get(0).reset();
-							$('.generalErrors').removeClass('panel-danger').addClass('panel-success').html('<h4 class="panel-heading">Enviado com sucesso</h4>').css('background','#dff0d8');
-							$('#alertFormModal').modal('show');
-
-						}
-				}
-				catch(e)
-				{
-					console.log(e)
-					console.log(data)
-					//$('#carregando').fadeOut();
-				}
-				return true;
-			},
-			'dataType': 'json',
-			'redirect':null,
-			'resetform' : false,
-			'clearForm' : false,
-			'reload' : false,
-			'parameters' : {},
-			'autoSubmit' : true
-        };
-
-        
-
-
-
-
-
-        var settings = $.extend( {}, configs, options );
-
-        var output={
- 			
-            'init':function(){
-            	$jquery.each(function(){
-	            	form = $(this);
-			        var contentpanel = '<div class="modal fade" id="alertFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">'
-										  +'<div class="modal-dialog" role="document">'
-										    +'<div class="modal-content">'
-										      +'<div class="modal-header">'
-										        +'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-										        +'<h4 class="modal-title" id="myModalLabel">Atenção</h4>'
-										      +'</div>'
-										      +'<div class="modal-body">'
-										        	+'<div class="panel generalErrors panel-danger" style="text-align:left; background-color: #f2dede;">'
-										        		+'<h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4>'
-										        		+'<div class="alert alert-danger" role="alert">'
-										        		+'</div>'
-										        	+'</div>'
-										      +'</div>'
-										     +'<div class="modal-footer">'
-										        +'<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>'
-										      +'</div>'
-										    +'</div>'
-										  +'</div>'
-										+'</div>';
-			        $('body').append(contentpanel);
-					
-				})
+            'beforeSubmit': function(formData, jqForm, options) {
+                return true;
             },
-            'submitForm' :function(){
-            	// post-submit callback 
-			    form.ajaxSubmit({ 
-			        //target:        '#output1',   // target element(s) to be updated with server response 
-			        beforeSubmit:  settings.beforeSubmit,  // pre-submit callback 
-			        success:       settings.afterSubmit,  // post-submit callback 
-			 
-			        // other available options: 
-			        url:       form.attr('action'),         // override for form's 'action' attribute 
-			        //type:      form.attr('').type        // 'get' or 'post', override for form's 'method' attribute 
-			        dataType:  settings.dataType,        // 'xml', 'script', or 'json' (expected server response type) 
-			        clearForm: settings.clearForm,       // clear all form fields after successful submit 
-			        resetForm: settings.resetform,      // reset the form after successful submit 
-			 		data:  settings.parameters,
-			        // $.ajax options can be used here too, for example: 
-			        //timeout:   3000
-			        error : function(e,st){
-			        	//console.log(e.responseText);
-			        	if(e.status == 400)
-			        	{
-		        			data = jQuery.parseJSON(e.responseText);
-				        	$('#alertFormModal').modal('show');
-				        	$('.generalErrors .alert').html('');
-				       			//data = $.parseJSON(data);
-			       			$.each(data, function(index, value) {
-						        var value = ''+value;
-								var values = value.split(',');
-						        $.each(values, function(id, val) {
-						        	$('.generalErrors .alert').append('<p>'+val+'</p>');
-						        });
-						        $('[name='+index+']',form).css('box-shadow','0 0 1px 1px #F00');
+            'afterSubmit': function(data, status, xhr, $form) {
+                $('input, select, textarea', form).css('box-shadow', 'none');
+                //$('.generalErrors .alert').html('');
+                try {
+                    $('#carregando').fadeOut();
+                    if (data != true) {
+                        // $('#alertFormModal').modal('show');
+                        $.each(data, function(index, value) {
+                            var value = '' + value;
+                            var values = value.split(',');
+                            $.each(values, function(id, val) {
+                                //$('.generalErrors .alert').append('<p>' + val + '</p>');
+		                        $.notify({
+		                        	title: 'Atenção',
+		                        	icon: 'glyphicons glyphicons-warning-sign',
+									message: val,
+								},{
+									type: "warning",
+									placement: {
+										from: "top",
+										align: "right"
+									}
+								});
+                            });
+                            $('[name=' + index + ']', form).css('box-shadow', '0 0 1px 1px #F00');
+                        });
+
+
+
+                    } else {
+                        $("#img_previous", form).attr('src', '');
+                        if (settings.reload == true) location.reload();
+                        if (settings.redirect != null) location.href = settings.redirect
+                        if (settings.resetform == true) form.get(0).reset();
+                        //$('.generalErrors').removeClass('panel-danger').addClass('panel-success').html('<h4 class="panel-heading">Enviado com sucesso</h4>').css('background', '#dff0d8');
+                        //$('#alertFormModal').modal('show');
+
+                        $.notify({
+                        	icon: 'glyphicons glyphicons-ok',
+							message: settings.successmessage,
+						},{
+							type: "success",
+							placement: {
+								from: "top",
+								align: "right"
+							}
+						});
+                    }
+                } catch (e) {
+                    console.log(e)
+                    console.log(data)
+
+                }
+                return true;
+            },
+            errorSubmit: function(e) {
+            	//console.log(e.responseText);
+	        	if(e.status == 400)
+	        	{
+        			data = jQuery.parseJSON(e.responseText);
+		        	// $('#alertFormModal').modal('show');
+		        	// $('.generalErrors .alert').html('');
+		       			//data = $.parseJSON(data);
+	       			$.each(data, function(index, value) {
+				        var value = ''+value;
+						var values = value.split(',');
+				        $.each(values, function(id, val) {
+				        	// $('.generalErrors .alert').append('<p>'++'</p>');
+				        	$.notify({
+			                	icon: 'glyphicons glyphicons-alert',
+								message: val,
+							},{
+								type: "danger",
+								placement: {
+									from: "top",
+									align: "right"
+								}
 							});
-			        	}else
-			        	{
-			        		$('#alertFormModal').modal('show');
-			        		$('.generalErrors .alert').html(e.responseText);
-			        	}
-			        }
-			    });
+				        	
+				        });
+				        $('[name='+index+']',form).css('box-shadow','0 0 1px 1px #F00');
+					});
+	        	}else
+	        	{
+	        		$.notify({
+	                	icon: 'glyphicons glyphicons-alert',
+						message: e.responseText,
+					},{
+						type: "danger",
+						placement: {
+							from: "top",
+							align: "right"
+						}
+					});
+	        	}
+
+
+                // $('#alertFormModal').modal('show');
+                // $('.generalErrors .alert').html(e.responseText);
+                
+            },
+            'dataType': 'json',
+            'redirect': null,
+            'resetform': false,
+            'clearForm': false,
+            'reload': false,
+            'parameters': {},
+            'autoSubmit': true,
+            'successmessage' : 'Enviado com sucesso'
+        };
+        var settings = $.extend({}, configs, options);
+        var output = {
+            'init': function() {
+                $jquery.each(function() {
+                    form = $(this);
+                    //var contentpanel = '<div class="modal fade" id="alertFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">' + '<div class="modal-dialog" role="document">' + '<div class="modal-content">' + '<div class="modal-header">' + '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '<h4 class="modal-title" id="myModalLabel">Atenção</h4>' + '</div>' + '<div class="modal-body">' + '<div class="panel generalErrors panel-danger" style="text-align:left; background-color: #f2dede;">' + '<h4 class="panel-heading">Ocorreu(ram) o(s) seguinte(s) erro(s):</h4>' + '<div class="alert alert-danger" role="alert">' + '</div>' + '</div>' + '</div>' + '<div class="modal-footer">' + '<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>' + '</div>' + '</div>' + '</div>' + '</div>';
+                    //$('body').append(contentpanel);
+                })
+            },
+            'submitForm': function() {
+                form.ajaxSubmit({
+                    beforeSubmit: settings.beforeSubmit,
+                    success: settings.afterSubmit,
+                    url: form.attr('action'),
+                    dataType: settings.dataType,
+                    clearForm: settings.clearForm,
+                    resetForm: settings.resetform,
+                    data: settings.parameters,
+                    error: settings.errorSubmit
+                });
             }
         };
-
         output.init();
-        if(settings.autoSubmit == true)
-        	output.submitForm();
-        
+        if (settings.autoSubmit == true) output.submitForm();
         return output;
-    }; 
+    };
 })(jQuery);

@@ -33,6 +33,40 @@ a{
 }
 
 
+.fullscreenCheckout.active{
+position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    border: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+/** PNotify **/
+.alert-success {
+  color: #ffffff;
+  background-color: rgba(38, 185, 154, 0.88);
+  border-color: rgba(38, 185, 154, 0.88); }
+
+.alert-info {
+  color: #E9EDEF;
+  background-color: rgba(52, 152, 219, 0.88);
+  border-color: rgba(52, 152, 219, 0.88); }
+
+.alert-warning {
+  color: #E9EDEF;
+  background-color: rgba(243, 156, 18, 0.88);
+  border-color: rgba(243, 156, 18, 0.88); }
+
+.alert-danger,
+.alert-error {
+  color: #E9EDEF;
+  background-color: rgba(231, 76, 60, 0.88);
+  border-color: rgba(231, 76, 60, 0.88); }
 
 #carregando{
 background: rgba(238, 238, 238, 0.83);

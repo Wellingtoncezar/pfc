@@ -43,13 +43,15 @@ class gerenciar extends Controller{
 	{
 		if(!$this->load->checkPermissao->check(false,URL.'caixa/checkout/gerenciar'))
 		{
-			echo "Você não tem permissão para realizar esta ação";
+			$this->http->response("Você não tem permissão para realizar esta ação");
 			return false;
 		}
-		$this->load->model('caixa/checkoutModel');
-		$this->load->dao('caixa/checkoutDao');
+		$this->load->dao('caixa/caixasDao');
+		$this->load->model('caixa/caixasModel');
+		$this->load->dao('caixa/iConsultaCaixa');
+		$this->load->dao('caixa/consultaPorIp');
 
-		//get ip client
+		//obtendo o ip da maquina
 		$ip = '';
 		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 		    $ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -60,39 +62,83 @@ class gerenciar extends Controller{
 		}
 
 
-		$checkoutModel = new checkoutModel();
-		$checkoutModel->setIpmaquina($ip);
+		$caixasModel = new caixasModel();
+		$caixasModel->setIp($ip);
 
-		$checkoutDao = new checkoutDao();
-		if($checkoutDao->checkmachine($checkoutModel))
+		$caixasDao = new caixasDao();
+		//verificando se a maquina tem permissao de abrir caixa
+		if($caixasDao->checkmachine($caixasModel))
 		{
-			$_SESSION['IP'] = $ip;
+			//retornando os dados do caixa por consulta por ip
+			$caixasModel = $caixasDao->consultar(new consultaPorIp(), $caixasModel);
+			//gravando os dados do caixa na sessão
+			$_SESSION['caixa'] = serialize($caixasModel);
+
 			// setcookie('IP', $ip, time() + (86400 * 30), "/"); // 86400 = 1 day
-			echo true;
+			$this->http->response(true);
 		}
 		else
-			echo 'Esta maquina não está registrada';
+			$this->http->response('Esta máquina não está registrada');
 	}
 
 
 	public function abrirCaixa()
 	{
-		if(!$this->load->checkPermissao->check(false,URL.'caixa/checkout/gerenciar'))
-		{
-			echo "Você não tem permissão para realizar esta ação";
-			return false;
-		}
+		try{
+			//verificação de permissão de acesso
+			if(!$this->load->checkPermissao->check(false,URL.'caixa/checkout/gerenciar'))
+			{
+				$this->http->response("Você não tem permissão para abrir caixa");
+				return false;
+			}
 
-		if(!isset($_SESSION['IP'])) {
-			echo 'Erro ao abrir caixa';
-		} else {
-			$this->load->dao('caixa/checkoutDao');
-			$this->load->model('caixa/caixaAbertoModel');
-			$caixaAbertoModel = new caixaAbertoModel();
-			$caixaAbertoModel->setUsuario(unserialize($_SESSION['user']));
-			//$caixaAbertoModel->setIp$_COOKIE['IP']
-			
-			$checkoutDao = new checkoutDao();
+			//VERIFICANDO SE O CAIXA JÁ ESTÀ DEFINIDO PARA A MAQUINA ATUAL
+			if(!isset($_SESSION['caixa'])) {
+				$this->http->response('A Máquina não está configurada corretamente');
+				return false;
+			}
+
+			//OBTENDO OS DADOS
+			$dataformat = new dataformat();
+			$saldoInicial = $dataformat->formatar($this->http->getRequest('saldoinicial'), 'decimal', 'banco');
+
+			//VALIDANDO OS DADOS
+			$this->load->library('dataValidator');
+			$dataValidator = new dataValidator();
+			$dataValidator->set('Número', $saldoInicial, 'saldoinicial')->is_required();
+			if ($dataValidator->validate())
+			{
+
+				$this->load->dao('caixa/caixasDao');
+				$this->load->model('caixa/caixaAbertoModel');
+				$this->load->model('caixa/caixasModel');
+				$this->load->model('caixa/vendasModel');
+				$vendasModel = new vendasModel();
+
+				$caixaAbertoModel = new caixaAbertoModel();
+				$caixaAbertoModel->setUsuario(unserialize($_SESSION['user']));
+				$caixaAbertoModel->setSaldoInicial($saldoInicial);
+				$caixaAbertoModel->setDataAbertura(date('Y-m-d'));
+				$caixaAbertoModel->addVenda($vendasModel);
+
+
+				//obtendo os dados do caixa da sessão
+				$caixa = unserialize($_SESSION['caixa']);
+				$caixa->addCaixaAberto($caixaAbertoModel);
+
+				$caixasDao = new caixasDao();
+				if($caixasDao->abrirCaixa($caixa))
+				{
+					$_SESSION['caixa'] = serialize($caixa);
+					$this->http->response(true);
+				}else
+					$this->http->response('Não foi possível abrir o caixa, feche o caixa anterior para poder prosseguir', 400);
+			}else
+			{
+				$this->http->response('Informe o saldo inicial em caixa', 400);
+			}	
+		} catch (dbException $e) {
+			$this->http->response($e->getMessageError(), 400);
 		}
 	}
 
@@ -167,7 +213,73 @@ class gerenciar extends Controller{
 
 	public function addProdutoListaVenda()
 	{
-		echo 'produto listado';
+		//carregamento das classes dependentes
+		$this->load->dao('produtos/IConsultaProduto');
+		$this->load->dao('produtos/consultaPorId');
+		$this->load->dao('produtos/produtosDao');
+		$this->load->dao('produtos/precosDao');
+		$this->load->model('produtos/produtosModel');
+		$this->load->model('caixa/produtosVendidoModel');
+		$this->load->model('caixa/vendasModel');
+		$this->load->model('caixa/caixaAbertoModel');
+		$this->load->model('caixa/caixasModel');
+
+		//Obtendo os dados de entrada
+		$dataformat = new dataformat();
+		$idproduto = $this->http->getRequest('idproduto');
+		$quantidade = $dataformat->formatar($this->http->getRequest('quantidade'), 'decimal', 'banco');
+
+		$produtosModel = new produtosModel();
+		$produtosModel->setId($idproduto);
+
+		//obtendo os dados do produto
+		$produtosDao = new produtosDao();
+		$produtosModel = $produtosDao->consultar(new consultaPorId(), $produtosModel, array(status::ATIVO));
+		
+		$produtosVendidoModel = new produtosVendidoModel();
+		$produtosVendidoModel->setProduto($produtosModel);
+		$produtosVendidoModel->setQuantidade($quantidade);
+
+		//Obtendo o preço de venda
+		$precosDao = new precosDao();
+		$produtosVendidoModel->setPrecoVendido($precosDao->consultarPrecoVenda($produtosModel)->getPreco());
+
+		//Adicionando o produto na venda
+		$caixa = unserialize($_SESSION['caixa']);
+		$caixa->getCaixaAberto()[0]->getVendas()[0]->addProdutoVendido($produtosVendidoModel);
+
+		$_SESSION['caixa'] = serialize($caixa);
+
+		$this->http->response(true);
+	}
+
+	/**
+	 * retorna a lista dos produtos no carrinho
+	 * */
+	public function listarCarrinho()
+	{
+		$this->load->model('produtos/produtosModel');
+		$this->load->model('caixa/produtosVendidoModel');
+		$this->load->model('caixa/vendasModel');
+		$this->load->model('caixa/caixaAbertoModel');
+		$this->load->model('caixa/caixasModel');
+
+		$dataformat = new dataformat();
+		$caixa = unserialize($_SESSION['caixa']);
+		$produtosVendidos = $caixa->getCaixaAberto()[0]->getVendas()[0]->getProdutosVendidos();
+
+		$carrinho = Array();
+		foreach ($produtosVendidos as $i => $produtoVendido)
+		{
+			$row = Array(
+				'item' => html_entity_decode($produtoVendido->getProduto()->getNome()),
+				'qtd' => $dataformat->formatar($produtoVendido->getQuantidade(),'decimal'),
+				'preco' => $dataformat->formatar($produtoVendido->getPrecoVendido(), 'moeda')
+			);
+
+			array_push($carrinho, $row);
+		}
+		$this->http->response(json_encode($carrinho));
 	}
 	
 

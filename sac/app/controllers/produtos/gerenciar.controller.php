@@ -102,7 +102,6 @@ class gerenciar extends Controller{
 		$produtosModel->setId($idProduto);
 		$produtos = new produtosDao();
 		$data['produto'] = $produtos->consultar(new consultaPorId(), $produtosModel, $status);
-
 		//marcas
 		$marcas = new marcasDao;
 		$data['marcas']=$marcas->listar();
