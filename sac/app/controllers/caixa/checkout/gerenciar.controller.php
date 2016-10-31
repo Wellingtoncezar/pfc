@@ -118,7 +118,7 @@ class gerenciar extends Controller{
 				$caixaAbertoModel = new caixaAbertoModel();
 				$caixaAbertoModel->setUsuario(unserialize($_SESSION['user']));
 				$caixaAbertoModel->setSaldoInicial($saldoInicial);
-				$caixaAbertoModel->setDataAbertura(date('Y-m-d'));
+				$caixaAbertoModel->setDataAbertura(date('Y-m-d h:i:s'));
 				$caixaAbertoModel->addVenda($vendasModel);
 
 
@@ -127,7 +127,8 @@ class gerenciar extends Controller{
 				$caixa->addCaixaAberto($caixaAbertoModel);
 
 				$caixasDao = new caixasDao();
-				if($caixasDao->abrirCaixa($caixa))
+				$caixa = $caixasDao->abrirCaixa($caixa);
+				if($caixa != null)
 				{
 					$_SESSION['caixa'] = serialize($caixa);
 					$this->http->response(true);
@@ -227,7 +228,7 @@ class gerenciar extends Controller{
 		//Obtendo os dados de entrada
 		$dataformat = new dataformat();
 		$idproduto = $this->http->getRequest('idproduto');
-		$quantidade = $dataformat->formatar($this->http->getRequest('quantidade'), 'decimal', 'banco');
+		$quantidade = (double) $dataformat->formatar($this->http->getRequest('quantidade'), 'decimal', 'banco');
 
 		$produtosModel = new produtosModel();
 		$produtosModel->setId($idproduto);
@@ -259,6 +260,8 @@ class gerenciar extends Controller{
 	public function listarCarrinho()
 	{
 		$this->load->model('produtos/produtosModel');
+		$this->load->model('produtos/unidadeMedidaEstoqueModel');
+		$this->load->model('produtos/unidadeMedidaModel');
 		$this->load->model('caixa/produtosVendidoModel');
 		$this->load->model('caixa/vendasModel');
 		$this->load->model('caixa/caixaAbertoModel');
@@ -276,19 +279,102 @@ class gerenciar extends Controller{
 				'qtd' => $dataformat->formatar($produtoVendido->getQuantidade(),'decimal'),
 				'preco' => $dataformat->formatar($produtoVendido->getPrecoVendido(), 'moeda')
 			);
-
 			array_push($carrinho, $row);
 		}
 		$this->http->response(json_encode($carrinho));
 	}
 	
 
+	public function consultaSubtotalCarrinho()
+	{
+		$this->load->model('produtos/produtosModel');
+		$this->load->model('caixa/produtosVendidoModel');
+		$this->load->model('caixa/vendasModel');
+		$this->load->model('caixa/caixaAbertoModel');
+		$this->load->model('caixa/caixasModel');
+
+		$dataformat = new dataformat();
+		$caixa = unserialize($_SESSION['caixa']);
+		$produtosVendidos = $caixa->getCaixaAberto()[0]->getVendas()[0]->getProdutosVendidos();
+
+		
+		$subtotal = 0;
+		foreach ($produtosVendidos as $i => $produtoVendido)
+		{
+			$subtotal += $produtoVendido->getQuantidade() * $produtoVendido->getPrecoVendido();
+		}
+		$retorn = array(
+			'formated' => $dataformat->formatar($subtotal, 'decimal'),
+			'unformated' => $subtotal
+		);
+		$this->http->response(json_encode($retorn));
+	}
+
+
+
+	public function finalizarCompra()
+	{
+		try {
+			
+			$dataformat = new dataformat();
+			$this->load->library('dataValidator');
+			$dataValidator = new dataValidator();
+
+			$this->load->model('produtos/produtosModel');
+			$this->load->model('caixa/produtosVendidoModel');
+			$this->load->model('caixa/vendasModel');
+			$this->load->model('caixa/caixaAbertoModel');
+			$this->load->model('caixa/caixasModel');
+			$this->load->dao('caixa/caixasDao');
+
+
+			$formapagamento = $this->http->getRequest('formapagamento');
+
+			$valorrecebido = $dataformat->formatar($this->http->getRequest('valorrecebido'),'decimal', 'banco');
+			
+
+			if($formapagamento == formapagamento::DINHEIRO){
+				$dataValidator->set('Valor recebido', $valorrecebido, 'valorrecebido')->is_required();
+			}
+			
+			//validando os dados de entrada
+			if ($dataValidator->validate())
+			{
+				$dataformat = new dataformat();
+				$caixa = unserialize($_SESSION['caixa']);
+
+				$caixa->getCaixaAberto()[0]->getVendas()[0]->setDataVenda(date('Y-m-d'));
+				$caixa->getCaixaAberto()[0]->getVendas()[0]->setHoraVenda(date('H:i:s'));
+
+				//forma de pagamento escolhido 
+				if($formapagamento == formapagamento::DINHEIRO)
+					$caixa->getCaixaAberto()[0]->getVendas()[0]->pagarComDinheiro();
+				else
+				if($formapagamento == formapagamento::CARTAOCREDITO)
+					$caixa->getCaixaAberto()[0]->getVendas()[0]->pagarComCartaoCredito();
+				else
+				if($formapagamento == formapagamento::CARTAODEBITO)
+					$caixa->getCaixaAberto()[0]->getVendas()[0]->pagarComCartaoDebito();
+
+				//valor pago pelo cliente
+				$caixa->getCaixaAberto()[0]->getVendas()[0]->setValorPago($valorrecebido);
+
+				
+				$caixasDao = new caixasDao();
+				if($caixasDao->finalizarCompra($caixa));
+				{
+					$caixa->getCaixaAberto()[0]->setVendas(array(new vendasModel()));
+					$_SESSION['caixa'] = serialize($caixa);
+					$this->http->response(true);
+				}
+
+			}else
+		    {
+				$this->http->response('Informe o valor pago pelo cliente', 400);
+		    }
+		} catch (Exception $e) {
+			$this->http->response($e->getMessageError(), 400);
+		}
+	}
 
 }
-
-/**
-*
-*class: home
-*
-*location : controllers/home.controller.php
-*/

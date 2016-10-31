@@ -522,6 +522,7 @@
 	    overflow-y: auto;
 	}
 	.telaVenda .containerListaCompra{
+		background-image: url(../img/imagens/bgcheckout.png);
 		position: fixed;
 	    top: 0;
 	    bottom: 0;
@@ -539,4 +540,11 @@
 	}
 	.bic_calendar .header a{
 		color: #034573!important;
+	}
+
+	.telaVenda .containerFinalizarCompra{
+		position: absolute;
+	    bottom: 0;
+	    top: 0;
+	    left:0;
 	}

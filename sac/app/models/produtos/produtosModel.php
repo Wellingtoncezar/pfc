@@ -190,4 +190,36 @@ class produtosModel{
 	{	
 		return $this->ultimaAtualizacao;
 	}
+
+
+	/**
+	 * retorna o objeto da unidade de medida relacionada ao controle de estoque (armazém)
+	 * @return object unidadeMedidaEstoque
+	 * */
+	public function getUnidadeMedidaParaEstoque()
+	{
+		$unidadeMedidaEstoque = null;
+		foreach ($this->getUnidadeMedidaEstoque() as $undMed){
+			if($undMed->getParaEstoque()){
+				$unidadeMedidaEstoque = $undMed;
+			}
+		}
+		return $unidadeMedidaEstoque;
+	}
+
+
+	/**
+	 * retorna o objeto da unidade de medida relacionada ao controle de prateleiras (venda)
+	 * @return object unidadeMedidaEstoque
+	 * */
+	public function getUnidadeMedidaParaVenda()
+	{
+		$unidadeMedidaVenda = null;
+		foreach ($this->getUnidadeMedidaEstoque() as $undMed){
+			if($undMed->getParaVenda()){
+				$unidadeMedidaVenda = $undMed;
+			}
+		}
+		return $unidadeMedidaVenda;
+	}
 }

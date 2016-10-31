@@ -8,10 +8,10 @@
 		      		<img src="<?=URL?>skin/img/imagens/logosupermercado.png" alt="">
 				</figure>
 				<div class="containerHora">
-					<output id="hora"></output>				
+					<output id="hora" class="hora"></output>				
 				</div>	
 				<div class="containerData">
-					<output id="data"></output>
+					<output id="data" class="data"></output>
 				</div>
 				<form class="form" action="<?=URL?>caixa/checkout/gerenciar/abrircaixa" id="form_abrirCaixa">
 					<div class="form-group">
@@ -33,10 +33,10 @@
 			      		<img src="<?=URL?>skin/img/imagens/logosupermercado.png" alt="">
 					</figure>
 					<div class="containerHora">
-						<output id="hora"></output>
+						<output id="hora" class="hora"></output>
 					</div>	
 					<div class="containerData">
-						<output id="data"></output>
+						<output id="data" class="data"></output>
 					</div>
 		          	<ul class="nav nav-sidebar">
 		            	<li><a href="javascript:void(0)" class="openfullscreen">Tela cheia</a></li>
@@ -142,6 +142,110 @@
 						</div>
 					</div>
 		        </div>
+
+
+
+
+				<div class="col-sm-4 col-sm-offset-2 col-md-4 col-md-offset-2 bg-primary hide containerPagarCompra">
+					<h1 class="page-header">PAGAMENTO</h1>
+					<div class="row">
+						<div class="col-sm-6 col-md-4">
+						    <a href="javascript:void(0)" class="thumbnail btnformaPagamento" type="DINHEIRO">
+						    	<figure class="text-center">
+						    		<span class="glyphicons glyphicons-money"></span>
+						    	</figure>
+						      	
+						      	<div class="caption">
+						        	<h5 class="text-center">DINHEIRO</h5>
+						      	</div>
+						    </a>
+						</div>
+
+						<div class="col-sm-6 col-md-4">
+						    <a href="javascript:void(0)" class="thumbnail btnformaPagamento" type="CARTAODEBITO">
+						    	<figure  class="text-center">
+						    		<span class="glyphicons glyphicons-credit-card"></span>
+						    	</figure>
+						      	
+						      	<div class="caption">
+						        	<h5 class="text-center">CARTÃO DE DÉBITO</h5>
+						      	</div>
+						    </a>
+						</div>
+
+						<div class="col-sm-6 col-md-4">
+						    <a href="javascript:void(0)" class="thumbnail btnformaPagamento" type="CARTAOCREDITO">
+						    	<figure class="text-center">
+						    		<span class="glyphicons glyphicons-credit-card"></span>
+						    	</figure>
+						      	
+						      	<div class="caption">
+						        	<h5 class="text-center">CARTÃO DE CRÉDITO</h5>
+						      	</div>
+						    </a>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="col-sm-4 col-sm-offset-2 col-md-4 col-md-offset-2 bg-primary hide containerFinalizarCompra">
+					<h2 class="page-header">FINALIZANDO PAGAMENTO</h2>
+					<div class="row">
+						<div class="form-group">
+						    <h3 class="col-sm-5 control-label">SUBTOTAL</h3>
+						    <div class="col-sm-7">
+						      	<h2 id="subtotalProduto" class="text-right"></h2>
+						      	<input type="text" name="subtotal" value="">
+						    </div>
+						</div>
+						<div class="col-sm-12 col-md-12 hide" id="tipo_DINHEIRO">
+							<div class="wel">
+							    <h3><small>PAGAMENTO ESCOLHIDO: </small> DINHEIRO</h3>
+							    
+							    <div class="form-group">
+								    <label>Valor pago</label>
+								    <input type="text" class="form-control" placeholder="Digite o valor recebido" name="valorrecebido">
+								</div>
+
+								<div class="form-group">
+								    <label>Troco</label>
+								    <p class="form-control" id="troco"></p>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-12 hide" id="tipo_CARTAODEBITO">
+							<div class="wel">
+							    <h3><small>PAGAMENTO ESCOLHIDO: </small> CARTÃO DE DÉBITO</h3>
+								<div class="form-group">
+								    <label>Status da operação</label>
+								    <p class="form-control">Aguardando cartão</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-12 hide" id="tipo_CARTAOCREDITO">
+							<div class="wel">
+							    <h3><small>PAGAMENTO ESCOLHIDO: </small> CARTÃO DE CRÉDITO</h3>
+							    <div class="form-group">
+								    <label>Status da operação</label>
+								    <p class="form-control">Aguardando cartão</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="btn-group pull-right">
+							<button type="button" class="btn btn-success btnFinalizar">Finalizar</button>
+						</div>
+					</div>
+				</div>
+
+
+
+
+
+
+
 		        <div class="col-sm-4 col-sm-offset-2 col-md-6 col-md-offset-6 containerListaCompra">
 		          	<h1 class="page-header">LISTA DA COMPRA</h1>
 					<div class="row">
@@ -156,24 +260,27 @@
 							        </tr>
 							    </thead>
 							    <tbody>
-							    	<tr>
-							        	<td>01</td>
-							        	<td>Arroz Camil tipo 1 - 5kg</td>
-							        	<td>1</td>
-							        	<td>1,50</td>
-							        </tr>
+							    	
 							    </tbody>
 							</table>
 						</div>
 					</div>
 					<div class="row">
-						<h1>Subtotal</h1>
-
+						<div class="well">TOTAL A PAGAR <small>R$</small> <span id="subtotal"></span></div>
+						<div class="btn-group btn-lg">
+							<button class="cancelarcompra btn btn-danger">CANCELAR COMPRA <span class="glyphicon glyphicon-remove-circle"></span></button>
+							<button class="pagarcompra btn btn-primary ">PAGAR COMPRA <span class="glyphicons glyphicons-usd"></span></button>
+						</div>
 					</div>
-		          
 		        </div>
+
+
+				
+
 		    </div>
 	    </section>
+
+
 	</div>
 
 	<div id="telaPrincipal" class="">
@@ -193,7 +300,6 @@
 	</div>
 
 
-	
 
 
 </div>
@@ -203,20 +309,23 @@
 <script type="text/javascript">
 	$(function() {
 		
-		// $("input[name=quantidade]").maskMoney({decimal:",",thousands:""});
+		$("input[name=valorrecebido]").maskMoney({decimal:",",thousands:""});
 		$('input[name=saldoinicial], input[name=quantidade]').wvmask('numero');
 
 		var isRegisteredMachine = false;
-		$.post(url+'caixa/checkout/gerenciar/checkmachine', {}, function(data) {
-			if(data == true){
-				isRegisteredMachine = true;
-				//$('#fullscreen').html($('#telaPrincipal').clone().removeClass('hide'))
-			}else
-			{
-				//$('#fullscreen').html('<div class="alert alert-warning text-center" role="alert"><h3>Esta máquina não está registrada para realizar esta operação!</h3></div>');
-				isRegisteredMachine = data;
-			}
-		});
+		function checkRegiteredMachine(){
+			$.post(url+'caixa/checkout/gerenciar/checkmachine', {}, function(data) {
+				if(data == true){
+					isRegisteredMachine = true;
+					//$('#fullscreen').html($('#telaPrincipal').clone().removeClass('hide'))
+				}else
+				{
+					//$('#fullscreen').html('<div class="alert alert-warning text-center" role="alert"><h3>Esta máquina não está registrada para realizar esta operação!</h3></div>');
+					isRegisteredMachine = data;
+				}
+			});
+		}
+		checkRegiteredMachine()
 
 		$('#form_abrirCaixa').on('submit', function(event) {
 			event.preventDefault();
@@ -254,6 +363,7 @@
 
 		// open in fullscreen
 		$(document).on('click', '.openfullscreen', function() {
+			checkRegiteredMachine()
 			if(isRegisteredMachine === true){
 				$('.fullscreenCheckout').removeClass('hide').addClass('active')
 				$('#telaPrincipal').addClass('hide')
@@ -406,10 +516,11 @@
 
 		
 	
+		$('.data').html('<h4 class="text-center">'+dataFormat+'</h4>');
+		$('.hora').html('<h4 class="text-center">'+horaFormat+'</h4>');
 
-
-		document.getElementById("data").innerHTML = '<p class="text-center">'+dataFormat+'</p>';
-		document.getElementById("hora").innerHTML = '<h4 class="text-center">'+horaFormat+'</h4>';
+		// document.getElementById("data").innerHTML = '<p class="text-center">'+dataFormat+'</p>';
+		// document.getElementById("hora").innerHTML = '';
 		setTimeout("atualizaRelogio()",1000);
 	}
 
@@ -459,7 +570,7 @@ $(function(){
 		.fail(function(data) {
 			console.log("error");
 			console.log(data)
-		})
+		})	
 	}
 
 
@@ -509,7 +620,8 @@ $(function(){
         qtd = parseFloat(qtd);
 		var subtotalProd = qtd*vUnit;
 		subtotalProd = subtotalProd.formatMoney(2, ',', '.');
-		$('#subtotalProduto').html('R$ '+subtotalProd)
+		$('#subtotalProduto').html('R$ '+subtotalProd);
+
 	}
 
 
@@ -563,11 +675,119 @@ $(function(){
 					        +'</tr>';
 				$('#listcarrinho tbody').append(row);	        
 			});
+			$('.pagarcompra').removeAttr('disabled')
+			//exibe o subtotal
+			consultaSubtotal();
 		})
 		.fail(function(data) {
 			console.log("error");
 			console.log(data)
 		})
+	}
+
+	function consultaSubtotal()
+	{
+		$.ajax({
+			url: url+'caixa/checkout/gerenciar/consultaSubtotalCarrinho',
+			type: 'POST',
+			dataType: 'json',
+			data: {},
+		})
+		.done(function(data) {
+			console.log(data)
+			$('#subtotal').html(data.formated);
+			$('input[name=subtotal]').val(data.unformated);
+		})
+		.fail(function(data) {
+			console.log("error");
+			console.log(data)
+		})
+	}
+
+
+	$('.pagarcompra').on('click', function(event) {
+		event.preventDefault();
+		$(this).attr('disabled', 'disabled')
+		
+		$('.containerProdutos').addClass('hide')
+		$('.containerPagarCompra').removeClass('hide')
+	});
+
+	var formapagamento = '';
+	$('.btnformaPagamento').on('click', function(event) {
+		event.preventDefault();
+		formapagamento = $(this).attr('type')
+		$('#tipo_'+formapagamento).removeClass('hide')
+		$('.containerFinalizarCompra').removeClass('hide')
+		$('.containerPagarCompra').addClass('hide')
+	});
+
+
+	$('input[name=valorrecebido]').bind('change paste keyup', function(event) {
+		var qtd = $(this).val();
+		qtd = qtd.replace(".","");
+        qtd = qtd.replace(",",".");
+        qtd = parseFloat(qtd);
+		var subtotal = qtd - $('input[name=subtotal]').val();
+
+		subtotal = subtotal.formatMoney(2, ',', '.');
+		$('#troco').html('R$ '+subtotal);
+
+
+
+	});
+
+	$('.btnFinalizar').on('click', function(event) {
+		event.preventDefault();
+		var valorrecebido = $('input[name=valorrecebido]').val();
+
+		$.ajax({
+			url: url+'caixa/checkout/gerenciar/finalizarCompra',
+			type: 'POST',
+			//dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
+			data: {formapagamento: formapagamento, valorrecebido : valorrecebido},
+		})
+		.done(function(data) {
+			console.log(data)
+			$.notify({
+            	icon: 'glyphicons glyphicons-alert',
+				message: 'Compra finalizada',
+			},{
+				type: "warning",
+				placement: {
+					from: "top",
+					align: "right"
+				}
+			});
+
+			resetCheckout();
+		})
+		.fail(function(data) {
+			$.notify({
+            	icon: 'glyphicons glyphicons-alert',
+				message: data.responseText,
+			},{
+				type: "warning",
+				placement: {
+					from: "top",
+					align: "right"
+				}
+			});
+		})
+	});
+
+
+	function resetCheckout()
+	{
+		formapagamento = '';
+		$('input[name=valorrecebido]').val('');
+		$('#troco').html('');
+		$('#listcarrinho tbody').html('');
+		$('#subtotalProduto').html('')
+		$('input[name=subtotal]').val('');
+		$('#tipo_DINHEIRO, #tipo_CARTAODEBITO, #tipo_CARTAOCREDITO').addClass('hide');
+		$('.containerProdutos').removeClass('hide');
+		$('.containerProdutoUnitario').addClass('hide')
 	}
 
 

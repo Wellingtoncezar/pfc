@@ -216,13 +216,56 @@ class caixasDao extends Dao{
 			$this->db->setParameter(1, $caixa->getId());
 			if($this->db->select())
 			{
-				return false;
-
+				return null;
 			}else
+			{
 				$this->db->insert($data);
+				$caixaAberto->setId($this->db->getUltimoId());
+				return $caixa;
+			}
 		}
-		return true;
+		return null;
 
 	}
 
+
+
+	public function finalizarCompra(caixasModel $caixa)
+	{
+		$data = array(
+			'id_abertura_caixa' => $caixa->getCaixaAberto()[0]->getId(),
+			'data_venda' => $caixa->getCaixaAberto()[0]->getVendas()[0]->getDataVenda(),
+			'hora_venda' => $caixa->getCaixaAberto()[0]->getVendas()[0]->getHoraVenda(),
+			'forma_pagamento' => $caixa->getCaixaAberto()[0]->getVendas()[0]->getFormaPagamento(),
+			'valor_pago' => $caixa->getCaixaAberto()[0]->getVendas()[0]->getValorPago()
+		);
+		$this->db->clear();
+		$this->db->query('BEGIN');
+		$this->db->setTabela('vendas');
+		if($this->db->insert($data))
+		{
+			$caixa->getCaixaAberto()[0]->getVendas()[0]->setId( $this->db->getUltimoId());
+			$this->cadastraItemCompra($caixa);
+			return true;
+		}
+	}
+
+	private function cadastraItemCompra(caixasModel $caixa)
+	{
+
+		foreach ($caixa->getCaixaAberto()[0]->getVendas()[0]->getProdutosVendidos() as $produtoVendido){
+			$data = array(
+				'id_venda' => $caixa->getCaixaAberto()[0]->getVendas()[0]->getId(),
+				'id_produto' => $produtoVendido->getProduto()->getId(),
+				'quantidade_produto_vendido' => $produtoVendido->getQuantidade(),
+				'unidade_medida_vendido' =>'', //$produtoVendido->getProduto()->getUnidadeMedidaParaVenda()->getUnidadeMedida()->getAbreviacao(),
+				'preco_vendido' => $produtoVendido->getPrecoVendido()
+			);
+
+			$this->db->clear();
+			$this->db->setTabela('produtos_vendidos');
+			$this->db->insert($data);
+		}
+		$this->db->query('COMMIT');
+	}
 }

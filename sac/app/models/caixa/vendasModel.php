@@ -7,6 +7,8 @@ class vendasModel{
 	private $id;
 	private $dataVenda;
 	private $horaVenda;
+	private $formapagamento = formapagamento::DINHEIRO;
+	private $valorpago = 0;
 	private $produtosVendido = Array();
 	
  	//SETERS
@@ -31,7 +33,24 @@ class vendasModel{
  	{
  		array_push($this->produtosVendido, $produtoVendido);
  	}
- 	
+ 	public function setValorPago($valorpago)
+ 	{
+ 		$this->valorpago = $valorpago;
+ 	}
+
+ 	public function pagarComDinheiro()
+ 	{
+ 		$this->formapagamento = formapagamento::DINHEIRO;
+ 	}
+ 	public function pagarComCartaoCredito()
+ 	{
+ 		$this->formapagamento = formapagamento::CARTAOCREDITO;
+ 	}
+ 	public function pagarComCartaoDebito()
+ 	{
+ 		$this->formapagamento = formapagamento::CARTAODEBITO;
+ 	}
+
 
 
  	public function getId()
@@ -51,7 +70,14 @@ class vendasModel{
  	{
  		return $this->produtosVendido;
  	}
+ 	public function getValorPago()
+ 	{
+ 		return $this->valorpago;
+ 	}
  	
- 	
+ 	public function getFormaPagamento()
+ 	{
+ 		return $this->formapagamento;
+ 	}
  	
 }
