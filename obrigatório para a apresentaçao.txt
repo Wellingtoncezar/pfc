@@ -1,0 +1,8 @@
+Obrigatório para a apresentação
+
+especificação 
+arquitetura]
+diagrama de classe
+mer 
+caso de uso
+diagrama de sequencia

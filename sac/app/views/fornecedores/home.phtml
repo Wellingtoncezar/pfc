@@ -7,105 +7,72 @@
       <h1>Fornecedores</h1>
     </div>
     <div class="middle-content">
-        <?php
-            $thead = '  <tr>
-            				<th width="20">ID</th>
-                            <th width="40">Foto</th>
-                            <th width="100">Razão social</th>
-                            <th width="160">Nome Fantasia</th>
-                            <th width="160">CPF</th>
-                            <th width="120">CNPJ</th>
-                            <th width="100">Status (Ativo/Inativo)</th>
-                            <th width="180">Ações</th>
-                        </tr>';
-            $tfoot = '  <tr>
-            				<th>ID</th>
-                            <th>Foto</th>
-                            <th>Razão social</th>
-                            <th>Nome Fantasia</th>
-                            <th>CPF</th>
-                            <th>CNPJ</th>
-                            <th>Status (Ativo/Inativo)</th>
-                            <th>Ações</th>
-                        </tr>';  
+        <table class="dataTable rwd-table" cellspacing="0" width="100%" {{moreContent}} style="display:none">
+            <thead>
+                <tr>
+                    <th width="20">ID</th>
+                    <th width="40">Foto</th>
+                    <th width="100">Razão social</th>
+                    <th width="160">Nome Fantasia</th>
+                    <th width="160">CPF</th>
+                    <th width="120">CNPJ</th>
+                    <th width="100">Status (Ativo/Inativo)</th>
+                    <th width="180">Ações</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Foto</th>
+                    <th>Razão social</th>
+                    <th>Nome Fantasia</th>
+                    <th>CPF</th>
+                    <th>CNPJ</th>
+                    <th>Status (Ativo/Inativo)</th>
+                    <th>Ações</th>
+                </tr>
+            </tfoot>
+            <tbody>
+            <?php
             if(!empty($fornecedores)):
                 $tbody = '';
                 foreach ($fornecedores as $fornec):
                     $foto = $fornec->getFoto() != '' ? URL.'skin/uploads/fornecedores/p/'.$fornec->getFoto() : URL.'skin/img/imagens/semlogo.jpg';
                     $ativo = ($fornec->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
                     $inativo = ($fornec->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
-
-    $tbody .= ' <tr id="'.$fornec->getId().'">
-    				<td>'.$fornec->getId().'</td>
-                    <td><img src="'.$foto.'" style=" width: 60px; height: 60px;" class="img-circle"></td>
-                    <td>'.$fornec->getRazaoSocial().'</td>
-                    <td>'.$fornec->getNomeFantasia().'</td>
-                    <td>'.$fornec->getCpf().'</td>
-                    <td>'.$fornec->getCnpj().'</td>
+            ?>
+                <tr id="<?=$fornec->getId()?>">
+                    <td><?=$fornec->getId()?></td>
+                    <td><img src="<?=$foto?>" style=" width: 60px; height: 60px;" class="img-circle"></td>
+                    <td><?=$fornec->getRazaoSocial()?></td>
+                    <td><?=$fornec->getNomeFantasia()?></td>
+                    <td><?=$fornec->getCpf()?></td>
+                    <td><?=$fornec->getCnpj()?></td>
                     <td>
-                        <select name="status" id="'.$fornec->getId().'" class="statusSelect">
-                            <option value="'.status::ATIVO.'" class="active" '.$ativo.'>Ativo</option>
-                            <option value="'.status::INATIVO.'" class="inactive" '.$inativo.'>Inativo</option>
+                        <select name="status" id="<?=$fornec->getId()?>" class="statusSelect">
+                            <option value="<?=status::ATIVO?>" class="active" <?=$ativo?>>Ativo</option>
+                            <option value="<?=status::INATIVO?>" class="inactive" <?=$inativo?>>Inativo</option>
                         </select>
                     </td>
-                    <td>'
-                        .$this->templateFactory->getButton('editar',array('href'=> URL.'fornecedores/gerenciar/editar/'.$fornec->getId()), URL.'fornecedores/gerenciar/editar/')
-                         .$this->templateFactory->getButton('excluir', array('id'=> $fornec->getId()), URL.'fornecedores/gerenciar/excluir/').
+                    <td>
+                        <?=$this->templateFactory->getButton('editar',array('href'=> URL.'fornecedores/gerenciar/editar/'.$fornec->getId()), URL.'fornecedores/gerenciar/editar/')?>
+                        <?=$this->templateFactory->getButton('excluir', array('id'=> $fornec->getId()), URL.'fornecedores/gerenciar/excluir/')?>
 
                     '</td>
-                </tr>';
-        
+                </tr>
+                <?php
                 endforeach;
-                echo $template->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
-            else:
-                echo '<h2>Não há registros cadastrados</h2>';
             endif;
             ?>
+            </tbody>
+        </table>
+
+
+        
                 
             </tbody>
         </table>
     </div>
 
 </div>
-
-<script type="text/javascript">
-    $(function(){
-        //DATATABLE
-        var table = $('.dataTable').DataTable({
-            order: [0,'asc']
-        });
-
-        //STATUS
-        table.$('select[name=status]').on('change',function(){
-            var id = $(this).attr('id');
-            var status = $(this).val();
-            $.post(url+'fornecedores/gerenciar/atualizarStatus',{id:id,status:status},function(data){
-                console.log(data)
-                if(data == true)
-                    messageDialog('Status atualizado','success',false,null);
-                else
-                    messageDialog('Erro ao atualizar','warning',false,null);
-            });
-
-        });
-
-        //EXCLUIR
-        table.$('.btn_excluir').on('click',function(){
-            var id = $(this).attr('id');
-            var status = $(this).data('value');
-            var modalDelete = $('#modalDelete').modal('show')
-            $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'fornecedores/gerenciar/excluir',{id:id,status:status},function(data){
-                    console.log(data)
-                    if(data == true){
-                        $('#modalDelete').modal('hide');
-                        $('tr#'+id).hide();
-                    }
-                });
-            });
-        });
-
-
-    })
-</script>
-
+<script type="text/javascript" src="<?=URL?>skin/js/fornecedores/fornecedores.js"></script>

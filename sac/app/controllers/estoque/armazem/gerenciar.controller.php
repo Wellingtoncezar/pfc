@@ -74,7 +74,7 @@ class gerenciar extends Controller{
 				    	'codigobarras' => $estoqueProd->getProduto()->getCodigoBarra(),
 						'produto'=> $estoqueProd->getProduto()->getNome(),
 						'foto'=> $foto,
-						'qtdtotal'=> $dataformat->formatar($estoqueProd->getQuantidadeTotal(),'decimal').' '.$estoqueProd->getUnidadeMedidaParaEstoque()->getUnidadeMedida()->getNome(),
+						'qtdtotal'=> $dataformat->formatar($estoqueProd->getQuantidadeTotal(),'decimal').' '.$estoqueProd->getProduto()->getUnidadeMedidaParaEstoque()->getUnidadeMedida()->getNome(),
 						'min'=> $dataformat->formatar($estoqueProd->getNivelEstoque()->getQuantidadeMinima(),'decimal'),
 						'max'=> $dataformat->formatar($estoqueProd->getNivelEstoque()->getQuantidadeMaxima(),'decimal'),
 						'minUnformated'=> $estoqueProd->getNivelEstoque()->getQuantidadeMinima(),
@@ -105,8 +105,8 @@ class gerenciar extends Controller{
 							'nomeUnidadeConvertido' => $lotes->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getUnidadeMedida()->getNome(),
 							'qtdNaoConvertido' => $lotes->getQuantidadeLotePorLocalizacao(false),
 							'acoes' => "",
-							'idUnidadeMedidaPraVenda' => $estoqueProd->getUnidadeMedidaParaVenda()->getId(),
-							'nomeUnidadeMedida' => $estoqueProd->getUnidadeMedidaParaVenda()->getUnidadeMedida()->getNome(),
+							'idUnidadeMedidaPraVenda' => $estoqueProd->getProduto()->getUnidadeMedidaParaVenda()->getId(),
+							'nomeUnidadeMedida' => $estoqueProd->getProduto()->getUnidadeMedidaParaVenda()->getUnidadeMedida()->getNome(),
 							'linkemprateleirar' => URL."estoque/armazem/gerenciar/emprateleirar",
 							'linkdescartar' => URL."estoque/armazem/gerenciar/descartar"
 				    	);

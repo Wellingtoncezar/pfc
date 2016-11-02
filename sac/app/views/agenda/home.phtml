@@ -1,9 +1,6 @@
 <div class="container">
-
-    <?php
-    $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'agenda/gerenciar/cadastrar'));
-    echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
-    ?>
+    <?php $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'agenda/gerenciar/cadastrar'));?>
+    <?= $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));?>
 
     <div class="page-header">
       <h1>Agenda de fornecedores</h1>
@@ -16,8 +13,6 @@
         </div>
     </div>
 </div>
-
-
 
 <!-- Modal -->
 <div class="modal fade" id="modalAgenda" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -39,47 +34,4 @@
 
 <link href="<?=URL?>skin/js/bic_calendar/css/bic_calendar.css" rel="stylesheet">
 <script src="<?=URL?>skin/js/bic_calendar/js/bic_calendar.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        var monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        var dayNames = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"];
-        $('#agendaFornecedores').bic_calendar({
-            //list of events in array
-            //events: events,
-            //enable select
-            enableSelect: false,
-            //enable multi-select
-            multiSelect: false,
-            //set day names
-            dayNames: dayNames,
-            //set month names
-            monthNames: monthNames,
-            //show dayNames
-            showDays: true,
-            //set ajax call
-            reqAjax: {
-                type: 'post',
-                //parameters : {classe: 1},
-                url: '<?=URL?>agenda/gerenciar/listar'
-            }
-            //set popover options
-            //popoverOptions: {}
-            //set tooltip options
-            //tooltipOptions: {}
-        });
-
-        $(document).on('click', '#agendaFornecedores a[rel=tooltip]', function(event) {
-            event.preventDefault();
-            var href = $(this).attr('href');
-            console.log(href)
-            $.post(href,{}, function(data){
-                $('#modalAgenda .modal-body').html(data);
-                $('#modalAgenda').modal('show')
-            })
-        });
-
-        
-    });
-</script>
-
-
+<script src="<?=URL?>skin/js/agenda/agenda.js"></script>

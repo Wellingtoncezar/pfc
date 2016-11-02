@@ -1,78 +1,35 @@
-    
-       <?php
-      //  echo "<pre>";
-      // print_r($compromissosagendados);
-      // echo "</pre>";
-            $thead = '  <tr>
-                            <th width="30">Id</th>
-                            <th width="30">Fornecedor</th>
-                            <th width="300">Titulo</th>
-                            <th width="300">Data</th>
-                            <th width="80">Ações</th>
-                        </tr>';
-            $tfoot = '  <tr>
-                            <td>Id</td>
-                            <td>Fornecedor</td>
-                            <th>Titulo</th>
-                            <th>Data</th>
-                            <td>Ações</td>
-                        </tr>';  
-
-            $tbody = '';
-
-            foreach ($compromissosagendados as $compromissos):
-
-            $tbody .='  <tr id="'.$compromissos->getId().'">
-                            <td>'.$compromissos->getId().'</td>
-                            <td>'.$compromissos->getFornecedor()->getNomeFantasia().'</td>
-                            <td>'.$compromissos->getTitulo().'</td>
-                            <td><input type="date" iddata="'.$compromissos->getId().'" name="dataAgenda" min="'.$compromissos->getData().'" disabled value="'.$compromissos->getData().'" /></td>
-                            
-                            <td>'
-                                .$this->templateFactory->getButton('Adiar', array('href'=>URL.'agenda/gerenciar/adiarCompromissos/'.$compromissos->getId(), 'title'=>'Adiar', 'moreContent'=>' habilitar iddata="'.$compromissos->getId().'"')).
-
-                            '</td>
-                        </tr>';
-                endforeach;
-                echo $this->templateFactory->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody, 'moreContent' => ''));
-            ?>  
-
-
-<script type="text/javascript">
-    $(function(){
-
-            $('.dataTable').show()
-            
-            // //DATATABLE
-            var table = $('.dataTable').DataTable({
-                order: [0,'asc']
-            });
-            //ADIAR
-            table.$(' .btn_adiar').on('click',function(){
-                var id = $(this).attr('iddata')
-                if($(this).hasAttr('habilitar')){
-                    $('input[iddata='+id+']').prop('disabled',false)
-                    $(this).removeAttr('habilitar');
-                    $(this).removeClass('btn-primary').addClass('btn-success')
-                    $('span',this).removeClass('glyphicons-history').addClass('glyphicons-ok')
-                }else{
-                    $.post( url+"agenda/gerenciar/adiarCompromissos", { 
-                        data: $('input[iddata='+id+']').val(),
-                        id_agenda: id
-                    })
-                      .done(function( data ) {
-                        if(data){
-                            location.reload()
-                        }else
-                            console.log(data)
-                    });
-                }
-                return false;
-            });
-            $.fn.hasAttr = function(name) {  
-               return this.attr(name) !== undefined;
-            };
-
-    })
-</script>
+<table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
+    <thead>
+        <tr>
+            <th width="30">Id</th>
+            <th width="30">Fornecedor</th>
+            <th width="300">Titulo</th>
+            <th width="300">Data</th>
+            <th width="80">Ações</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td>Id</td>
+            <td>Fornecedor</td>
+            <th>Titulo</th>
+            <th>Data</th>
+            <td>Ações</td>
+        </tr>
+    </tfoot>
+    <tbody>
+        <?php foreach ($compromissosagendados as $compromissos):?>
+        <tr id="<?=$compromissos->getId()?>">
+            <td><?=$compromissos->getId()?></td>
+            <td><?=$compromissos->getFornecedor()->getNomeFantasia()?></td>
+            <td><?=$compromissos->getTitulo()?></td>
+            <td><input type="date" iddata="<?=$compromissos->getId()?>" name="dataAgenda" min="<?=$compromissos->getData()?>" disabled value="<?=$compromissos->getData()?>" /></td>
+            <td>
+                <?=$this->templateFactory->getButton('Adiar', array('href'=>URL.'agenda/gerenciar/adiarCompromissos/'.$compromissos->getId(), 'title'=>'Adiar', 'moreContent'=>' habilitar iddata="'.$compromissos->getId().'"'))?>
+            </td>
+        </tr>
+        <?php endforeach;?>  
+    </tbody>
+</table>
+<script type="text/javascript" src="<?=URL?>skin/js/agenda/compromissosagendados.js"></script>
 

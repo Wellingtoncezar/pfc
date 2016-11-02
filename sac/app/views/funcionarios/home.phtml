@@ -7,113 +7,72 @@
       <h1>Funcionários</h1>
     </div>
     <div class="middle-content">
-            <?php
-            $thead = '  <tr>
-            				<th width="20">ID</th>
-                            <th width="100">Código</th>
-                            <th width="40">Foto</th>
-                            <th width="160">Nome</th>
-                            <th width="160">Cargo</th>
-                            <th width="120">CPF</th>
-                            <th width="100">Status (Ativo/Inativo)</th>
-                            <th width="180">Ações</th>
-                        </tr>';
-            $tfoot = '  <tr>
-            				<th>ID</th>
-                            <th>Código</th>
-                            <th>Foto</th>
-                            <th>Nome</th>
-                            <th>Cargo</th>
-                            <th>CPF</th>
-                            <th>Status (Ativo/Inativo)</th>
-                            <th>Ações</th>
-                        </tr>';  
-            if(!empty($funcionarios)):
-                $tbody = '';
-                foreach ($funcionarios as $func):
-                    $foto = $func->getFoto() != '' ? URL.'skin/uploads/funcionarios/p/'.$func->getFoto() : URL.'skin/img/imagens/semfoto.jpg';
-                    $ativo = ($func->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
-                    $inativo = ($func->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
-                    
-            $tbody .='  <tr id="'.$func->getId().'">
-            				<td>'.$func->getId().'</td>
-                            <td>'.$func->getCodigo().'</td>
-                            <td><img src="'.$foto.'" style=" width: 60px; height: 60px;" class="img-circle"></td>
-                            <td>'.$func->getNome().' '.$func->getSobrenome().'</td>
-                            <td>'.$func->getCargo()->getNome().'(<small>'.$func->getCargo()->getSetor().'</small>)</td>
-                            <td>'.$func->getCpf().'</td>
-                            <td>';
-
-                            //permite a mudança de status se nao for administrador
-                            if(!$func->getUserAdministrator()): 
-                    $tbody .=   '<select name="status" id="'.$func->getId().'" class="statusSelect">
-                                    <option value="'.status::ATIVO.'" class="active" '.$ativo.'>Ativo</option>
-                                    <option value="'.status::INATIVO.'" class="inactive" '.$inativo.'>Inativo</option>
-                                </select>';
-                            endif;
-                    $tbody .='</td>
-                            <td>'
-                                .$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/gerenciar/editar/'.$func->getId()), URL.'funcionarios/gerenciar/editar/');
-                            if(!$func->getUserAdministrator()) //permite a mudança de status se nao for administrador
-                    $tbody .=  $this->templateFactory->getButton('excluir', array('id'=> $func->getId()), URL.'funcionarios/gerenciar/excluir/');
-                    
-                    $tbody .=  '</td>
-                        </tr>';
-                endforeach;
-                echo $this->templateFactory->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
-            else:
-                echo '<h2>Não há registros cadastrados</h2>';
-            endif;
-            ?>
+        <table class="dataTable rwd-table" cellspacing="0" width="100%" style="display:none">
+            <thead>
+                <tr>
+                    <th width="20">ID</th>
+                    <th width="100">Código</th>
+                    <th width="40">Foto</th>
+                    <th width="160">Nome</th>
+                    <th width="160">Cargo</th>
+                    <th width="120">CPF</th>
+                    <th width="100">Status (Ativo/Inativo)</th>
+                    <th width="180">Ações</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Código</th>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>Cargo</th>
+                    <th>CPF</th>
+                    <th>Status (Ativo/Inativo)</th>
+                    <th>Ações</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <?php
+                if(!empty($funcionarios)):
+                    foreach ($funcionarios as $func):
+                        $foto = $func->getFoto() != '' ? URL.'skin/uploads/funcionarios/p/'.$func->getFoto() : URL.'skin/img/imagens/semfoto.jpg';
+                        $ativo = ($func->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
+                        $inativo = ($func->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
+                ?>        
+                    <tr id="<?=$func->getId()?>">
+                        <td><?=$func->getId()?></td>
+                        <td><?=$func->getCodigo()?></td>
+                        <td><img src="<?=$foto?>" style=" width: 60px; height: 60px;" class="img-circle"></td>
+                        <td><?=$func->getNome()?> <?=$func->getSobrenome()?></td>
+                        <td><?=$func->getCargo()->getNome()?>(<small><?=$func->getCargo()->getSetor()?></small>)</td>
+                        <td><?=$func->getCpf()?></td>
+                        <td>
+                    <?php
+                        //permite a mudança de status se nao for administrador
+                        if(!$func->getUserAdministrator()): 
+                    ?>
+                            <select name="status" id="<?=$func->getId()?>" class="statusSelect">
+                                <option value="<?=status::ATIVO?>" class="active" <?=$ativo?>>Ativo</option>
+                                <option value="<?=status::INATIVO?>" class="inactive" <?=$inativo?>>Inativo</option>
+                            </select>
+                    <?php endif; ?>
+                        </td>
+                        <td>
+                            <?=$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/gerenciar/editar/'.$func->getId()), URL.'funcionarios/gerenciar/editar/')?>
+                            <?php if(!$func->getUserAdministrator()): //permite a mudança de status se nao for administrador?>
+                            <?= $this->templateFactory->getButton('excluir', array('id'=> $func->getId()), URL.'funcionarios/gerenciar/excluir/');?>
+                            <?php endif;?>
+                        </td>
+                    </tr>
+                <?php endforeach;
+                endif; ?>
+            </tbody>
+        </table>
+            
 
     </div>
 
 </div>
 
-<script type="text/javascript">
-    $(function(){
-        //DATATABLE
-        var table = $('.dataTable').DataTable({
-            order: [0,'asc']
-        });
-
-        //STATUS
-        table.$('select[name=status]').on('change',function(){
-            var id = $(this).attr('id');
-            var status = $(this).val();
-            $.post(url+'funcionarios/gerenciar/atualizarStatus',{id:id,status:status},function(data){
-                console.log(data)
-                if(data == true)
-                    messageDialog('Status atualizado','success',false,null);
-                else
-                    messageDialog('Erro ao atualizar','warning',false,null);
-            });
-
-        });
-
-        //EXCLUIR
-        var id;
-        var status;
-        table.$('.btn_excluir').on('click',function(){
-            var modalDelete = $('#modalDelete').modal('show')
-            id = $(this).attr('id');
-            status = $(this).data('value');
-        });
-
-        $('.btn_ok','#modalDelete').on('click', function(event) {
-            $.post(url+'funcionarios/gerenciar/excluir',{id:id,status:status},function(data){
-                console.log(data)
-                if(data == true){
-                    $('#modalDelete').modal('hide');
-                    $('tr#'+id).hide();
-                }else{
-                    $('#modalDelete').modal('hide');
-                    messageDialog(data,'warning',false,null);
-                }
-            });
-        });
-
-
-    })
-</script>
-
+<script type="text/javascript" SRC="<?=URL?>skin/js/funcionarios/funcionarios.js"></script>
