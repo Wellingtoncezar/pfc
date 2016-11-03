@@ -32,7 +32,9 @@ class gerenciar extends Controller{
 		$this->load->view('estoque/home',$data);
 		$this->load->view('includes/footer',$data);
 	}
-
+	/**
+	 * ação utilizada para pesquisa de produtos na entrada de mercadorias
+	 * */
 	public function pesquisarproduto()
 	{
 		$this->load->model('produtos/produtosModel');
