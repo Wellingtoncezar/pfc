@@ -13,8 +13,6 @@ class produtosModel{
 	private $descricao;
 	private $fornecedores = array();
 	private $unidadeMedidaEstoque = Array();
-	private $unidadeMedidaVenda;
-	private $fatorUnidadeMedidaVenda;
 	private $status = status::ATIVO;
 	private $dataValidadeControlada = false;
 	private $precos = array();
@@ -67,14 +65,7 @@ class produtosModel{
 	{
 		array_push($this->unidadeMedidaEstoque, $unidadeMedidaEstoque);
 	}
-	public function setUnidadeMedidaVenda(unidadeMedidaModel $unidadeMedidaVenda)
-	{
-		$this->unidadeMedidaVenda = $unidadeMedidaVenda;
-	}
-	public function setFatorUnidadeMedidaVenda($fatorUnidadeMedidaVenda)
-	{
-		$this->fatorUnidadeMedidaVenda = $fatorUnidadeMedidaVenda;
-	}
+
 
 	public function ativarControleValidade(){
 		$this->dataValidadeControlada = true;
@@ -160,14 +151,6 @@ class produtosModel{
 	public function getUnidadeMedidaEstoque()
 	{
 		return $this->unidadeMedidaEstoque;
-	}
-	public function getUnidadeMedidaVenda()
-	{
-		return $this->unidadeMedidaVenda;
-	}
-	public function getFatorUnidadeMedidaVenda()
-	{
-		return $this->fatorUnidadeMedidaVenda;
 	}
 
 	public function getControleValidade(){

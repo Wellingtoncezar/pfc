@@ -34,7 +34,7 @@ class usuariosModel{
 	{
 		$this->senha = $senha;
 	}
-	public function setNivelAcesso ($nivelAcesso)
+	public function setNivelAcesso (niveisAcessoModel $nivelAcesso)
 	{
 		$this->nivelAcesso = $nivelAcesso;
 	}

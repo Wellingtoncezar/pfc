@@ -24,13 +24,14 @@
 						<div class="form-group">
 							<div class="thumbnail preview-lg">
 								<lable>Código de barras (GTI)</lable>
-								<input type="text" id="barCodeGti" name="codigobarras" class="form-control " value="" maxlength="13" />
+								<input type="text" id="barCodeGti" name="codigobarras" class="form-control " value="" maxlength="13" placeholder="cod. de barras" />
 								<div class="demo-section k-content box-barcode-produto">
 						            <div id="barcode"></div>
 						        </div>
 					        </div>
 	                    </div>
 					</div>
+					
 
                 </div>
                 <div class="row col-xs-6 col-md-3 col-sm-9 col-lg-9">
@@ -61,6 +62,17 @@
                             <?php endif;?>
                         </select>
                     </div>
+	                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-4">
+	                    <label>Preço padrão</label>
+	                    <input type="text" class="form-control" placeholder="Preço" name="preco" >
+	                </div>
+	                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-4">
+						<lable>Controlar validade</lable>
+						<select name="controlarvalidade" class="form-control">
+							<option value="1">Sim</option>
+							<option value="0">Não</option>
+						</select>
+					</div>
                     <div class="form-group col-xs-12 col-md-12 col-sm-12 col-lg-12">
                         <label>Descrição</label>
                         <textarea class="form-control" placeholder="Descrição" name="descricao"></textarea>
@@ -105,37 +117,10 @@
             </div>
         </div>
 
-		<!--UNIDADE MEDIDA VENDA-->
-        <div class="panel panel-default">
-            <div class="panel-heading">Unidade de medida para venda (preço x unidade medida)</div>
-            <div class="panel-body">
-            	<div class="alert alert-warning alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Exemplos:</strong> 
-                    <p>• Venda de um frango por x valor o kg. No campo "Fator multiplicação" fica 1 e no campo "unidade de medida" fica Quilograma(s). Ou seja, para cada kg vendido multiplica-se por 1 (fator multiplicação)</p>
-                </div>
-                <div class="form-group col-xs-12 col-md-12 col-sm-12 col-lg-12">
-	                <div class=" col-xs-6 col-md-6 col-sm-6 col-lg-6">
-	                	<label>Fator multiplicação</label>
-		                <input type="number" min="1" value="1" class="form-control" placeholder="Fator multiplicação" aria-describedby="basic-addon1" name="fatorUnidadeMedidaVenda" maxlength="6" value="">
-		            </div> 
-		            <div class="col-xs-6 col-md-6 col-sm-6 col-lg-6">
-		            	<label>Unidade de medida</label>
-		                <select name="unidadeMedidaVenda" class="form-control">
-		                <?php foreach ($unidademedida as $unidade):?>
-		                    <option value="<?=$unidade->getId()?>"><?=$unidade->getNome()?></option>
-		                <?php endforeach;?>
-		                </select>
-		            </div>
-	            </div>
 
-                <div class="input-group boxmarkup" style="display:none">
-                    <label>Markup %</label>
-                    <input type="text" class="form-control" placeholder="Markup %" aria-describedby="basic-addon1" name="markup" maxlength="6" value="">
-                </div>
-                
-            </div>
-        </div>
+        
+
+		
         <div class="btn-group pull-right" role="group">
             <button type="submit" class="btn btn-success">Enviar</button>
         </div>
@@ -173,7 +158,7 @@
             </div>
             <div class="form-group">
                 <label>Fator conversão</label>
-                <input type="number" min="1" value="1" class="form-control" placeholder="Fator" name="fator_unidade" maxlength="20" value="1">
+                <input type="text" value="1" class="form-control" placeholder="Fator" name="fator_unidade" maxlength="20" value="1">
             </div>
             <fieldset class="form-group">
                 <div class="input-group">

@@ -5,8 +5,8 @@
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class nivelEstoqueModel{
 	private $id;
-	private $quantidadeMinima;
-	private $quantidadeMaxima;
+	private $quantidade_minima;
+	private $quantidade_maxima;
 	private $localizacao = localizacoes::ARMAZEM;
 	
 	//set

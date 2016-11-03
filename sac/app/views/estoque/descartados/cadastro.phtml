@@ -1,0 +1,241 @@
+<div class="container">
+    <?php
+       $btnVoltar = $this->templateFactory->getButton("voltar",array('href'=>URL.'estoque/armazem'));
+        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnVoltar));    
+    ?>
+    <div class="page-header">
+      <h1>Estoque<small> Entrada de mercadorias</small></h1>
+    </div>
+    <form action="<?=URL?>estoque/gerenciar/inserir" method="post" id="form_estoque">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+            	<span>Dados Gerais</span>
+			  	<button type="button" class="pull-right btn btn-default" data-toggle="modal" data-target="#modalPesquisaProduto">Pesquisar produto</button>
+            </div>
+            <div class="panel-body dadosProduto hide ">
+            	<div class="form-group col-xs-12 col-md-12 col-sm-12 col-lg-12">
+					
+					<div class="dadosProdutoEntrada">
+						<div class="col-xs-12 col-md-12 col-sm-3 col-lg-3">
+						    <a href="#" class="thumbnail">
+						      	<img src="<?=URL?>skin/img/imagens/benchmarking.png" id="foto_produto">
+						    </a>
+						    <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+								<div class="row">
+									<div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+										<label>Código de barras</label>
+										<div class="form-control" id="codigobarras">Código de barra</div>
+									</div>
+									<div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+										<label>Nome do produto</label>
+										<div class="form-control" id="nome_produto">nome do produto</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+
+						<div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
+							<input type="hidden" value="" id="id_produto" name="id_produto">
+							<div class="row">
+								<div class="col-xs-12 col-md-12 col-sm-6 col-lg-4">
+									<div class="form-group">
+									    <label for="exampleInputEmail1">Código lote</label>
+									    <input type="text" class="form-control" id="codigoLote" placeholder="Código do lote" name="codigoLote">
+									</div>
+								</div>
+								<div class="col-xs-12 col-md-12 col-sm-6 col-lg-4">
+									<div class="form-group">
+									    <label for="exampleInputEmail1">Cod. barras GTI </label>
+									    <input type="text" class="form-control" id="codBarrasGti" name="codBarrasGti" maxlength="13" placeholder="Cod. barras GTI">
+									</div>
+								</div>
+								<div class="col-xs-12 col-md-12 col-sm-6 col-lg-4">
+									<div class="form-group">
+									    <label for="exampleInputEmail1">Cod. barras GST </label>
+									    <input type="text" class="form-control" id="codBarrasGst" name="codBarrasGst" placeholder="Cod. barras GST">
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-xs-12 col-md-12 col-sm-6 col-lg-8">
+									<div class="form-group">
+									    <label for="exampleInputEmail1">Quantidade</label>
+									    <div class="row">
+										    <div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
+										    	<input type="text" class="form-control" id="quantidade" name="quantidade" placeholder="Quantidade">
+										    </div>
+										    <div class="col-xs-12 col-md-12 col-sm-12 col-lg-3">
+											    <select class="form-control" id="unidadeMedidaEstoque" name="unidadeMedidaEstoque">
+											    </select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12 col-md-12 col-sm-6 col-lg-4">
+									<div class="form-group groupDataValidade">
+										<input type="checkbox" name="dataValidadeControlada" class="hide">
+									    <label for="exampleInputEmail1">Data de validade</label>
+									    <input type="text" class="form-control" id="dataValidade" name="dataValidade" min= placeholder="Data de validade">
+									</div>
+								</div>
+							</div>
+							
+
+							<div class="form-group">
+							    <label for="exampleInputEmail1">Observações</label>
+							    <textarea class="form-control" id="observacoes" name="observacoes" placeholder="Observações"></textarea>
+							</div>
+							
+						</div>
+					</div>
+
+
+				</div>
+                <div class="btn-group pull-right" role="group">
+                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalPesquisaProduto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  	<div class="modal-dialog" role="document">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        		<h4 class="modal-title" id="myModalLabel">Pesquisar produto</h4>
+      		</div>
+      		<div class="modal-body">
+				
+				<div>
+					<!-- Nav tabs -->
+					<ul class="nav nav-tabs" role="tablist">
+					    <li role="presentation" class="active"><a href="#porcodigo" aria-controls="porcodigo" role="tab" data-toggle="tab">Por código de barras</a></li>
+					    <li role="presentation"><a href="#pordescricao" aria-controls="pordescricao" role="tab" data-toggle="tab">Por descrição</a></li>
+					</ul>
+
+					<!-- Tab panes -->
+					<div class="tab-content">
+					    <div role="tabpanel" class="tab-pane active" id="porcodigo">
+							<div class="form-group col-xs-12 col-md-12 col-sm-12 col-lg-12">
+			                    <label>Código de barras (GTI)</label>
+			                    <input type="text" class="form-control" name="codigobarras" maxlength="13">
+			                </div>
+					    </div>
+					    <div role="tabpanel" class="tab-pane" id="pordescricao">
+					    	<div class="form-group col-xs-12 col-md-12 col-sm-12 col-lg-12">
+			                    <label>Produtos</label>
+			                    <select name="listaproduto" class="form-control">
+			                        <?php if(!empty($produtos)):?>
+			                        <?php foreach ($produtos as $produto):?>
+			                        <option value="<?=$produto->getId()?>"><?=$produto->getNome()?></option>
+			                        <?php endforeach;?>
+			                        <?php endif;?>
+			                    </select>
+			                </div>
+
+					    </div>
+					</div>
+
+				</div>
+
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-default btnAddProduto">Ok</button>
+      		</div>
+    	</div>
+  	</div>
+</div>
+
+
+
+<script type="text/javascript" src="<?=URL?>skin/js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?=URL?>skin/js/uploadForm.js"></script>
+<!-- <script type="text/javascript" src="<?=URL?>skin/js/suprimentos/requisicoes/cadastrar.js"></script> -->
+<script>
+$(function(){
+	var tabactive = '#porcodigo';
+
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+	  	tabactive = e.target.hash; // newly activated tab
+	  	//e.relatedTarget // previous active tab
+
+	  	if(e.relatedTarget.hash == '#porcodigo')
+	  	{
+	  		$('input[name=codigobarras]').val('');
+	  	}
+	})
+
+
+	$("input[name=quantidade]").wvmask('numero')
+	$('input[name=dataValidade]').datepicker({ dateFormat: 'dd/mm/yy',changeMonth: true, changeYear: true, yearRange: "-0:+10", minDate: 0});
+	$('.btnAddProduto').on('click', function(event) {
+		event.preventDefault();
+		var value = '';
+		var tipo = 'porcodigo';
+		if(tabactive == '#porcodigo')
+		{
+			tipo = 'porcodigo';
+			value = $('input[name=codigobarras]').val()
+		}else
+		if(tabactive == '#pordescricao'){
+			tipo = 'pordescricao';
+			value = $('select[name=listaproduto]').val()
+		}
+
+		$.ajax({
+			url: url+'estoque/gerenciar/pesquisarproduto',
+			type: 'POST',
+			dataType:'json',
+			data: {tipo: tipo, value:value},
+		})
+		.done(function(data) {
+			$('.dadosProduto').removeClass('hide')
+
+			//preenchimento dos campos
+			if(data.foto_produto != '')
+				$('#foto_produto').attr('src',data.foto_produto);
+			$('#codigobarras').html(data.codigo_barras);
+			$('#nome_produto').html(data.nome_produto);
+			$('#id_produto').val(data.id_produto);
+
+			$('#unidadeMedidaEstoque').html('<option value="" selected="selected" disabled="disabled">Selecione</option>')
+			$.each(data.unidadeMedidaEstoque,function(index, val){
+				console.log(val)
+				$('#unidadeMedidaEstoque').append('<option value="'+val.id_unidade_medida_estoque+'">'+val.nome_unidade_medida+'</option>')
+			})
+
+			console.log(data.validadeControlada);
+			if(data.validadeControlada){
+				console.log('passou')
+				$('.groupDataValidade').removeClass('hide');
+				$('input[name=dataValidadeControlada]').prop('checked',true);
+			}else{
+				$('.groupDataValidade').addClass('hide');
+				$('input[name=dataValidadeControlada]').prop('checked',false);
+				$('#dataValidade').val('');
+			}
+
+
+		})
+		.fail(function(data) {
+			console.log("error");
+			console.log(data)
+		})
+		
+	});
+
+
+	$('#form_estoque').on('submit', function(){
+		$('#form_estoque').uploadForm({
+            'reload':true
+        });
+		return false;
+	})
+})
+</script>

@@ -74,9 +74,10 @@ class gerenciar extends Controller{
 				    	'codigobarras' => $estoqueProd->getProduto()->getCodigoBarra(),
 						'produto'=> $estoqueProd->getProduto()->getNome(),
 						'foto'=> $foto,
-						'qtdtotal'=> $dataformat->formatar($estoqueProd->getQuantidadeTotal(),'decimal').' '.$estoqueProd->getProduto()->getUnidadeMedidaParaEstoque()->getUnidadeMedida()->getNome(),
-						'min'=> $dataformat->formatar($estoqueProd->getNivelEstoque()->getQuantidadeMinima(),'decimal'),
-						'max'=> $dataformat->formatar($estoqueProd->getNivelEstoque()->getQuantidadeMaxima(),'decimal'),
+						'qtdtotal'=> $dataformat->formatar($estoqueProd->getQuantidadeTotal(),'decimalinteiro').' '.$estoqueProd->getProduto()->getUnidadeMedidaParaEstoque()->getUnidadeMedida()->getNome(),
+						'unformatedqtdtotal'=> (int)$estoqueProd->getQuantidadeTotal(),
+						'min'=> (int)$estoqueProd->getNivelEstoque()->getQuantidadeMinima(),
+						'max'=> (int)$estoqueProd->getNivelEstoque()->getQuantidadeMaxima(),
 						'minUnformated'=> $estoqueProd->getNivelEstoque()->getQuantidadeMinima(),
 						'maxUnformated'=> $estoqueProd->getNivelEstoque()->getQuantidadeMaxima(),
 						'nivel'=> $estoqueProd->getQuantidadeTotal(),//(($estoqueProd->getQuantidadeTotal()- $estoqueProd->getNivelEstoque()->getQuantidadeMinima()) * 100) / ($estoqueProd->getNivelEstoque()->getQuantidadeMaxima() - $estoqueProd->getNivelEstoque()->getQuantidadeMinima()),
@@ -196,6 +197,8 @@ class gerenciar extends Controller{
 	{
 		$this->load->dao('estoque/estoqueDao');
 		$this->load->model('estoque/estoqueModel');
+		$this->load->model('estoque/nivelEstoqueModel');
+		
 		$this->load->library('dataformat');
 		$dataformat = new dataformat();
 		$idEstoque 	= (int) $this->http->getRequest('idEstoque');
@@ -212,8 +215,8 @@ class gerenciar extends Controller{
 			$estoqueModel->setId($idEstoque);
 
 			$nivelEstoqueModel = new nivelEstoqueModel();
-			$nivelEstoqueModel->setQuantidadeMinima($value['quantidade_minima']);
-			$nivelEstoqueModel->setQuantidadeMaxima($value['quantidade_maxima']);
+			$nivelEstoqueModel->setQuantidadeMinima($qtdMin);
+			$nivelEstoqueModel->setQuantidadeMaxima($qtdMax);
 			
 			
 			$estoqueModel->setNivelEstoque($nivelEstoqueModel);

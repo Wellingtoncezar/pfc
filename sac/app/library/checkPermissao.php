@@ -74,7 +74,7 @@ class checkPermissao extends Library{
 
 		$this->load->url = new url($url);
 		$retorno = false;
-		//se for diferente de administrador
+
 
 		//se for diferente da tela inicial 
 		if(!empty($this->load->url->getUrl())){

@@ -141,20 +141,72 @@
             </div>
         </div><!-- fim panel endereco -->
 
-        
+        <div id="defaultCampos">
+            <div class="radio telefones" id="defaultTel" style="margin-bottom:5px;display:none">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                            <label>Categoria</label>
+                            <select name="categoria" class="form-control">
+                                <option value="telefone" selected="selected">Telefone</option>
+                                <option value="celular">Celular</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                            <label>Número</label>
+                            <input type="tel" name="telefone" placeholder="Número" class="form-control" />
+                        </div>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                            <label>Operadora</label>
+                            <input type="text" name="operadora" placeholder="Operadora" class="form-control" />
+                        </div>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-3">
+                            <label>Tipo</label>
+                            <select name="tipo_telefone" class="form-control">
+                                <option value="" selected="selected" disabled="disabled">Selecione um tipo</option>
+                                <option value="Pessoal">Pessoal</option>
+                                <option value="Residencial">Residencial</option>
+                                <option value="Profissional">Profissional</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="radio emails" id="defaultEmail" style="margin-bottom:5px;display:none">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <a href="javascript:void(0)" class="delCel pull-right"><span class="glyphicons glyphicons-remove"></span></a>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                            <label>Tipo</label>
+                            <select name="tipo_email" class="form-control ">
+                                <option value="" disabled="disabled">Tipo</option>
+                                <option value="Pessoal">Pessoal</option>
+                                <option value="Profissional">Profissional</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                            <label>E-mail</label>
+                            <input type="email" name="email" placeholder="E-mail" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
 
         <div class="panel panel-default">
             <div class="panel-heading">Contatos</div>
             <div class="panel-body">
                 <div class="form-group group_tel">
-                    <div class="form-group col-xs-12 col-md-6 col-sm-6 col-lg-6">
-                        <label>E-mail</label>
-                        <input type="email" name="email" placeholder="E-mail" class="form-control" />
-                    </div>
-                    <div class="form-group col-xs-12 col-md-6 col-sm-6 col-lg-6">
-                        <label>Telefone</label>
-                        <input type="tel" name="telefone" placeholder="Telefone" class="form-control" />
-                    </div>
+                    <button type="button" class="btn btn-default addTel addCel"><span class="glyphicons glyphicons-earphone"></span> Adicionar telefones</button>
+                </div>
+
+                <div class="form-group group_email">
+                    <button type="button" class="btn btn-default addEmail addCel"><span class="glyphicons glyphicons-envelope"></span> Adicionar E-mail</button>
                 </div>
             </div>
         </div>

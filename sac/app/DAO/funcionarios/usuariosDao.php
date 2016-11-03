@@ -7,6 +7,9 @@ if(!defined('BASEPATH')) die('Acesso não permitido');
 class usuariosDao extends Dao{
 	public function __construct(){
 		parent::__construct();
+		$this->load->model('funcionarios/usuariosModel');
+		$this->load->model('funcionarios/funcionariosModel');
+		$this->load->model('configuracoes/niveis_acesso/niveisAcessoModel');
 	}
 
 
@@ -16,9 +19,6 @@ class usuariosDao extends Dao{
 	 */
 	public function listar()
 	{
-		$this->load->model('funcionarios/usuariosModel');
-		$this->load->model('configuracoes/niveis_acesso/niveisAcessoModel');
-		$this->load->model('funcionarios/funcionariosModel');
 		$usuarios = Array();
 
 		$this->db->clear();
@@ -31,15 +31,19 @@ class usuariosDao extends Dao{
 
 			foreach ($result as $value)
 			{
-				$usuariosModel = new usuariosModel();
+				//niveis de acesso
 				$nivelAcessoModel = new niveisAcessoModel();
-				$funcionariosModel = new funcionariosModel();
-				$usuariosModel->setId($value['id_usuario']);
 				$nivelAcessoModel->setId($value['id_nivel_acesso']);
 
+				//funcionario
+				$funcionariosModel = new funcionariosModel();
 				$funcionariosModel->setId($value['id_funcionario']);
 				$funcionariosModel->setNome($value['nome_funcionario']);
 				$funcionariosModel->setSobrenome($value['sobrenome_funcionario']);
+				
+				//usuario
+				$usuariosModel = new usuariosModel();
+				$usuariosModel->setId($value['id_usuario']);
                 $usuariosModel->setNivelAcesso($nivelAcessoModel);
 				$usuariosModel->setFuncionario($funcionariosModel);
 				$usuariosModel->setLogin($value['login_usuario']);
@@ -54,42 +58,27 @@ class usuariosDao extends Dao{
 		endif;
 	}
 
-	public function consultar(usuariosModel $usuariosModel)
+	public function consultar(IUsuarios $iusuario, usuariosModel $usuario, $status)
 	{
-		$this->load->model('funcionarios/usuariosModel');
-		$this->load->model('funcionarios/funcionariosModel');
-		$this->load->model('configuracoes/niveis_acesso/niveisAcessoModel');
+		$result = $iusuario->consultar($this->db, $usuario, $status);	
 
-		$this->db->clear();
-		$sql="select * from sys_usuarios as a 
-							    inner join nivel_acesso as b on a.id_nivel_acesso = b.id_nivel_acesso
-							    inner join funcionarios as c on a.id_funcionario = c.id_funcionario 
-							    where a.id_usuario = '".$usuariosModel->getId()."' and a.status_usuario <> '".status::EXCLUIDO."'"; 
-		try{
-			$this->db->query($sql);
+		if($result != null):
+			//niveis de acesso
+			$nivelAcessoModel = new niveisAcessoModel();
+			$nivelAcessoModel->setId($result['id_nivel_acesso']);
 
-			if($this->db->rowCount() > 0):
-				$result = $this->db->result();
-
-				$nivelAcessoModel = new niveisAcessoModel();
-				$nivelAcessoModel->setId($result['id_nivel_acesso']);
-				$funcionariosModel = new funcionariosModel();
-				
-				$funcionariosModel->setId($result['id_funcionario']);
-				$funcionariosModel->setNome($result['nome_funcionario']);
-				$funcionariosModel->setSobrenome($result['sobrenome_funcionario']);
-				
-				$usuariosModel->setId($result['id_usuario']);
-				$usuariosModel->setFuncionario($funcionariosModel);
-				$usuariosModel->setNivelAcesso($nivelAcessoModel);
-				$usuariosModel->setLogin($result['login_usuario']);
-				$usuariosModel->setEmail($result['email_usuario']);
-				$usuariosModel->setStatus(status::getAttribute($result['status_usuario']));
-			endif;
+			//usuarios
+			$usuariosModel = new usuariosModel();
+			$usuariosModel->setId($result['id_usuario']);
+			$usuariosModel->setNivelAcesso($nivelAcessoModel);
+			$usuariosModel->setLogin($result['login_usuario']);
+			$usuariosModel->setEmail($result['email_usuario']);
+			$usuariosModel->setStatus(status::getAttribute($result['status_usuario']));
 			return $usuariosModel;
-		}catch (dbException $e) {
-			echo $e->getMessageError();
-		}
+		else:
+			return null;
+		endif;
+		
 	}
 
 	

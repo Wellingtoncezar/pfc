@@ -1,108 +1,35 @@
 <div class="container">
-    <?php
-
-        $btnCadastrar = $this->templateFactory->getButton("cadastrar",array('href'=>URL.'suprimentos/requisicoes/gerenciar/cadastrar'), URL.'suprimentos/requisicoes/gerenciar/cadastrar');
-        echo $this->templateFactory->getButton("actions_buttons",array('buttons'=>$btnCadastrar));
-    ?>
     <div class="page-header">
       <h1>Gestão de Estoque</h1>
     </div>
     <div class="middle-content">
-        <?php
-            $thead = '  <tr>
-                            <th width="100">Código</th>
-                            <th width="160">Cadastrado por</th>
-                            <th width="160">Aprovado por</th>
-                            <th width="160">Titulo</th>
-                            <th width="160">Data</th>
-                            <th width="180">Ações</th>
-                        </tr>';
-            $tfoot = '  <tr>
-                            <td>Código</td>
-                            <th>Cadastrado por</th>
-                            <th>Aprovado por</th>
-                            <td>Titulo</td>
-                            <td>Data</td>
-                            <td>Ações</td>
-                        </tr>';  
-
-                $tbody = '';
-                foreach ($requisicoes as $requisicao):
-
-                    $ativo = ($requisicao->getStatus() == status::ATIVO) ? 'selected="selected"' : '';
-                    $inativo = ($requisicao->getStatus() == status::INATIVO) ? 'selected="selected"' : '';
-
-            $tbody .='  <tr id="'.$requisicao->getId().'">
-                            <td>'.$requisicao->getCodigo().'</td>
-                            <td>'.$requisicao->getUsuarioCadastrado()->getFuncionario()->getNome().'</td>
-                            <td></td>
-                            <td>'.$requisicao->getTitulo().'</td>
-                            <td>'.$dataFormat->formatar($requisicao->getData(),'datahora').'</td>
-                            <td>'
-                                .$this->templateFactory->getButton('visualizar',array('href'=>URL.'suprimentos/requisicoes/gerenciar/listarprodutosrequisitados/'.$requisicao->getId(), 'title'=>'Visualizar')).
-                                $this->templateFactory->getButton('Editar',array('href'=>URL.'suprimentos/requisicoes/gerenciar/editar/'.$requisicao->getId(), 'title'=>'Editar')).
-                                $this->templateFactory->getButton('cotar',array('id'=> $requisicao->getId(), URL.'suprimentos/requisicoes/gerenciar/cotartodos/', 'title'=>'Cotar')).
-                                $this->templateFactory->getButton('excluir', array('id'=> $requisicao->getId()), URL.'suprimentos/requisicoes/gerenciar/cancelar/').
-                            '</td>
-                        </tr>';
-                endforeach;
-                echo $this->templateFactory->getTable('tabela', array('thead'=>$thead, 'tfoot'=>$tfoot, 'tbody'=>$tbody));
-            ?>
+        <div class="row">
+			<div class="col-sm-6 col-md-4">
+			    <a href="<?=URL?>estoque/prateleira" class="thumbnail">
+			      	<img src="<?=URL?>skin/img/imagens/prateleira.jpg" alt="..." style="height: 200px">
+			      	<div class="caption text-center">
+			        	<h3>PRATELEIRA</h3>
+			      	</div>
+			    </a>
+			</div>
+			<div class="col-sm-6 col-md-4">
+			    <a href="<?=URL?>estoque/armazem" class="thumbnail">
+			      	<img src="<?=URL?>skin/img/imagens/armazem.jpg" alt="..." style="height: 200px">
+			      	<div class="caption text-center">
+			        	<h3>ARMAZÉM</h3>
+			      	</div>
+			    </a>
+			</div>
+			<div class="col-sm-6 col-md-4">
+			    <a href="<?=URL?>estoque/descartados" class="thumbnail">
+			      	<img src="<?=URL?>skin/img/imagens/descartados.jpg" alt="..." style="height: 200px">
+			      	<div class="caption text-center">
+			        	<h3>DESCARTADOS</h3>
+			      	</div>
+			    </a>
+			</div>
+		</div>
     </div>
-
 </div>
-<div class="modal fade" id="modalProdutosRequisitados">
-        <div class="modal-dialog animated zoomIn ">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Lista De Produtos Requisitados</h4>
-                </div>
-                <div class="modal-body">
-                   
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-<script type="text/javascript">
-    $(function(){
-        //DATATABLE
-        var table = $('.dataTable').DataTable({
-            order: [0,'asc']
-        });
-
-        //EXCLUIR
-        table.$('.btn_cancelar').on('click',function(){
-            var id = $(this).attr('id');
-            var status = $(this).data('value');
-            var modalDelete = $('#modalDelete').modal('show')
-            $('.btn_ok','#modalDelete').on('click', function(event) {
-                $.post(url+'suprimentos/requisicoes/gerenciar/cancelar',{id:id,status:status},function(data){
-                    console.log(data)
-                    if(data == true){
-                        $('#modalDelete').modal('hide');
-                        $('tr#'+id).hide();
-                    }
-                });
-            });
-        });
-
-        table.$('.btn_visualizar').on('click',function(){
-            $('#modalProdutosRequisitados').modal('show');
-            
-            $.post($(this).attr('href'), {}, function(data, textStatus, xhr) {
-                $('#modalProdutosRequisitados .modal-body').html(data);
-            });
-
-
-            return false;
-        })
-
-    })
-</script>
 
 

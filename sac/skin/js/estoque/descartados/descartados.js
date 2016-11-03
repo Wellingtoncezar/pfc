@@ -60,7 +60,7 @@ $("#grid").kendoGrid({
   	dataSource:{
 	  	transport: {
 		    read: {
-		      	url: url+"estoque/armazem/gerenciar/getjsonlote",
+		      	url: url+"estoque/descartados/gerenciar/getjsonlote",
 		      	dataType: "json"
 		    }
 		}
@@ -84,22 +84,17 @@ $("#grid").kendoGrid({
 	      		{ field: "codigogst", title:"Cód. barras gst", width: "150px" },
 	      		{ field: "validade", title:"Validade", width: "150px" },
 	      		{ field: "quantidade", title:"Quantidade", width: "200px", template: "<div class='chart'></div>" },
-	      		{ 
-	      			command: [{ 
-		      			text: "",
-		      			name: "details",
-		      			template: '<a href="" data-command="popup" class="k-button k-button-icontext k-grid-details"><span class="glyphicon glyphicon-transfer"></span></a>',
-		      			click: showDetails 
-	      			},{ 
-		      			text: "",
-		      			name: "descartar",
-		      			template: '<a href="" data-command="popup" class="k-button k-button-icontext k-grid-descartar"><span class="glyphicons glyphicons-remove"></span></a>',
-		      			click: descartar 
-	      			}
-	      			], 
-	      			title: " ", 
-	      			width: "180px" 
-	      		}
+	      		// { 
+	      		// 	command: [{ 
+		      	// 		text: "",
+		      	// 		name: "details",
+		      	// 		template: '<a href="" data-command="popup" class="k-button k-button-icontext k-grid-details"><span class="glyphicon glyphicon-transfer"></span></a>',
+		      	// 		click: showDetails 
+	      		// 	}
+	      		// 	], 
+	      		// 	title: " ", 
+	      		// 	width: "180px" 
+	      		// }
 	        ],
 	        dataBound: function(){
 				var grid = this;

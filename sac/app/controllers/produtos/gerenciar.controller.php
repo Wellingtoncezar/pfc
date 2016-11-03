@@ -29,8 +29,7 @@ class gerenciar extends Controller{
 		$produtos = $produtosDao->listar(); 
 		$data = array(
 			'titlePage' => 'Produtos',
-			'produtos' => $produtos,
-			'template' => new templateFactory()
+			'produtos' => $produtos
 		);
 		
 		$this->load->view('includes/header',$data);
@@ -49,22 +48,22 @@ class gerenciar extends Controller{
 			'titlePage' => 'Cadastrar Produtos'
 		);
 
-		//marcas
+		//marcas -- obtendo a lista das marcas
 		$this->load->dao('produtos/marcasDao');
 		$marcas = new marcasDao;
 		$data['marcas']=$marcas->listar();
 
-		//categorias
+		//categorias -- obtendo a lista das categorias
 		$this->load->dao('produtos/categoriasDao');
 		$categorias = new categoriasDao;
 		$data['categorias']=$categorias->listar();
 
-		//unidades de medida
+		//unidades de medida ---- obtendo a lista das unidades de medida
 		$this->load->dao('produtos/unidademedidaDao');
 		$unidademedida = new unidademedidaDao;
 		$data['unidademedida']= $unidademedida->listar();
 
-		//fornecedores
+		//fornecedores -- obtendo a lista dos fornecedores
 		$this->load->dao('fornecedores/fornecedoresDao');
 		$fornecedores = new fornecedoresDao;
 		$data['fornecedores']=$fornecedores->listar();
@@ -251,144 +250,172 @@ class gerenciar extends Controller{
 
 	public function inserir()
 	{
-		if(!$this->load->checkPermissao->check(false,URL.'produtos/gerenciar/cadastrar'))
-		{
-			echo "Ação não permitida";
-			return false;
-		}
-
-		$this->load->library('dataFormat', null, true);
-		$this->load->model('produtos/produtosModel');
-		$this->load->model('produtos/marcasModel');
-		$this->load->model('produtos/categoriasModel');
-		$this->load->model('produtos/unidadeMedidaModel');
-		$this->load->model('produtos/unidadeMedidaEstoqueModel');
-		$this->load->dao('produtos/produtosDao');
-
-		$foto 					= isset($_FILES['foto']) ? $_FILES['foto'] : '';
-		$nome 					= isset($_POST['nome']) ? filter_var($_POST['nome']) : '';
-		$codigoBarra 			= isset($_POST['codigobarras']) ? filter_var($_POST['codigobarras']) : '';
-		$marca 					= isset($_POST['marca']) ? intval($_POST['marca']) : '';
-		$categoria 				= isset($_POST['categoria']) ? intval($_POST['categoria']) : '';
-        $descricao 				= isset($_POST['descricao']) ? filter_var(trim($_POST['descricao'])) : '';
-		$fornecedores 			= isset($_POST['fornecedores']) ? filter_var_array($_POST['fornecedores']) : Array();
-		$unidadeMedidaEstoque 	= isset($_POST['unidadeMedidaEstoque']) ? filter_var_array($_POST['unidadeMedidaEstoque']) : array();
-		$unidadeMedidaVenda 	= isset($_POST['unidadeMedidaVenda']) ? filter_var($_POST['unidadeMedidaVenda']) : '';
-		$fatorUnidadeMedidaVenda= isset($_POST['fatorUnidadeMedidaVenda']) ? filter_var($_POST['fatorUnidadeMedidaVenda']) : '';
-
-
-		//validação dos dados
-		$this->load->library('dataValidator', null, true);
-		$this->load->dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(3);
-		$this->load->dataValidator->set('Marca', $marca, 'marca')->is_required();
-		$this->load->dataValidator->set('Categoria', $categoria, 'categoria')->is_required();
-		$this->load->dataValidator->set('Fornecedores', $fornecedores, 'fornecedores')->is_required()->min_value(3);
-		$this->load->dataValidator->set('Unidades de medidas de estoque', $unidadeMedidaEstoque, 'unidadeMedidaEstoque')->is_required();
-		$this->load->dataValidator->set('Unidade de medida para venda', $unidadeMedidaVenda, 'unidadeMedidaVenda')->is_required();
-		$this->load->dataValidator->set('Fator da unidade de medida para venda', $fatorUnidadeMedidaVenda, 'fatorUnidadeMedidaVenda')->is_required();
-		if ($this->load->dataValidator->validate())
-		{
-			//PRODUTOS
-			$produtosModel = new produtosModel();
-
-			//MARCA
-			$marcasModel = new marcasModel();
-			$marcasModel->setId($marca);
-
-			//CATEGORIA
-			$categoriasModel = new categoriasModel();
-			$categoriasModel->setId($categoria);
-			
-			$unidadeMedidaVendaModel = new unidadeMedidaModel();
-			$unidadeMedidaVendaModel->setId($unidadeMedidaVenda);
-
-
-			//UNIDADES DE MEDIDA DE ESTOQUE
-			foreach ($unidadeMedidaEstoque as $unidade)
+		try {
+			if(!$this->load->checkPermissao->check(false,URL.'produtos/gerenciar/cadastrar'))
 			{
-				$unidade['venda'] = $unidade['venda']== "true" ? true : false;
-				$unidade['estoque'] = $unidade['estoque']== "true" ? true : false;
-				$fator = $this->load->dataFormat->formatar($unidade['fator_unidade'],'decimal','banco');
-
-				$unidadeMedidaModel = new unidadeMedidaModel();
-				$unidadeMedidaModel->setId($unidade['idUnidadeMedida']);
-
-				$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
-				$unidadeMedidaEstoqueModel->setId($unidade['idUnidadeMedidaProduto']);
-				$unidadeMedidaEstoqueModel->setUnidadeMedida($unidadeMedidaModel);
-				$unidadeMedidaEstoqueModel->setParaVenda($unidade['venda']);
-				$unidadeMedidaEstoqueModel->setParaEstoque($unidade['estoque']);
-				$unidadeMedidaEstoqueModel->setFator($fator);
-				$unidadeMedidaEstoqueModel->setOrdem($unidade['ordem']);
-				$produtosModel->addUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
+				$this->http->response("Ação não permitida");
+				return false;
 			}
 
-			//FORNECEDORES
-			$this->load->model('fornecedores/fornecedoresModel');
-			$this->load->model('produtos/produtofornecedorModel');
-			foreach ($fornecedores as $fornec)
+
+			$this->load->model('produtos/produtosModel');
+			$this->load->model('produtos/marcasModel');
+			$this->load->model('produtos/categoriasModel');
+			$this->load->model('produtos/unidadeMedidaModel');
+			$this->load->model('produtos/unidadeMedidaEstoqueModel');
+			$this->load->model('produtos/precosModel');
+			$this->load->dao('produtos/precosDao');
+			$this->load->dao('produtos/produtosDao');
+
+
+			//obtendo os dados enviados pela requisição
+			$dataFormat = new dataFormat();
+			$foto 					= isset($_FILES['foto']) ? $_FILES['foto'] : '';
+			$nome 					= $this->http->getRequest('nome');
+			$codigoBarra 			= $this->http->getRequest('codigobarras');
+			$marca 					= $this->http->getRequest('marca');
+			$categoria 				= $this->http->getRequest('categoria');
+			$preco 					= $dataFormat->formatar($this->http->getRequest('preco'), 'decimal', 'banco');
+	        $controlarvalidade 		= (boolean)$this->http->getRequest('controlarvalidade');
+	        $descricao 				= $this->http->getRequest('descricao');
+			$fornecedores 			= (Array) $this->http->getRequest('fornecedores');
+			$unidadeMedidaEstoque 	= $this->http->getRequest('unidadeMedidaEstoque');
+
+
+			//validação dos dados
+			$dataValidator = new dataValidator();
+			$dataValidator->set('Nome', $nome, 'nome')->is_required()->min_length(3);
+			$dataValidator->set('Marca', $marca, 'marca')->is_required();
+			$dataValidator->set('Categoria', $categoria, 'categoria')->is_required();
+			$dataValidator->set('Preço', $preco, 'preco')->is_required();
+			$dataValidator->set('Fornecedores', $fornecedores, 'fornecedores')->is_required()->min_value(3);
+			$dataValidator->set('Unidades de medidas de estoque', $unidadeMedidaEstoque, 'unidadeMedidaEstoque')->is_required();
+
+
+			if ($dataValidator->validate())
 			{
-				$fornecedoresModel = new fornecedoresModel();
-				$fornecedoresModel->setId($fornec['id']);
+				//PRODUTOS
+				$produtosModel = new produtosModel();
+
+				//MARCA
+				$marcasModel = new marcasModel();
+				$marcasModel->setId($marca);
+
+				//CATEGORIA
+				$categoriasModel = new categoriasModel();
+				$categoriasModel->setId($categoria);
 				
-				$produtofornecedorModel = new produtofornecedorModel();
-				$produtofornecedorModel->setFornecedor($fornecedoresModel);
-				$produtosModel->addFornecedor($produtofornecedorModel);
-			}
 
-			//IMAGEM
-			$cropValues = Array(
-				'w' => $_POST['w'],
-				'h' => $_POST['h'],
-				'x1' => $_POST['x1'],
-				'y1' => $_POST['y1']
-			);
-			$tamanho = Array(
-				'p' =>array(
-						'w' => 404,
-						'h' =>  158
-					)
-			);
-			$nome_foto = '';
-			if(!empty($foto))
-			{
-				$nome_foto = md5(date('dmYHis'));
-				try {
+
+				//UNIDADES DE MEDIDA DE ESTOQUE -- obtendo as unidades de medida 
+				foreach ($unidadeMedidaEstoque as $unidade)
+				{
+					$unidade['venda'] = $unidade['venda']== "true" ? true : false;
+					$unidade['estoque'] = $unidade['estoque']== "true" ? true : false;
+					$fator = $dataFormat->formatar($unidade['fator_unidade'],'decimal','banco');
+
+					$unidadeMedidaModel = new unidadeMedidaModel();
+					$unidadeMedidaModel->setId($unidade['idUnidadeMedida']);
+
+					$unidadeMedidaEstoqueModel = new unidadeMedidaEstoqueModel();
+					$unidadeMedidaEstoqueModel->setId($unidade['idUnidadeMedidaProduto']);
+					$unidadeMedidaEstoqueModel->setUnidadeMedida($unidadeMedidaModel);
+					$unidadeMedidaEstoqueModel->setParaVenda($unidade['venda']);
+					$unidadeMedidaEstoqueModel->setParaEstoque($unidade['estoque']);
+					$unidadeMedidaEstoqueModel->setFator($fator);
+					$unidadeMedidaEstoqueModel->setOrdem($unidade['ordem']);
+					//adicionando as unidades no produto
+					$produtosModel->addUnidadeMedidaEstoque($unidadeMedidaEstoqueModel);
+				}
+
+				//FORNECEDORES -- obtendo os fonecedores do produto
+				$this->load->model('fornecedores/fornecedoresModel');
+				$this->load->model('produtos/produtofornecedorModel');
+				foreach ($fornecedores as $fornec)
+				{
+					$fornecedoresModel = new fornecedoresModel();
+					$fornecedoresModel->setId($fornec['id']);
+					
+					$produtofornecedorModel = new produtofornecedorModel();
+					$produtofornecedorModel->setFornecedor($fornecedoresModel);
+					//adicionando os fornecedores ao produto
+					$produtosModel->addFornecedor($produtofornecedorModel);
+				}
+
+				//IMAGEM
+				//obtendo a imagem e realizando o upload
+				$nome_foto = '';
+				if(!empty($foto))
+				{
+					//obtendo o tamanho do corte da imagem
+					$cropValues = Array(
+						'w' => $this->http->getRequest('w'),
+						'h' => $this->http->getRequest('h'),
+						'x1' => $this->http->getRequest('x1'),
+						'y1' => $this->http->getRequest('y1')
+					);
+
+					//definindo o tamanho da imagem após o upload
+					$tamanho = Array(
+						'p' =>array(
+								'w' => 404,
+								'h' =>  158
+							)
+					);
+					//renomeando a imagem
+					$nome_foto = md5(date('dmYHis'));
+
+					// realizando o upload
 					$this->load->library('uploadFoto');
 					$upload = new uploadFoto('produtos', $foto, $nome_foto, $tamanho, $cropValues);
 					$nome_foto = $upload->getNomeArquivo();
-				} catch (Exception $e) {
-					echo $e->getMessage();
-					return false;
+				
 				}
-			}
 
-			// //FORMATAÇÃO DOS DADOS
+				// //FORMATAÇÃO DOS DADOS
+				$produtosModel->setFoto($nome_foto);
+				$produtosModel->setCodigoBarra($codigoBarra);
+				$produtosModel->setNome($nome);
+				$produtosModel->setMarca($marcasModel);
+				$produtosModel->setCategoria($categoriasModel);
+				$produtosModel->setDescricao($descricao);
+				$produtosModel->setDataCadastro(date('Y-m-d h:i:s'));
+				//definindo controle de validade
+				if($controlarvalidade == true)
+					$produtosModel->ativarControleValidade();
+				else
+					$produtosModel->desativarControleValidade();
+				//adicionando o preço padrão ao produto
+				$precosModel = new precosModel();
+				$precosModel->setPreco($preco);
+				$precosModel->setPadrao(true);
+				
 
-
-			$produtosModel->setFoto($nome_foto);
-			$produtosModel->setCodigoBarra($codigoBarra);
-			$produtosModel->setNome($nome);
-			$produtosModel->setMarca($marcasModel);
-			$produtosModel->setCategoria($categoriasModel);
-			$produtosModel->setDescricao($descricao);
-			$produtosModel->setUnidadeMedidaVenda($unidadeMedidaVendaModel);
-			$produtosModel->setFatorUnidadeMedidaVenda($fatorUnidadeMedidaVenda);
-			
-			$produtosModel->setDataCadastro(date('Y-m-d h:i:s'));
-			//PRODUTOS DAO
-			$produtosDao = new produtosDao();
-			try {
-				echo $produtosDao->inserir($produtosModel);
-			} catch (Exception $e) {
-				echo $e->getMessage();
-				return false;
-			}
-		}else
-	    {
-			$todos_erros = $this->load->dataValidator->get_errors();
-			echo json_encode($todos_erros);
-	    }
+				//PRODUTOS DAO
+				$produtosDao = new produtosDao();
+				$produtosModel = $produtosDao->inserir($produtosModel);
+				//se o produto foi cadastrado corretamente
+				if($produtosModel->getId() != '')
+				{
+					//insere o preço padrão
+					$precosDao = new precosDao();
+					$precosDao->inserir($produtosModel, $precosModel);
+					$this->http->response(true);
+				}
+			}else
+		    {
+		    	//exibindo os erro de validação
+				$this->http->response(json_encode($dataValidator->get_errors()));
+		    }
+		}catch (dbException $e) {
+			//se tiver algum erro no banco
+			$this->http->response($e->getMessageError());
+			return false;
+		}catch (Exception $e) {
+			//se tiver algum erro no envio da imagem ou outro erro que seja diferente do banco
+			$this->http->response($e->getMessage());
+			return false;
+		}
 
 	}
 

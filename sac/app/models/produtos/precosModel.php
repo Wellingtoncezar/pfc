@@ -4,11 +4,40 @@
 */
 if(!defined('BASEPATH')) die('Acesso não permitido');
 class precosModel{
+	/**
+	 * @id
+	 * @var int
+	 * */ 
 	private $id;
+	/**
+	 * @preco
+     * @Column(type="decimal(10,2)", name="preco_produto")
+     * @var double
+     * */
 	private $preco;
+	/**
+	 * @dataInicio
+     * @Column(type="date", name="data_inicio")
+     * @var date
+     * */
 	private $dataInicio;
+	/**
+	 * @dataFim
+     * @Column(type="date", name="data_fim")
+     * @var date
+     * */
 	private $dataFim;
-	private $padrao;
+	/**
+	 * @padrao
+     * @Column(type="boolean", name="preco_padrao")
+     * @var boolean
+   	 * */
+	private $padrao = false;
+	/**
+	 * @dataCadastro
+     * @Column(type="boolean", name="data_cadastro")
+     * @var date
+     * */
 	private $dataCadastro;
 
  	//SETERS

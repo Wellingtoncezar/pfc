@@ -79,18 +79,25 @@
                     <h4 class="modal-title">Alterar limites de estoque</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="text" name="idEstoque" value="">
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Min.</span>
-                        <input type="text" class="form-control" name="qtdMin" value="" min="0">
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">Max.</span>
-                        <input type="text" class="form-control" name="qtdMax" value="" min="0">
-                    </div>
-                </div>
+	                <div class="row">
+						<div class="col-lg-8 limites" >
+							
+						</div>
+						<div class="col-lg-4">
+		                    <input type="hidden" name="idEstoque" value="">
+		                    <div class="input-group">
+		                        <span class="input-group-addon" id="basic-addon1">Min.</span>
+		                        <input type="number" class="form-control" name="qtdMin" value="" min="1">
+		                    </div>
+		                    <div class="input-group">
+		                        <span class="input-group-addon" id="basic-addon1">Max.</span>
+		                        <input type="number" class="form-control" name="qtdMax" value="" min="0">
+		                    </div>
+	    				</div>            
+	    			</div>
+	            </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success pull-rigth btnAlterLimites">Salvar</button>
+                    <button type="button" class="btn btn-success pull-rigth btn_enviarAlteracaoLimites">Salvar</button>
                 </div>
             </form>
         </div><!-- /.modal-content -->

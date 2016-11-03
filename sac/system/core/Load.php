@@ -143,7 +143,6 @@ class Load{
     /**
     * inclui e instancia a biblioteca requisitada
      * @access public
-     * @return booleam
      */
     public function library($filename, $parameters = null, $autoExec = false)
     {
@@ -178,7 +177,6 @@ class Load{
     /**
     * inclui o model requisitado
      * @access public
-     * @return booleam
      */
     public function model($filename, $autoExec = false)
     {

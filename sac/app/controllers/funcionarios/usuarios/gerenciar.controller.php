@@ -99,10 +99,10 @@ class gerenciar extends Controller{
 		$saveRouter->saveAction();
 		$this->load->checkPermissao->check();
 		$data = array(
-			'titlePage' => 'Editar Usuários',
-			'template' => new templateFactory()
+			'titlePage' => 'Editar Usuários'
 		);
-		//ID
+
+		//ID -- obtendo o id na url -  caso não tenha redireciona para página de erro
 		if($this->load->url->getSegment(4) == false)
 			$this->http->redirect(URL.'error404');
 		$idUsuario = intval($this->load->url->getSegment(4));
@@ -112,22 +112,32 @@ class gerenciar extends Controller{
 		$usuariosModel = new usuariosModel();
 		$usuariosModel->setId($idUsuario);
 
-		//USUARIO DAO
+		//USUARIO DAO -- consultando o usuário a partir do id
+		$this->load->dao('funcionarios/iUsuarios');
+		$this->load->dao('funcionarios/consultaUsuarioPorId');
 		$this->load->dao('funcionarios/usuariosDao');
 		$usuariosDao = new usuariosDao();
-		$data['usuario'] = $usuariosDao->consultar($usuariosModel);
+		$usuariosModel = $usuariosDao->consultar(new consultaUsuarioPorId(), $usuariosModel, array(status::ATIVO, status::INATIVO));
 
-		//Funcionários
+
+		//Funcionários - consultando o funcionario a partir do usuário
 		$this->load->dao('funcionarios/IListagemFuncionarios');
 		$this->load->dao('funcionarios/funcionariosDao');
+		$this->load->dao('funcionarios/consultaFuncionarioPorUsuario');
 		$funcionarios = new funcionariosDao;
-		$data['funcionarios']=$funcionarios->listarAtivos();
+		$funcionariosModel = $funcionarios->consultar(new consultaFuncionarioPorUsuario($usuariosModel), new funcionariosModel(), array(status::ATIVO, status::INATIVO));
+		
+		//setando o funcionário em usuário
+		$usuariosModel->setFuncionario($funcionariosModel);
 
-		//Nível Acesso
+		
+		//Nível Acesso - listagem de todos os níveis de acesso
 		$this->load->dao('configuracoes/niveisAcessoDao');
 		$niveisAcesso = new niveisAcessoDao;
-		$data['niveisAcesso']=$niveisAcesso->listar();
 
+
+		$data['usuario'] = $usuariosModel;
+		$data['niveisAcesso'] = $niveisAcesso->listar();
 
 		$this->load->view('includes/header',$data);
 		$this->load->view('funcionarios/usuarios/editar',$data);

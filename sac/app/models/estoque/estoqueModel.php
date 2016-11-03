@@ -62,14 +62,16 @@ class estoqueModel{
 	public function getQuantidadeTotal()
 	{	
 		$valorUndEstoque = 0;
+		//para cada lote de um produto no estoque
 		foreach ($this->lotes as $lotes){
+			//obtem cada localização deste lote para pegar as quantidades relativas a unidade de medida
 			foreach ($lotes->getLocalizacao() as $localizacao){
-				$fatorUnidadeLote = $localizacao->getUnidadeMedidaEstoque()->getFator();
+				$fatorUnidadeLote = $localizacao->getUnidadeMedidaEstoque()->getFator(); // fator relacionada a unidade de medida do estoque
 				$qtdLoteLocal = $localizacao->getQuantidade(); //quantidade do lote por localização
 				if(localizacoes::ARMAZEM == $localizacao->getLocalizacao())
 				{
-					$fator = $this->getUnidadeMedidaParaEstoque()->getFator();
-					if($this->getUnidadeMedidaParaEstoque()->getId() != $localizacao->getUnidadeMedidaEstoque()->getId()){
+					$fator = $this->getProduto()->getUnidadeMedidaParaEstoque()->getFator();
+					if($this->getProduto()->getUnidadeMedidaParaEstoque()->getId() != $localizacao->getUnidadeMedidaEstoque()->getId()){
 						$qtd = ($qtdLoteLocal * $localizacao->getUnidadeMedidaEstoque()->getFator()) / $fator;
 					}else
 						$qtd = ($qtdLoteLocal * $fator) / $localizacao->getUnidadeMedidaEstoque()->getFator();
@@ -77,9 +79,19 @@ class estoqueModel{
 				}else
 				if(localizacoes::PRATELEIRA == $localizacao->getLocalizacao())
 				{
-					$fator = $this->getUnidadeMedidaParaVenda()->getFator();
+					$fator = $this->getProduto()->getUnidadeMedidaParaVenda()->getFator();
 
-					if($this->getUnidadeMedidaParaEstoque()->getId() != $localizacao->getUnidadeMedidaEstoque()->getId()){
+					if($this->getProduto()->getUnidadeMedidaParaEstoque()->getId() != $localizacao->getUnidadeMedidaEstoque()->getId()){
+						$qtd = ($qtdLoteLocal * $localizacao->getUnidadeMedidaEstoque()->getFator()) / $fator;
+					}else
+						$qtd = ($qtdLoteLocal * $fator) / $localizacao->getUnidadeMedidaEstoque()->getFator();
+
+				}else
+				if(localizacoes::DESCARTADOS == $localizacao->getLocalizacao())
+				{
+					$fator = $this->getProduto()->getUnidadeMedidaParaVenda()->getFator();
+
+					if($this->getProduto()->getUnidadeMedidaParaEstoque()->getId() != $localizacao->getUnidadeMedidaEstoque()->getId()){
 						$qtd = ($qtdLoteLocal * $localizacao->getUnidadeMedidaEstoque()->getFator()) / $fator;
 					}else
 						$qtd = ($qtdLoteLocal * $fator) / $localizacao->getUnidadeMedidaEstoque()->getFator();
@@ -96,41 +108,6 @@ class estoqueModel{
 
 		return $this->quantidade_total;
 	}
-
-	/**
-	 * retorna o objeto da unidade de medida relacionada ao controle de estoque (armazém)
-	 * @return object unidadeMedidaEstoque
-	 * */
-	public function getUnidadeMedidaParaEstoque()
-	{
-		$unidadeMedidaEstoque = null;
-		foreach ($this->produto->getUnidadeMedidaEstoque() as $undMed){
-			if($undMed->getParaEstoque()){
-				$unidadeMedidaEstoque = $undMed;
-			}
-		}
-		return $unidadeMedidaEstoque;
-	}
-
-
-	/**
-	 * retorna o objeto da unidade de medida relacionada ao controle de prateleiras (venda)
-	 * @return object unidadeMedidaEstoque
-	 * */
-	public function getUnidadeMedidaParaVenda()
-	{
-		$unidadeMedidaVenda = null;
-		foreach ($this->produto->getUnidadeMedidaEstoque() as $undMed){
-			if($undMed->getParaVenda()){
-				$unidadeMedidaVenda = $undMed;
-			}
-		}
-		return $unidadeMedidaVenda;
-	}
-
-
-
-
 
 
 	public function getLotes()

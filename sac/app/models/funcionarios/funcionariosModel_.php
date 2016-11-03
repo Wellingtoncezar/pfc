@@ -15,8 +15,8 @@ class funcionariosModel{
 	private $estadoCivil;
 	private $escolaridade;
 	private $endereco;
-	private $telefone;
-	private $email;
+	private $telefones = Array();
+	private $email = Array();
 	private $codigo;
 	private $cargo;
 	private $dataAdmissao;
@@ -24,7 +24,7 @@ class funcionariosModel{
 	private $status = status::ATIVO;
 	private $dataCadastro;
 	private $dataAtualizacao;
-	private $usuario;
+	private $isUserAdministrator = false;
 
  	//SETERS
  	public function setId($id)
@@ -71,16 +71,22 @@ class funcionariosModel{
 	{
 		$this->endereco = $endereco;
 	}
-	public function setTelefone($telefone)
+	public function setTelefones($telefones)
 	{
-		$this->telefone = $telefone;
+		$this->telefones = $telefones;
 	}
-
-	public function setEmail($email)
+	public function addTelefone(telefoneModel $telefones)
+	{
+		array_push($this->telefones, $telefones);
+	}
+	public function setEmails(emailModel $email)
 	{
 		$this->email = $email;
 	}
-
+	public function addEmail(emailModel $email)
+	{
+		array_push($this->email, $email);
+	}
 	public function setCodigo($codigo)
 	{
 		$this->codigo = $codigo;
@@ -122,9 +128,9 @@ class funcionariosModel{
 		$this->status = status::EXCLUIDO;
 	}
 
-	public function setUsuario(usuariosModel $usuario)
+	public function setUserAdministrator($isUserAdministrator)
 	{
-		$this->usuario = $usuario;
+		$this->isUserAdministrator = $isUserAdministrator;
 	}
 
 	//GETERS
@@ -172,9 +178,9 @@ class funcionariosModel{
 	{
 		return $this->endereco;
 	}
-	public function getTelefone()
+	public function getTelefones()
 	{
-		return $this->telefone;
+		return $this->telefones;
 	}
 	public function getEmail()
 	{
@@ -209,8 +215,8 @@ class funcionariosModel{
 		return $this->dataAtualizacao;
 	}
 
-	public function getUsuario()
+	public function getUserAdministrator()
 	{
-		return $this->usuario;
+		return $this->isUserAdministrator;
 	}
 }

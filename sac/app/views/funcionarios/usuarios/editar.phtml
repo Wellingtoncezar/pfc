@@ -8,9 +8,9 @@
     </div>
     <form action="<?=URL?>funcionarios/usuarios/gerenciar/atualizar" method="post" id="form_usuarios">
         <div class="panel panel-default">
-            <div class="panel-heading">Dados Gerais</div>
+            <div class="panel-heading">Dados de usuário de <?=$usuario->getFuncionario()->getNome().' '.$usuario->getFuncionario()->getSobrenome()?></div>
             <div class="panel-body">
-                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
+                <div class="form-group col-xs-6 col-md-3 col-sm-6 col-lg-6">
                     <label>Nível de acesso</label>
                     <select name="nivel" id="nivel" class="form-control">
                         <option selected="selected" disabled="disabled" value="">..Selecione..</option>
@@ -21,18 +21,7 @@
                         <?php endif;?>
                     </select>
                 </div>
-                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-6">
-                    <label>Funcionário</label>
-                    <select name="funcionario" id="funcionarios" class="form-control">
-                        <option selected="selected" disabled="disabled" value="">..Selecione..</option>
-                        <?php if(!empty($funcionarios)):?>
-                        <?php foreach ($funcionarios as $funcionario):?>
-                        <option value="<?= $funcionario->getId()?>" <?=$funcionario->getId() == $usuario->getFuncionario()->getId() ? 'selected="selected"' : ''?>><?=$funcionario->getNome(). ' '.$funcionario->getSobrenome()?></option>
-                        <?php endforeach;?>
-                        <?php endif;?>
-                    </select>
-                </div>
-                <div class="form-group col-xs-6 col-md-3 col-sm-3 col-lg-4">
+                <div class="form-group col-xs-6 col-md-3 col-sm-6 col-lg-6">
                     <label>Email</label>
                     <input type="email" class="form-control" placeholder="Email" name="email" value="<?=$usuario->getEmail()?>">
                 </div>

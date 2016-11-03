@@ -16,4 +16,9 @@ class listarTodos implements iListagemFuncionarios{
 			return $db->resultAll();
 		}
 	}
+	
+	public function consultar(db $db, funcionariosModel $funcionarios, $status)
+	{
+
+	}
 }

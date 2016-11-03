@@ -361,36 +361,29 @@ class estoqueDao extends Dao{
 	 * */
 	public function limitar(estoqueModel $estoqueModel)
 	{
-		/*
 		try {
+			$data = array();
+			$data['quantidade_minima'] = $estoqueModel->getNivelEstoque()->getQuantidadeMinima();
+			$data['quantidade_maxima'] = $estoqueModel->getNivelEstoque()->getQuantidadeMaxima();
+
 			$this->db->clear();
-			$this->db->setTabela('localizacao_lote');
-			$this->db->setCondicao("id_produto_lote = ? AND localizacao = ?");
-			$this->db->setParameter(1, $id_produto_lote);
-			$this->db->setParameter(2, $localizacao);
+			$this->db->setTabela('nivel_estoque');
+			$this->db->setCondicao("id_estoque = ? AND localizacao_estoque = ?");
+			$this->db->setParameter(1, $estoqueModel->getId());
+			$this->db->setParameter(2, $estoqueModel->getNivelEstoque()->getLocalizacao());
 			if($this->db->select())
 			{
 				$res = $this->db->result();
-				$data['quantidade_localizacao'] = $res['quantidade_localizacao']+$data['quantidade_localizacao'];
-				if($this->db->update($data))
-				{
-					$this->db->query('COMMIT');
-					return true;
-				}else
-				{
-					$this->db->query('rollback');
-					return false;
-				}
+				$this->db->update($data);
 			}else
 			{
 				$this->db->insert($data);
-				$this->db->query('COMMIT');
 			}
+			return true;
 		} catch (dbException $e) {
-			$this->db->query('rollback');
 			return $e->getMessageError();
 		}
-		*/
+		
 	}
 
 	public function armazenarLote(estoqueModel $estoqueModel)

@@ -60,7 +60,7 @@ $("#grid").kendoGrid({
   	dataSource:{
 	  	transport: {
 		    read: {
-		      	url: url+"estoque/armazem/gerenciar/getjsonlote",
+		      	url: url+"estoque/prateleira/gerenciar/getjsonlote",
 		      	dataType: "json"
 		    }
 		}

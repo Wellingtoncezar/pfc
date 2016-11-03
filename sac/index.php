@@ -1,6 +1,6 @@
 <?php 
 /**
-*@author Wellington cezar (programador jr) - wellington-cezar@hotmail.com
+*@author Wellington cezar - wellington-cezar@hotmail.com
 */
 session_start();
 header('Content-Type: text/html; charset=utf-8');
@@ -13,14 +13,16 @@ if (!version_compare(PHP_VERSION, '5.4.0', '>=')):
 endif;
 
 require_once('include.php');
-config::getInstance();
-config::getConfig();
 
-class _initialize extends Router{
+
+class _initialize{
 	public function __construct(){
-		parent::__construct();
-		
-		$this->explodeUri();
+		// parent::__construct();
+		config::getInstance();
+		config::getConfig();
+
+		$router = new Router();
+		$router->explodeUri();
 
 		/*
 		apenas para checagem dos caminhos
@@ -32,9 +34,9 @@ class _initialize extends Router{
 		echo '</pre>';
 		*/
 
-		define('ROUTE', $this->getRoute());
-		define('CONTROLLER', $this->getController());
-		define('ACTION', $this->getAction());
+		define('ROUTE', $router->getRoute());
+		define('CONTROLLER', $router->getController());
+		define('ACTION', $router->getAction());
 		
 		$filename = BASEPATH.DIRECTORY_SEPARATOR.APPPATH.DIRECTORY_SEPARATOR.CONTROLLERS.DIRECTORY_SEPARATOR.ROUTE.CONTROLLER.'.controller.php';
 		

@@ -50,7 +50,7 @@
                         <td>
                     <?php
                         //permite a mudança de status se nao for administrador
-                        if(!$func->getUserAdministrator()): 
+                        if($func->getUsuario() == null || $func->getUsuario()->getNivelAcesso()->getTipoPermissao() == tipopermissao::USUARIO): 
                     ?>
                             <select name="status" id="<?=$func->getId()?>" class="statusSelect">
                                 <option value="<?=status::ATIVO?>" class="active" <?=$ativo?>>Ativo</option>
@@ -60,7 +60,7 @@
                         </td>
                         <td>
                             <?=$this->templateFactory->getButton('editar',array('href'=> URL.'funcionarios/gerenciar/editar/'.$func->getId()), URL.'funcionarios/gerenciar/editar/')?>
-                            <?php if(!$func->getUserAdministrator()): //permite a mudança de status se nao for administrador?>
+                            <?php if($func->getUsuario() == null || $func->getUsuario()->getNivelAcesso()->getTipoPermissao() == tipopermissao::USUARIO): //permite a mudança de status se nao for administrador?>
                             <?= $this->templateFactory->getButton('excluir', array('id'=> $func->getId()), URL.'funcionarios/gerenciar/excluir/');?>
                             <?php endif;?>
                         </td>

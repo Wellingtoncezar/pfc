@@ -1,7 +1,6 @@
 $(function(){
-    $("input[name=preco_custo],input[name=preco_venda]").maskMoney({symbol:"R$",decimal:",",thousands:"."});
-	$("input[name=markup]").maskMoney({decimal:",",thousands:""});
-    // //$("input[name=markup]").wvmask('numero')
+    $("input[name=preco]").maskMoney({symbol:"R$",decimal:",",thousands:"."});
+    $("input[name=fator_unidade], input[name=codigobarras]").wvmask('numero')
     
     // $("#barcode").kendoBarcode({
     //     value: $('#barCodeGti').val(),

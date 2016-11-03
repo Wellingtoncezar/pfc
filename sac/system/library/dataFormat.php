@@ -58,6 +58,9 @@ Class dataFormat{
                 case "decimal":
                    $dados = $this->converter_decimal_pv($dados);
                    break;
+                case "decimalinteiro":
+                   $dados = $this->converter_decimalinteiro_pv($dados);
+                   break;
                 case "inteiro":
                    $dados = $this->converter_int_vp($dados);
                    break;
@@ -94,7 +97,18 @@ Class dataFormat{
    }
    public function converter_decimal_pv($strDecimal) {
       $strDecimalFinal = number_format($strDecimal,2,',','.');
-   return $strDecimalFinal;
+
+      
+   		return $strDecimalFinal;
+   }
+   public function converter_decimalinteiro_pv($strDecimal) {
+      $strDecimalFinal = number_format($strDecimal,2,',','.');
+
+      if(substr_count($strDecimalFinal, ',00') == 1)
+      {
+      	$strDecimalFinal = str_replace(",00", "", $strDecimalFinal);
+      }
+   		return $strDecimalFinal;
    }
    function converter_decimal_vp($strDecimal) {
       $strDecimal = str_replace(".", "", $strDecimal);

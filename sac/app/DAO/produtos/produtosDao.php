@@ -215,10 +215,10 @@ class produtosDao extends Dao{
  			'id_marca' => $produto->getMarca()->getId(),
  			'id_categoria' => $produto->getCategoria()->getId(),
  			'descricao_produto' => $produto->getDescricao(),
- 			'unidade_medida_venda' => $produto->getUnidadeMedidaVenda()->getId(),
- 			'fator_unidade_medida_venda' => $produto->getFatorUnidadeMedidaVenda(),
  			'status_produto' => $produto->getStatus(),
+ 			'data_validade_controlada' => $produto->getControleValidade(),
  			'data_cadastro_produto' => $produto->getDataCadastro()
+
  		);
 
  		$this->db->clear();
@@ -235,13 +235,12 @@ class produtosDao extends Dao{
 			//FORNECEDORES
 			if(!empty($produto->getFornecedores()))
 			 	$this->atualizaFornecedores($produto);
-			return true;
+			return $produto;
  		}else
  		{
  			throw new Exception($this->db->getError(), 1);
- 		}
-	 	
 
+ 		}
 	}
 
 	/**
