@@ -197,7 +197,7 @@ class gerenciar extends Controller{
 			$nivelEstoqueModel = new nivelEstoqueModel();
 			$nivelEstoqueModel->setQuantidadeMinima($qtdMin);
 			$nivelEstoqueModel->setQuantidadeMaxima($qtdMax);
-			
+			$nivelEstoqueModel->emprateleirar();
 			
 			$estoqueModel->setNivelEstoque($nivelEstoqueModel);
 			

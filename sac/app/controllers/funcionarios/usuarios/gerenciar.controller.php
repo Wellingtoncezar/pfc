@@ -219,32 +219,27 @@ class gerenciar extends Controller{
 		//validação dos dados
 		$this->load->library('dataValidator',null,true);
 		$this->load->dataValidator->set('Nível de acesso', $nivel, 'nivel')->is_required();
-		$this->load->dataValidator->set('Funcionário', $funcionario, 'funcionario')->is_required();
+		// $this->load->dataValidator->set('Funcionário', $funcionario, 'funcionario')->is_required();
 		$this->load->dataValidator->set('Email', $email, 'email')->is_required()->is_email();
 		
 		
 
 		if ($this->load->dataValidator->validate())
 		{
-			$this->load->model('funcionarios/funcionariosModel');
-			$funcionariosModel = new funcionariosModel();
-			$funcionariosModel->setId($funcionario);
-
+			$this->load->model('configuracoes/niveis_acesso/niveisAcessoModel');
+			$nivelAcesso = new niveisAcessoModel();
+			$nivelAcesso->setId($nivel);
             //USUARIO
 			$this->load->model('funcionarios/usuariosModel');
 			$usuariosModel = new usuariosModel();
 			$usuariosModel->setId($id_usuario);
-			$usuariosModel->setNivelAcesso($nivel);
+			$usuariosModel->setNivelAcesso($nivelAcesso);
 			$usuariosModel->setEmail($email);
-			$usuariosModel->setFuncionario($funcionariosModel);
 
 			//USUARIO DAO
 			$this->load->dao('funcionarios/usuariosDao');
 			$usuariosDao = new usuariosDao();
-			if($usuariosDao->checkFuncionarioDuplicado($funcionariosModel, $id_usuario))
-				$this->http->response("Funcionário já possui um usuário cadastrado");
-			else
-				$this->http->response($usuariosDao->atualizar($usuariosModel));
+			$this->http->response($usuariosDao->atualizar($usuariosModel));
 		}else
 	    {
 			$todos_erros = $this->load->dataValidator->get_errors();

@@ -1,0 +1,164 @@
+<div class="container">
+    <?php
+        //$btnCadastrar = $template->btnCadastrar(URL.'funcionarios/gerenciar/cadastrar');
+        //echo $template->actions_buttons($btnCadastrar);
+    ?>
+    <div class="page-header">
+      <h1>Relatórios <small>Vendas</small></h1>
+    </div>
+    <div class="middle-content">
+
+        <div>
+		  	<!-- Nav tabs -->
+		  	<ul class="nav nav-tabs" role="tablist">
+		    	<li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Produtos mais vendidos</a></li>
+		    	<li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+		    	<li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+		    	<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+		  	</ul>
+
+		  	<!-- Tab panes -->
+		  	<div class="tab-content">
+		    	<div role="tabpanel" class="tab-pane active" id="home">
+		    		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+			    		<div class="form-group">
+			    			<label>Período De:</label>
+		                    <input type="text" class="form-control" placeholder="De" name="de">
+	                    
+			    		</div>
+			    	</div>
+			    	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+			    		<div class="form-group">
+			    			<label>Até</label>
+							<input type="text" class="form-control" placeholder="Até" name="ate">
+			    		</div>
+			    	</div>
+					<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+			    		<div class="form-group">
+			    			<label>Produto</label>
+							<select class="form-control" name="produto">
+								<option value="">Selecione</option>
+								<?php foreach ($produtos as $produto):?>
+								<option value="<?=$produto->getId()?>"><?=$produto->getNome()?></option>
+								<?php endforeach;?>
+							</select>
+			    		</div>
+			    	</div>
+			    	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-12">
+			    		<div class="btn-group">
+			    			<button type="button" name="filtrar" class="btn btn-primary">Filtrar</button>
+			    		</div>
+			    	</div>
+
+
+			    	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-12">
+			    		<div class="demo-section k-content wide">
+					        <div id="chart" ></div>
+					    </div>
+					</div>
+		    	</div>
+		    	<div role="tabpanel" class="tab-pane" id="profile">...</div>
+		    	<div role="tabpanel" class="tab-pane" id="messages">...</div>
+		    	<div role="tabpanel" class="tab-pane" id="settings">...</div>
+		  	</div>
+
+		</div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+$(function(){
+	$( "input[name=de]" ).datepicker({
+        defaultDate: "+0w",
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true, 
+        changeYear: true,
+        yearRange: "-10:+0",
+        numberOfMonths: 2,
+        onClose: function( selectedDate ) {
+            $( "input[name=ate]" ).datepicker( "option", "minDate", selectedDate );
+        }
+    });
+    $( "input[name=ate]" ).datepicker({
+        defaultDate: "+0w",
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true, 
+        changeYear: true,
+        yearRange: "-10:+0", 
+        numberOfMonths: 2,
+        onClose: function( selectedDate ) {
+            $( "input[name=de]" ).datepicker( "option", "maxDate", selectedDate );
+        }
+    });
+
+
+
+        var stocksDataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: function() {
+                        return url+"relatorios/vendas/gerenciar/produtosMaisVendidos";
+                    },
+                    dataType: "json"
+                }
+            },
+            group: {
+                field: "symbol"
+            },
+
+            sort: {
+                field: "date",
+                dir: "asc"
+            },
+
+            schema: {
+                model: {
+                    fields: {
+                        date: {
+                            type: "date"
+                        }
+                    }
+                }
+            }
+        });
+
+        function createChart() {
+            $("#chart").kendoChart({
+                title: { text: "Produtos mais vendidos" },
+                dataSource: stocksDataSource,
+                series: [{
+                    type: "line",
+                    field: "close",
+                    name: "#= group.value # (close)"
+                  }],
+                legend: {
+                    position: "bottom"
+                },
+                valueAxis: {
+                    labels: {
+                        format: "${0}",
+                        skip: 2,
+                        step: 2
+                    }
+                },
+                categoryAxis: [{
+				    categories: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+				}],
+	            tooltip: {
+		          visible: true,
+		          format: "{0}%",
+		          template: "#= dataItem.volume #<br/>#= dataItem.date #"
+		        }
+            });
+        }
+
+        $(document).ready(createChart);
+        $(document).bind("kendo:skinChange", createChart);
+})
+    </script>
+
+

@@ -88,8 +88,8 @@
 						                    <select name="listaproduto" class="form-control">
 						                    	<option value="" selected="selected" disabled="disabled"></option>
 						                        <?php if(!empty($produtos)):?>
-						                        <?php foreach ($produtos as $produto):?>
-						                        <option value="<?=$produto->getId()?>"><?=$produto->getNome()?></option>
+						                        <?php foreach ($produtos as $produtoestoque):?>
+						                        <option value="<?=$produtoestoque->getProduto()->getId()?>"><?=$produtoestoque->getProduto()->getNome()?></option>
 						                        <?php endforeach;?>
 						                        <?php endif;?>
 						                    </select>

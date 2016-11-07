@@ -31,33 +31,6 @@ class caixasDao extends Dao{
 			foreach ($result as $value)
 			{
 				$caixasModel = new caixasModel();
-				$this->db->clear();
-				$this->db->setParameter(1, $value['id_caixa']);
-				if($this->db->query("select abertura_caixa.*, funcionarios.nome_funcionario, funcionarios.sobrenome_funcionario from abertura_caixa 
-						inner join caixas on abertura_caixa.id_caixa = caixas.id_caixa 
-						inner join sys_usuarios on abertura_caixa.id_usuario = sys_usuarios.id_usuario 
-						inner join funcionarios on funcionarios.id_funcionario = sys_usuarios.id_funcionario
-					 where caixas.id_caixa= ?"))
-				{
-					$result = $this->db->result();
-					$caixaAberto = new caixaAbertoModel();
-					$caixaAberto->setSaldoInicial($result['saldo_inicial']);
-					$caixaAberto->setSaldoFinal($result['saldo_final']);
-					$caixaAberto->setDataAbertura($result['data_abertura_caixa']);
-					$caixaAberto->setDataFechamento($result['data_fechamento_caixa']);
-
-					$usuario = new usuariosModel();
-					$funcionarios = new funcionariosModel();
-					$funcionarios->setNome($result['nome_funcionario']);
-					$funcionarios->setSobrenome($result['sobrenome_funcionario']);
-					$usuario->setId($result['id_usuario']);
-					$usuario->setFuncionario($funcionarios);
-					$caixaAberto->setUsuario($usuario);
-					$caixasModel->addCaixaAberto($caixaAberto);
-				}
-
-
-				
 				$caixasModel->setId($value['id_caixa']);
 				$caixasModel->setCodigo($value['codigo_caixa']);
 				$caixasModel->setIp($value['ip_maquina']);
@@ -66,7 +39,36 @@ class caixasDao extends Dao{
 
 			}
 		endif;
-		return $this->getJsoncaixa($caixa);
+		return $caixa;
+	}
+
+
+	public function listaAberturaCaixa(caixasModel $caixa)
+	{
+
+		$this->db->clear();
+		$this->db->setParameter(1, $caixa->getId());
+		if($this->db->query("select abertura_caixa.* from abertura_caixa where abertura_caixa.id_caixa= ? ORDER BY id_abertura_caixa DESC"))
+		{
+			$result = $this->db->resultAll();
+			foreach ($result as $res)
+			{
+				$caixaAberto = new caixaAbertoModel();
+				$caixaAberto->setId($res['id_abertura_caixa']);
+				$caixaAberto->setSaldoInicial($res['saldo_inicial']);
+				$caixaAberto->setSaldoFinal($res['saldo_final']);
+				$caixaAberto->setDataAbertura($res['data_abertura_caixa']);
+				$caixaAberto->setDataFechamento($res['data_fechamento_caixa']);
+				
+				$usuario = new usuariosModel();
+				$usuario->setId($res['id_usuario']);
+				$caixaAberto->setUsuario($usuario);
+
+				$caixa->addCaixaAberto($caixaAberto);
+			}
+		}
+		return $caixa;
+
 	}
 
 	/**
@@ -162,40 +164,7 @@ class caixasDao extends Dao{
  	}
 
 
- 	public function getJsoncaixa($caixa)
-	{
-		$this->load->library('dataformat');
-		$dataformat = new dataformat();
-		$_arCaixa = Array();
-		foreach ($caixa as $cx):
-			$aux = array(
-				    	'id'=> $cx->getId(),
-				    	'codigo' => $cx->getCodigo(),
-						'ip'=> $cx->getIp(),
-						'acoes'=> "",
-						'linkEditar'=> URL.'caixa/gerenciar/editar/'.$cx->getId(),
-						'abertos'=> array()
-				    );
-			$arrAberturaCaixa = array();
-			foreach ($cx->getCaixaAberto() as $OpenBox){
-				$valorUndEstoque = 0;
-		        $aux2 = array( 
-				        	'id' => $OpenBox->getId(),
-							'dateOpen' => $OpenBox->getDataAbertura(),
-							'dateClose' => $OpenBox->getDataFechamento(),
-							'user' => $OpenBox->getUsuario()->getFuncionario()->getNome().' '.$OpenBox->getUsuario()->getFuncionario()->getSobreNome(),
-							'acoes' => ""
-							
-				    	);
-
-				array_push($aux['abertos'], $aux2);
-			}
-
-			array_push($_arCaixa, $aux);
-        endforeach;
-
-        return json_encode($_arCaixa);
-	}
+ 	
 
 
 

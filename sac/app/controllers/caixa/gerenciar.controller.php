@@ -206,7 +206,7 @@ class gerenciar extends Controller{
     	    }
     	}
 
-public function excluir()
+	public function excluir()
 	{
 		$saveRouter = new saveRouter;
 		$saveRouter->saveModule();
@@ -216,13 +216,83 @@ public function excluir()
 	}
 
 
-	public function getjsoncaixa()
+
+
+
+	public function getJsoncaixa()
 	{
+		//caixas
 		$this->load->dao('caixa/caixasDao');
 		$this->load->dao('caixa/iListagemCaixa');
+		//usurios
+		$this->load->dao('funcionarios/IUsuarios');
+		$this->load->dao('funcionarios/consultaUsuarioPorId');
+		$this->load->dao('funcionarios/usuariosDao');
+		//funcionarios
+		$this->load->dao('funcionarios/IListagemFuncionarios');
+		$this->load->dao('funcionarios/consultaFuncionarioPorId');
+		$this->load->dao('funcionarios/funcionariosDao');
+
+
 		$caixasDao = new caixasDao();
-		$caixa = $caixasDao->listar();
-		echo $caixasDao->listar($caixa);
+		$caixas = $caixasDao->listar();
+		//echo $caixasDao->listar($caixa);
+
+		foreach ($caixas as $caixa) 
+		{
+			$caixasDao->listaAberturaCaixa($caixa);
+			foreach($caixa->getCaixaAberto() as $caixaAberto)
+			{
+				//USUARIOS DAO -- consultando o usuario pelo id
+				$usuariosDao = new usuariosDao;
+				$usuariosModel = $usuariosDao->consultar(new consultaUsuarioPorId(), $caixaAberto->getUsuario(), array(status::ATIVO, status::INATIVO));
+				if($usuariosModel != null)
+				{
+
+					//FUNCIONARIOS DAO -- Consultando o funcionario pelo id
+					$funcionariosDao = new funcionariosDao();
+					$funcionariosModel = $funcionariosDao->consultar(new consultaFuncionarioPorId(), $usuariosModel->getFuncionario(), array(status::ATIVO, status::INATIVO));
+					$usuariosModel->setFuncionario($funcionariosModel);
+
+					$caixaAberto->setUsuario($usuariosModel);
+				}
+			}
+		}
+
+
+
+		$this->load->library('dataformat');
+		$dataformat = new dataformat();
+		$_arCaixa = Array();
+		foreach ($caixas as $cx):
+			$aux = array(
+				    	'id'=> $cx->getId(),
+				    	'codigo' => $cx->getCodigo(),
+						'ip'=> $cx->getIp(),
+						'acoes'=> "",
+						'linkEditar'=> URL.'caixa/gerenciar/editar/'.$cx->getId(),
+						'abertos'=> array()
+				    );
+			$arrAberturaCaixa = array();
+			foreach ($cx->getCaixaAberto() as $OpenBox){
+				$valorUndEstoque = 0;
+		        $aux2 = array( 
+				        	'id' => $OpenBox->getId(),
+							'dateOpen' => $dataformat->formatar($OpenBox->getDataAbertura(),'datahora'),
+							'dateClose' => $dataformat->formatar($OpenBox->getDataFechamento(),'datahora'),
+							'user' => html_entity_decode($OpenBox->getUsuario()->getFuncionario()->getNome().' '.$OpenBox->getUsuario()->getFuncionario()->getSobreNome()),
+							'acoes' => "",
+							'linkvisualizar' => ''
+							
+				    	);
+
+				array_push($aux['abertos'], $aux2);
+			}
+
+			array_push($_arCaixa, $aux);
+        endforeach;
+
+        $this->http->response(json_encode($_arCaixa));
 	}
 }
 

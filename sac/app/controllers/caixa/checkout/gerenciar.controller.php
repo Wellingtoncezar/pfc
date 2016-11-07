@@ -32,7 +32,18 @@ class gerenciar extends Controller{
 		$this->load->dao('produtos/produtosDao');
 		$produtosDao = new produtosDao();
 		$produtos = $produtosDao->listarAtivos();
-		$data['produtos'] = $produtos;
+
+		$this->load->dao('estoque/estoqueDao');
+		$this->load->dao('estoque/iListagemEstoque');
+		$this->load->dao('estoque/listarPrateleira');
+		$estoqueDao = new estoqueDao();
+		$estoque = $estoqueDao->listar(new listarPrateleira());
+
+		// echo '<pre>';
+		// print_r($estoque);
+		// echo '</pre>';
+
+		$data['produtos'] = $estoque;
 
 		$this->load->view('includes/header',$data);
 		$this->load->view('caixa/checkout/home',$data);

@@ -133,12 +133,12 @@ class gerenciar extends Controller{
 		$funcionariosModel = $funcionariosDao->consultar(new consultaFuncionarioPorId(), $funcionariosModel, array(status::ATIVO, status::INATIVO));
 		
 		
-		//USUARIOS DAO -- consultando o usuario pelo funcionário
-		$usuariosDao = new usuariosDao;
-		$usuariosModel = $usuariosDao->consultar(new consultaUsuarioPorFuncionario($funcionariosModel), new usuariosModel(), array(status::ATIVO, status::INATIVO));
-		//setando o usuario em funcionario
-		if($usuariosModel != null)
-			$funcionariosModel->setUsuario($usuariosModel);
+		// //USUARIOS DAO -- consultando o usuario pelo funcionário
+		// $usuariosDao = new usuariosDao;
+		// $usuariosModel = $usuariosDao->consultar(new consultaUsuarioPorFuncionario($funcionariosModel), new usuariosModel(), array(status::ATIVO, status::INATIVO));
+		// //setando o usuario em funcionario
+		// if($usuariosModel != null)
+		// 	$funcionariosModel->setUsuario($usuariosModel);
 
 
 		$data['funcionario'] = $funcionariosModel;

@@ -204,19 +204,18 @@ class estoqueDao extends Dao{
 				$this->db->setTabela('localizacao_lote');
 				$this->db->setCondicao("id_localizacao_lote = ?");
 				$this->db->setParameter(1, $lote['id_localizacao_lote']);
-				if($this->db->update($data))
-				{
-					//dados do lote a ser transferido para a nova localidade
-					$data = array(
-						'id_produto_lote' => $lotesModel->getId(),
-						'id_unidade_medida_produto' => $lotesModel->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId(),
-						'localizacao' => $lotesModel->getLocalizacao()[0]->getLocalizacao(),
-						'quantidade_localizacao' => $lotesModel->getLocalizacao()[0]->getQuantidade(),
-						'observacoes_localizacao_lote' => $lotesModel->getLocalizacao()[0]->getObservacoes()
-					);
-
-					return $this->atualizaLoteLocalizacao($data, $lotesModel->getId(), $lotesModel->getLocalizacao()[0]->getLocalizacao(), $lotesModel->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId());
-				}
+				$this->db->update($data);
+			
+				//dados do lote a ser transferido para a nova localidade
+				$data = array(
+					'id_produto_lote' => $lotesModel->getId(),
+					'id_unidade_medida_produto' => $lotesModel->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId(),
+					'localizacao' => $lotesModel->getLocalizacao()[0]->getLocalizacao(),
+					'quantidade_localizacao' => $lotesModel->getLocalizacao()[0]->getQuantidade(),
+					'observacoes_localizacao_lote' => $lotesModel->getLocalizacao()[0]->getObservacoes()
+				);
+				return $this->atualizaLoteLocalizacao($data, $lotesModel->getId(), $lotesModel->getLocalizacao()[0]->getLocalizacao(), $lotesModel->getLocalizacao()[0]->getUnidadeMedidaEstoque()->getId());
+				
 			}
 
 
@@ -340,7 +339,6 @@ class estoqueDao extends Dao{
 					return true;
 				}else
 				{
-
 					$this->db->query('rollback');
 					return false;
 				}
@@ -348,6 +346,7 @@ class estoqueDao extends Dao{
 			{
 				$this->db->insert($data);
 				$this->db->query('COMMIT');
+				return true;
 			}
 		} catch (dbException $e) {
 			$this->db->query('rollback');

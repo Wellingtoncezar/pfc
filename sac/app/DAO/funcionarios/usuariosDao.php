@@ -74,6 +74,11 @@ class usuariosDao extends Dao{
 			$usuariosModel->setLogin($result['login_usuario']);
 			$usuariosModel->setEmail($result['email_usuario']);
 			$usuariosModel->setStatus(status::getAttribute($result['status_usuario']));
+
+			$funcionariosModel = new funcionariosModel();
+			$funcionariosModel->setId($result['id_funcionario']);
+			$usuariosModel->setFuncionario($funcionariosModel);
+
 			return $usuariosModel;
 		else:
 			return null;
@@ -130,8 +135,7 @@ class usuariosDao extends Dao{
  	{
 
 		$data = array(
-			'id_funcionario' => $usuarios->getFuncionario()->getId(),
- 			'id_nivel_acesso' => $usuarios->getNivelAcesso(),
+ 			'id_nivel_acesso' => $usuarios->getNivelAcesso()->getId(),
  			'email_usuario' => $usuarios->getEmail()
  		);
 

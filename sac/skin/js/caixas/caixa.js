@@ -57,15 +57,15 @@ $("#grid").kendoGrid({
         pageSize: 8,
         refresh: true
     },
-    detailTemplate: 'Lotes: <div class="grid"></div>',
+    detailTemplate: 'Caixas abertos: <div class="grid"></div>',
     detailInit: function(e) {
         e.detailRow.find(".grid").kendoGrid({
-            dataSource: e.data.lotes,
+            dataSource: e.data.abertos,
             columns: [
-                { field: "id", title:"ID", width: "50px"},
-                { field: "dateOpen", title:"Data De Abertura", width: "150px" },
-                { field: "dateClose", title:"Data De Fechamento", width: "150px" },
-                { field: "user", title:"Funcionário", width: "150px" },
+                { field: "id", title:"ID", width: "80px"},
+                { field: "dateOpen", title:"Data De Abertura"},
+                { field: "dateClose", title:"Data De Fechamento" },
+                { field: "user", title:"Funcionário" },
                 { 
                     field: "acoes", 
                     title:"Ações" ,
