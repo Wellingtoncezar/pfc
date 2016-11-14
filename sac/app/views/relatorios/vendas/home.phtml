@@ -23,21 +23,21 @@
 		    		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
 			    		<div class="form-group">
 			    			<label>Período De:</label>
-		                    <input type="text" class="form-control" placeholder="De" name="de">
+		                    <input type="text" class="form-control" placeholder="De" name="de" value="01/<?=date('m/Y')?>">
 	                    
 			    		</div>
 			    	</div>
 			    	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
 			    		<div class="form-group">
 			    			<label>Até</label>
-							<input type="text" class="form-control" placeholder="Até" name="ate">
+							<input type="text" class="form-control" placeholder="Até" name="ate" value="31/<?=date('m/Y')?>">
 			    		</div>
 			    	</div>
 					<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 			    		<div class="form-group">
 			    			<label>Produto</label>
 							<select class="form-control" name="produto">
-								<option value="">Selecione</option>
+								<option value="">Indiferente</option>
 								<?php foreach ($produtos as $produto):?>
 								<option value="<?=$produto->getId()?>"><?=$produto->getNome()?></option>
 								<?php endforeach;?>
@@ -46,7 +46,7 @@
 			    	</div>
 			    	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-12">
 			    		<div class="btn-group">
-			    			<button type="button" name="filtrar" class="btn btn-primary">Filtrar</button>
+			    			<button type="button" name="filtrar" class="btn btn-primary btnFiltrar">Filtrar</button>
 			    		</div>
 			    	</div>
 
@@ -95,69 +95,112 @@ $(function(){
         }
     });
 
+    function updateChart()
+    {
+    	var dataDe = $( "input[name=de]" ).val();
+    	var dataAte = $( "input[name=ate]" ).val();
+    	var produto = $('select[name=produto]').val();
 
+    	$.ajax({
+    		url: url+'relatorios/vendas/gerenciar/consultaRelatorio',
+    		type: 'POST',
+    		dataType: 'json',
+    		data: {periodoDe: dataDe, periodoAte:dataAte, produto:produto},
+    	})
+    	.done(function(data) {
+    		console.log(data);
+    		var chart = $("#chart").data("kendoChart");
+			var dataSource = new kendo.data.DataSource( {
+			  data: data
+			  
+			});
+			chart.setDataSource(dataSource);
+    	})
+    	.fail(function(e) {
+    		$.notify({
+            	title: 'Atenção',
+            	icon: 'glyphicons glyphicons-warning-sign',
+				message: e.responseText,
+			},{
+				type: "warning",
+				placement: {
+					from: "top",
+					align: "right"
+				}
+			});
+    	});
 
-        var stocksDataSource = new kendo.data.DataSource({
-            transport: {
-                read: {
-                    url: function() {
-                        return url+"relatorios/vendas/gerenciar/produtosMaisVendidos";
-                    },
-                    dataType: "json"
+    }
+
+    updateChart();
+
+    $('.btnFiltrar').on('click', function(event) {
+    	event.preventDefault();
+    	updateChart()
+    });
+
+    function createChart() {
+        $("#chart").kendoChart({
+            title: { text: "Produtos mais vendidos" },
+            dataSource: {
+	            transport: {
+	                read: {
+	                    // url: function() {
+	                    //     return url+"relatorios/vendas/gerenciar/consultaRelatorio";
+	                    // },
+	                    dataType: "json"
+	                }
+	            },
+	            // group: {
+	            //     field: "symbol"
+	            // },
+
+	            sort: {
+	                field: "produto",
+	                dir: "asc"
+	            },
+
+	            schema: {
+	                model: {
+	                    fields: {
+	                        date: {
+	                            type: "qtdVenda"
+	                        }
+	                    }
+	                }
+	            }
+	        },
+            series: [{
+                type: "column",
+                field: "qtdVenda",
+                name: "Quantidade de vendas"
+            }],
+            legend: {
+                position: "bottom"
+            },
+            valueAxis: {
+                labels: {
+                    format: "{0} Venda(s)",
+                    // skip: 2,
+                    // step: 2
                 }
             },
-            group: {
-                field: "symbol"
+            categoryAxis: {
+                field: "produto"
             },
-
-            sort: {
-                field: "date",
-                dir: "asc"
-            },
-
-            schema: {
-                model: {
-                    fields: {
-                        date: {
-                            type: "date"
-                        }
-                    }
-                }
-            }
+//             categoryAxis: [{
+			//     categories: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+			// }],
+            tooltip: {
+	          visible: true,
+	          template: "Quant.: #= dataItem.qtdProduto # #=dataItem.unidadeMedida#<br> Média: #=dataItem.media# #=dataItem.unidadeMedida# / venda"
+	        }
         });
+    }
 
-        function createChart() {
-            $("#chart").kendoChart({
-                title: { text: "Produtos mais vendidos" },
-                dataSource: stocksDataSource,
-                series: [{
-                    type: "line",
-                    field: "close",
-                    name: "#= group.value # (close)"
-                  }],
-                legend: {
-                    position: "bottom"
-                },
-                valueAxis: {
-                    labels: {
-                        format: "${0}",
-                        skip: 2,
-                        step: 2
-                    }
-                },
-                categoryAxis: [{
-				    categories: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
-				}],
-	            tooltip: {
-		          visible: true,
-		          format: "{0}%",
-		          template: "#= dataItem.volume #<br/>#= dataItem.date #"
-		        }
-            });
-        }
+    $(document).ready(createChart);
+    $(document).bind("kendo:skinChange", createChart);
 
-        $(document).ready(createChart);
-        $(document).bind("kendo:skinChange", createChart);
 })
     </script>
 

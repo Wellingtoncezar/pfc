@@ -8,7 +8,8 @@ class produtosVendidoModel{
 	private $produto;
 	private $quantidade;
 	private $precoVendido;
-	
+	private $unidadeMedidaVendido;
+	private $venda;
  	//SETERS
  	public function setId($id)
  	{
@@ -28,13 +29,22 @@ class produtosVendidoModel{
  		$this->precoVendido = $precoVendido;
  	}
  	
+ 	public function setVenda(vendasModel $venda)
+ 	{
+ 		$this->venda = $venda;
+ 	}
  	
+ 	public function setUnidadeMedidaVendido($unidadeMedidaVendido)
+ 	{
+ 		$this->unidadeMedidaVendido = $unidadeMedidaVendido;
+ 	}
 
 
  	public function getId()
  	{
  		return $this->id;
  	}
+ 	
  	public function getProduto()
  	{
  		return $this->produto;
@@ -49,6 +59,14 @@ class produtosVendidoModel{
  		return $this->precoVendido;
  	}
  	
+ 	public function getVenda()
+ 	{
+ 		return $this->venda;
+ 	}
  	
- 	
+ 	public function getUnidadeMedidaVendido()
+ 	{
+ 		return $this->unidadeMedidaVendido;
+ 	}
+
 }

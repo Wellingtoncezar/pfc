@@ -282,7 +282,8 @@ class gerenciar extends Controller{
 							'dateClose' => $dataformat->formatar($OpenBox->getDataFechamento(),'datahora'),
 							'user' => html_entity_decode($OpenBox->getUsuario()->getFuncionario()->getNome().' '.$OpenBox->getUsuario()->getFuncionario()->getSobreNome()),
 							'acoes' => "",
-							'linkvisualizar' => ''
+							'linkvisualizar' => '',
+							'itens' => array()
 							
 				    	);
 

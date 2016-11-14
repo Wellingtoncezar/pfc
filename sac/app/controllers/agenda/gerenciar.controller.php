@@ -1,4 +1,4 @@
-<?php
+	<?php
 /**
 *@author Wellington cezar, Diego Hernandes
 */
@@ -106,7 +106,7 @@ class gerenciar extends Controller{
 	public function notificar()
 	{
 		//AGENDA DAO
-		$this->load->dao('fornecedores/agendaDao');
+		$this->load->dao('agendas/agendaDao');
 		$agendaDao = new agendaDao();
 		$agendamentos = $agendaDao->getDataNotificar();
 		$notificacoes = array();
@@ -124,7 +124,7 @@ class gerenciar extends Controller{
 				array_push($notificacoes, $aux);
 			}
 		}
-		echo json_encode($notificacoes);
+		$this->http->response(json_encode($notificacoes));
 	}
 
 

@@ -73,7 +73,25 @@ $("#grid").kendoGrid({
                                     +'<span class="glyphicons glyphicons-eye-open"></span>'
                                 +'</a>'
                 }
-            ]
+            ],
+            detailInit: function(e) {
+		        e.detailRow.find(".itens").kendoGrid({
+		            dataSource: e.data.itens,
+		            columns: [
+		                { field: "id", title:"ID", width: "80px"},
+		                { field: "dateOpen", title:"Data De Abertura"},
+		                { field: "dateClose", title:"Data De Fechamento" },
+		                { field: "user", title:"Funcionário" },
+		                { 
+		                    field: "acoes", 
+		                    title:"Ações" ,
+		                    template : '<a class="btn btn-primary pull-left btn_visualizar btn-sm" href="#:linkvisualizar#" data-toggle="tooltip" data-placement="top" role="button" id="btn_visualizar" title="Visualizar">'
+		                                    +'<span class="glyphicons glyphicons-eye-open"></span>'
+		                                +'</a>'
+		                }
+		            ]
+		        });
+		    }
         });
     }
 
